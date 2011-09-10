@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
+// Company: Potato
 // Engineer: 
 // 
 // Create Date:    16:21:14 09/08/2011 
@@ -19,9 +19,6 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-//ADDC, ADDCU, ADDCUI, ADDCI, SUB, SUBI, CMP, CMPI, CMPU/I,
-//AND, OR, XOR, NOT(?), LSH, LSHI, RSH, RSHI, ALSH, ARSH, NOP/WAIT
-
 parameter ADD      = 8'd0;
 parameter ADDU     = 8'd1;
 parameter ADDI     = 8'd2;
@@ -33,31 +30,32 @@ parameter ADDCI    = 8'd7;
 parameter SUB      = 8'd8;
 parameter SUBI     = 8'd9;
 parameter CMP      = 8'd10;
-parameter CMPI     = 8'd11;
-parameter CMPU/I   = 8'd12;
-parameter AND      = 8'd13;
-parameter OR       = 8'd14;
-parameter XOR      = 8'd15;
-parameter NOT      = 8'd16;
-parameter LSH      = 8'd17;
-parameter LSHI     = 8'd18;
-parameter RSH      = 8'd19;
-parameter RSHI     = 8'd20;
-parameter ALSH     = 8'd21;
-parameter ARSH     = 8'd22;
-parameter NOP/WAIT = 8'd23;
+parameter CMPU     = 8'd11;
+parameter CMPI     = 8'd12;
+parameter CMPUI    = 8'd13;
+parameter AND      = 8'd14;
+parameter OR       = 8'd15;
+parameter XOR      = 8'd16;
+parameter NOT      = 8'd17;
+parameter LSH      = 8'd18;
+parameter LSHI     = 8'd19;
+parameter RSH      = 8'd20;
+parameter RSHI     = 8'd21;
+parameter ALSH     = 8'd22;
+parameter ARSH     = 8'd23;
+parameter NOP      = 8'd24;
 
 module ALU(
-	 input [15:0] A,
-    input [15:0] B,
-    input [7:0] Opcode,
-    output Carry,
-    output [15:0] Result,
-    output Flag,
-    output Low,
-    output Negative,
-    output Zero
-    );
+	input [15:0] A,
+	input [15:0] B,
+	input [7:0] Opcode,
+	output Carry,
+	output [15:0] C,
+	output Flag,
+	output Low,
+	output Negative,
+	output Zero
+);
 
 always@(*)
 begin
@@ -176,59 +174,92 @@ end
 
 CMP:
 begin
-	Low = $signed(A)<$signed(B); //THIS ISN'T DONE (probly).
+	Low = $signed(A)<$signed(B);
+end
+
+CMPU:
+begin
+	Low = A<B;
 end
 
 CMPI:
 begin
+	Low = $signed(A)<$signed(B);
 end
 
-CMPU/I:
+CMPIU:
 begin
+	Low = A<B;
 end
 
 AND:
 begin
+	C = A&B;
 end
 
 OR:
 begin
+	C = A|B;
 end
 
 XOR:
 begin
+	C = A^B;
 end
 
 NOT:
 begin
+	C = !A;
 end
 
 LSH:
 begin
+	C = A << B;
 end
 
 LSHI:
 begin
+	C = A << B;
 end
 
 RSH:
 begin
+	C = A >> B;
 end
 
 RSHI:
 begin
+	C = A >> B;
 end
 
 ALSH:
 begin
+	C = A <<< B;
 end
 
 ARSH:
 begin
+	C = A >>> B;
 end
 
-NOP/WAIT:
+NOP:
 begin
+	C = 16'dx;
+	Carry = 1'bx;
+	Flag = 1'bx;
+	Low = 1'bx;
+	Negative = 1'bx;
+	Zero = 1'bx;
+end
+
+default:
+begin
+	C = 16'dx;
+	Carry = 1'bx;
+	Flag = 1'bx;
+	Low = 1'bx;
+	Negative = 1'bx;
+	Zero = 1'bx;
 end
 
 end
