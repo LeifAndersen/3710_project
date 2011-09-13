@@ -61,205 +61,205 @@ module ALU(
 
 	always@(*) begin
 		case(Opcode)
-			ADD:
-			begin
-				C = A + B;
-				Zero = (C == 0);
-					
-				Flag = (~A[15]&~B[15]&C[15]) | (A[15] & B[15] & ~C[15]);
+		ADD:
+		begin
+			C = A + B;
+			Zero = (C == 0);
 				
-				Carry = 0;
-				Low = 0;
-				Negative = 0;
-			end
+			Flag = (~A[15]&~B[15]&C[15]) | (A[15] & B[15] & ~C[15]);
+			
+			Carry = 0;
+			Low = 0;
+			Negative = 0;
+		end
 
-			ADDU:
-			begin
-				{Carry, C} = A + B;
-				Zero = (C == 0);
+		ADDU:
+		begin
+			{Carry, C} = A + B;
+			Zero = (C == 0);
+			
+			Flag = 0;
+			Low = 0;
+			Negative = 0;
+		end
+
+		ADDI:
+		begin
+			C = A + B;
+			Zero = (C == 0);
 				
-				Flag = 0;
-				Low = 0;
-				Negative = 0;
-			end
+			Flag = (~A[15]&~B[15]&C[15]) | (A[15] & B[15] & ~C[15]);
+			
+			Carry = 0;
+			Low = 0;
+			Negative = 0;
+		end
 
-			ADDI:
-			begin
-				C = A + B;
-				Zero = (C == 0);
-					
-				Flag = (~A[15]&~B[15]&C[15]) | (A[15] & B[15] & ~C[15]);
-				
-				Carry = 0;
-				Low = 0;
-				Negative = 0;
-			end
+		ADDUI:
+		begin
+			{Carry, C} = A + B;
+			Zero = (C == 0);
+			
+			Flag = 0;
+			Low = 0;
+			Negative = 0;
+		end
 
-			ADDUI:
-			begin
-				{Carry, C} = A + B;
-				Zero = (C == 0);
-				
-				Flag = 0;
-				Low = 0;
-				Negative = 0;
-			end
+		//This operation can be deleted.
+		ADDC:
+		begin
+			C = A + B + Carry;
+			Zero = (C == 0);
+			
+			//If we keep, this needs to be changed.
+			Flag = (~A[15]&~B[15]&C[15]) | (A[15] & B[15] & ~C[15]);
+			
+			Carry = 0;
+			Low = 0;
+			Negative = 0;
+		end
 
-			//This operation can be deleted.
-			ADDC:
-			begin
-				C = A + B + Carry;
-				Zero = (C == 0);
-				
-				//If we keep, this needs to be changed.
-				Flag = (~A[15]&~B[15]&C[15]) | (A[15] & B[15] & ~C[15]);
-				
-				Carry = 0;
-				Low = 0;
-				Negative = 0;
-			end
+		ADDCU:
+		begin
+			{Carry, C} = A + B + Carry;
+			Zero = (C == 0);
+			
+			Flag = 0;
+			Low = 0;
+			Negative = 0;
+		end
 
-			ADDCU:
-			begin
-				{Carry, C} = A + B + Carry;
-				Zero = (C == 0);
-				
-				Flag = 0;
-				Low = 0;
-				Negative = 0;
-			end
+		ADDCUI:
+		begin
+			{Carry, C} = A + B + Carry;
+			Zero = (C == 0);
+			
+			Flag = 0;
+			Low = 0;
+			Negative = 0;
+		end
 
-			ADDCUI:
-			begin
-				{Carry, C} = A + B + Carry;
-				Zero = (C == 0);
-				
-				Flag = 0;
-				Low = 0;
-				Negative = 0;
-			end
+		//Can probly be deleted.
+		ADDCI:
+		begin
 
-			//Can probly be deleted.
-			ADDCI:
-			begin
+		end
 
-			end
+		SUB:
+		begin
+			C = A-B;
+			Zero = (C == 0);
+			
+			//Currently using -B[15], maybe a way to say D = -B[15], then use D.
+			Flag = (~A[15]&~(-B[15])&C[15]) | (A[15] & (-B[15]) & ~C[15]);
+			
+			Low = 0;
+			Carry = 0;
+			Negative = 0;
+		end
 
-			SUB:
-			begin
-				C = A-B;
-				Zero = (C == 0);
-				
-				//Currently using -B[15], maybe a way to say D = -B[15], then use D.
-				Flag = (~A[15]&~(-B[15])&C[15]) | (A[15] & (-B[15]) & ~C[15]);
-				
-				Low = 0;
-				Carry = 0;
-				Negative = 0;
-			end
+		SUBI:
+		begin
+			C = A-B;
+			Zero = (C == 0);
+			
+			//Currently using -B[15], maybe a way to say D = -B[15], then use D.
+			Flag = (~A[15]&~(-B[15])&C[15]) | (A[15] & (-B[15]) & ~C[15]);
+			
+			Low = 0;
+			Carry = 0;
+			Negative = 0;
+		end
 
-			SUBI:
-			begin
-				C = A-B;
-				Zero = (C == 0);
-				
-				//Currently using -B[15], maybe a way to say D = -B[15], then use D.
-				Flag = (~A[15]&~(-B[15])&C[15]) | (A[15] & (-B[15]) & ~C[15]);
-				
-				Low = 0;
-				Carry = 0;
-				Negative = 0;
-			end
+		CMP:
+		begin
+			Low = $signed(A)<$signed(B);
+		end
 
-			CMP:
-			begin
-				Low = $signed(A)<$signed(B);
-			end
+		CMPU:
+		begin
+			Low = A<B;
+		end
 
-			CMPU:
-			begin
-				Low = A<B;
-			end
+		CMPI:
+		begin
+			Low = $signed(A)<$signed(B);
+		end
 
-			CMPI:
-			begin
-				Low = $signed(A)<$signed(B);
-			end
+		CMPUI:
+		begin
+			Low = A<B;
+		end
 
-			CMPUI:
-			begin
-				Low = A<B;
-			end
+		AND:
+		begin
+			C = A&B;
+		end
 
-			AND:
-			begin
-				C = A&B;
-			end
+		OR:
+		begin
+			C = A|B;
+		end
 
-			OR:
-			begin
-				C = A|B;
-			end
+		XOR:
+		begin
+			C = A^B;
+		end
 
-			XOR:
-			begin
-				C = A^B;
-			end
+		NOT:
+		begin
+			C = !A;
+		end
 
-			NOT:
-			begin
-				C = !A;
-			end
+		LSH:
+		begin
+			C = A << B;
+		end
 
-			LSH:
-			begin
-				C = A << B;
-			end
+		LSHI:
+		begin
+			C = A << B;
+		end
 
-			LSHI:
-			begin
-				C = A << B;
-			end
+		RSH:
+		begin
+			C = A >> B;
+		end
 
-			RSH:
-			begin
-				C = A >> B;
-			end
+		RSHI:
+		begin
+			C = A >> B;
+		end
 
-			RSHI:
-			begin
-				C = A >> B;
-			end
+		ALSH:
+		begin
+			C = A <<< B;
+		end
 
-			ALSH:
-			begin
-				C = A <<< B;
-			end
+		ARSH:
+		begin
+			C = A >>> B;
+		end
 
-			ARSH:
-			begin
-				C = A >>> B;
-			end
+		NOP:
+		begin
+			C = 16'dx;
+			Carry = 1'bx;
+			Flag = 1'bx;
+			Low = 1'bx;
+			Negative = 1'bx;
+			Zero = 1'bx;
+		end
 
-			NOP:
-			begin
-				C = 16'dx;
-				Carry = 1'bx;
-				Flag = 1'bx;
-				Low = 1'bx;
-				Negative = 1'bx;
-				Zero = 1'bx;
-			end
-
-			default:
-			begin
-				C = 16'dx;
-				Carry = 1'bx;
-				Flag = 1'bx;
-				Low = 1'bx;
-				Negative = 1'bx;
-				Zero = 1'bx;
-			end
+		default:
+		begin
+			C = 16'dx;
+			Carry = 1'bx;
+			Flag = 1'bx;
+			Low = 1'bx;
+			Negative = 1'bx;
+			Zero = 1'bx;
+		end
 
 		endcase
 	end
