@@ -45,8 +45,8 @@ module ALU(
 			Flag = (~A[15]&~B[15]&C[15]) | (A[15] & B[15] & ~C[15]);
 			
 			Carry = 0;
-			Low = 0;
-			Negative = 0;
+			Low = A<B;
+			Negative = $signed(A)<$signed(B);
 		end
 
 		ADDU:
@@ -54,9 +54,9 @@ module ALU(
 			{Carry, C} = A + B;
 			Zero = (C == 0);
 			
+			Low = A<B;
+			Negative = $signed(A)<$signed(B);
 			Flag = 0;
-			Low = 0;
-			Negative = 0;
 		end
 
 		ADDI:
@@ -67,8 +67,8 @@ module ALU(
 			Flag = (~A[15]&~B[15]&C[15]) | (A[15] & B[15] & ~C[15]);
 			
 			Carry = 0;
-			Low = 0;
-			Negative = 0;
+			Low = A<B;
+			Negative = $signed(A)<$signed(B);
 		end
 
 		ADDUI:
@@ -77,8 +77,8 @@ module ALU(
 			Zero = (C == 0);
 			
 			Flag = 0;
-			Low = 0;
-			Negative = 0;
+			Low = A<B;
+			Negative = $signed(A)<$signed(B);
 		end
 
 		ADDCU:
@@ -87,8 +87,8 @@ module ALU(
 			Zero = (C == 0);
 			
 			Flag = 0;
-			Low = 0;
-			Negative = 0;
+			Low = A<B;
+			Negative = $signed(A)<$signed(B);
 		end
 
 		ADDCUI:
@@ -96,8 +96,8 @@ module ALU(
 			{Carry, C} = A + B + Carry;
 			Zero = (C == 0);
 			
-			Flag = 0;
-			Low = 0;
+			Flag = $signed(A)<$signed(B);
+			Low = A<B;
 			Negative = 0;
 		end
 
