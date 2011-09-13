@@ -80,7 +80,7 @@ module ALU(
 			Low = 0;
 			Negative = 0;
 		end
-		
+
 		ADDCU:
 		begin
 			{Carry, C} = A + B + Carry;
@@ -101,17 +101,28 @@ module ALU(
 			Negative = 0;
 		end
 
+		SUB:
+		begin
+			C = A-B;
+			Zero = (A == B);
+			Flag = (~A[15]&~(-B[15])&C[15]) | (A[15] & (-B[15]) & ~C[15]);
+			
+			Low = A<B;
+			Carry = 0;
+			Negative = $signed(A)<$signed(B);
+		end
+
 		SUBI:
 		begin
 			C = A-B;
-			Zero = (C == 0);
+			Zero = (A == B);
 			
 			//Currently using -B[15], maybe a way to say D = -B[15], then use D.
 			Flag = (~A[15]&~(-B[15])&C[15]) | (A[15] & (-B[15]) & ~C[15]);
 			
-			Low = 0;
+			Low = A<B;
 			Carry = 0;
-			Negative = 0;
+			Negative = $signed(A)<$signed(B);
 		end
 
 		CMP:
