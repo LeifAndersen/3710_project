@@ -31,7 +31,7 @@ module ALU(
 		output reg Negative,
 		output reg Zero
 	);
-
+	
 	parameter ADD      = 8'd0;
 	parameter ADDU     = 8'd1;
 	parameter ADDI     = 8'd2;
@@ -229,34 +229,70 @@ module ALU(
 			Carry = 1'bx;
 		end
 
-		LSH:
+		LSH: //Jon starts here.
 		begin
 			C = A << B;
+			Zero = (C==0);
+			
+			Low = 1'bx;
+			Negative = 1'bx;
+			Flag = 1'bx;
+			Carry = 1'bx;
 		end
 
 		LSHI:
 		begin
 			C = A << B;
+			Zero = (C==0);
+			
+			Low = 1'bx;
+			Negative = 1'bx;
+			Flag = 1'bx;
+			Carry = 1'bx;
 		end
 
 		RSH:
 		begin
 			C = A >> B;
+			Zero = (C==0);
+			
+			Low = 1'bx;
+			Negative = 1'bx;
+			Flag = 1'bx;
+			Carry = 1'bx;
 		end
 
 		RSHI:
 		begin
 			C = A >> B;
+			Zero = (C==0);
+			
+			Low = 1'bx;
+			Negative = 1'bx;
+			Flag = 1'bx;
+			Carry = 1'bx;
 		end
 
 		ALSH:
 		begin
 			C = A <<< B;
+			Zero = (C==0);
+			
+			Low = 1'bx;
+			Negative = 1'bx;
+			Flag = 1'bx;
+			Carry = 1'bx;
 		end
 
 		ARSH:
 		begin
 			C = A >>> B;
+			Zero = (C==0);
+			
+			Low = 1'bx;
+			Negative = 1'bx;
+			Flag = 1'bx;
+			Carry = 1'bx;
 		end
 
 		NOP:
