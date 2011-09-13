@@ -24,8 +24,9 @@ module ALU(
 		input [15:0] A,
 		input [15:0] B,
 		input [7:0] Opcode,
-		output reg Carry,
+		input CarryIn,
 		output reg [15:0] C,
+		output reg Carry,
 		output reg Flag,
 		output reg Low,
 		output reg Negative,
@@ -79,21 +80,7 @@ module ALU(
 			Low = 0;
 			Negative = 0;
 		end
-
-		//This operation can be deleted.
-		ADDC:
-		begin
-			C = A + B + Carry;
-			Zero = (C == 0);
-			
-			//If we keep, this needs to be changed.
-			Flag = (~A[15]&~B[15]&C[15]) | (A[15] & B[15] & ~C[15]);
-			
-			Carry = 0;
-			Low = 0;
-			Negative = 0;
-		end
-
+		
 		ADDCU:
 		begin
 			{Carry, C} = A + B + Carry;
@@ -114,25 +101,6 @@ module ALU(
 			Negative = 0;
 		end
 
-		//Can probly be deleted.
-		ADDCI:
-		begin
-
-		end
-
-		SUB:
-		begin
-			C = A-B;
-			Zero = (C == 0);
-			
-			//Currently using -B[15], maybe a way to say D = -B[15], then use D.
-			Flag = (~A[15]&~(-B[15])&C[15]) | (A[15] & (-B[15]) & ~C[15]);
-			
-			Low = 0;
-			Carry = 0;
-			Negative = 0;
-		end
-
 		SUBI:
 		begin
 			C = A-B;
@@ -148,73 +116,73 @@ module ALU(
 
 		CMP:
 		begin
-			Low = (A<B) ? 1'b1 : 1'b0;
-			Negative = ($signed(A)<$signed(B)) ? 1'b1 : 1'b0;
-			Zero = (A==B) ? 1'b1 : 1'b0;
-			Carry = 1'bx;
-			C = 16'bxxxxxxxxxxxxxxxx;
-			Flag = 1'dx;
+			Low = A<B;
+			Negative = $signed(A)<$signed(B);
+			Zero = A==B;
+			Carry = 1'b0;
+			C = 16'b0;
+			Flag = 1'd0;
 		end
 
 		CMPI:
 		begin
-			Low = (A<B) ? 1'b1 : 1'b0;
-			Negative = ($signed(A)<$signed(B)) ? 1'b1 : 1'b0;
-			Zero = (A==B) ? 1'b1 : 1'b0;
-			Flag = 1'dx;
-			Carry = 1'bx;
-			C = 16'bxxxxxxxxxxxxxxxx;
+			Low = A<B;
+			Negative = $signed(A)<$signed(B);
+			Zero = A==B;
+			Flag = 1'd0;
+			Carry = 1'b0;
+			C = 16'b0;
 		end
 
 		AND:
 		begin
 			C = A&B;
-			Zero = (A==B) ? 1'b1 : 1'b0;
-			Low = (A<B) ? 1'b1 : 1'b0;
-			Negative = ($signed(A)<$signed(B)) ? 1'b1 : 1'b0;
-			Flag = 1'bx;
-			Carry = 1'bx;
+			Zero = A==B;
+			Low = A<B;
+			Negative = $signed(A)<$signed(B);
+			Flag = 1'b0;
+			Carry = 1'b0;
 		end
 
 		OR:
 		begin
 			C = A|B;
-			Zero = (A==B) ? 1'b1 : 1'b0;
-			Low = (A<B) ? 1'b1 : 1'b0;
-			Negative = ($signed(A)<$signed(B)) ? 1'b1 : 1'b0;
-			Flag = 1'bx;
-			Carry = 1'bx;
+			Zero = A==B;
+			Low = A<B;
+			Negative = $signed(A)<$signed(B);
+			Flag = 1'b0;
+			Carry = 1'b0;
 		end
 
 		XOR:
 		begin
 			C = A^B;
-			Zero = (A==B) ? 1'b1 : 1'b0;
-			Low = (A<B) ? 1'b1 : 1'b0;
-			Negative = ($signed(A)<$signed(B)) ? 1'b1 : 1'b0;
-			Flag = 1'bx;
-			Carry = 1'bx;
+			Zero = A==B;
+			Low = A<B;
+			Negative = $signed(A)<$signed(B);
+			Flag = 1'b0;
+			Carry = 1'b0;
 		end
 
 		NOT:
 		begin
 			C = ~A;
-			Zero = (A==B) ? 1'b1 : 1'b0;
-			Low = (A<B) ? 1'b1 : 1'b0;
-			Negative = ($signed(A)<$signed(B)) ? 1'b1 : 1'b0;
-			Flag = 1'bx;
-			Carry = 1'bx;
+			Zero = A==B;
+			Low = A<B;
+			Negative = $signed(A)<$signed(B);
+			Flag = 1'b0;
+			Carry = 1'b0;
 		end
 
-		LSH: //Jon starts here.
+		LSH:
 		begin
 			C = A << B;
 			Zero = (C==0);
 			
-			Low = 1'bx;
-			Negative = 1'bx;
-			Flag = 1'bx;
-			Carry = 1'bx;
+			Low = 1'b0;
+			Negative = 1'b0;
+			Flag = 1'b0;
+			Carry = 1'b0;
 		end
 
 		LSHI:
@@ -222,10 +190,10 @@ module ALU(
 			C = A << B;
 			Zero = (C==0);
 			
-			Low = 1'bx;
-			Negative = 1'bx;
-			Flag = 1'bx;
-			Carry = 1'bx;
+			Low = 1'b0;
+			Negative = 1'b0;
+			Flag = 1'b0;
+			Carry = 1'b0;
 		end
 
 		RSH:
@@ -233,10 +201,10 @@ module ALU(
 			C = A >> B;
 			Zero = (C==0);
 			
-			Low = 1'bx;
-			Negative = 1'bx;
-			Flag = 1'bx;
-			Carry = 1'bx;
+			Low = 1'b0;
+			Negative = 1'b0;
+			Flag = 1'b0;
+			Carry = 1'b0;
 		end
 
 		RSHI:
@@ -244,52 +212,52 @@ module ALU(
 			C = A >> B;
 			Zero = (C==0);
 			
-			Low = 1'bx;
-			Negative = 1'bx;
-			Flag = 1'bx;
-			Carry = 1'bx;
+			Low = 1'b0;
+			Negative = 1'b0;
+			Flag = 1'b0;
+			Carry = 1'b0;
 		end
 
 		ALSH:
 		begin
-			C = A <<< B;
+			C = $signed(A) <<< B;
 			Zero = (C==0);
 			
-			Low = 1'bx;
-			Negative = 1'bx;
-			Flag = 1'bx;
-			Carry = 1'bx;
+			Low = 1'b0;
+			Negative = 1'b0;
+			Flag = 1'b0;
+			Carry = 1'b0;
 		end
 
 		ARSH:
 		begin
-			C = A >>> B;
+			C = $signed(A) >>> B;
 			Zero = (C==0);
 			
-			Low = 1'bx;
-			Negative = 1'bx;
-			Flag = 1'bx;
-			Carry = 1'bx;
+			Low = 1'b0;
+			Negative = 1'b0;
+			Flag = 1'b0;
+			Carry = 1'b0;
 		end
 
 		NOP:
 		begin
-			C = 16'dx;
-			Carry = 1'bx;
-			Flag = 1'bx;
-			Low = 1'bx;
-			Negative = 1'bx;
-			Zero = 1'bx;
+			C = 16'd0;
+			Carry = 1'b0;
+			Flag = 1'b0;
+			Low = 1'b0;
+			Negative = 1'b0;
+			Zero = 1'b0;
 		end
 
 		default:
 		begin
-			C = 16'dx;
-			Carry = 1'bx;
-			Flag = 1'bx;
-			Low = 1'bx;
-			Negative = 1'bx;
-			Zero = 1'bx;
+			C = 16'd0;
+			Carry = 1'b0;
+			Flag = 1'b0;
+			Low = 1'b0;
+			Negative = 1'b0;
+			Zero = 1'b0;
 		end
 
 		endcase
