@@ -148,7 +148,7 @@ module ALU(
 		AND:
 		begin
 			C = A&B;
-			Zero = A==B;
+			Zero = (C==0);
 			Low = A<B;
 			Negative = $signed(A)<$signed(B);
 			Flag = 1'b0;
@@ -158,7 +158,7 @@ module ALU(
 		OR:
 		begin
 			C = A|B;
-			Zero = A==B;
+			Zero = (C==0);
 			Low = A<B;
 			Negative = $signed(A)<$signed(B);
 			Flag = 1'b0;
@@ -263,10 +263,10 @@ module ALU(
 
 		MULT:
 		begin
-			
+			C = A*B;
 		end
 
-		MULTI
+		MULTI:
 		begin
 		
 		end
