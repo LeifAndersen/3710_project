@@ -43,20 +43,18 @@ module ALU(
 	parameter SUB      = 8'd8;
 	parameter SUBI     = 8'd9;
 	parameter CMP      = 8'd10;
-	parameter CMPU     = 8'd11;
-	parameter CMPI     = 8'd12;
-	parameter CMPUI    = 8'd13;
-	parameter AND      = 8'd14;
-	parameter OR       = 8'd15;
-	parameter XOR      = 8'd16;
-	parameter NOT      = 8'd17;
-	parameter LSH      = 8'd18;
-	parameter LSHI     = 8'd19;
-	parameter RSH      = 8'd20;
-	parameter RSHI     = 8'd21;
-	parameter ALSH     = 8'd22;
-	parameter ARSH     = 8'd23;
-	parameter NOP      = 8'd24;
+	parameter CMPI     = 8'd11;
+	parameter AND      = 8'd12;
+	parameter OR       = 8'd13;
+	parameter XOR      = 8'd14;
+	parameter NOT      = 8'd15;
+	parameter LSH      = 8'd16;
+	parameter LSHI     = 8'd17;
+	parameter RSH      = 8'd18;
+	parameter RSHI     = 8'd19;
+	parameter ALSH     = 8'd20;
+	parameter ARSH     = 8'd21;
+	parameter NOP      = 8'd22;
 
 
 	always@(*) begin
@@ -173,22 +171,20 @@ module ALU(
 
 		CMP:
 		begin
-			Low = $signed(A)<$signed(B);
-		end
-
-		CMPU:
-		begin
-			Low = A<B;
+			Low = (A<B) ? 1'b1 : 1'b0;
+			Negative = ($signed(A)<$signed(B)) ? 1'b1 : 1'b0;
+			Zero = (A==B) ? 1'b1 : 1'b0;
+			Carry = 1'bx;
+			C = 16'bxxxxxxxxxxxxxxxx;
 		end
 
 		CMPI:
 		begin
-			Low = $signed(A)<$signed(B);
-		end
-
-		CMPUI:
-		begin
-			Low = A<B;
+			Low = ($signed(A)<$signed(B)) ? 1'b1 : 1'b0;
+			Flag = 1'dx;
+			Zero = (A==B) ? 1'b1 : 1'b0;
+			Carry = 1'bx;
+			C = 16'bxxxxxxxxxxxxxxxx;
 		end
 
 		AND:
