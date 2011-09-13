@@ -370,7 +370,7 @@ module ALU_tests(
 		B = 16'd47;
 		#10
 		if (!((C) == (A - B)) || !({Carry,Flag,Low,Negative,Zero} == 5'b00010)) begin
-			$display("Wrong for A: %b + B: %b, C:%b", A, B, C);
+			$display("Wrong for Opcode: %b, A: %b - B: %b, C:%b", Opcode, A, B, C);
 		end
 
         // +/+ (0)
@@ -378,7 +378,7 @@ module ALU_tests(
         B = 16'h000F;
 		#10
 		if (!((C) == (A - B)) || !({Carry,Flag,Low,Negative,Zero} == 5'b00001)) begin
-			$display("Wrong for A: %b + B: %b, C:%b", A, B, C);
+			$display("Wrong for Opcode: %b, A: %b - B: %b, C:%b", Opcode, A, B, C);
 		end
 
 		// -/-
@@ -386,7 +386,7 @@ module ALU_tests(
 		B = 16'd40;
 		#10
 		if (!((C) == (A - B)) || !({Carry,Flag,Low,Negative,Zero} == 5'b00000)) begin
-			$display("Wrong for A: %b + B: %b, C:%b", A, B, C);
+			$display("Wrong for Opcode: %b, A: %b - B: %b, C:%b", Opcode, A, B, C);
 		end
 
 		// -/- (0)
@@ -394,7 +394,7 @@ module ALU_tests(
 		B = 16'hF0F1;
 		#10
 		if (!((C) == (A - B)) || !({Carry,Flag,Low,Negative,Zero} == 5'b00001)) begin
-			$display("Wrong for A: %b + B: %b, C:%b", A, B, C);
+			$display("Wrong for Opcode: %b, A: %b - B: %b, C:%b", Opcode, A, B, C);
 		end
 
 		// +/- (OF)
@@ -402,7 +402,7 @@ module ALU_tests(
 		B = 16'hFFFF;
 		#10
 		if (!((C) == (A - B)) || !({Carry,Flag,Low,Negative,Zero} == 5'b01000)) begin
-			$display("Wrong for A: %b + B: %b, C:%b", A, B, C);
+			$display("Wrong for Opcode: %b, A: %b - B: %b, C:%b", Opcode, A, B, C);
 		end
 
 		// -/+ (OF)
@@ -410,7 +410,7 @@ module ALU_tests(
 		B = 16'h0001;
 		#10
 		if (!((C) == (A - B)) && !({Carry,Flag,Low,Negative,Zero} == 5'b01000)) begin
-			$display("Wrong for A: %b + B: %b, C:%b", A, B, C);
+			$display("Wrong for Opcode: %b, A: %b - B: %b, C:%b", Opcode, A, B, C);
 		end
 
 		/////////////////////////////////////////////////////////////////////////////
@@ -423,7 +423,7 @@ module ALU_tests(
 		B = 16'd47;
 		#10
 		if (!((C) == (A - B)) || !({Carry,Flag,Low,Negative,Zero} == 5'b00010)) begin
-			$display("Wrong for A: %b + B: %b, C:%b", A, B, C);
+			$display("Wrong for Opcode: %b, A: %b - B: %b, C:%b", Opcode, A, B, C);
 		end
 
         // +/+ (0)
@@ -431,7 +431,7 @@ module ALU_tests(
         B = 16'h000F;
 		#10
 		if (!((C) == (A - B)) || !({Carry,Flag,Low,Negative,Zero} == 5'b00001)) begin
-			$display("Wrong for A: %b + B: %b, C:%b", A, B, C);
+			$display("Wrong for Opcode: %b, A: %b - B: %b, C:%b", Opcode, A, B, C);
 		end
 
 		// -/-
@@ -439,7 +439,7 @@ module ALU_tests(
 		B = 16'd40;
 		#10
 		if (!((C) == (A - B)) || !({Carry,Flag,Low,Negative,Zero} == 5'b00000)) begin
-			$display("Wrong for A: %b + B: %b, C:%b", A, B, C);
+			$display("Wrong for Opcode: %b, A: %b - B: %b, C:%b", Opcode, A, B, C);
 		end
 
 		// -/- (0)
@@ -447,7 +447,7 @@ module ALU_tests(
 		B = 16'hF0F1;
 		#10
 		if (!((C) == (A - B)) || !({Carry,Flag,Low,Negative,Zero} == 5'b00001)) begin
-			$display("Wrong for A: %b + B: %b, C:%b", A, B, C);
+			$display("Wrong for Opcode: %b, A: %b - B: %b, C:%b", Opcode, A, B, C);
 		end
 
 		// +/- (OF)
@@ -455,7 +455,7 @@ module ALU_tests(
 		B = 16'hFFFF;
 		#10
 		if (!((C) == (A - B)) || !({Carry,Flag,Low,Negative,Zero} == 5'b01000)) begin
-			$display("Wrong for A: %b + B: %b, C:%b", A, B, C);
+			$display("Wrong for Opcode: %b, A: %b - B: %b, C:%b", Opcode, A, B, C);
 		end
 
 		// -/+ (OF)
@@ -463,7 +463,278 @@ module ALU_tests(
 		B = 16'h0001;
 		#10
 		if (!((C) == (A - B)) && !({Carry,Flag,Low,Negative,Zero} == 5'b01000)) begin
-			$display("Wrong for A: %b + B: %b, C:%b", A, B, C);
+			$display("Wrong for Opcode: %b, A: %b - B: %b, C:%b", Opcode, A, B, C);
+		end
+
+		/////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////
+
+		Opcode = CMP;
+		// same
+		A = 16'd45;
+		B = 16'd45;
+		#10
+		if (!(C == 0) || !({Carry,Flag,Low,Negative,Zero} == 5'b00001)) begin
+			$display("CMP Wrong for A: %b, B: %b, C:%b", A, B, C);
+		end
+
+        // A > B
+		A = 16'h0FF1;
+        B = 16'h000F;
+		#10
+		if (!(C == 0) || !({Carry,Flag,Low,Negative,Zero} == 5'b00000)) begin
+			$display("CMP Wrong for A: %b, B: %b, C:%b", A, B, C);
+		end
+
+		// A < B
+		A = 16'd2;
+		B = 16'd4000;
+		#10
+		if (!(C == 0) || !({Carry,Flag,Low,Negative,Zero} == 5'b00100)) begin
+			$display("CMP Wrong for A: %b, B: %b, C:%b", A, B, C);
+		end
+
+		/////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////
+
+		Opcode = CMPI;
+		// same
+		A = 16'd45;
+		B = 16'd45;
+		#10
+		if (!(C == 0) || !({Carry,Flag,Low,Negative,Zero} == 5'b00001)) begin
+			$display("CMP Wrong for A: %b, B: %b, C:%b", A, B, C);
+		end
+
+        // A > B
+		A = 16'h0FF1;
+        B = 16'h000F;
+		#10
+		if (!(C == 0) || !({Carry,Flag,Low,Negative,Zero} == 5'b00000)) begin
+			$display("CMP Wrong for A: %b, B: %b, C:%b", A, B, C);
+		end
+
+		// A < B
+		A = 16'd2;
+		B = 16'd4000;
+		#10
+		if (!(C == 0) || !({Carry,Flag,Low,Negative,Zero} == 5'b00100)) begin
+			$display("CMP Wrong for A: %b, B: %b, C:%b", A, B, C);
+		end
+
+		/////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////
+
+        Opcode = AND;
+		A = 16'd45;
+		B = 16'd45;
+		#10
+		if (!(C == (A & B)) || !({Carry,Flag,Low,Negative,Zero} == 5'b00000)) begin
+			$display("Wrong for A: %b AND B: %b, C:%b", A, B, C);
+		end
+
+		A = 16'h0FF1;
+        B = 16'h000F;
+		#10
+		if (!(C == (A & B)) || !({Carry,Flag,Low,Negative,Zero} == 5'b00000)) begin
+			$display("Wrong for A: %b AND B: %b, C:%b", A, B, C);
+		end
+
+		A = 16'd2000;
+		B = 16'd4000;
+		#10
+		if (!(C == (A & B)) || !({Carry,Flag,Low,Negative,Zero} == 5'b00000)) begin
+			$display("Wrong for A: %b AND B: %b, C:%b", A, B, C);
+		end
+
+
+
+		/////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////
+
+        Opcode = OR;
+		A = 16'd45;
+		B = 16'd45;
+		#10
+		if (!(C == (A | B)) || !({Carry,Flag,Low,Negative,Zero} == 5'b00000)) begin
+			$display("Wrong for A: %b OR B: %b, C:%b", A, B, C);
+		end
+
+		A = 16'h0FF1;
+        B = 16'h000F;
+		#10
+		if (!(C == (A | B)) || !({Carry,Flag,Low,Negative,Zero} == 5'b00000)) begin
+			$display("Wrong for A: %b OR B: %b, C:%b", A, B, C);
+		end
+
+		A = 16'd2000;
+		B = 16'd4000;
+		#10
+		if (!(C == (A | B)) || !({Carry,Flag,Low,Negative,Zero} == 5'b00000)) begin
+			$display("Wrong for A: %b OR B: %b, C:%b", A, B, C);
+		end
+
+		/////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////
+
+        Opcode = XOR;
+		A = 16'd45;
+		B = 16'd45;
+		#10
+		if (!(C == (A ^ B)) || !({Carry,Flag,Low,Negative,Zero} == 5'b00000)) begin
+			$display("Wrong for A: %b XOR B: %b, C:%b", A, B, C);
+		end
+
+		A = 16'h0FF1;
+        B = 16'h000F;
+		#10
+		if (!(C == (A ^ B)) || !({Carry,Flag,Low,Negative,Zero} == 5'b00000)) begin
+			$display("Wrong for A: %b XOR B: %b, C:%b", A, B, C);
+		end
+
+		A = 16'd2000;
+		B = 16'd4000;
+		#10
+		if (!(C == (A ^ B)) || !({Carry,Flag,Low,Negative,Zero} == 5'b00000)) begin
+			$display("Wrong for A: %b XOR B: %b, C:%b", A, B, C);
+		end
+
+		/////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////
+
+        Opcode = LSH;
+		A = 16'h4444;
+		B = 16'd4;
+		#10
+		if (!(C == 16'h4440) || !({Carry,Flag,Low,Negative,Zero} == 5'b00000)) begin
+			$display("Wrong for A: %b LSH B: %b, C:%b", A, B, C);
+		end
+
+        A = 16'h4444;
+		B = 16'd1;
+		#10
+		if (!(C == 16'h8888) || !({Carry,Flag,Low,Negative,Zero} == 5'b00000)) begin
+			$display("Wrong for A: %b LSH B: %b, C:%b", A, B, C);
+		end
+
+		/////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////
+
+        Opcode = LSHI;
+		A = 16'h4444;
+		B = 16'd4;
+		#10
+		if (!(C == 16'h4440) || !({Carry,Flag,Low,Negative,Zero} == 5'b00000)) begin
+			$display("Wrong for A: %b LSHI B: %b, C:%b", A, B, C);
+		end
+
+        A = 16'h4444;
+		B = 16'd1;
+		#10
+		if (!(C == 16'h8888) || !({Carry,Flag,Low,Negative,Zero} == 5'b00000)) begin
+			$display("Wrong for A: %b LSHI B: %b, C:%b", A, B, C);
+		end
+
+		/////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////
+
+        Opcode = RSH;
+		A = 16'h4444;
+		B = 16'd4;
+		#10
+		if (!(C == 16'h0444) || !({Carry,Flag,Low,Negative,Zero} == 5'b00000)) begin
+			$display("Wrong for A: %b RSH B: %b, C:%b", A, B, C);
+		end
+
+        A = 16'h4444;
+		B = 16'd1;
+		#10
+		if (!(C == 16'h2222) || !({Carry,Flag,Low,Negative,Zero} == 5'b00000)) begin
+			$display("Wrong for A: %b RSH B: %b, C:%b", A, B, C);
+		end
+
+		/////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////
+
+        Opcode = RSHI;
+		A = 16'h4444;
+		B = 16'd4;
+		#10
+		if (!(C == 16'h0444) || !({Carry,Flag,Low,Negative,Zero} == 5'b00000)) begin
+			$display("Wrong for A: %b RSHI B: %b, C:%b", A, B, C);
+		end
+
+        A = 16'h4444;
+		B = 16'd1;
+		#10
+		if (!(C == 16'h2222) || !({Carry,Flag,Low,Negative,Zero} == 5'b00000)) begin
+			$display("Wrong for A: %b RSHI B: %b, C:%b", A, B, C);
+		end
+
+		/////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////
+
+        Opcode = ALSH;
+		A = 16'h4444;
+		B = 16'd4;
+		#10
+		if (!(C == 16'h4440) || !({Carry,Flag,Low,Negative,Zero} == 5'b00000)) begin
+			$display("Wrong for A: %b ALSH B: %b, C:%b", A, B, C);
+		end
+
+        A = 16'h1111;
+		B = 16'd1;
+		#10
+		if (!(C == 16'h2223) || !({Carry,Flag,Low,Negative,Zero} == 5'b00000)) begin
+			$display("Wrong for A: %b ALSH B: %b, C:%b", A, B, C);
+		end
+
+		/////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////
+
+        Opcode = ARSH;
+		A = 16'h4444;
+		B = 16'd4;
+		#10
+		if (!(C == 16'h0444) || !({Carry,Flag,Low,Negative,Zero} == 5'b00000)) begin
+			$display("Wrong for A: %b ARSH B: %b, C:%b", A, B, C);
+		end
+
+        A = 16'h8888;
+		B = 16'd1;
+		#10
+		if (!(C == 16'hD222) || !({Carry,Flag,Low,Negative,Zero} == 5'b00000)) begin
+			$display("Wrong for A: %b ARSH B: %b, C:%b", A, B, C);
+		end
+
+		/////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////
+
+        Opcode = NOP;
+		A = 16'h4444;
+		B = 16'd4;
+		#10
+		if (!(C == 0) || !({Carry,Flag,Low,Negative,Zero} == 5'b00000)) begin
+			$display("Wrong for A: %b NOP B: %b, C:%b", A, B, C);
+		end
+
+        A = 16'h8888;
+		B = 16'd1;
+		#10
+		if (!(C == 0) || !({Carry,Flag,Low,Negative,Zero} == 5'b00000)) begin
+			$display("Wrong for A: %b NOP B: %b, C:%b", A, B, C);
 		end
 
 		$finish(2);
