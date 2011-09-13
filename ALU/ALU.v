@@ -261,6 +261,16 @@ module ALU(
 			Zero = 1'b0;
 		end
 
+		MULT:
+		begin
+			
+		end
+
+		MULTI
+		begin
+		
+		end
+
 		default:
 		begin
 			C = 16'd0;
