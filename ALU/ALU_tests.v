@@ -60,17 +60,9 @@ module ALU_tests(
 		CarryIn = 0;
 		Opcode = 2'b11;
 
-		//Random simulation
-        /*for( i = 0; i< 10; i = 1+ 1)
-		begin
-			#10
-			A = $random % 16;
-			B = $random %16;
-		end*/
-
 		// Edge Cases
 		// ADD
-		        Opcode = ADD;
+		Opcode = ADD;
 		// +/-
 		A = 16'd45;
 		B = 16'hFF00;
@@ -505,7 +497,7 @@ module ALU_tests(
 		B = 16'd45;
 		#10
 		if (!(C == 0) || !({Carry,Flag,Low,Negative,Zero} == 5'b00001)) begin
-			$display("CMP Wrong for A: %b, B: %b, C:%b", A, B, C);
+			$display("CMPI Wrong for A: %b, B: %b, C:%b", A, B, C);
 		end
 
         // A > B
@@ -513,7 +505,7 @@ module ALU_tests(
         B = 16'h000F;
 		#10
 		if (!(C == 0) || !({Carry,Flag,Low,Negative,Zero} == 5'b00000)) begin
-			$display("CMP Wrong for A: %b, B: %b, C:%b", A, B, C);
+			$display("CMPI Wrong for A: %b, B: %b, C:%b", A, B, C);
 		end
 
 		// A < B
@@ -521,7 +513,7 @@ module ALU_tests(
 		B = 16'd4000;
 		#10
 		if (!(C == 0) || !({Carry,Flag,Low,Negative,Zero} == 5'b00100)) begin
-			$display("CMP Wrong for A: %b, B: %b, C:%b", A, B, C);
+			$display("CMPI Wrong for A: %b, B: %b, C:%b", A, B, C);
 		end
 
 		/////////////////////////////////////////////////////////////////////////////
@@ -714,7 +706,7 @@ module ALU_tests(
         A = 16'h8888;
 		B = 16'd1;
 		#10
-		if (!(C == 16'hD222) || !({Carry,Flag,Low,Negative,Zero} == 5'b00000)) begin
+		if (!(C == 16'hC222) || !({Carry,Flag,Low,Negative,Zero} == 5'b00000)) begin
 			$display("Wrong for A: %b ARSH B: %b, C:%b", A, B, C);
 		end
 
