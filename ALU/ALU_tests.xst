@@ -1,6 +1,5 @@
-set -tmpdir "C:/Users/Daniel/3710/ALU/xst/projnav.tmp"
-set -xsthdpdir "C:/Users/Daniel/3710/ALU/xst"
+set -tmpdir "U:/3710/3710/ALU/xst/projnav.tmp"
+set -xsthdpdir "U:/3710/3710/ALU/xst"
 elaborate
--lso "C:/Users/Daniel/3710/ALU/ALU_tests.lso"
 -ifn ALU_tests.prj
 -ifmt mixed

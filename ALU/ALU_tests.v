@@ -21,6 +21,8 @@
 module ALU_tests(
     );
 
+	`include "opcodesLOL.v"
+
 	// Inputs
 	reg [15:0] A;
 	reg [15:0] B;
@@ -65,13 +67,62 @@ module ALU_tests(
 
 		// Edge Cases
 		// ADD
-
-
-		// ADDU
-
-
-		// SUB
-
+		Opcode = ADD;
+		A = 16'b45;
+		B = 16'hFF00;
+		if (!((C) == (A + B)) && !({Carry,Flag,Low,Negative,Zero} == 5'b00010)) begin
+			$display("Wrong for A: %b + B: %b, C:%b", A, B, C);
+		end
+		#10
+		
+		A = 16'b45;
+		B = 16'hFF00;
+		if (!((C) == (A + B)) && !({Carry,Flag,Low,Negative,Zero} == 5'b00010)) begin
+			$display("Wrong for A: %b + B: %b, C:%b", A, B, C);
+		end
+		#10
+		
+		A = 16'b45;
+		B = 16'hFF00;
+		if (!((C) == (A + B)) && !({Carry,Flag,Low,Negative,Zero} == 5'b00010)) begin
+			$display("Wrong for A: %b + B: %b, C:%b", A, B, C);
+		end
+		#10
+		
+		A = 16'b45;
+		B = 16'hFF00;
+		if (!((C) == (A + B)) && !({Carry,Flag,Low,Negative,Zero} == 5'b00010)) begin
+			$display("Wrong for A: %b + B: %b, C:%b", A, B, C);
+		end
+		#10
+		
+		A = 16'b45;
+		B = 16'hFF00;
+		if (!((C) == (A + B)) && !({Carry,Flag,Low,Negative,Zero} == 5'b00010)) begin
+			$display("Wrong for A: %b + B: %b, C:%b", A, B, C);
+		end
+		#10
+		
+		A = 16'b45;
+		B = 16'hFF00;
+		if (!((C) == (A + B)) && !({Carry,Flag,Low,Negative,Zero} == 5'b00010)) begin
+			$display("Wrong for A: %b + B: %b, C:%b", A, B, C);
+		end
+		#10
+		
+		A = 16'b45;
+		B = 16'hFF00;
+		if (!((C) == (A + B)) && !({Carry,Flag,Low,Negative,Zero} == 5'b00010)) begin
+			$display("Wrong for A: %b + B: %b, C:%b", A, B, C);
+		end
+		#10
+		
+		A = 16'b45;
+		B = 16'hFF00;
+		if (!((C) == (A + B)) && !({Carry,Flag,Low,Negative,Zero} == 5'b00010)) begin
+			$display("Wrong for A: %b + B: %b, C:%b", A, B, C);
+		end
+		#10
 
 		$finish(2);
 
