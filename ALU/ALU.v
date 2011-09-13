@@ -263,7 +263,7 @@ module ALU(
 
 		ARSH:
 		begin
-			C = &signed(A) >>> B;
+			C = $signed(A) >>> B;
 			Zero = (C==0);
 			
 			Low = 1'bx;
