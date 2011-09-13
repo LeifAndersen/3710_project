@@ -116,9 +116,9 @@ module ALU(
 
 		CMP:
 		begin
-			Low = (A<B) ? 1'b1 : 1'b0;
-			Negative = ($signed(A)<$signed(B)) ? 1'b1 : 1'b0;
-			Zero = (A==B) ? 1'b1 : 1'b0;
+			Low = A<B;
+			Negative = $signed(A)<$signed(B);
+			Zero = A==B;
 			Carry = 1'b0;
 			C = 16'b0;
 			Flag = 1'd0;
@@ -126,9 +126,9 @@ module ALU(
 
 		CMPI:
 		begin
-			Low = (A<B) ? 1'b1 : 1'b0;
-			Negative = ($signed(A)<$signed(B)) ? 1'b1 : 1'b0;
-			Zero = (A==B) ? 1'b1 : 1'b0;
+			Low = A<B;
+			Negative = $signed(A)<$signed(B);
+			Zero = A==B;
 			Flag = 1'd0;
 			Carry = 1'b0;
 			C = 16'b0;
@@ -137,9 +137,9 @@ module ALU(
 		AND:
 		begin
 			C = A&B;
-			Zero = (A==B) ? 1'b1 : 1'b0;
-			Low = (A<B) ? 1'b1 : 1'b0;
-			Negative = ($signed(A)<$signed(B)) ? 1'b1 : 1'b0;
+			Zero = A==B;
+			Low = A<B;
+			Negative = $signed(A)<$signed(B);
 			Flag = 1'b0;
 			Carry = 1'b0;
 		end
@@ -147,9 +147,9 @@ module ALU(
 		OR:
 		begin
 			C = A|B;
-			Zero = (A==B) ? 1'b1 : 1'b0;
-			Low = (A<B) ? 1'b1 : 1'b0;
-			Negative = ($signed(A)<$signed(B)) ? 1'b1 : 1'b0;
+			Zero = A==B;
+			Low = A<B;
+			Negative = $signed(A)<$signed(B);
 			Flag = 1'b0;
 			Carry = 1'b0;
 		end
@@ -157,9 +157,9 @@ module ALU(
 		XOR:
 		begin
 			C = A^B;
-			Zero = (A==B) ? 1'b1 : 1'b0;
-			Low = (A<B) ? 1'b1 : 1'b0;
-			Negative = ($signed(A)<$signed(B)) ? 1'b1 : 1'b0;
+			Zero = A==B;
+			Low = A<B;
+			Negative = $signed(A)<$signed(B);
 			Flag = 1'b0;
 			Carry = 1'b0;
 		end
@@ -167,9 +167,9 @@ module ALU(
 		NOT:
 		begin
 			C = ~A;
-			Zero = (A==B) ? 1'b1 : 1'b0;
-			Low = (A<B) ? 1'b1 : 1'b0;
-			Negative = ($signed(A)<$signed(B)) ? 1'b1 : 1'b0;
+			Zero = A==B;
+			Low = A<B;
+			Negative = $signed(A)<$signed(B);
 			Flag = 1'b0;
 			Carry = 1'b0;
 		end
@@ -220,7 +220,7 @@ module ALU(
 
 		ALSH:
 		begin
-			C = A <<< B;
+			C = $signed(A) <<< B;
 			Zero = (C==0);
 			
 			Low = 1'b0;
