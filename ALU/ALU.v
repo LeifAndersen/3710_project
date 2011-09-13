@@ -24,8 +24,9 @@ module ALU(
 		input [15:0] A,
 		input [15:0] B,
 		input [7:0] Opcode,
-		output reg Carry,
+		input CarryIn,
 		output reg [15:0] C,
+		output reg Carry,
 		output reg Flag,
 		output reg Low,
 		output reg Negative,
@@ -173,7 +174,7 @@ module ALU(
 			Carry = 1'b0;
 		end
 
-		LSH: //Jon starts here.
+		LSH:
 		begin
 			C = A << B;
 			Zero = (C==0);
