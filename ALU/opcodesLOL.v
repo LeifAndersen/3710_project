@@ -19,3 +19,5 @@
 	parameter ALSH     = 8'd18;
 	parameter ARSH     = 8'd19;
 	parameter NOP      = 8'd20;
+	parameter MULT     = 8'd21;
+	parameter MULTI    = 8'd22;
