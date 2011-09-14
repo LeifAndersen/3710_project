@@ -70,7 +70,7 @@ module ALU_tests(
 		flags = 5'b00010;
 		#10
 		if (!((C) == (A + B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b\n\nExpected %b, but got %b.\n\nExpected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         // -/+
