@@ -8,5 +8,12 @@
 <!-- Copyright (c) 1995-2010 Xilinx, Inc.  All rights reserved.    -->
 
 <messages>
+<msg type="info" file="ProjectMgmt" num="1062" ><arg fmt="%s" index="1">Parsing Verilog file &quot;C:/Users/Daniel/3710/ALU/ALU_tests.v&quot; into library work</arg>
+</msg>
+
+<msg type="info" file="ProjectMgmt" num="1065" >&quot;<arg fmt="%s" index="1">C:/Users/Daniel/3710/ALU/ALU_tests.v</arg>&quot; Line <arg fmt="%d" index="2">24</arg>. <arg fmt="%s" index="3">Include file found: &apos;C:/Users/Daniel/3710/ALU/opcodesLOL.v&apos; in file &quot;C:/Users/Daniel/3710/ALU/ALU_tests.v&quot; line 24
+</arg>
+</msg>
+
 </messages>
 

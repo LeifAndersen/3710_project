@@ -70,9 +70,7 @@ module ALU_tests(
 		flags = 5'b00010;
 		#10
 		if (!((C) == (A + B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         // -/+
@@ -81,9 +79,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Lo
         flags = 5'b00000;
 		#10
 		if (!((C) == (A + B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// TMin/Tmax
@@ -92,9 +88,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Lo
 		flags = 5'b00010;
 		#10
 		if (!((C) == (A + B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// TMax/Tmin
@@ -103,9 +97,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Lo
 		flags = 5'b00010;
 		#10
 		if (!((C) == (A + B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         // TMax/1
@@ -114,9 +106,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Lo
 		flags = 5'b01010;
 		#10
 		if (!((C) == (A + B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// TMin/0
@@ -125,9 +115,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Lo
 		flags = 5'b00010;
 		#10
 		if (!((C) == (A + B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// -/-
@@ -136,9 +124,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Lo
 		flags = 5'b00010;
 		#10
 		if (!((C) == (A + B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// +/+
@@ -147,9 +133,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Lo
 		flags = 5'b00010;
 		#10
 		if (!((C) == (A + B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		/////////////////////////////////////////////////////////////////////////////
@@ -163,9 +147,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Lo
 		flags = b00010;
 		#10
 		if (!((C) == (A + B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         // -/+
@@ -174,9 +156,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Lo
 		flags = b00000;
 		#10
 		if (!((C) == (A + B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// TMin/Tmax
@@ -185,9 +165,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Lo
 		flags = b00010;
 		#10
 		if (!((C) == (A + B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// TMax/Tmin
@@ -196,9 +174,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Lo
 		flags = b00010;
 		#10
 		if (!((C) == (A + B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         // TMax/1
@@ -207,9 +183,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Lo
 		flags = b01010;
 		#10
 		if (!((C) == (A + B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// TMin/0
@@ -218,9 +192,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Lo
 		flags = b00010;
 		#10
 		if (!((C) == (A + B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// -/-
@@ -229,9 +201,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Lo
 		flags = b00010;
 		#10
 		if (!((C) == (A + B)) && !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// +/+
@@ -240,9 +210,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Lo
 		flags = b00010;
 		#10
 		if (!((C) == (A + B)) && !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		/////////////////////////////////////////////////////////////////////////////
@@ -256,9 +224,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Lo
 		flags = b00000;
 		#10
 		if (!((C) == (A + B)) && !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// TMax/0
@@ -267,9 +233,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Lo
 		flags = b00000;
 		#10
 		if (!((C) == (A + B)) && !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         // TMax/1
@@ -278,9 +242,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Lo
 		flags = b10000;
 		#10
 		if (!((C) == (A + B)) && !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// 1/TMax
@@ -289,9 +251,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Lo
 		flags = b01000;
 		#10
 		if (!((C) == (A + B)) && !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		/////////////////////////////////////////////////////////////////////////////
@@ -305,9 +265,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Lo
 		flags = b00000;
 		#10
 		if (!((C) == (A + B)) && !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// TMax/0
@@ -316,9 +274,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Lo
 		flags = b00000;
 		#10
 		if (!((C) == (A + B)) && !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         // TMax/1
@@ -327,9 +283,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Lo
 		flags = b10000;
 		#10
 		if (!((C) == (A + B)) && !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// 1/TMax
@@ -338,9 +292,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Lo
 		flags = b01000;
 		#10
 		if (!((C) == (A + B)) && !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		/////////////////////////////////////////////////////////////////////////////
@@ -355,9 +307,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Lo
 		flags = b00000;
 		#10
 		if (!((C) == (A + B + CarryIn)) && !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// TMax/0
@@ -367,9 +317,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Lo
 		flags = b10000;
 		#10
 		if (!((C) == (A + B + CarryIn)) && !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         // TMax/1
@@ -379,9 +327,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Lo
 		flags = b10000;
 		#10
 		if (!((C) == (A + B + CarryIn)) && !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// 1/TMax
@@ -391,9 +337,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Lo
 		flags = b01000;
 		#10
 		if (!((C) == (A + B + CarryIn)) && !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		/////////////////////////////////////////////////////////////////////////////
@@ -408,9 +352,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Lo
 		flags = b00000;
 		#10
 		if (!((C) == (A + B + CarryIn)) && !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// TMax/0
@@ -420,9 +362,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Lo
 		flags = b10000;
 		#10
 		if (!((C) == (A + B + CarryIn)) && !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         // TMax/1
@@ -432,9 +372,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Lo
 		flags = b10000;
 		#10
 		if (!((C) == (A + B + CarryIn)) && !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// 1/TMax
@@ -444,9 +382,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Lo
 		flags = b01000;
 		#10
 		if (!((C) == (A + B + CarryIn)) && !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b + B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		/////////////////////////////////////////////////////////////////////////////
@@ -460,9 +396,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Lo
 		flags = b00010;
 		#10
 		if (!((C) == (A - B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b - B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b - B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         // +/+ (0)
@@ -471,9 +405,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Lo
 		flags = b00001;
 		#10
 		if (!((C) == (A - B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b - B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b - B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// -/-
@@ -482,9 +414,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Lo
 		flags = b00000;
 		#10
 		if (!((C) == (A - B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b - B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b - B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// -/- (0)
@@ -493,9 +423,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Lo
 		flags = b00001;
 		#10
 		if (!((C) == (A - B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b - B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b - B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// +/- (OF)
@@ -504,9 +432,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Lo
 		flags = b01000;
 		#10
 		if (!((C) == (A - B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b - B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b - B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// -/+ (OF)
@@ -515,9 +441,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Lo
 		flags = b01000;
 		#10
 		if (!((C) == (A - B)) && !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b - B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b - B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		/////////////////////////////////////////////////////////////////////////////
@@ -531,9 +455,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Lo
 		flags = b00010;
 		#10
 		if (!((C) == (A - B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b - B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b - B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         // +/+ (0)
@@ -542,9 +464,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Lo
 		flags = b00001;
 		#10
 		if (!((C) == (A - B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b - B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b - B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// -/-
@@ -553,9 +473,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Lo
 		flags = b00000;
 		#10
 		if (!((C) == (A - B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b - B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b - B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// -/- (0)
@@ -564,9 +482,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Lo
 		flags = b00001;
 		#10
 		if (!((C) == (A - B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b - B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b - B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// +/- (OF)
@@ -575,9 +491,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Lo
 		flags = b01000;
 		#10
 		if (!((C) == (A - B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b - B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b - B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// -/+ (OF)
@@ -586,9 +500,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Lo
 		flags = b01000;
 		#10
 		if (!((C) == (A - B)) && !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b - B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for Opcode: %b, A: %b - B: %bExpected %b, but got %b.Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		/////////////////////////////////////////////////////////////////////////////
@@ -602,9 +514,7 @@ Expected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Lo
 		flags = b00001;
 		#10
 		if (!(C == 0) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("CMP Wrong for A: %b, B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", A, B, (A < B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("CMP Wrong for A: %b, B: %bExpected %b, but got %b.Expected flags %b, but got %b.", A, B, (A < B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         // A > B
@@ -613,9 +523,7 @@ Expected flags %b, but got %b.", A, B, (A < B), C, flags, {Carry,Flag,Low,Negati
 		flags = b00000;
 		#10
 		if (!(C == 0) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("CMP Wrong for A: %b, B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", A, B, (A < B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("CMP Wrong for A: %b, B: %bExpected %b, but got %b.Expected flags %b, but got %b.", A, B, (A < B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// A < B
@@ -624,9 +532,7 @@ Expected flags %b, but got %b.", A, B, (A < B), C, flags, {Carry,Flag,Low,Negati
 		flags = b00100;
 		#10
 		if (!(C == 0) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("CMP Wrong for A: %b, B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", A, B, (A < B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("CMP Wrong for A: %b, B: %bExpected %b, but got %b.Expected flags %b, but got %b.", A, B, (A < B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		/////////////////////////////////////////////////////////////////////////////
@@ -640,9 +546,7 @@ Expected flags %b, but got %b.", A, B, (A < B), C, flags, {Carry,Flag,Low,Negati
 		flags = b00001;
 		#10
 		if (!(C == 0) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("CMPI Wrong for A: %b, B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", A, B, (A < B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("CMPI Wrong for A: %b, B: %bExpected %b, but got %b.Expected flags %b, but got %b.", A, B, (A < B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         // A > B
@@ -651,9 +555,7 @@ Expected flags %b, but got %b.", A, B, (A < B), C, flags, {Carry,Flag,Low,Negati
 		flags = b00000;
 		#10
 		if (!(C == 0) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("CMPI Wrong for A: %b, B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", A, B, (A < B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("CMPI Wrong for A: %b, B: %bExpected %b, but got %b.Expected flags %b, but got %b.", A, B, (A < B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// A < B
@@ -662,9 +564,7 @@ Expected flags %b, but got %b.", A, B, (A < B), C, flags, {Carry,Flag,Low,Negati
 		flags = b00100;
 		#10
 		if (!(C == 0) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("CMPI Wrong for A: %b, B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", A, B, (A < B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("CMPI Wrong for A: %b, B: %bExpected %b, but got %b.Expected flags %b, but got %b.", A, B, (A < B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		/////////////////////////////////////////////////////////////////////////////
@@ -677,9 +577,7 @@ Expected flags %b, but got %b.", A, B, (A < B), C, flags, {Carry,Flag,Low,Negati
 		flags = b00000;
 		#10
 		if (!(C == (A & B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b AND B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", A, B, (A & B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for A: %b AND B: %bExpected %b, but got %b.Expected flags %b, but got %b.", A, B, (A & B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		A = 16'h0FF1;
@@ -687,9 +585,7 @@ Expected flags %b, but got %b.", A, B, (A & B), C, flags, {Carry,Flag,Low,Negati
 		flags = b00000;
 		#10
 		if (!(C == (A & B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b AND B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", A, B, (A & B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for A: %b AND B: %bExpected %b, but got %b.Expected flags %b, but got %b.", A, B, (A & B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		A = 16'd2000;
@@ -697,9 +593,7 @@ Expected flags %b, but got %b.", A, B, (A & B), C, flags, {Carry,Flag,Low,Negati
 		flags = b00000;
 		#10
 		if (!(C == (A & B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b AND B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", A, B, (A & B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for A: %b AND B: %bExpected %b, but got %b.Expected flags %b, but got %b.", A, B, (A & B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 
@@ -714,9 +608,7 @@ Expected flags %b, but got %b.", A, B, (A & B), C, flags, {Carry,Flag,Low,Negati
 		flags = b00000;
 		#10
 		if (!(C == (A | B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b OR B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", A, B, (A | B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for A: %b OR B: %bExpected %b, but got %b.Expected flags %b, but got %b.", A, B, (A | B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		A = 16'h0FF1;
@@ -724,9 +616,7 @@ Expected flags %b, but got %b.", A, B, (A | B), C, flags, {Carry,Flag,Low,Negati
 		flags = b00000;
 		#10
 		if (!(C == (A | B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b OR B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", A, B, (A | B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for A: %b OR B: %bExpected %b, but got %b.Expected flags %b, but got %b.", A, B, (A | B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		A = 16'd2000;
@@ -734,9 +624,7 @@ Expected flags %b, but got %b.", A, B, (A | B), C, flags, {Carry,Flag,Low,Negati
 		flags = b00000;
 		#10
 		if (!(C == (A | B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b OR B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", A, B, (A | B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for A: %b OR B: %bExpected %b, but got %b.Expected flags %b, but got %b.", A, B, (A | B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		/////////////////////////////////////////////////////////////////////////////
@@ -749,9 +637,7 @@ Expected flags %b, but got %b.", A, B, (A | B), C, flags, {Carry,Flag,Low,Negati
 		flags = b00000;
 		#10
 		if (!(C == (A ^ B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b XOR B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", A, B, (A ^ B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for A: %b XOR B: %bExpected %b, but got %b.Expected flags %b, but got %b.", A, B, (A ^ B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		A = 16'h0FF1;
@@ -759,9 +645,7 @@ Expected flags %b, but got %b.", A, B, (A ^ B), C, flags, {Carry,Flag,Low,Negati
 		flags = b00000;
 		#10
 		if (!(C == (A ^ B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b XOR B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", A, B, (A ^ B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for A: %b XOR B: %bExpected %b, but got %b.Expected flags %b, but got %b.", A, B, (A ^ B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		A = 16'd2000;
@@ -769,9 +653,7 @@ Expected flags %b, but got %b.", A, B, (A ^ B), C, flags, {Carry,Flag,Low,Negati
 		flags = b00000;
 		#10
 		if (!(C == (A ^ B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b XOR B: %b
-Expected %b, but got %b.
-Expected flags %b, but got %b.", A, B, (A ^ B), C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for A: %b XOR B: %bExpected %b, but got %b.Expected flags %b, but got %b.", A, B, (A ^ B), C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		/////////////////////////////////////////////////////////////////////////////
@@ -784,9 +666,7 @@ Expected flags %b, but got %b.", A, B, (A ^ B), C, flags, {Carry,Flag,Low,Negati
 		flags = b00000;
 		#10
 		if (!(C == 16'h4440) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b LSH B: %b
-Expected 0100010001000000, but got %b.
-Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for A: %b LSH B: %bExpected 0100010001000000, but got %b.Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         A = 16'h4444;
@@ -794,9 +674,7 @@ Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero})
 		flags = b00000;
 		#10
 		if (!(C == 16'h8888) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b LSH B: %b
-Expected 1000100010001000, but got %b.
-Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for A: %b LSH B: %bExpected 1000100010001000, but got %b.Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		/////////////////////////////////////////////////////////////////////////////
@@ -809,9 +687,7 @@ Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero})
 		flags = b00000;
 		#10
 		if (!(C == 16'h4440) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b LSHI B: %b
-Expected 0100010001000000, but got %b.
-Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for A: %b LSHI B: %bExpected 0100010001000000, but got %b.Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         A = 16'h4444;
@@ -819,9 +695,7 @@ Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero})
 		flags = b00000;
 		#10
 		if (!(C == 16'h8888) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b LSHI B: %b
-Expected 1000100010001000, but got %b.
-Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for A: %b LSHI B: %bExpected 1000100010001000, but got %b.Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		/////////////////////////////////////////////////////////////////////////////
@@ -834,9 +708,7 @@ Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero})
 		flags = b00000;
 		#10
 		if (!(C == 16'h0444) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b RSH B: %b
-Expected 0000010001000100, but got %b.
-Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for A: %b RSH B: %bExpected 0000010001000100, but got %b.Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         A = 16'h4444;
@@ -844,9 +716,7 @@ Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero})
 		flags = b00000;
 		#10
 		if (!(C == 16'h2222) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b RSH B: %b
-Expected 0010001000100010, but got %b.
-Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for A: %b RSH B: %bExpected 0010001000100010, but got %b.Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
         end
 
 		/////////////////////////////////////////////////////////////////////////////
@@ -859,9 +729,7 @@ Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero})
 		flags = b00000;
 		#10
 		if (!(C == 16'h0444) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b RSHI B: %b
-Expected 0000010001000100, but got %b.
-Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for A: %b RSHI B: %bExpected 0000010001000100, but got %b.Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         A = 16'h4444;
@@ -869,9 +737,7 @@ Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero})
 		flags = b00000;
 		#10
 		if (!(C == 16'h2222) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b RSHI B: %b
-Expected 0010001000100010, but got %b.
-Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for A: %b RSHI B: %bExpected 0010001000100010, but got %b.Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		/////////////////////////////////////////////////////////////////////////////
@@ -884,9 +750,7 @@ Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero})
 		flags = b00000;
 		#10
 		if (!(C == 16'h4440) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b ALSH B: %b
-Expected 0100010001000000, but got %b.
-Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for A: %b ALSH B: %bExpected 0100010001000000, but got %b.Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         A = 16'h1111;
@@ -894,9 +758,7 @@ Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero})
 		flags = b00000;
 		#10
 		if (!(C == 16'h2223) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b ALSH B: %b
-Expected 0010001000100011, but got %b.
-Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for A: %b ALSH B: %bExpected 0010001000100011, but got %b.Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		/////////////////////////////////////////////////////////////////////////////
@@ -909,9 +771,7 @@ Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero})
 		flags = b00000;
 		#10
 		if (!(C == 16'h0444) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b ALSH B: %b
-Expected 0000010001000100, but got %b.
-Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for A: %b ALSH B: %bExpected 0000010001000100, but got %b.Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         A = 16'h8888;
@@ -919,9 +779,7 @@ Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero})
 		flags = b00000;
 		#10
 		if (!(C == 16'hE222) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b ALSH B: %b
-Expected 1110001000100010, but got %b.
-Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
+			$display("Wrong for A: %b ALSH B: %bExpected 1110001000100010, but got %b.Expected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		/////////////////////////////////////////////////////////////////////////////
