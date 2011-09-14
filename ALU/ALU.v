@@ -145,6 +145,16 @@ module ALU(
 			C = 16'b0;
 		end
 
+		TEST:
+		begin
+			C = A&B;
+			Zero = (C==0);
+			Low = A<B;
+			Negative = $signed(A)<$signed(B);
+			Flag = 1'b0;
+			Carry = 1'b0;
+		end
+
 		AND:
 		begin
 			C = A&B;
@@ -269,6 +279,16 @@ module ALU(
 		MULTI:
 		begin
 		
+		end
+
+		MULTU:
+		begin
+
+		end
+
+		MULTUI:
+		begin
+
 		end
 
 		default:
