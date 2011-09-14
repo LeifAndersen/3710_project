@@ -23,4 +23,4 @@
 	parameter MULT     = 8'd23;
 	parameter MULTI    = 8'd24;
 	parameter MULTU    = 8'd25;
-	parameter MULTUUI  = 8'd26;
+	parameter MULTUI  = 8'd26;
