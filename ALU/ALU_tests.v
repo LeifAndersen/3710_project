@@ -173,7 +173,7 @@ module ALU_tests(
 		// +/+
 		A = 16'd45;
 		B = 16'd42;
-		flags = 5'b00010;
+		flags = 5'b00000;
 		#10
 		$display("Test number %i", testNumber);
 		testNumber = testNumber + 1;
@@ -299,7 +299,7 @@ module ALU_tests(
 		// +/+
 		A = 16'd45;
 		B = 16'd42;
-		flags = 5'b00010;
+		flags = 5'b00000;
 		#10
 		$display("Test number %i", testNumber);
 		testNumber = testNumber + 1;
@@ -1185,8 +1185,8 @@ module ALU_tests(
 		#10
 		$display("Test number %i", testNumber);
 		testNumber = testNumber + 1;
-		if (!(C == 16'h2223)) begin
-        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, 16'h2223, C);
+		if (!(C == 16'h2222)) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, 16'h2222, C);
         end
         if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
 
