@@ -64,7 +64,7 @@ module ALU_tests(
 		// Edge Cases
 		// ADD
 		Opcode = ADD;
-		$display("Testing opcode ADD...\n");
+		$display("Testing opcode ADD...");
 		// +/-
 		A = 16'd45;
 		B = 16'hFF00;
@@ -174,7 +174,7 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
 	    Opcode = ADDI;
-	    $display("Testing opcode ADDI...\n");
+	    $display("Testing opcode ADDI...");
 		// +/-
 		A = 16'd45;
 		B = 16'hFF00;
@@ -276,7 +276,7 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
 	    Opcode = ADDU;
-	    $display("Testing opcode ADDU...\n");
+	    $display("Testing opcode ADDU...");
 		// +/+
 		A = 16'd42;
 		B = 16'h12;
@@ -318,7 +318,7 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
 	    Opcode = ADDUI;
-	    $display("Testing opcode ADDUI...\n");
+	    $display("Testing opcode ADDUI...");
 		// +/+
 		A = 16'd42;
 		B = 16'h12;
@@ -360,7 +360,7 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
 	    Opcode = ADDCU;
-	    $display("Testing opcode ADDCU...\n");
+	    $display("Testing opcode ADDCU...");
 		// +/+
 		A = 16'd42;
 		B = 16'h12;
@@ -406,7 +406,7 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
 	    Opcode = ADDCUI;
-	    $display("Testing opcode ADDCUI...\n");
+	    $display("Testing opcode ADDCUI...");
 		// +/+
 		A = 16'd42;
 		B = 16'h12;
@@ -452,7 +452,7 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
 		Opcode = SUB;
-		$display("Testing opcode SUB...\n");
+		$display("Testing opcode SUB...");
 		// +/+
 		A = 16'd45;
 		B = 16'd47;
@@ -532,7 +532,7 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
 		Opcode = SUBI;
-		$display("Testing opcode SUBI...\n");
+		$display("Testing opcode SUBI...");
 		// +/+
 		A = 16'd45;
 		B = 16'd47;
@@ -612,7 +612,7 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
 		Opcode = CMP;
-		$display("Testing opcode CMP...\n");
+		$display("Testing opcode CMP...");
 		// same
 		A = 16'd45;
 		B = 16'd45;
@@ -657,7 +657,7 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
 		Opcode = CMPI;
-		$display("Testing opcode CMPI...\n");
+		$display("Testing opcode CMPI...");
 		// same
 		A = 16'd45;
 		B = 16'd45;
@@ -702,7 +702,7 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
         Opcode = AND;
-        $display("Testing opcode AND...\n");
+        $display("Testing opcode AND...");
 		A = 16'd45;
 		B = 16'd45;
 		flags = 5'b00000;
@@ -746,7 +746,7 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
         Opcode = OR;
-        $display("Testing opcode OR...\n");
+        $display("Testing opcode OR...");
 		A = 16'd45;
 		B = 16'd45;
 		flags = 5'b00000;
@@ -860,7 +860,7 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
         Opcode = LSHI;
-        $display("Testing opcode LSHI...\n");
+        $display("Testing opcode LSHI...");
 		A = 16'h4444;
 		B = 16'd4;
 		flags = 5'b00000;
@@ -890,7 +890,7 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
         Opcode = RSH;
-        $display("Testing opcode RSH...\n");
+        $display("Testing opcode RSH...");
 		A = 16'h4444;
 		B = 16'd4;
 		flags = 5'b00000;
@@ -920,7 +920,7 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
         Opcode = RSHI;
-        $display("Testing opcode RSHI...\n");
+        $display("Testing opcode RSHI...");
 		A = 16'h4444;
 		B = 16'd4;
 		flags = 5'b00000;
@@ -950,7 +950,7 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
         Opcode = ALSH;
-        $display("Testing opcode ALSH...\n");
+        $display("Testing opcode ALSH...");
 		A = 16'h4444;
 		B = 16'd4;
 		flags = 5'b00000;
@@ -1010,7 +1010,7 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
         Opcode = NOP;
-        $display("Testing opcode NOP...\n");
+        $display("Testing opcode NOP...");
 		A = 16'h4444;
 		B = 16'd4;
 		flags = 5'b00000;
