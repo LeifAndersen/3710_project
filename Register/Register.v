@@ -22,9 +22,9 @@
 
 module Register(
 		input clk,
-		input [15:0] A,
-		input [15:0] B,
-		input [15:0] C,
+		input [3:0] A,
+		input [3:0] B,
+		input [3:0] C,
 		input write,
 		input [15:0] inputReg,
 		output reg [15:0] outputReg1,
