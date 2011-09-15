@@ -64,13 +64,18 @@ module ALU_tests(
 		// Edge Cases
 		// ADD
 		Opcode = ADD;
+		$display("Testing opcode ADD...\n");
 		// +/-
 		A = 16'd45;
 		B = 16'hFF00;
 		flags = 5'b00010;
 		#10
-		if (!((C) == (A + B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!((C) == (A + B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         // -/+
@@ -78,8 +83,12 @@ module ALU_tests(
         B = 16'd42;
         flags = 5'b00000;
 		#10
-		if (!((C) == (A + B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!((C) == (A + B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// TMin/Tmax
@@ -87,8 +96,12 @@ module ALU_tests(
 		B = 16'h7FFF;
 		flags = 5'b00010;
 		#10
-		if (!((C) == (A + B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!((C) == (A + B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// TMax/Tmin
@@ -96,8 +109,12 @@ module ALU_tests(
 		B = 16'h8000;
 		flags = 5'b00010;
 		#10
-		if (!((C) == (A + B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!((C) == (A + B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         // TMax/1
@@ -105,8 +122,12 @@ module ALU_tests(
 		B = 16'h0001;
 		flags = 5'b01010;
 		#10
-		if (!((C) == (A + B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!((C) == (A + B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// TMin/0
@@ -114,8 +135,12 @@ module ALU_tests(
 		B = 16'h0000;
 		flags = 5'b00010;
 		#10
-		if (!((C) == (A + B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!((C) == (A + B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// -/-
@@ -123,8 +148,12 @@ module ALU_tests(
 		B = 16'hFF00;
 		flags = 5'b00010;
 		#10
-		if (!((C) == (A + B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!((C) == (A + B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// +/+
@@ -132,8 +161,12 @@ module ALU_tests(
 		B = 16'd42;
 		flags = 5'b00010;
 		#10
-		if (!((C) == (A + B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!((C) == (A + B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		/////////////////////////////////////////////////////////////////////////////
@@ -141,13 +174,18 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
 	    Opcode = ADDI;
+	    $display("Testing opcode ADDI...\n");
 		// +/-
 		A = 16'd45;
 		B = 16'hFF00;
 		flags = 5'b00010;
 		#10
-		if (!((C) == (A + B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!((C) == (A + B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         // -/+
@@ -155,8 +193,12 @@ module ALU_tests(
         B = 16'd42;
 		flags = 5'b00000;
 		#10
-		if (!((C) == (A + B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!((C) == (A + B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// TMin/Tmax
@@ -164,8 +206,12 @@ module ALU_tests(
 		B = 16'h7FFF;
 		flags = 5'b00010;
 		#10
-		if (!((C) == (A + B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!((C) == (A + B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// TMax/Tmin
@@ -173,8 +219,12 @@ module ALU_tests(
 		B = 16'h8000;
 		flags = 5'b00010;
 		#10
-		if (!((C) == (A + B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!((C) == (A + B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         // TMax/1
@@ -182,8 +232,12 @@ module ALU_tests(
 		B = 16'h0001;
 		flags = 5'b01010;
 		#10
-		if (!((C) == (A + B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!((C) == (A + B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// TMin/0
@@ -191,8 +245,12 @@ module ALU_tests(
 		B = 16'h0000;
 		flags = 5'b00010;
 		#10
-		if (!((C) == (A + B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b + B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", Opcode, A, B, (A + B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!((C) == (A + B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// -/-
@@ -218,6 +276,7 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
 	    Opcode = ADDU;
+	    $display("Testing opcode ADDU...\n");
 		// +/+
 		A = 16'd42;
 		B = 16'h12;
@@ -259,6 +318,7 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
 	    Opcode = ADDUI;
+	    $display("Testing opcode ADDUI...\n");
 		// +/+
 		A = 16'd42;
 		B = 16'h12;
@@ -300,6 +360,7 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
 	    Opcode = ADDCU;
+	    $display("Testing opcode ADDCU...\n");
 		// +/+
 		A = 16'd42;
 		B = 16'h12;
@@ -345,6 +406,7 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
 	    Opcode = ADDCUI;
+	    $display("Testing opcode ADDCUI...\n");
 		// +/+
 		A = 16'd42;
 		B = 16'h12;
@@ -390,13 +452,18 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
 		Opcode = SUB;
+		$display("Testing opcode SUB...\n");
 		// +/+
 		A = 16'd45;
 		B = 16'd47;
 		flags = 5'b00010;
 		#10
-		if (!((C) == (A - B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b - B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!((C) == (A - B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         // +/+ (0)
@@ -404,8 +471,12 @@ module ALU_tests(
         B = 16'h000F;
 		flags = 5'b00001;
 		#10
-		if (!((C) == (A - B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b - B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!((C) == (A - B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// -/-
@@ -413,8 +484,12 @@ module ALU_tests(
 		B = 16'd40;
 		flags = 5'b00000;
 		#10
-		if (!((C) == (A - B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b - B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!((C) == (A - B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// -/- (0)
@@ -422,8 +497,12 @@ module ALU_tests(
 		B = 16'hF0F1;
 		flags = 5'b00001;
 		#10
-		if (!((C) == (A - B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b - B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!((C) == (A - B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// +/- (OF)
@@ -431,8 +510,12 @@ module ALU_tests(
 		B = 16'hFFFF;
 		flags = 5'b01000;
 		#10
-		if (!((C) == (A - B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b - B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!((C) == (A - B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// -/+ (OF)
@@ -449,13 +532,18 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
 		Opcode = SUBI;
+		$display("Testing opcode SUBI...\n");
 		// +/+
 		A = 16'd45;
 		B = 16'd47;
 		flags = 5'b00010;
 		#10
-		if (!((C) == (A - B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b - B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!((C) == (A - B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         // +/+ (0)
@@ -463,8 +551,12 @@ module ALU_tests(
         B = 16'h000F;
 		flags = 5'b00001;
 		#10
-		if (!((C) == (A - B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b - B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!((C) == (A - B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// -/-
@@ -472,8 +564,12 @@ module ALU_tests(
 		B = 16'd40;
 		flags = 5'b00000;
 		#10
-		if (!((C) == (A - B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b - B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!((C) == (A - B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// -/- (0)
@@ -481,8 +577,12 @@ module ALU_tests(
 		B = 16'hF0F1;
 		flags = 5'b00001;
 		#10
-		if (!((C) == (A - B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b - B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!((C) == (A - B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// +/- (OF)
@@ -490,8 +590,12 @@ module ALU_tests(
 		B = 16'hFFFF;
 		flags = 5'b01000;
 		#10
-		if (!((C) == (A - B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for Opcode: %b, A: %b - B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", Opcode, A, B, (A - B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!((C) == (A - B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// -/+ (OF)
@@ -508,13 +612,18 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
 		Opcode = CMP;
+		$display("Testing opcode CMP...\n");
 		// same
 		A = 16'd45;
 		B = 16'd45;
 		flags = 5'b00001;
 		#10
-		if (!(C == 0) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("CMP Wrong for A: %b, B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", A, B, (A < B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!(C == 0)) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         // A > B
@@ -522,8 +631,12 @@ module ALU_tests(
         B = 16'h000F;
 		flags = 5'b00000;
 		#10
-		if (!(C == 0) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("CMP Wrong for A: %b, B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", A, B, (A < B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!(C == 0)) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// A < B
@@ -531,8 +644,12 @@ module ALU_tests(
 		B = 16'd4000;
 		flags = 5'b00100;
 		#10
-		if (!(C == 0) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("CMP Wrong for A: %b, B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", A, B, (A < B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!(C == 0)) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		/////////////////////////////////////////////////////////////////////////////
@@ -540,13 +657,18 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
 		Opcode = CMPI;
+		$display("Testing opcode CMPI...\n");
 		// same
 		A = 16'd45;
 		B = 16'd45;
 		flags = 5'b00001;
 		#10
-		if (!(C == 0) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("CMPI Wrong for A: %b, B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", A, B, (A < B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!(C == 0)) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         // A > B
@@ -554,8 +676,12 @@ module ALU_tests(
         B = 16'h000F;
 		flags = 5'b00000;
 		#10
-		if (!(C == 0) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("CMPI Wrong for A: %b, B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", A, B, (A < B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!(C == 0)) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		// A < B
@@ -563,8 +689,12 @@ module ALU_tests(
 		B = 16'd4000;
 		flags = 5'b00100;
 		#10
-		if (!(C == 0) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("CMPI Wrong for A: %b, B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", A, B, (A < B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!(C == 0)) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		/////////////////////////////////////////////////////////////////////////////
@@ -572,28 +702,41 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
         Opcode = AND;
+        $display("Testing opcode AND...\n");
 		A = 16'd45;
 		B = 16'd45;
 		flags = 5'b00000;
 		#10
-		if (!(C == (A & B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b AND B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", A, B, (A & B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!(C == (A & B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		A = 16'h0FF1;
         B = 16'h000F;
 		flags = 5'b00000;
 		#10
-		if (!(C == (A & B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b AND B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", A, B, (A & B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!(C == (A & B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		A = 16'd2000;
 		B = 16'd4000;
 		flags = 5'b00000;
 		#10
-		if (!(C == (A & B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b AND B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", A, B, (A & B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!(C == (A & B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 
@@ -603,28 +746,41 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
         Opcode = OR;
+        $display("Testing opcode OR...\n");
 		A = 16'd45;
 		B = 16'd45;
 		flags = 5'b00000;
 		#10
-		if (!(C == (A | B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b OR B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", A, B, (A | B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!(C == (A | B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		A = 16'h0FF1;
         B = 16'h000F;
 		flags = 5'b00000;
 		#10
-		if (!(C == (A | B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b OR B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", A, B, (A | B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!(C == (A | B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		A = 16'd2000;
 		B = 16'd4000;
 		flags = 5'b00000;
 		#10
-		if (!(C == (A | B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b OR B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", A, B, (A | B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!(C == (A | B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		/////////////////////////////////////////////////////////////////////////////
@@ -632,28 +788,41 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
         Opcode = XOR;
+        $display("Testing opcode XOR..\n");
 		A = 16'd45;
 		B = 16'd45;
 		flags = 5'b00000;
 		#10
-		if (!(C == (A ^ B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b XOR B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", A, B, (A ^ B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!(C == (A ^ B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		A = 16'h0FF1;
         B = 16'h000F;
 		flags = 5'b00000;
 		#10
-		if (!(C == (A ^ B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b XOR B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", A, B, (A ^ B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!(C == (A ^ B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		A = 16'd2000;
 		B = 16'd4000;
 		flags = 5'b00000;
 		#10
-		if (!(C == (A ^ B)) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b XOR B: %b\nExpected %b, but got %b.\nExpected flags %b, but got %b.", A, B, (A ^ B), C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!(C == (A ^ B))) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		/////////////////////////////////////////////////////////////////////////////
@@ -661,20 +830,29 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
         Opcode = LSH;
+        $display("Testing opcode LSH..\n");
 		A = 16'h4444;
 		B = 16'd4;
 		flags = 5'b00000;
 		#10
-		if (!(C == 16'h4440) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b LSH B: %b\nExpected 0100010001000000, but got %b.\nExpected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!(C == 16'h4440)) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         A = 16'h4444;
 		B = 16'd1;
 		flags = 5'b00000;
 		#10
-		if (!(C == 16'h8888) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b LSH B: %b\nExpected 1000100010001000, but got %b.\nExpected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!(C == 16'h8888)) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		/////////////////////////////////////////////////////////////////////////////
@@ -682,20 +860,29 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
         Opcode = LSHI;
+        $display("Testing opcode LSHI...\n");
 		A = 16'h4444;
 		B = 16'd4;
 		flags = 5'b00000;
 		#10
-		if (!(C == 16'h4440) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b LSHI B: %b\nExpected 0100010001000000, but got %b.\nExpected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!(C == 16'h4440)) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         A = 16'h4444;
 		B = 16'd1;
 		flags = 5'b00000;
 		#10
-		if (!(C == 16'h8888) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b LSHI B: %b\nExpected 1000100010001000, but got %b.\nExpected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!(C == 16'h8888)) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		/////////////////////////////////////////////////////////////////////////////
@@ -703,41 +890,59 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
         Opcode = RSH;
+        $display("Testing opcode RSH...\n");
 		A = 16'h4444;
 		B = 16'd4;
 		flags = 5'b00000;
 		#10
-		if (!(C == 16'h0444) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b RSH B: %b\nExpected 0000010001000100, but got %b.\nExpected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!(C == 16'h0444)) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         A = 16'h4444;
 		B = 16'd1;
 		flags = 5'b00000;
 		#10
-		if (!(C == 16'h2222) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b RSH B: %b\nExpected 0010001000100010, but got %b.\nExpected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!(C == 16'h2222)) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
+		end
 
 		/////////////////////////////////////////////////////////////////////////////
 		/////////////////////////////////////////////////////////////////////////////
 		/////////////////////////////////////////////////////////////////////////////
 
         Opcode = RSHI;
+        $display("Testing opcode RSHI...\n");
 		A = 16'h4444;
 		B = 16'd4;
 		flags = 5'b00000;
 		#10
-		if (!(C == 16'h0444) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b RSHI B: %b\nExpected 0000010001000100, but got %b.\nExpected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!(C == 16'h0444)) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         A = 16'h4444;
 		B = 16'd1;
 		flags = 5'b00000;
 		#10
-		if (!(C == 16'h2222) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b RSHI B: %b\nExpected 0010001000100010, but got %b.\nExpected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!(C == 16'h2222)) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		/////////////////////////////////////////////////////////////////////////////
@@ -745,20 +950,29 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
         Opcode = ALSH;
+        $display("Testing opcode ALSH...\n");
 		A = 16'h4444;
 		B = 16'd4;
 		flags = 5'b00000;
 		#10
-		if (!(C == 16'h4440) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b ALSH B: %b\nExpected 0100010001000000, but got %b.\nExpected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!(C == 16'h4440)) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         A = 16'h1111;
 		B = 16'd1;
 		flags = 5'b00000;
 		#10
-		if (!(C == 16'h2223) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b ALSH B: %b\nExpected 0010001000100011, but got %b.\nExpected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!(C == 16'h2223)) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		/////////////////////////////////////////////////////////////////////////////
@@ -766,20 +980,29 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
         Opcode = ARSH;
+        $display("Testing opcode ARSH..\n");
 		A = 16'h4444;
 		B = 16'd4;
 		flags = 5'b00000;
 		#10
-		if (!(C == 16'h0444) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b ALSH B: %b\nExpected 0000010001000100, but got %b.\nExpected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!(C == 16'h0444)) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         A = 16'h8888;
 		B = 16'd2;
 		flags = 5'b00000;
 		#10
-		if (!(C == 16'hE222) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b ALSH B: %b\nExpected 1110001000100010, but got %b.\nExpected flags %b, but got %b.", A, B, C, flags, {Carry,Flag,Low,Negative,Zero});
+		if (!(C == 16'hE222)) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		/////////////////////////////////////////////////////////////////////////////
@@ -787,20 +1010,29 @@ module ALU_tests(
 		/////////////////////////////////////////////////////////////////////////////
 
         Opcode = NOP;
+        $display("Testing opcode NOP...\n");
 		A = 16'h4444;
 		B = 16'd4;
 		flags = 5'b00000;
 		#10
-		if (!(C == 0) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b NOP B: %b, C:%b", A, B, C);
+		if (!(C == 0)) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
         A = 16'h8888;
 		B = 16'd1;
 		flags = 5'b00000;
 		#10
-		if (!(C == 0) || !({Carry,Flag,Low,Negative,Zero} == flags)) begin
-			$display("Wrong for A: %b NOP B: %b, C:%b", A, B, C);
+		if (!(C == 0)) begin
+        	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
+        end
+        if(!({Carry,Flag,Low,Negative,Zero} == flags)) begin
+
+            $display("Wrong for Opcode: %b, A: %b, B: %b\nExpected flags %b, but got %b.", Opcode, A, B, flags, {Carry,Flag,Low,Negative,Zero});
 		end
 
 		$finish(2);
