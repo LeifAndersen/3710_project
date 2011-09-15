@@ -447,7 +447,7 @@ module ALU_tests(
 		A = 16'h0001;
 		B = 16'hFFFF;
 		CarryIn = 1'b0;
-		flags = 5'b01000;
+		flags = 5'b01100;
 		#10
 		if (!((C) == (A + B + CarryIn))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
@@ -509,7 +509,7 @@ module ALU_tests(
 		A = 16'h0001;
 		B = 16'hFFFF;
 		CarryIn = 1'b0;
-		flags = 5'b01000;
+		flags = 5'b01100;
 		#10
 		if (!((C) == (A + B + CarryIn))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
