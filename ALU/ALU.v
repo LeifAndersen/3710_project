@@ -40,19 +40,19 @@ module ALU(
 		ADD:
 		begin
 			C = A + B;
-			Zero = (C == 0);
+			Zero = (A+B == 0);
 				
 			Flag = (~A[15]&~B[15]&C[15]) | (A[15] & B[15] & ~C[15]);
 			
 			Carry = 0;
 			Low = $signed(A)<$signed(B);
-			Negative = $signed(C)<0;
+			Negative = $signed(A + B)<0;
 		end
 
 		ADDU:
 		begin
 			{Carry, C} = A + B;
-			Zero = (C == 0);
+			Zero = (A+B == 0);
 			
 			Low = A<B;
 			Negative = 0;
@@ -62,19 +62,19 @@ module ALU(
 		ADDI:
 		begin
 			C = A + B;
-			Zero = (C == 0);
+			Zero = (A+B == 0);
 				
 			Flag = (~A[15]&~B[15]&C[15]) | (A[15] & B[15] & ~C[15]);
 			
 			Carry = 0;
 			Low = $signed(A)<$signed(B);
-			Negative = $signed(C)<0;
+			Negative = $signed(A + B)<0;
 		end
 
 		ADDUI:
 		begin
 			{Carry, C} = A + B;
-			Zero = (C == 0);
+			Zero = (A+B == 0);
 			
 			Flag = 0;
 			Low = A<B;
@@ -83,8 +83,8 @@ module ALU(
 
 		ADDCU:
 		begin
-			{Carry, C} = A + B + Carry;
-			Zero = (C == 0);
+			{Carry, C} = A + B + CarryIn;
+			Zero = (A+B+CarryIn == 0);
 			
 			Flag = 0;
 			Low = A<B;
@@ -93,8 +93,8 @@ module ALU(
 
 		ADDCUI:
 		begin
-			{Carry, C} = A + B + Carry;
-			Zero = (C == 0);
+			{Carry, C} = A + B + CarryIn;
+			Zero = (A + B + CarryIn == 0);
 			
 			Flag = 0;
 			Low = A<B;
@@ -109,7 +109,7 @@ module ALU(
 			
 			Low = $signed(A)<$signed(B);
 			Carry = 0;
-			Negative = $signed(C)<0;
+			Negative = $signed(A-B)<0;
 		end
 
 		SUBI:
@@ -122,7 +122,7 @@ module ALU(
 			
 			Low = $signed(A)<$signed(B);
 			Carry = 0;
-			Negative = $signed(C)<0;
+			Negative = $signed(A-B)<0;
 		end
 
 		CMP:
@@ -148,7 +148,7 @@ module ALU(
 		TEST:
 		begin
 			C = A&B;
-			Zero = (C==0);
+			Zero = (A&B == 0);
 			Low = A<B;
 			Negative = $signed(A)<$signed(B);
 			Flag = 1'b0;
@@ -158,7 +158,7 @@ module ALU(
 		AND:
 		begin
 			C = A&B;
-			Zero = (C==0);
+			Zero = (A&B ==0);
 			Low = A<B;
 			Negative = $signed(A)<$signed(B);
 			Flag = 1'b0;
@@ -168,7 +168,7 @@ module ALU(
 		OR:
 		begin
 			C = A|B;
-			Zero = (C==0);
+			Zero = (A|B ==0);
 			Low = A<B;
 			Negative = $signed(A)<$signed(B);
 			Flag = 1'b0;
@@ -190,7 +190,7 @@ module ALU(
 			C = ~A;
 			Zero = A==B;
 			Low = C<A; //0?
-			Negative = $signed(C)<0;
+			Negative = $signed(~A)<0;
 			Flag = 1'b0;
 			Carry = 1'b0;
 		end
@@ -198,7 +198,7 @@ module ALU(
 		LSH:
 		begin
 			C = A << B;
-			Zero = (C==0);
+			Zero = ((A<<B)==0);
 			
 			Low = 1'b0;
 			Negative = 1'b0;
@@ -209,7 +209,7 @@ module ALU(
 		LSHI:
 		begin
 			C = A << B;
-			Zero = (C==0);
+			Zero = ((A<<B) == 0);
 			
 			Low = 1'b0;
 			Negative = 1'b0;
@@ -220,7 +220,7 @@ module ALU(
 		RSH:
 		begin
 			C = A >> B;
-			Zero = (C==0);
+			Zero = ((A>>B) == 0);
 			
 			Low = 1'b0;
 			Negative = 1'b0;
@@ -231,7 +231,7 @@ module ALU(
 		RSHI:
 		begin
 			C = A >> B;
-			Zero = (C==0);
+			Zero = ((A >> B) ==0);
 			
 			Low = 1'b0;
 			Negative = 1'b0;
@@ -242,7 +242,7 @@ module ALU(
 		ALSH:
 		begin
 			C = $signed(A) <<< B;
-			Zero = (C==0);
+			Zero = (($signed(A) <<< B) ==0);
 			
 			Low = 1'b0;
 			Negative = 1'b0;
@@ -253,7 +253,7 @@ module ALU(
 		ARSH:
 		begin
 			C = $signed(A) >>> B;
-			Zero = (C==0);
+			Zero = (($signed(A) >>> B) ==0);
 			
 			Low = 1'b0;
 			Negative = 1'b0;
@@ -269,26 +269,6 @@ module ALU(
 			Low = 1'b0;
 			Negative = 1'b0;
 			Zero = 1'b0;
-		end
-
-		MULT:
-		begin
-			C = A*B;
-		end
-
-		MULTI:
-		begin
-		
-		end
-
-		MULTU:
-		begin
-
-		end
-
-		MULTUI:
-		begin
-
 		end
 
 		default:
