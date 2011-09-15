@@ -1,16 +1,16 @@
-Release 12.1 - xst M.53d (nt64)
+Release 12.2 - xst M.63c (nt)
 Copyright (c) 1995-2010 Xilinx, Inc.  All rights reserved.
 --> Parameter TMPDIR set to xst/projnav.tmp
 
 
-Total REAL time to Xst completion: 0.00 secs
-Total CPU time to Xst completion: 0.07 secs
+Total REAL time to Xst completion: 1.00 secs
+Total CPU time to Xst completion: 0.12 secs
  
 --> Parameter xsthdpdir set to xst
 
 
-Total REAL time to Xst completion: 0.00 secs
-Total CPU time to Xst completion: 0.07 secs
+Total REAL time to Xst completion: 1.00 secs
+Total CPU time to Xst completion: 0.12 secs
  
 --> Reading design: ALU.prj
 
@@ -49,21 +49,21 @@ Top Module Name                    : ALU
 Automatic FSM Extraction           : YES
 FSM Encoding Algorithm             : Auto
 Safe Implementation                : No
-FSM Style                          : lut
+FSM Style                          : LUT
 RAM Extraction                     : Yes
 RAM Style                          : Auto
 ROM Extraction                     : Yes
 Mux Style                          : Auto
 Decoder Extraction                 : YES
-Priority Encoder Extraction        : YES
+Priority Encoder Extraction        : Yes
 Shift Register Extraction          : YES
 Logical Shifter Extraction         : YES
 XOR Collapsing                     : YES
 ROM Style                          : Auto
-Mux Extraction                     : YES
+Mux Extraction                     : Yes
 Resource Sharing                   : YES
 Asynchronous To Synchronous        : NO
-Multiplier Style                   : auto
+Multiplier Style                   : Auto
 Automatic Register Balancing       : No
 
 ---- Target Options
@@ -76,15 +76,14 @@ Optimize Instantiated Primitives   : NO
 Use Clock Enable                   : Yes
 Use Synchronous Set                : Yes
 Use Synchronous Reset              : Yes
-Pack IO Registers into IOBs        : auto
+Pack IO Registers into IOBs        : Auto
 Equivalent register Removal        : YES
 
 ---- General Options
 Optimization Goal                  : Speed
 Optimization Effort                : 1
-Library Search Order               : ALU.lso
-Keep Hierarchy                     : NO
-Netlist Hierarchy                  : as_optimized
+Keep Hierarchy                     : No
+Netlist Hierarchy                  : As_Optimized
 RTL Output                         : Yes
 Global Optimization                : AllClockNets
 Read Cores                         : YES
@@ -92,7 +91,7 @@ Write Timing Constraints           : NO
 Cross Clock Analysis               : NO
 Hierarchy Separator                : /
 Bus Delimiter                      : <>
-Case Specifier                     : maintain
+Case Specifier                     : Maintain
 Slice Utilization Ratio            : 100
 BRAM Utilization Ratio             : 100
 Verilog 2001                       : YES
@@ -106,20 +105,319 @@ Slice Utilization Ratio Delta      : 5
 *                          HDL Compilation                              *
 =========================================================================
 Compiling verilog file "ALU.v" in library work
-ERROR:HDLCompilers:28 - "ALU.v" line 63 'opcode' has not been declared
-ERROR:HDLCompilers:28 - "ALU.v" line 71 'Cary' has not been declared
-ERROR:HDLCompilers:28 - "ALU.v" line 93 'Cary' has not been declared
-ERROR:HDLCompilers:28 - "ALU.v" line 117 'Cary' has not been declared
-ERROR:HDLCompilers:28 - "ALU.v" line 156 'Less' has not been declared
-ERROR:HDLCompilers:28 - "ALU.v" line 169 'Less' has not been declared
-ERROR:HDLCompilers:28 - "ALU.v" line 189 'CMPIU' has not been declared
+Compiling verilog include file "opcodesLOL.v"
 Module <ALU> compiled
-Analysis of file <"ALU.prj"> failed.
+No errors in compilation
+Analysis of file <"ALU.prj"> succeeded.
+ 
+
+=========================================================================
+*                     Design Hierarchy Analysis                         *
+=========================================================================
+Analyzing hierarchy for module <ALU> in library <work> with parameters.
+	ADD = "00000000"
+	ADDCU = "00000100"
+	ADDCUI = "00000101"
+	ADDI = "00000010"
+	ADDU = "00000001"
+	ADDUI = "00000011"
+	ALSH = "00010011"
+	AND = "00001011"
+	ARSH = "00010100"
+	CMP = "00001000"
+	CMPI = "00001001"
+	LSH = "00001111"
+	LSHI = "00010000"
+	MULT = "00010111"
+	MULTI = "00011000"
+	MULTU = "00011001"
+	MULTUI = "00011010"
+	NOP = "00010101"
+	NOT = "00001110"
+	OR = "00001100"
+	RSH = "00010001"
+	RSHI = "00010010"
+	SUB = "00000110"
+	SUBI = "00000111"
+	TEST = "00001010"
+	XOR = "00001101"
+
+
+=========================================================================
+*                            HDL Analysis                               *
+=========================================================================
+Analyzing top module <ALU>.
+	ADD = 8'b00000000
+	ADDCU = 8'b00000100
+	ADDCUI = 8'b00000101
+	ADDI = 8'b00000010
+	ADDU = 8'b00000001
+	ADDUI = 8'b00000011
+	ALSH = 8'b00010011
+	AND = 8'b00001011
+	ARSH = 8'b00010100
+	CMP = 8'b00001000
+	CMPI = 8'b00001001
+	LSH = 8'b00001111
+	LSHI = 8'b00010000
+	MULT = 8'b00010111
+	MULTI = 8'b00011000
+	MULTU = 8'b00011001
+	MULTUI = 8'b00011010
+	NOP = 8'b00010101
+	NOT = 8'b00001110
+	OR = 8'b00001100
+	RSH = 8'b00010001
+	RSHI = 8'b00010010
+	SUB = 8'b00000110
+	SUBI = 8'b00000111
+	TEST = 8'b00001010
+	XOR = 8'b00001101
+Module <ALU> is correct for synthesis.
+ 
+
+=========================================================================
+*                           HDL Synthesis                               *
+=========================================================================
+
+Performing bidirectional port resolution...
+
+Synthesizing Unit <ALU>.
+    Related source file is "ALU.v".
+    Found 16-bit adder carry out for signal <AUX_3$addsub0000> created at line 76.
+    Found 17-bit adder for signal <AUX_5$add0000> created at line 96.
+    Found 16-bit shifter logical left for signal <C$shift0003> created at line 200.
+    Found 16-bit shifter logical right for signal <C$shift0004> created at line 222.
+    Found 16-bit shifter arithmetic right for signal <C$shift0005> created at line 255.
+    Found 16-bit xor2 for signal <C$xor0000> created at line 180.
+    Found 1-bit adder for signal <Flag$addsub0000> created at line 108.
+    Found 16-bit comparator less for signal <Low$cmp_lt0000> created at line 48.
+    Found 16-bit comparator less for signal <Low$cmp_lt0001> created at line 57.
+    Found 16-bit comparator less for signal <Low$cmp_lt0002> created at line 192.
+    Found 17-bit comparator less for signal <Negative$cmp_lt0000> created at line 49.
+    Found 17-bit comparator less for signal <Negative$cmp_lt0001> created at line 112.
+    Found 17-bit comparator less for signal <Negative$cmp_lt0002> created at line 193.
+    Found 17-bit subtractor for signal <Negative$sub0000> created at line 112.
+    Found 17-bit adder for signal <Zero$addsub0000> created at line 87.
+    Found 16-bit comparator equal for signal <Zero$cmp_eq0002> created at line 107.
+    Found 32-bit shifter logical left for signal <Zero$shift0004> created at line 245.
+    Found 32-bit shifter arithmetic right for signal <Zero$shift0005> created at line 256.
+    Found 32-bit shifter logical left for signal <Zero$shift0006> created at line 201.
+    Found 32-bit shifter logical right for signal <Zero$shift0007> created at line 223.
+    Summary:
+	inferred   7 Adder/Subtractor(s).
+	inferred   7 Comparator(s).
+	inferred   7 Combinational logic shifter(s).
+Unit <ALU> synthesized.
+
+
+=========================================================================
+HDL Synthesis Report
+
+Macro Statistics
+# Adders/Subtractors                                   : 7
+ 1-bit adder                                           : 1
+ 16-bit adder                                          : 1
+ 16-bit adder carry out                                : 1
+ 16-bit subtractor                                     : 1
+ 17-bit adder                                          : 2
+ 17-bit subtractor                                     : 1
+# Comparators                                          : 7
+ 16-bit comparator equal                               : 1
+ 16-bit comparator less                                : 3
+ 17-bit comparator less                                : 3
+# Logic shifters                                       : 7
+ 16-bit shifter arithmetic right                       : 1
+ 16-bit shifter logical left                           : 1
+ 16-bit shifter logical right                          : 1
+ 32-bit shifter arithmetic right                       : 1
+ 32-bit shifter logical left                           : 2
+ 32-bit shifter logical right                          : 1
+# Xors                                                 : 1
+ 16-bit xor2                                           : 1
+
+=========================================================================
+
+=========================================================================
+*                       Advanced HDL Synthesis                          *
+=========================================================================
+
+
+=========================================================================
+Advanced HDL Synthesis Report
+
+Macro Statistics
+# Adders/Subtractors                                   : 7
+ 1-bit adder                                           : 1
+ 16-bit adder                                          : 1
+ 16-bit adder carry out                                : 1
+ 16-bit subtractor                                     : 1
+ 17-bit adder                                          : 2
+ 17-bit subtractor                                     : 1
+# Comparators                                          : 7
+ 16-bit comparator equal                               : 1
+ 16-bit comparator less                                : 3
+ 17-bit comparator less                                : 3
+# Logic shifters                                       : 7
+ 16-bit shifter arithmetic right                       : 1
+ 16-bit shifter logical left                           : 1
+ 16-bit shifter logical right                          : 1
+ 32-bit shifter arithmetic right                       : 1
+ 32-bit shifter logical left                           : 2
+ 32-bit shifter logical right                          : 1
+# Xors                                                 : 1
+ 16-bit xor2                                           : 1
+
+=========================================================================
+
+=========================================================================
+*                         Low Level Synthesis                           *
+=========================================================================
+WARNING:Xst:2170 - Unit ALU : the following signal(s) form a combinatorial loop: Zero_shift0001<31>.
+WARNING:Xst:2170 - Unit ALU : the following signal(s) form a combinatorial loop: C_shift0002<15>.
+
+Optimizing unit <ALU> ...
+
+Mapping all equations...
+Building and optimizing final netlist ...
+Found area constraint ratio of 100 (+ 5) on block ALU, actual ratio is 9.
+
+Final Macro Processing ...
+
+=========================================================================
+Final Register Report
+
+Found no macro
+=========================================================================
+
+=========================================================================
+*                           Partition Report                            *
+=========================================================================
+
+Partition Implementation Status
+-------------------------------
+
+  No Partitions were found in this design.
+
+-------------------------------
+
+=========================================================================
+*                            Final Report                               *
+=========================================================================
+Final Results
+RTL Top Level Output File Name     : ALU.ngr
+Top Level Output File Name         : ALU
+Output Format                      : NGC
+Optimization Goal                  : Speed
+Keep Hierarchy                     : No
+
+Design Statistics
+# IOs                              : 62
+
+Cell Usage :
+# BELS                             : 880
+#      GND                         : 1
+#      INV                         : 1
+#      LUT1                        : 32
+#      LUT2                        : 115
+#      LUT3                        : 120
+#      LUT4                        : 349
+#      MUXCY                       : 134
+#      MUXF5                       : 44
+#      VCC                         : 1
+#      XORCY                       : 83
+# IO Buffers                       : 62
+#      IBUF                        : 41
+#      OBUF                        : 21
+=========================================================================
+
+Device utilization summary:
+---------------------------
+
+Selected Device : 3s500efg320-5 
+
+ Number of Slices:                      342  out of   4656     7%  
+ Number of 4 input LUTs:                617  out of   9312     6%  
+ Number of IOs:                          62
+ Number of bonded IOBs:                  62  out of    232    26%  
+
+---------------------------
+Partition Resource Summary:
+---------------------------
+
+  No Partitions were found in this design.
+
+---------------------------
+
+
+=========================================================================
+TIMING REPORT
+
+NOTE: THESE TIMING NUMBERS ARE ONLY A SYNTHESIS ESTIMATE.
+      FOR ACCURATE TIMING INFORMATION PLEASE REFER TO THE TRACE REPORT
+      GENERATED AFTER PLACE-and-ROUTE.
+
+Clock Information:
+------------------
+No clock signals found in this design
+
+Asynchronous Control Signals Information:
+----------------------------------------
+No asynchronous control signals found in this design
+
+Timing Summary:
+---------------
+Speed Grade: -5
+
+   Minimum period: No path found
+   Minimum input arrival time before clock: No path found
+   Maximum output required time after clock: No path found
+   Maximum combinational path delay: 16.914ns
+
+Timing Detail:
+--------------
+All values displayed in nanoseconds (ns)
+
+=========================================================================
+Timing constraint: Default path analysis
+  Total number of paths / destination ports: 13531 / 21
+-------------------------------------------------------------------------
+Delay:               16.914ns (Levels of Logic = 13)
+  Source:            B<0> (PAD)
+  Destination:       Zero (PAD)
+
+  Data Path: B<0> to Zero
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     IBUF:I->O            62   1.106   1.233  B_0_IBUF (B_0_IBUF)
+     LUT3:I0->O            4   0.612   0.568  Sh140_SW0 (N189)
+     LUT3:I1->O            5   0.612   0.541  Sh140 (Sh140)
+     LUT4:I3->O            4   0.612   0.502  Sh3441 (Sh344)
+     LUT4:I3->O            1   0.612   0.360  Zero1832_SW1 (N390)
+     LUT4:I3->O            1   0.612   0.387  Zero1832 (Zero1832)
+     LUT4:I2->O            1   0.612   0.387  Zero1856 (Zero1856)
+     LUT4:I2->O            1   0.612   0.426  Zero2046_SW0 (N280)
+     LUT4:I1->O            1   0.612   0.360  Zero2046_SW1 (N350)
+     LUT4:I3->O            1   0.612   0.426  Zero2046 (Zero2046)
+     LUT4:I1->O            1   0.612   0.360  Zero2845 (Zero2845)
+     LUT4:I3->O            1   0.612   0.357  Zero2867 (Zero_OBUF)
+     OBUF:I->O                 3.169          Zero_OBUF (Zero)
+    ----------------------------------------
+    Total                     16.914ns (11.007ns logic, 5.907ns route)
+                                       (65.1% logic, 34.9% route)
+
+=========================================================================
+
+
+Total REAL time to Xst completion: 8.00 secs
+Total CPU time to Xst completion: 7.56 secs
+ 
 --> 
 
-Total memory usage is 232400 kilobytes
+Total memory usage is 140980 kilobytes
 
-Number of errors   :    7 (   0 filtered)
-Number of warnings :    0 (   0 filtered)
+Number of errors   :    0 (   0 filtered)
+Number of warnings :    2 (   0 filtered)
 Number of infos    :    0 (   0 filtered)
 
