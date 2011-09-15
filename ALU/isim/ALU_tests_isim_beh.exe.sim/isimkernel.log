@@ -1,0 +1,10 @@
+Command line:
+   ALU_tests_isim_beh.exe
+     -simmode  gui
+     -simrunnum  0
+     -socket  2778
+
+Thu Sep 15 16:31:04 2011
+
+
+ Elaboration Time: 0.015625 sec

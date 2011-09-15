@@ -45,8 +45,8 @@ module ALU(
 			Flag = (~A[15]&~B[15]&C[15]) | (A[15] & B[15] & ~C[15]);
 			
 			Carry = 0;
-			Low = A<B;
-			Negative = $signed(A)<$signed(B);
+			Low = $signed(A)<$signed(B);
+			Negative = $signed(C)<0;
 		end
 
 		ADDU:
@@ -55,7 +55,7 @@ module ALU(
 			Zero = (C == 0);
 			
 			Low = A<B;
-			Negative = $signed(A)<$signed(B);
+			Negative = 0;
 			Flag = 0;
 		end
 
@@ -67,8 +67,8 @@ module ALU(
 			Flag = (~A[15]&~B[15]&C[15]) | (A[15] & B[15] & ~C[15]);
 			
 			Carry = 0;
-			Low = A<B;
-			Negative = $signed(A)<$signed(B);
+			Low = $signed(A)<$signed(B);
+			Negative = $signed(C)<0;
 		end
 
 		ADDUI:
@@ -78,7 +78,7 @@ module ALU(
 			
 			Flag = 0;
 			Low = A<B;
-			Negative = $signed(A)<$signed(B);
+			Negative = 0;
 		end
 
 		ADDCU:
@@ -88,7 +88,7 @@ module ALU(
 			
 			Flag = 0;
 			Low = A<B;
-			Negative = $signed(A)<$signed(B);
+			Negative = 0;
 		end
 
 		ADDCUI:
@@ -96,7 +96,7 @@ module ALU(
 			{Carry, C} = A + B + Carry;
 			Zero = (C == 0);
 			
-			Flag = $signed(A)<$signed(B);
+			Flag = 0;
 			Low = A<B;
 			Negative = 0;
 		end
@@ -107,9 +107,9 @@ module ALU(
 			Zero = (A == B);
 			Flag = (~A[15]&~(-B[15])&C[15]) | (A[15] & (-B[15]) & ~C[15]);
 			
-			Low = A<B;
+			Low = $signed(A)<$signed(B);
 			Carry = 0;
-			Negative = $signed(A)<$signed(B);
+			Negative = $signed(C)<0;
 		end
 
 		SUBI:
@@ -120,9 +120,9 @@ module ALU(
 			//Currently using -B[15], maybe a way to say D = -B[15], then use D.
 			Flag = (~A[15]&~(-B[15])&C[15]) | (A[15] & (-B[15]) & ~C[15]);
 			
-			Low = A<B;
+			Low = $signed(A)<$signed(B);
 			Carry = 0;
-			Negative = $signed(A)<$signed(B);
+			Negative = $signed(C)<0;
 		end
 
 		CMP:
@@ -189,8 +189,8 @@ module ALU(
 		begin
 			C = ~A;
 			Zero = A==B;
-			Low = A<B;
-			Negative = $signed(A)<$signed(B);
+			Low = C<A; //0?
+			Negative = $signed(C)<0;
 			Flag = 1'b0;
 			Carry = 1'b0;
 		end
