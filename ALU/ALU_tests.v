@@ -191,7 +191,7 @@ module ALU_tests(
         // -/+
 		A = 16'hFFF1;
         B = 16'd42;
-		flags = 5'b00000;
+		flags = 5'b00100;
 		#10
 		if (!((C) == (A + B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
@@ -204,7 +204,7 @@ module ALU_tests(
 		// TMin/Tmax
 		A = 16'h8000;
 		B = 16'h7FFF;
-		flags = 5'b00010;
+		flags = 5'b00110;
 		#10
 		if (!((C) == (A + B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
@@ -243,7 +243,7 @@ module ALU_tests(
 		// TMin/0
 		A = 16'h8000;
 		B = 16'h0000;
-		flags = 5'b00010;
+		flags = 5'b00110;
 		#10
 		if (!((C) == (A + B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
@@ -327,7 +327,7 @@ module ALU_tests(
 		// 1/TMax
 		A = 16'h0001;
 		B = 16'hFFFF;
-		flags = 5'b01000;
+		flags = 5'b01100;
 		#10
 		if (!((C) == (A + B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
