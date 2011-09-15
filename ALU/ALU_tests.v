@@ -385,7 +385,7 @@ module ALU_tests(
 		// 1/TMax
 		A = 16'h0001;
 		B = 16'hFFFF;
-		flags = 5'b01000;
+		flags = 5'b01100;
 		#10
 		if (!((C) == (A + B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
