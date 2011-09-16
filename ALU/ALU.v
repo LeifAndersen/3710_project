@@ -40,7 +40,10 @@ module ALU(
 		ADD:
 		begin
 			C = A + B;
-			Zero = (A+B == 0);
+			if (C == 0)
+				Zero = 1;
+			else
+				Zero = 0;
 				
 			Flag = (~A[15]&~B[15]&C[15]) | (A[15] & B[15] & ~C[15]);
 			
@@ -52,7 +55,10 @@ module ALU(
 		ADDU:
 		begin
 			{Carry, C} = A + B;
-			Zero = (A+B == 0);
+			if (C == 0)
+				Zero = 1;
+			else
+				Zero = 0;
 			
 			Low = A<B;
 			Negative = 0;
@@ -62,7 +68,10 @@ module ALU(
 		ADDI:
 		begin
 			C = A + B;
-			Zero = (A+B == 0);
+			if( C == 0)
+				Zero = 1;
+			else
+				Zero = 0;
 				
 			Flag = (~A[15]&~B[15]&C[15]) | (A[15] & B[15] & ~C[15]);
 			
@@ -74,7 +83,10 @@ module ALU(
 		ADDUI:
 		begin
 			{Carry, C} = A + B;
-			Zero = (A+B == 0);
+			if (C == 0)
+				Zero = 1;
+			else
+				Zero = 0;
 			
 			Flag = 0;
 			Low = A<B;
@@ -84,7 +96,10 @@ module ALU(
 		ADDCU:
 		begin
 			{Carry, C} = A + B + CarryIn;
-			Zero = (A+B+CarryIn == 0);
+			if ((C == 0) && (Carry == 0))
+				Zero = 1;
+			else
+				Zero = 0;
 			
 			Flag = 0;
 			Low = A<B;
@@ -94,7 +109,10 @@ module ALU(
 		ADDCUI:
 		begin
 			{Carry, C} = A + B + CarryIn;
-			Zero = (A + B + CarryIn == 0);
+			if ((C == 0) && (Carry == 0))
+				Zero = 1;
+			else
+				Zero = 0;
 			
 			Flag = 0;
 			Low = A<B;
@@ -104,7 +122,11 @@ module ALU(
 		SUB:
 		begin
 			C = A-B;
-			Zero = (A == B);
+			if (A == B)
+				Zero = 1;
+			else
+				Zero = 0;
+			
 			Flag = (~A[15]&~(-B[15])&C[15]) | (A[15] & (-B[15]) & ~C[15]);
 			
 			Low = $signed(A)<$signed(B);
@@ -115,7 +137,10 @@ module ALU(
 		SUBI:
 		begin
 			C = A-B;
-			Zero = (A == B);
+			if (A == B)
+				Zero = 1;
+			else
+				Zero = 0;
 			
 			//Currently using -B[15], maybe a way to say D = -B[15], then use D.
 			Flag = (~A[15]&~(-B[15])&C[15]) | (A[15] & (-B[15]) & ~C[15]);
@@ -129,7 +154,7 @@ module ALU(
 		begin
 			Low = A<B;
 			Negative = $signed(A)<$signed(B);
-			Zero = A==B;
+			Zero = (A==B);
 			Carry = 1'b0;
 			C = 16'b0;
 			Flag = 1'd0;
@@ -139,7 +164,7 @@ module ALU(
 		begin
 			Low = A<B;
 			Negative = $signed(A)<$signed(B);
-			Zero = A==B;
+			Zero = (A==B);
 			Flag = 1'd0;
 			Carry = 1'b0;
 			C = 16'b0;
@@ -148,7 +173,7 @@ module ALU(
 		TEST:
 		begin
 			C = A&B;
-			Zero = (A&B == 0);
+			Zero = ((A&B) == 0);
 			Low = A<B;
 			Negative = $signed(A)<$signed(B);
 			Flag = 1'b0;
@@ -158,7 +183,7 @@ module ALU(
 		AND:
 		begin
 			C = A&B;
-			Zero = (A&B ==0);
+			Zero = ((A&B) == 0);
 			Low = A<B;
 			Negative = $signed(A)<$signed(B);
 			Flag = 1'b0;
@@ -168,7 +193,7 @@ module ALU(
 		OR:
 		begin
 			C = A|B;
-			Zero = (A|B ==0);
+			Zero = ((A|B) ==0);
 			Low = A<B;
 			Negative = $signed(A)<$signed(B);
 			Flag = 1'b0;
@@ -178,7 +203,7 @@ module ALU(
 		XOR:
 		begin
 			C = A^B;
-			Zero = A==B;
+			Zero = (A==B);
 			Low = A<B;
 			Negative = $signed(A)<$signed(B);
 			Flag = 1'b0;
@@ -188,7 +213,7 @@ module ALU(
 		NOT:
 		begin
 			C = ~A;
-			Zero = A==B;
+			Zero = (A==B);
 			Low = C<A; //0?
 			Negative = $signed(~A)<0;
 			Flag = 1'b0;
@@ -198,7 +223,10 @@ module ALU(
 		LSH:
 		begin
 			C = A << B;
-			Zero = ((A<<B)==0);
+			if (C == 0)
+				Zero = 1;
+			else
+				Zero = 0;
 			
 			Low = 1'b0;
 			Negative = 1'b0;
@@ -209,7 +237,10 @@ module ALU(
 		LSHI:
 		begin
 			C = A << B;
-			Zero = ((A<<B) == 0);
+			if (C == 0)
+				Zero = 1;
+			else
+				Zero = 0;
 			
 			Low = 1'b0;
 			Negative = 1'b0;
@@ -220,7 +251,10 @@ module ALU(
 		RSH:
 		begin
 			C = A >> B;
-			Zero = ((A>>B) == 0);
+			if (C == 0)
+				Zero = 1;
+			else
+				Zero = 0;
 			
 			Low = 1'b0;
 			Negative = 1'b0;
@@ -231,7 +265,10 @@ module ALU(
 		RSHI:
 		begin
 			C = A >> B;
-			Zero = ((A >> B) ==0);
+			if (C == 0)
+				Zero = 1;
+			else
+				Zero = 0;
 			
 			Low = 1'b0;
 			Negative = 1'b0;
@@ -242,7 +279,10 @@ module ALU(
 		ALSH:
 		begin
 			C = $signed(A) <<< B;
-			Zero = (($signed(A) <<< B) ==0);
+			if (C == 0)
+				Zero = 1;
+			else
+				Zero = 0;
 			
 			Low = 1'b0;
 			Negative = 1'b0;
@@ -253,7 +293,10 @@ module ALU(
 		ARSH:
 		begin
 			C = $signed(A) >>> B;
-			Zero = (($signed(A) >>> B) ==0);
+			if (C == 0)
+				Zero = 1;
+			else
+				Zero = 0;
 			
 			Low = 1'b0;
 			Negative = 1'b0;
