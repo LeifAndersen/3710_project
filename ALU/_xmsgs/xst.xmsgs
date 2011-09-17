@@ -5,26 +5,7 @@
      behavior or data corruption.  It is strongly advised that
      users do not edit the contents of this file. -->
 <messages>
-<msg type="error" file="HDLCompilers" num="28" delta="new" ><arg fmt="%s" index="1">&quot;ALU.v&quot; line 63 </arg>&apos;<arg fmt="%s" index="2">opcode</arg>&apos; has not been declared
-</msg>
-
-<msg type="error" file="HDLCompilers" num="28" delta="new" ><arg fmt="%s" index="1">&quot;ALU.v&quot; line 71 </arg>&apos;<arg fmt="%s" index="2">Cary</arg>&apos; has not been declared
-</msg>
-
-<msg type="error" file="HDLCompilers" num="28" delta="new" ><arg fmt="%s" index="1">&quot;ALU.v&quot; line 93 </arg>&apos;<arg fmt="%s" index="2">Cary</arg>&apos; has not been declared
-</msg>
-
-<msg type="error" file="HDLCompilers" num="28" delta="new" ><arg fmt="%s" index="1">&quot;ALU.v&quot; line 117 </arg>&apos;<arg fmt="%s" index="2">Cary</arg>&apos; has not been declared
-</msg>
-
-<msg type="error" file="HDLCompilers" num="28" delta="new" ><arg fmt="%s" index="1">&quot;ALU.v&quot; line 156 </arg>&apos;<arg fmt="%s" index="2">Less</arg>&apos; has not been declared
-</msg>
-
-<msg type="error" file="HDLCompilers" num="28" delta="new" ><arg fmt="%s" index="1">&quot;ALU.v&quot; line 169 </arg>&apos;<arg fmt="%s" index="2">Less</arg>&apos; has not been declared
-</msg>
-
-<msg type="error" file="HDLCompilers" num="28" delta="new" ><arg fmt="%s" index="1">&quot;ALU.v&quot; line 189 </arg>&apos;<arg fmt="%s" index="2">CMPIU</arg>&apos; has not been declared
-</msg>
+<msg type="warning" file="Xst" num="2170" delta="old" >Unit <arg fmt="%s" index="1">ALU</arg> : the following signal(s) form a combinatorial loop: </msg>
 
 </messages>
 

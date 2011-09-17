@@ -20,7 +20,7 @@
 	parameter ALSH     = 8'd19;
 	parameter ARSH     = 8'd20;
 	parameter NOP      = 8'd21;
-	parameter MULT     = 8'd23;
-	parameter MULTI    = 8'd24;
-	parameter MULTU    = 8'd25;
-	parameter MULTUI  = 8'd26;
+	//parameter MULT     = 8'd23;
+	//parameter MULTI    = 8'd24;
+	//parameter MULTU    = 8'd25;
+	//parameter MULTUI   = 8'd26;

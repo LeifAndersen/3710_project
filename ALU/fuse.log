@@ -1,18 +1,21 @@
-Running: C:\Xilinx\12.2\ISE_DS\ISE\bin\nt\unwrapped\fuse.exe -intstyle ise -incremental -lib unisims_ver -lib unimacro_ver -lib xilinxcorelib_ver -o U:/3710/3710/ALU/ALU_isim_beh.exe -prj U:/3710/3710/ALU/ALU_beh.prj work.ALU work.glbl 
+Running: C:\Xilinx\12.2\ISE_DS\ISE\bin\nt\unwrapped\fuse.exe -intstyle ise -incremental -lib unisims_ver -lib unimacro_ver -lib xilinxcorelib_ver -o U:/3710/3710/ALU/ALU_tests_isim_beh.exe -prj U:/3710/3710/ALU/ALU_tests_beh.prj work.ALU_tests work.glbl 
 ISim M.63c (signature 0xb869381d)
 Number of CPUs detected in this system: 4
 Turning on mult-threading, number of parallel sub-compilation jobs: 8 
 Determining compilation order of HDL files
 Analyzing Verilog file \"U:/3710/3710/ALU/ALU.v\" into library work
+Analyzing Verilog file \"U:/3710/3710/ALU/ALU_tests.v\" into library work
 Analyzing Verilog file \"C:/Xilinx/12.2/ISE_DS/ISE//verilog/src/glbl.v\" into library work
 Starting static elaboration
 Completed static elaboration
 Fuse Memory Usage: 58312 KB
 Fuse CPU Usage: 140 ms
 Compiling module ALU
+Compiling module ALU_tests
 Compiling module glbl
 Time Resolution for simulation is 1ps.
-Compiled 2 Verilog Units
-Built simulation executable U:/3710/3710/ALU/ALU_isim_beh.exe
-Fuse Memory Usage: 83912 KB
-Fuse CPU Usage: 202 ms
+Waiting for 1 sub-compilation(s) to finish...
+Compiled 3 Verilog Units
+Built simulation executable U:/3710/3710/ALU/ALU_tests_isim_beh.exe
+Fuse Memory Usage: 85640 KB
+Fuse CPU Usage: 296 ms
