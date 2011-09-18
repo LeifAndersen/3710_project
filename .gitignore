@@ -1,8 +1,6 @@
 .DS_Store
 
-ALU/ALU_tests_summary.html
-ALU/iseconfig/ALU_tests.xreport
-ALU/isim*
+*isim*
 *_beh*
 *_isim*
 *.log
@@ -18,3 +16,7 @@ xilinxsim.ini
 *.xrpt
 *.ref
 *.bin
+*.lso
+*.stx
+*.prj
+*.xst
