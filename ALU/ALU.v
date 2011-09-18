@@ -156,7 +156,7 @@ module ALU(
 			Negative = $signed(A)<$signed(B);
 			Zero = (A==B);
 			Carry = 1'b0;
-			C = 16'b0;
+			C = 16'b0000000000000000;
 			Flag = 1'd0;
 		end
 
@@ -167,7 +167,7 @@ module ALU(
 			Zero = (A==B);
 			Flag = 1'd0;
 			Carry = 1'b0;
-			C = 16'b0;
+			C = 16'b0000000000000000;
 		end
 
 		TEST:
@@ -306,7 +306,7 @@ module ALU(
 
 		NOP:
 		begin
-			C = 16'd0;
+			C = 16'b0000000000000000;
 			Carry = 1'b0;
 			Flag = 1'b0;
 			Low = 1'b0;
@@ -316,7 +316,7 @@ module ALU(
 
 		default:
 		begin
-			C = 16'd0;
+			C = 16'b0000000000000000;
 			Carry = 1'b0;
 			Flag = 1'b0;
 			Low = 1'b0;
