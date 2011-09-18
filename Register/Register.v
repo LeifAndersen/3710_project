@@ -27,14 +27,16 @@ module Register(
 		input [3:0] C,
 		input write,
 		input [15:0] inputReg,
-		output reg [15:0] outputReg1,
-		output reg [15:0] outputReg2
+		output [15:0] outputReg1,
+		output [15:0] outputReg2
 	);
 
-	reg[15:0]R[15:0];	
+	reg[15:0]R[15:0];
+
+assign outputReg1 = R[A];
+assign outputReg2 = R[B];
+	
 always@(posedge clk) begin
-		outputReg1 = R[A];
-		outputReg2 = R[B];
 		if(write == 1'b1)
 		begin
 			R[C] = inputReg;

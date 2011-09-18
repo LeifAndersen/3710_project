@@ -5,7 +5,7 @@
     The structure and the elements are likely to change over the next few releases.
     This means code written to parse this file will need to be revisited each subsequent release.-->
 
-  <application stringID="Xst" timeStamp="Sun Sep 18 14:01:47 2011">
+  <application stringID="Xst" timeStamp="Sun Sep 18 14:07:29 2011">
     <section stringID="User_Env">
       <table stringID="User_EnvVar">
         <column stringID="variable"/>
@@ -33,7 +33,7 @@
         <column stringID="speed"/>
         <row stringID="row" value="0">
           <item stringID="arch" value="Intel(R) Core(TM) i3 CPU       M 330  @ 2.13GHz"/>
-          <item stringID="speed" value="2133.000 MHz"/>
+          <item stringID="speed" value="933.000 MHz"/>
         </row>
       </table>
     </section>
@@ -95,21 +95,11 @@
     </section>
     <section stringID="XST_HDL_SYNTHESIS_REPORT">
       <item dataType="int" stringID="XST_RAMS" value="2"></item>
-      <item dataType="int" stringID="XST_REGISTERS" value="2">
-        <item dataType="int" stringID="XST_16BIT_REGISTER" value="2"/>
-      </item>
     </section>
     <section stringID="XST_ADVANCED_HDL_SYNTHESIS_REPORT">
       <item dataType="int" stringID="XST_RAMS" value="2"></item>
-      <item dataType="int" stringID="XST_REGISTERS" value="32">
-        <item dataType="int" stringID="XST_FLIPFLOPS" value="32"/>
-      </item>
     </section>
-    <section stringID="XST_FINAL_REGISTER_REPORT">
-      <item dataType="int" stringID="XST_REGISTERS" value="32">
-        <item dataType="int" stringID="XST_FLIPFLOPS" value="32"/>
-      </item>
-    </section>
+    <section stringID="XST_FINAL_REGISTER_REPORTFOUND_NO_MACRO"/>
     <section stringID="XST_PARTITION_REPORT">
       <section stringID="XST_PARTITION_IMPLEMENTATION_STATUS">
         <section stringID="XST_NO_PARTITIONS_WERE_FOUND_IN_THIS_DESIGN"/>
@@ -127,9 +117,6 @@
         <item stringID="XST_IOS" value="62"/>
       </section>
       <section stringID="XST_CELL_USAGE">
-        <item dataType="int" stringID="XST_FLIPFLOPSLATCHES" value="32">
-          <item dataType="int" stringID="XST_FD" value="32"/>
-        </item>
         <item dataType="int" stringID="XST_RAMS" value="32">
           <item dataType="int" stringID="XST_RAM16X1D" value="32"/>
         </item>
@@ -145,7 +132,6 @@
     <section stringID="XST_DEVICE_UTILIZATION_SUMMARY">
       <item stringID="XST_SELECTED_DEVICE" value="3s500evq100-5"/>
       <item AVAILABLE="4656" dataType="int" label="Number of Slices" stringID="XST_NUMBER_OF_SLICES" value="32"/>
-      <item AVAILABLE="9312" dataType="int" label="Number of Slice Flip Flops" stringID="XST_NUMBER_OF_SLICE_FLIP_FLOPS" value="32"/>
       <item AVAILABLE="9312" dataType="int" label="Number of 4 input LUTs" stringID="XST_NUMBER_OF_4_INPUT_LUTS" value="64"/>
       <item dataType="int" label="Number used as Logic" stringID="XST_NUMBER_USED_AS_LOGIC" value="0"/>
       <item dataType="int" stringID="XST_NUMBER_USED_AS_RAMS" value="64"/>
