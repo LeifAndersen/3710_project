@@ -299,7 +299,7 @@ module ALU(
 
 		ALSH:
 		begin
-			C = $signed(A) <<< B;
+			C = A << B;
 			if (C == 0)
 				Zero = 1;
 			else
@@ -313,7 +313,7 @@ module ALU(
 
 		ARSH:
 		begin
-			C = $signed(A) >>> B;
+			C = A >>> B;
 			if (C == 0)
 				Zero = 1;
 			else
