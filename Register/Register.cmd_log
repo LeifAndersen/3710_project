@@ -1,0 +1,1 @@
+xst -intstyle ise -ifn "/home/leif/3710/Register/Register.xst" -ofn "/home/leif/3710/Register/Register.syr" 
