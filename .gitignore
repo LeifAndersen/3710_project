@@ -3,4 +3,9 @@
 ALU/ALU_tests_summary.html
 ALU/iseconfig/ALU_tests.xreport
 ALU/isim*
-ALU/isim/*
+*_beh*
+*_isim*
+*.log
+*.xreport
+*/isim/*
+xilinxsim.ini
