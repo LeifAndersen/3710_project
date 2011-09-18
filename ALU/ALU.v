@@ -205,7 +205,7 @@ module ALU(
 		OR:
 		begin
 			C = A|B;
-			if C == 0)
+			if (C == 0)
 				Zero = 1;
 			else
 				Zero = 0;
