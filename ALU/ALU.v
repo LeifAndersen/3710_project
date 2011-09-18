@@ -154,9 +154,12 @@ module ALU(
 		begin
 			Low = A<B;
 			Negative = $signed(A)<$signed(B);
-			Zero = (A==B);
+			if (A == B)
+				Zero = 1;
+			else
+				Zero = 0;
 			Carry = 1'b0;
-			C = 16'b0;
+			C = 16'b0000000000000000;
 			Flag = 1'd0;
 		end
 
@@ -164,16 +167,22 @@ module ALU(
 		begin
 			Low = A<B;
 			Negative = $signed(A)<$signed(B);
-			Zero = (A==B);
+			if (A == B)
+				Zero = 1;
+			else
+				Zero = 0;
 			Flag = 1'd0;
 			Carry = 1'b0;
-			C = 16'b0;
+			C = 16'b0000000000000000;
 		end
 
 		TEST:
 		begin
 			C = A&B;
-			Zero = ((A&B) == 0);
+			if (C == 0)
+				Zero = 1;
+			else
+				Zero = 0;
 			Low = A<B;
 			Negative = $signed(A)<$signed(B);
 			Flag = 1'b0;
@@ -183,7 +192,10 @@ module ALU(
 		AND:
 		begin
 			C = A&B;
-			Zero = ((A&B) == 0);
+			if (C == 0)
+				Zero = 1;
+			else
+				Zero = 0;
 			Low = A<B;
 			Negative = $signed(A)<$signed(B);
 			Flag = 1'b0;
@@ -193,7 +205,10 @@ module ALU(
 		OR:
 		begin
 			C = A|B;
-			Zero = ((A|B) ==0);
+			if (C == 0)
+				Zero = 1;
+			else
+				Zero = 0;
 			Low = A<B;
 			Negative = $signed(A)<$signed(B);
 			Flag = 1'b0;
@@ -203,7 +218,10 @@ module ALU(
 		XOR:
 		begin
 			C = A^B;
-			Zero = (A==B);
+			if (C == 0)
+				Zero = 1;
+			else
+				Zero = 0;
 			Low = A<B;
 			Negative = $signed(A)<$signed(B);
 			Flag = 1'b0;
@@ -213,7 +231,10 @@ module ALU(
 		NOT:
 		begin
 			C = ~A;
-			Zero = (A==B);
+			if (C == 0)
+				Zero = 1;
+			else
+				Zero = 0;
 			Low = C<A; //0?
 			Negative = $signed(~A)<0;
 			Flag = 1'b0;
@@ -306,7 +327,7 @@ module ALU(
 
 		NOP:
 		begin
-			C = 16'd0;
+			C = 16'b0000000000000000;
 			Carry = 1'b0;
 			Flag = 1'b0;
 			Low = 1'b0;
@@ -316,7 +337,7 @@ module ALU(
 
 		default:
 		begin
-			C = 16'd0;
+			C = 16'b0000000000000000;
 			Carry = 1'b0;
 			Flag = 1'b0;
 			Low = 1'b0;
