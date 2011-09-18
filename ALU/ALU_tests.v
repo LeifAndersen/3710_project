@@ -38,7 +38,6 @@ module ALU_tests(
 	wire Negative;
 	wire Zero;
 
-	integer testNumber;
 	// Instantiate the Unit Under Test (UUT)
 	ALU uut (
 		.A(A),
@@ -70,8 +69,7 @@ module ALU_tests(
 		B = 16'hFF00;
 		flags = 5'b00010;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 1);
 		if (!((C) == (A + B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
@@ -85,8 +83,7 @@ module ALU_tests(
         B = 16'd42;
         flags = 5'b00100;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 2);
 		if (!((C) == (A + B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
@@ -100,8 +97,7 @@ module ALU_tests(
 		B = 16'h7FFF;
 		flags = 5'b00110;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 3);
 		if (!((C) == (A + B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
@@ -115,8 +111,7 @@ module ALU_tests(
 		B = 16'h8000;
 		flags = 5'b00010;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 4);
 		if (!((C) == (A + B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
@@ -130,8 +125,7 @@ module ALU_tests(
 		B = 16'h0001;
 		flags = 5'b01010;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 5);
 		if (!((C) == (A + B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
@@ -145,8 +139,7 @@ module ALU_tests(
 		B = 16'h0000;
 		flags = 5'b00110;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 6);
 		if (!((C) == (A + B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
@@ -160,8 +153,7 @@ module ALU_tests(
 		B = 16'hFF00;
 		flags = 5'b00010;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 7);
 		if (!((C) == (A + B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
@@ -175,8 +167,7 @@ module ALU_tests(
 		B = 16'd42;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 8);
 		if (!((C) == (A + B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
@@ -196,8 +187,7 @@ module ALU_tests(
 		B = 16'hFF00;
 		flags = 5'b00010;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 9);
 		if (!((C) == (A + B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
@@ -211,8 +201,7 @@ module ALU_tests(
         B = 16'd42;
 		flags = 5'b00100;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 10);
 		if (!((C) == (A + B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
@@ -226,8 +215,7 @@ module ALU_tests(
 		B = 16'h7FFF;
 		flags = 5'b00110;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 11);
 		if (!((C) == (A + B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
@@ -241,8 +229,7 @@ module ALU_tests(
 		B = 16'h8000;
 		flags = 5'b00010;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 12);
 		if (!((C) == (A + B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
@@ -256,8 +243,7 @@ module ALU_tests(
 		B = 16'h0001;
 		flags = 5'b01010;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 13);
 		if (!((C) == (A + B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
@@ -271,8 +257,7 @@ module ALU_tests(
 		B = 16'h0000;
 		flags = 5'b00110;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 14);
 		if (!((C) == (A + B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
@@ -286,8 +271,7 @@ module ALU_tests(
 		B = 16'hFF00;
 		flags = 5'b00010;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 14.5);
 		if (!((C) == (A + B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
@@ -301,8 +285,7 @@ module ALU_tests(
 		B = 16'd42;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 15);
 		if (!((C) == (A + B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
@@ -322,8 +305,7 @@ module ALU_tests(
 		B = 16'h12;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 16);
 		if (!((C) == (A + B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
@@ -337,8 +319,7 @@ module ALU_tests(
 		B = 16'h0000;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 17);
 		if (!((C) == (A + B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
@@ -352,8 +333,7 @@ module ALU_tests(
 		B = 16'h0001;
 		flags = 5'b10000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 18);
 		if (!((C) == (A + B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
@@ -367,8 +347,7 @@ module ALU_tests(
 		B = 16'hFFFF;
 		flags = 5'b01100;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 19);
 		if (!((C) == (A + B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
@@ -388,8 +367,7 @@ module ALU_tests(
 		B = 16'h12;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 20);
 		if (!((C) == (A + B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
@@ -403,8 +381,7 @@ module ALU_tests(
 		B = 16'h0000;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 21);
 		if (!((C) == (A + B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
@@ -418,8 +395,7 @@ module ALU_tests(
 		B = 16'h0001;
 		flags = 5'b10000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 22);
 		if (!((C) == (A + B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
@@ -433,8 +409,7 @@ module ALU_tests(
 		B = 16'hFFFF;
 		flags = 5'b01100;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 23);
 		if (!((C) == (A + B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
@@ -455,8 +430,7 @@ module ALU_tests(
 		CarryIn = 1'b0;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 24);
 		if (!((C) == (A + B + CarryIn))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
@@ -471,8 +445,7 @@ module ALU_tests(
 		CarryIn = 1'b1;
 		flags = 5'b10000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 25);
 		if (!((C) == (A + B + CarryIn))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
@@ -487,8 +460,7 @@ module ALU_tests(
 		CarryIn = 1'b0;
 		flags = 5'b10000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 26);
 		if (!((C) == (A + B + CarryIn))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
@@ -503,8 +475,7 @@ module ALU_tests(
 		CarryIn = 1'b0;
 		flags = 5'b01100;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 27);
 		if (!((C) == (A + B + CarryIn))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
@@ -525,8 +496,7 @@ module ALU_tests(
 		CarryIn = 1'b0;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 28);
 		if (!((C) == (A + B + CarryIn))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
@@ -541,8 +511,7 @@ module ALU_tests(
 		CarryIn = 1'b1;
 		flags = 5'b10000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 29);
 		if (!((C) == (A + B + CarryIn))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
@@ -557,8 +526,7 @@ module ALU_tests(
 		CarryIn = 1'b0;
 		flags = 5'b10000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 30);
 		if (!((C) == (A + B + CarryIn))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
@@ -573,8 +541,7 @@ module ALU_tests(
 		CarryIn = 1'b0;
 		flags = 5'b01100;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 31);
 		if (!((C) == (A + B + CarryIn))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A + B), C);
         end
@@ -594,8 +561,7 @@ module ALU_tests(
 		B = 16'd47;
 		flags = 5'b00110;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 32);
 		if (!((C) == (A - B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A - B), C);
         end
@@ -609,8 +575,7 @@ module ALU_tests(
         B = 16'h000F;
 		flags = 5'b00101;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 33);
 		if (!((C) == (A - B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A - B), C);
         end
@@ -624,8 +589,7 @@ module ALU_tests(
 		B = 16'd40;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 34);
 		if (!((C) == (A - B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A - B), C);
         end
@@ -639,8 +603,7 @@ module ALU_tests(
 		B = 16'hF0F1;
 		flags = 5'b00001;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 35);
 		if (!((C) == (A - B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A - B), C);
         end
@@ -654,8 +617,7 @@ module ALU_tests(
 		B = 16'hFFFF;
 		flags = 5'b01000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 36);
 		if (!((C) == (A - B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A - B), C);
         end
@@ -669,8 +631,7 @@ module ALU_tests(
 		B = 16'h0001;
 		flags = 5'b01100;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 37);
 		if (!((C) == (A - B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A - B), C);
         end
@@ -690,8 +651,7 @@ module ALU_tests(
 		B = 16'd47;
 		flags = 5'b00110;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 38);
 		if (!((C) == (A - B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A - B), C);
         end
@@ -705,8 +665,7 @@ module ALU_tests(
         B = 16'h000F;
 		flags = 5'b00101;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 39);
 		if (!((C) == (A - B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A - B), C);
         end
@@ -720,8 +679,7 @@ module ALU_tests(
 		B = 16'd40;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 40);
 		if (!((C) == (A - B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A - B), C);
         end
@@ -735,8 +693,7 @@ module ALU_tests(
 		B = 16'hF0F1;
 		flags = 5'b00001;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 41);
 		if (!((C) == (A - B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A - B), C);
         end
@@ -750,8 +707,7 @@ module ALU_tests(
 		B = 16'hFFFF;
 		flags = 5'b01000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 42);
 		if (!((C) == (A - B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A - B), C);
         end
@@ -765,8 +721,7 @@ module ALU_tests(
 		B = 16'h0001;
 		flags = 5'b01100;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 43);
 		if (!((C) == (A - B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A - B), C);
         end
@@ -786,8 +741,7 @@ module ALU_tests(
 		B = 16'd45;
 		flags = 5'b00001;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 44);
 		if (!(C == 0)) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A < B), C);
         end
@@ -801,8 +755,7 @@ module ALU_tests(
         B = 16'h000F;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 45);
 		if (!(C == 0)) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A < B), C);
         end
@@ -816,8 +769,7 @@ module ALU_tests(
 		B = 16'd4000;
 		flags = 5'b00100;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 46);
 		if (!(C == 0)) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A < B), C);
         end
@@ -837,8 +789,7 @@ module ALU_tests(
 		B = 16'd45;
 		flags = 5'b00001;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 47);
 		if (!(C == 0)) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A < B), C);
         end
@@ -852,8 +803,7 @@ module ALU_tests(
         B = 16'h000F;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 48);
 		if (!(C == 0)) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A < B), C);
         end
@@ -867,8 +817,7 @@ module ALU_tests(
 		B = 16'd4000;
 		flags = 5'b00100;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 49);
 		if (!(C == 0)) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A < B), C);
         end
@@ -887,8 +836,7 @@ module ALU_tests(
 		B = 16'd45;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 50);
 		if (!(C == (A & B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A & B), C);
         end
@@ -901,8 +849,7 @@ module ALU_tests(
         B = 16'h000F;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 51);
 		if (!(C == (A & B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A & B), C);
         end
@@ -915,8 +862,7 @@ module ALU_tests(
 		B = 16'd4000;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 52);
 		if (!(C == (A & B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A & B), C);
         end
@@ -937,8 +883,7 @@ module ALU_tests(
 		B = 16'd45;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 53);
 		if (!(C == (A | B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A | B), C);
         end
@@ -951,8 +896,7 @@ module ALU_tests(
         B = 16'h000F;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 54);
 		if (!(C == (A | B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A | B), C);
         end
@@ -965,8 +909,7 @@ module ALU_tests(
 		B = 16'd4000;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 55);
 		if (!(C == (A | B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A | B), C);
         end
@@ -985,8 +928,7 @@ module ALU_tests(
 		B = 16'd45;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 56);
 		if (!(C == (A ^ B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A ^ B), C);
         end
@@ -999,8 +941,7 @@ module ALU_tests(
         B = 16'h000F;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 57);
 		if (!(C == (A ^ B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A ^ B), C);
         end
@@ -1013,8 +954,7 @@ module ALU_tests(
 		B = 16'd4000;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 58);
 		if (!(C == (A ^ B))) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, (A ^ B), C);
         end
@@ -1033,8 +973,7 @@ module ALU_tests(
 		B = 16'd4;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 59);
 		if (!(C == 16'h4440)) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, 16'h4440, C);
         end
@@ -1047,8 +986,7 @@ module ALU_tests(
 		B = 16'd1;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 60);
 		if (!(C == 16'h8888)) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, 16'h8888, C);
         end
@@ -1067,8 +1005,7 @@ module ALU_tests(
 		B = 16'd4;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 61);
 		if (!(C == 16'h4440)) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, 16'h4440, C);
         end
@@ -1081,8 +1018,7 @@ module ALU_tests(
 		B = 16'd1;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 62);
 		if (!(C == 16'h8888)) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, 16'h8888, C);
         end
@@ -1101,8 +1037,7 @@ module ALU_tests(
 		B = 16'd4;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 63);
 		if (!(C == 16'h0444)) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, 16'h0444, C);
         end
@@ -1115,8 +1050,7 @@ module ALU_tests(
 		B = 16'd1;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 64);
 		if (!(C == 16'h2222)) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, 16'h2222, C);
         end
@@ -1135,8 +1069,7 @@ module ALU_tests(
 		B = 16'd4;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 65);
 		if (!(C == 16'h0444)) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, 16'h0444, C);
         end
@@ -1149,8 +1082,7 @@ module ALU_tests(
 		B = 16'd1;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 66);
 		if (!(C == 16'h2222)) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, 16'h2222, C);
         end
@@ -1169,8 +1101,7 @@ module ALU_tests(
 		B = 16'd4;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 67);
 		if (!(C == 16'h4440)) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, 16'h4440, C);
         end
@@ -1183,8 +1114,7 @@ module ALU_tests(
 		B = 16'd1;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 68);
 		if (!(C == 16'h2222)) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, 16'h2222, C);
         end
@@ -1203,8 +1133,7 @@ module ALU_tests(
 		B = 16'd4;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 69);
 		if (!(C == 16'h0444)) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, 16'h0444, C);
         end
@@ -1217,8 +1146,7 @@ module ALU_tests(
 		B = 16'd2;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 70);
 		if (!(C == 16'hE222)) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, 16'hE222, C);
         end
@@ -1237,8 +1165,7 @@ module ALU_tests(
 		B = 16'd4;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 71);
 		if (!(C == 0)) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, 0, C);
         end
@@ -1251,8 +1178,7 @@ module ALU_tests(
 		B = 16'd1;
 		flags = 5'b00000;
 		#10
-		$display("Test number %d", testNumber);
-		testNumber = testNumber + 1;
+		$display("Test number %d", 72);
 		if (!(C == 0)) begin
         	$display("Wrong for Opcode: %b, A: %b, B: %b\nExpected %b, but got %b.", Opcode, A, B, 0, C);
         end
