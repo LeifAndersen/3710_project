@@ -331,7 +331,7 @@ module ALU_tests(
         // TMax/1
 		A = 16'hFFFF;
 		B = 16'h0001;
-		flags = 5'b10000;
+		flags = 5'b10001;
 		#10
 		$display("Test number %d", 18);
 		if (!((C) == (A + B))) begin
@@ -345,7 +345,7 @@ module ALU_tests(
 		// 1/TMax
 		A = 16'h0001;
 		B = 16'hFFFF;
-		flags = 5'b01100;
+		flags = 5'b10101;
 		#10
 		$display("Test number %d", 19);
 		if (!((C) == (A + B))) begin
@@ -393,7 +393,7 @@ module ALU_tests(
         // TMax/1
 		A = 16'hFFFF;
 		B = 16'h0001;
-		flags = 5'b10000;
+		flags = 5'b10001;
 		#10
 		$display("Test number %d", 22);
 		if (!((C) == (A + B))) begin
@@ -407,7 +407,7 @@ module ALU_tests(
 		// 1/TMax
 		A = 16'h0001;
 		B = 16'hFFFF;
-		flags = 5'b01100;
+		flags = 5'b10101;
 		#10
 		$display("Test number %d", 23);
 		if (!((C) == (A + B))) begin
@@ -473,7 +473,7 @@ module ALU_tests(
 		A = 16'h0001;
 		B = 16'hFFFF;
 		CarryIn = 1'b0;
-		flags = 5'b01100;
+		flags = 5'b10100;
 		#10
 		$display("Test number %d", 27);
 		if (!((C) == (A + B + CarryIn))) begin
@@ -539,7 +539,7 @@ module ALU_tests(
 		A = 16'h0001;
 		B = 16'hFFFF;
 		CarryIn = 1'b0;
-		flags = 5'b01100;
+		flags = 5'b10100;
 		#10
 		$display("Test number %d", 31);
 		if (!((C) == (A + B + CarryIn))) begin
@@ -573,7 +573,7 @@ module ALU_tests(
         // +/+ (0)
 		A = 16'hFFF1;
         B = 16'h000F;
-		flags = 5'b00101;
+		flags = 5'b00110;
 		#10
 		$display("Test number %d", 33);
 		if (!((C) == (A - B))) begin
@@ -599,7 +599,7 @@ module ALU_tests(
 		end
 
 		// -/- (0)
-		A = 16'h0F0F;
+		A = 16'hF0F1;
 		B = 16'hF0F1;
 		flags = 5'b00001;
 		#10
