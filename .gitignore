@@ -9,3 +9,13 @@ ALU/isim*
 *.xreport
 */isim/*
 xilinxsim.ini
+*/_xmsgs/*
+*/xst/*
+*.cmd_log
+*.gise
+*.ngc
+*.ngr
+*.syr
+*.xrpt
+*.ref
+*.bin
