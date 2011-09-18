@@ -1,5 +1,0 @@
-set -tmpdir "/home/leif/3710/ALU/xst/projnav.tmp"
-set -xsthdpdir "/home/leif/3710/ALU/xst"
-elaborate
--ifn ALU.prj
--ifmt mixed
