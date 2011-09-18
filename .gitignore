@@ -20,3 +20,5 @@ xilinxsim.ini
 *.stx
 *.prj
 *.xst
+*.gise
+
