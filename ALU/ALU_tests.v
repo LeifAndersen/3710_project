@@ -28,6 +28,7 @@ module ALU_tests(
 	reg [15:0] B;
 	reg [7:0] Opcode;
 	reg CarryIn;
+	reg [4:0] flags;
 
 	// Outputs
 	wire [15:0] C;

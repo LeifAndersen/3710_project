@@ -39,9 +39,9 @@ module ALUMiter(
 	wire Negative2;
 	wire Zero2;
 	 
-	ALU bob(A, B, Opcode, CarryIn, C, Carry, Flag, Low, Negative, Zero);
+	ALU alice(A, B, Opcode, CarryIn, C, Carry, Flag, Low, Negative, Zero);
 
-	ALUSynth fred(CarryIn, Flag2, Carry2, Low2, Negative2, Zero2, C2, A, B, Opcode);
+	ALUSynth bob(CarryIn, Flag2, Carry2, Low2, Negative2, Zero2, C2, A, B, Opcode);
 	
 	assign miterOut = (C == C2) && (Carry == Carry2) && (Flag ==  Flag2) && (Low == Low2) && (Negative == Negative2) && (Zero == Zero2);
 
