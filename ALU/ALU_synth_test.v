@@ -47,10 +47,6 @@ module ALU_synth_test;
 	);
 
 		initial begin
-		i = 0;
-		
-		#100
-
 			for( Opcode = 0; Opcode < 22; Opcode = Opcode + 1) begin
 				for( i = 0; i < 10; i = i + 1) begin
 					#10
@@ -63,7 +59,7 @@ module ALU_synth_test;
 				end
 			end
 
-		$finish(2);	
+			$finish(2);	
 		end
 			
 		
