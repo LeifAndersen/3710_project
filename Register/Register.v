@@ -26,18 +26,71 @@ module Register(
 		input [3:0] B,
 		input [3:0] C,
 		input write,
+		input reset,
 		input [15:0] inputReg,
-		output [15:0] outputReg1,
-		output [15:0] outputReg2
+		output reg [15:0] outputReg1,
+		output reg [15:0] outputReg2
 	);
 
 	reg[15:0]R[15:0];
 
-assign outputReg1 = R[A];
-assign outputReg2 = R[B];
-	
+always@(*) begin
+	case(A)
+	4'd0:outputReg1 = R[4'd0];
+	4'd1:outputReg1 = R[4'd1];
+	4'd2:outputReg1 = R[4'd2];
+	4'd3:outputReg1 = R[4'd3];
+	4'd4:outputReg1 = R[4'd4];
+	4'd5:outputReg1 = R[4'd5];
+	4'd6:outputReg1 = R[4'd6];
+	4'd7:outputReg1 = R[4'd7];
+	4'd8:outputReg1 = R[4'd8];
+	4'd9:outputReg1 = R[4'd9];
+	4'd10:outputReg1 = R[4'd10];
+	4'd11:outputReg1 = R[4'd11];
+	4'd12:outputReg1 = R[4'd12];
+	4'd13:outputReg1 = R[4'd13];
+	4'd14:outputReg1 = R[4'd14];
+	default:outputReg1 = R[4'd15];
+	endcase
+
+	case(B)
+	4'd0:outputReg2 = R[4'd0];
+	4'd1:outputReg2 = R[4'd1];
+	4'd2:outputReg2 = R[4'd2];
+	4'd3:outputReg2 = R[4'd3];
+	4'd4:outputReg2 = R[4'd4];
+	4'd5:outputReg2 = R[4'd5];
+	4'd6:outputReg2 = R[4'd6];
+	4'd7:outputReg2 = R[4'd7];
+	4'd8:outputReg2 = R[4'd8];
+	4'd9:outputReg2 = R[4'd9];
+	4'd10:outputReg2 = R[4'd10];
+	4'd11:outputReg2 = R[4'd11];
+	4'd12:outputReg2 = R[4'd12];
+	4'd13:outputReg2 = R[4'd13];
+	4'd14:outputReg2 = R[4'd14];
+	default:outputReg2 = R[4'd15];
+	endcase
+end
+
 always@(posedge clk) begin
-		if(write == 1'b1)
+	if(reset == 1'b1) begin
+		R[0] = 0;
+		R[1] = 0;
+		R[2] = 0;
+		R[3] = 0;
+		R[4] = 0;
+		R[5] = 0;
+		R[6] = 0;
+		R[7] = 0;
+		R[8] = 0;
+		R[9] = 0;
+		R[10] = 0;
+		R[14] = 0;
+		R[15] = 0;
+	end
+	else if(write == 1'b1)
 		begin
 			R[C] = inputReg;
 		end
