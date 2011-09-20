@@ -315,7 +315,7 @@ module ALU(
 
 		ARSH:
 		begin
-			C = $signed(A) >>> B[4:0];
+			C = $signed(A) >>> B[3:0];
 			if (C == 0)
 				Zero = 1;
 			else
