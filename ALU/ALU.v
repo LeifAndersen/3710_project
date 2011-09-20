@@ -35,7 +35,7 @@ module ALU(
 	
 	`include "opcodesLOL.v"
 
-	wire[15:0] D = ~B + 1;
+	wire[15:0] D = -B;//~B + 1;
 
 	always@(*) begin
 		case(Opcode)
@@ -123,17 +123,17 @@ module ALU(
 
 		SUB:
 		begin
-			C = A-B;
+			C = A+D;
 			if (A == B)
 				Zero = 1;
 			else
 				Zero = 0;
 			
-			Flag = ((!A[15])&(!D[15])&C[15]) | (A[15] & (D[15]) & (!C[15]));
+			Flag = ((~A[15])&(~D[15])&C[15]) | (A[15] & (D[15]) & (~C[15]));
 			
 			Low = $signed(A)<$signed(B);
 			Carry = 0;
-			Negative = $signed(A-B)<0;
+			Negative = C[15];
 		end
 
 		SUBI:
@@ -149,7 +149,7 @@ module ALU(
 			
 			Low = $signed(A)<$signed(B);
 			Carry = 0;
-			Negative = $signed(A-B)<0;
+			Negative = C[15];
 		end
 
 		CMP:

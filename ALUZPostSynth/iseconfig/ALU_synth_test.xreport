@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <report-views version="2.0" >
  <header>
-  <DateModified>2011-09-20T16:40:12</DateModified>
+  <DateModified>2011-09-20T16:46:27</DateModified>
   <ModuleName>ALU_synth_test</ModuleName>
   <SummaryTimeStamp>Unknown</SummaryTimeStamp>
-  <SavedFilePath>//wannsee/users/u0346997/desktop/3710/3710/ALUZPostSynth/iseconfig/ALU_synth_test.xreport</SavedFilePath>
-  <ImplementationReportsDirectory>U:/3710/3710/ALUZPostSynth</ImplementationReportsDirectory>
+  <SavedFilePath>//wannsee/users/u0595680/desktop/3710/3710/ALUZPostSynth/iseconfig/ALU_synth_test.xreport</SavedFilePath>
+  <ImplementationReportsDirectory>U:/3710/3710/ALUZPostSynth\</ImplementationReportsDirectory>
   <DateInitialized>2011-09-20T16:03:20</DateInitialized>
   <EnableMessageFiltering>false</EnableMessageFiltering>
  </header>

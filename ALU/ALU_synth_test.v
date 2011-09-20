@@ -47,7 +47,7 @@ module ALU_synth_test;
 	);
 
 		initial begin
-			for( Opcode = 0; Opcode < 22; Opcode = Opcode + 1) begin
+			for( Opcode = 6; Opcode < 8; Opcode = Opcode + 1) begin
 				for( i = 0; i < 10; i = i + 1) begin
 					#10
 					A = $random % 16;
