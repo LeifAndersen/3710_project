@@ -8,32 +8,32 @@
 //  \   \         Application: netgen
 //  /   /         Filename: ALU_synthesis.v
 // /___/   /\     Timestamp: Tue Sep 20 14:51:42 2011
-// \   \  /  \ 
+// \   \  /  \
 //  \___\/\___\
-//             
-// Command	: -intstyle ise -insert_glbl true -w -dir netgen/synthesis -ofmt verilog -sim ALU.ngc ALU_synthesis.v 
+//
+// Command	: -intstyle ise -insert_glbl true -w -dir netgen/synthesis -ofmt verilog -sim ALU.ngc ALU_synthesis.v
 // Device	: xc3s500e-5-fg320
 // Input file	: ALU.ngc
 // Output file	: \\wannsee\users\u0346997\desktop\3710\3710\ALU\netgen\synthesis\ALU_synthesis.v
 // # of Modules	: 1
 // Design Name	: ALU
 // Xilinx        : C:\Xilinx\12.2\ISE_DS\ISE\
-//             
-// Purpose:    
-//     This verilog netlist is a verification model and uses simulation 
-//     primitives which may not represent the true implementation of the 
-//     device, however the netlist is functionally correct and should not 
-//     be modified. This file cannot be synthesized and should only be used 
+//
+// Purpose:
+//     This verilog netlist is a verification model and uses simulation
+//     primitives which may not represent the true implementation of the
+//     device, however the netlist is functionally correct and should not
+//     be modified. This file cannot be synthesized and should only be used
 //     with supported simulation tools.
-//             
-// Reference:  
+//
+// Reference:
 //     Command Line Tools User Guide, Chapter 23 and Synthesis and Simulation Design Guide, Chapter 6
-//             
+//
 ////////////////////////////////////////////////////////////////////////////////
 
 `timescale 1 ns/1 ps
 
-module ALU (
+module ALUSynth (
   CarryIn, Flag, Carry, Low, Negative, Zero, C, A, B, Opcode
 );
   input CarryIn;
