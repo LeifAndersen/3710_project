@@ -1,0 +1,20 @@
+Release 12.2 - netgen M.63c (nt)
+Copyright (c) 1995-2010 Xilinx, Inc.  All rights reserved.
+
+Command Line: netgen -intstyle ise -insert_glbl true -w -dir netgen/synthesis
+-ofmt verilog -sim ALU.ngc ALU_synthesis.v  
+
+Reading design 'ALU.ngc' ...
+Flattening design ...
+Processing design ... 
+  Preping design's networks ...
+  Preping design's macros ...
+Writing Verilog netlist file
+'\\wannsee\users\u0346997\desktop\3710\3710\ALU\netgen\synthesis\ALU_synthesis.v
+' ...
+INFO:NetListWriters:633 - The generated Verilog netlist contains Xilinx UNISIM
+   simulation primitives and has to be used with UNISIM simulation library for
+   correct compilation and simulation. 
+Number of warnings: 0
+Number of info messages: 1
+Total memory usage is 70976 kilobytes

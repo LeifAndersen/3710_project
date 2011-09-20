@@ -1,25 +1,28 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company:
+
+////////////////////////////////////////////////////////////////////////////////
+// Company: 
 // Engineer:
 //
-// Create Date:    17:07:52 09/11/2011
-// Design Name:
-// Module Name:    ALU_tests
-// Project Name:
-// Target Devices:
-// Tool versions:
-// Description:
+// Create Date:   15:02:41 09/20/2011
+// Design Name:   glbl
+// Module Name:   U:/3710/3710/ALU/ALU_synth_test.v
+// Project Name:  ALU
+// Target Device:  
+// Tool versions:  
+// Description: 
+//
+// Verilog Test Fixture created by ISE for module: glbl
 //
 // Dependencies:
-//
+// 
 // Revision:
 // Revision 0.01 - File Created
 // Additional Comments:
-//
-//////////////////////////////////////////////////////////////////////////////////
-module ALU_tests(
-    );
+// 
+////////////////////////////////////////////////////////////////////////////////
+
+module ALU_synth_test;
 
 	`include "opcodesLOL.v"
 
@@ -1190,5 +1193,6 @@ module ALU_tests(
 		$finish(2);
 
 	end
-
+      
 endmodule
+
