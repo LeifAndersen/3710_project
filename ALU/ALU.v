@@ -35,6 +35,8 @@ module ALU(
 	
 	`include "opcodesLOL.v"
 
+	wire[15:0] D = ~B + 1;
+
 	always@(*) begin
 		case(Opcode)
 		ADD:
@@ -127,7 +129,7 @@ module ALU(
 			else
 				Zero = 0;
 			
-			Flag = (~A[15]&~(-B[15])&C[15]) | (A[15] & (-B[15]) & ~C[15]);
+			Flag = ((!A[15])&(!D[15])&C[15]) | (A[15] & (D[15]) & (!C[15]));
 			
 			Low = $signed(A)<$signed(B);
 			Carry = 0;
@@ -136,14 +138,14 @@ module ALU(
 
 		SUBI:
 		begin
-			C = A-B;
+			C = A+D;
 			if (A == B)
 				Zero = 1;
 			else
 				Zero = 0;
 			
-			//Currently using -B[15], maybe a way to say D = -B[15], then use D.
-			Flag = (~A[15]&~(-B[15])&C[15]) | (A[15] & (-B[15]) & ~C[15]);
+			//Currently using -B[15], maybe a way to say D = -B, then use D.
+			Flag = (!A[15]&!(D[15])&C[15]) | (A[15] & (D[15]) & !C[15]);
 			
 			Low = $signed(A)<$signed(B);
 			Carry = 0;
@@ -197,7 +199,7 @@ module ALU(
 			else
 				Zero = 0;
 			Low = A<B;
-			Negative = $signed(A)<$signed(B);
+			Negative = C[15];
 			Flag = 1'b0;
 			Carry = 1'b0;
 		end
@@ -210,7 +212,7 @@ module ALU(
 			else
 				Zero = 0;
 			Low = A<B;
-			Negative = $signed(A)<$signed(B);
+			Negative = C[15];
 			Flag = 1'b0;
 			Carry = 1'b0;
 		end
@@ -223,7 +225,7 @@ module ALU(
 			else
 				Zero = 0;
 			Low = A<B;
-			Negative = $signed(A)<$signed(B);
+			Negative = C[15];
 			Flag = 1'b0;
 			Carry = 1'b0;
 		end
@@ -313,7 +315,7 @@ module ALU(
 
 		ARSH:
 		begin
-			C = A >>> B;
+			C = $signed(A) >>> B[4:0];
 			if (C == 0)
 				Zero = 1;
 			else
