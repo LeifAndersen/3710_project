@@ -1,11 +1,15 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <report-views version="2.0" >
  <header>
+<<<<<<< HEAD
   <DateModified>2011-09-22T15:39:08</DateModified>
+=======
+  <DateModified>2011-09-22T15:01:06</DateModified>
+>>>>>>> 6a8a963c778f82f23e51a69bc6c1ceac98d0ada6
   <ModuleName>Register</ModuleName>
   <SummaryTimeStamp>2011-09-20T14:35:18</SummaryTimeStamp>
-  <SavedFilePath>/home/leif/3710/Register/iseconfig/Register.xreport</SavedFilePath>
-  <ImplementationReportsDirectory>/home/leif/3710/Register/</ImplementationReportsDirectory>
+  <SavedFilePath>//wannsee/users/u0595680/desktop/3710/3710/Register/iseconfig/Register.xreport</SavedFilePath>
+  <ImplementationReportsDirectory>U:/3710/3710/Register\</ImplementationReportsDirectory>
   <DateInitialized>2011-09-20T14:35:23</DateInitialized>
   <EnableMessageFiltering>false</EnableMessageFiltering>
  </header>
