@@ -91,6 +91,7 @@ module Register(
 			end
 		end
 	end
+	
 	always@(*) begin
 			case(read_select_1)
 				4'd0:output_reg_1 = reg0;
