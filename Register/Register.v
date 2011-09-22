@@ -22,14 +22,14 @@
 
 module Register(
 		input clk,
-		input [3:0] A,
-		input [3:0] B,
-		input [3:0] C,
+		input [3:0] A, //read sel 1
+		input [3:0] B, //read sel 2
+		input [3:0] C, //write sel
 		input write,
 		input reset,
-		input [15:0] inputReg,
-		output reg [15:0] outputReg1,
-		output reg [15:0] outputReg2
+		input [15:0] inputReg, //write value
+		output reg [15:0] outputReg1, //read value, A
+		output reg [15:0] outputReg2 //read value, B
 	);
 
 	reg[15:0]R[15:0];
