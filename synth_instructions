@@ -1,0 +1,15 @@
+1. write your project
+2. get rid of all imediate errors
+3.  run the tests.
+4.  synthesise
+5. generate post synthesis simulation model.
+6. make a new project
+7. import module want to test
+8. import the synthesise module from %oldproject%/netgen/synthesis/
+9. change module name of synthesis file.
+10.  make a miter
+10b. miter is a file that takes the same inputs for original module and synthesis module, outputs 1 if they're the same.
+11.  make a test bench and make the miter the uut
+12.  random tests
+13.  ???
+14.  profit.
