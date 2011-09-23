@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <report-views version="2.0" >
  <header>
-  <DateModified>2011-09-22T16:39:26</DateModified>
+  <DateModified>2011-09-22T20:51:40</DateModified>
   <ModuleName>Register</ModuleName>
   <SummaryTimeStamp>2011-09-22T15:59:01</SummaryTimeStamp>
-  <SavedFilePath>//wannsee/users/u0346997/desktop/3710/3710/Register/iseconfig/Register.xreport</SavedFilePath>
-  <ImplementationReportsDirectory>U:/3710/3710/Register\</ImplementationReportsDirectory>
+  <SavedFilePath>C:/Users/Daniel/3710/Register/iseconfig/Register.xreport</SavedFilePath>
+  <ImplementationReportsDirectory>C:/Users/Daniel/3710/Register\</ImplementationReportsDirectory>
   <DateInitialized>2011-09-20T14:35:23</DateInitialized>
   <EnableMessageFiltering>false</EnableMessageFiltering>
  </header>
