@@ -53,9 +53,8 @@ module TopLevel(
     wire [3:0] regRead2;
     wire [7:0] ALUOp;
     wire [3:0] buffCtrl;
-    wire regReset;
     wire regWriteEn;
-    FibFSM magic(clk, BTN_NORTH, BTN_SOUTH, initialR, regWrite, regRead1, regRead2, ALUOp, buffCtrl, regReset, regWriteEn);
+    FibFSM magic(clk, BTN_NORTH, BTN_SOUTH, initialR, regWrite, regRead1, regRead2, ALUOp, buffCtrl, regWriteEn);
 
     // Input buffers
     wire [15:0] ABusBuffed;
@@ -88,7 +87,7 @@ module TopLevel(
     FlagRegister yourmom(clk, carry, flag, zero, low, negative, carryFL, flagFL, zeroFL, lowFL, negativeFL);
 
     // regfile
-    Register omgbadname(clk, regRead1, regRead2, regWrite, regWriteEn, regReset, writeBusBuffed, ABus, BBus);
+    Register omgbadname(clk, regRead1, regRead2, regWrite, regWriteEn, reset, writeBusBuffed, ABus, BBus);
 
 	// lcd controller
 	lcd_ctrl lcdctrl(CLK_50MHZ, BTN_NORTH, BBus, SF_D, LCD_E, LCD_RS, LCD_RW);

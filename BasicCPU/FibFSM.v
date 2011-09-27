@@ -43,7 +43,6 @@ module FibFSM(
     output reg [3:0] regRead2,
     output reg [7:0] ALUOp,
     output reg [3:0] buffCtrl,
-    output reg regReset,
     output reg regWriteEn
     );
 
@@ -53,7 +52,7 @@ module FibFSM(
 	reg [3:0] nextState;
 
     // reset sends 1 to R0, R1
-	always@(posedge clk, negedge reset, negedge start) begin
+	always@(negedge clk, negedge reset, negedge start) begin
 		if (reset == 0) begin
             state = 0;
 		end
@@ -67,7 +66,7 @@ module FibFSM(
 		end
 	end
 
-	always@(posedge clk) begin
+	always@(negedge clk) begin
         case(state)
              4'd0: 
                 nextState = 4'd1;
@@ -86,7 +85,7 @@ module FibFSM(
     //      add R1, R0  // state 2
     //      add R0, R1	// state 3
 
-	always@(posedge clk) begin
+	always@(negedge clk) begin
         case(state)
 			0: begin				// mov R0, $1
 				initialR 	<= 16'd1;
@@ -95,7 +94,6 @@ module FibFSM(
 				regRead2 	<= 4'd0;
 				ALUOp 		<= NOP;
 				buffCtrl 	<= 4'b0001;
-				regReset 	<= 1'd0;
 				regWriteEn 	<= 1'd1;
 			end
 			1: begin				// mov R1, $1
@@ -105,7 +103,6 @@ module FibFSM(
 				regRead2 	<= 4'd0;
 				ALUOp 		<= NOP;
 				buffCtrl 	<= 4'b0001;
-				regReset 	<= 1'd0;
 				regWriteEn 	<= 1'd1;
 			end
 			2: begin				// add R1, R0
@@ -115,7 +112,6 @@ module FibFSM(
 				regRead2 	<= 4'd1;
 				ALUOp 		<= ADD;
 				buffCtrl 	<= 4'b1110;
-				regReset 	<= 1'd0;
 				regWriteEn 	<= 1'd1;
 			end
 			3: begin				// add R0, R1
@@ -125,7 +121,6 @@ module FibFSM(
 				regRead2 	<= 4'd0;
 				ALUOp 		<= ADD;
 				buffCtrl 	<= 4'b1110;
-				regReset 	<= 1'd0;
 				regWriteEn 	<= 1'd1;
 			end
 			default: begin			// default
@@ -135,7 +130,6 @@ module FibFSM(
 				regRead2 	<= 4'bxxxx;
 				ALUOp    	<= 8'bxxxx_xxxx;
 				buffCtrl 	<= 4'bxxxx;
-				regReset 	<= 1'bx;
 				regWriteEn 	<= 1'bx;
 			end
 		endcase

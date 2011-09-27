@@ -71,7 +71,7 @@ module simulate_test;
 		BTN_SOUTH = 0;
 		#1000;
 		
-		BTN_SOUTH = 0;
+		BTN_SOUTH = 1;
 	end
       
 endmodule
