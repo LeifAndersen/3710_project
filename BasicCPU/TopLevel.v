@@ -19,11 +19,10 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 module TopLevel(
-    input reset,
-    input start,
-    input undividedClk,
-    output SF_CE0,
-    output SF_D,
+    input BTN_NORTH,
+    input BTN_SOUTH,
+    input CLK_50MHZ,
+    output [11:8] SF_D,
     output LCD_E,
     output LCD_RS,
     output LCD_RW
@@ -31,7 +30,7 @@ module TopLevel(
 
     // clock divider and stuff
     wire clk;
-    ClockDivider omgwtfbbq(undividedClk, clk);
+    ClockDivider omgwtfbbq(BTN_NORTH, CLK_50MHZ, clk);
 
     //
     //  inputs:
@@ -53,21 +52,22 @@ module TopLevel(
     wire [3:0] regRead1;
     wire [3:0] regRead2;
     wire [7:0] ALUOp;
-    wire [2:0] buffCtrl;
+    wire [3:0] buffCtrl;
     wire regReset;
     wire regWriteEn;
-    FibFSM magic(reset, start, initialR, regWrite, regRead1, regRead2, ALUOp, buffCtrl, regReset, regWriteEn);
+    FibFSM magic(clk, BTN_NORTH, BTN_SOUTH, initialR, regWrite, regRead1, regRead2, ALUOp, buffCtrl, regReset, regWriteEn);
 
     // Input buffers
     wire [15:0] ABusBuffed;
     wire [15:0] ABus;
-    SixteenBuff abuf(ABus, buffCtrl[0], ABusBuffed);
+    SixteenBuff abuf(ABus, buffCtrl[1], ABusBuffed);
     wire [15:0] BBusBuffed;
     wire [15:0] BBus;
-    SixteenBuff bbuf(BBus, buffCtrl[1], BBusBuffed);
+    SixteenBuff bbuf(BBus, buffCtrl[2], BBusBuffed);
     wire [15:0] writeBusBuffed;
     wire [15:0] writeBus;
-    SixteenBuff bbuf(writeBus, buffCtrl[2], writeBusBuffed);
+    SixteenBuff cbuf(writeBus, buffCtrl[3], writeBusBuffed);
+    SixteenBuff initialbuf(initialR, buffCtrl[0], writeBusBuffed); // buffer from fsm
 
     // wires for ALU
     wire carryIn;
@@ -77,7 +77,7 @@ module TopLevel(
     wire low;
     wire negative;
     wire zero;
-    ALU myFirstALU(ABus, BBus, ALUOp, carryIn, writeBus, carry, flag, low, negative, zero);
+    ALU myFirstALU(ABusBuffed, BBusBuffed, ALUOp, carryIn, writeBus, carry, flag, low, negative, zero);
 
     // wires for flagregister
     wire carryFL;
@@ -85,9 +85,12 @@ module TopLevel(
     wire zeroFL;
     wire lowFL;
     wire negativeFL;
-    FlagRegister yourmom(clk, carry, flag, zero, low, negative, carryFL, flagFL, zeroFL, negativeFL);
+    FlagRegister yourmom(clk, carry, flag, zero, low, negative, carryFL, flagFL, zeroFL, lowFL, negativeFL);
 
     // regfile
     Register omgbadname(clk, regRead1, regRead2, regWrite, regWriteEn, regReset, writeBusBuffed, ABus, BBus);
+
+	// lcd controller
+	lcd_ctrl lcdctrl(CLK_50MHZ, BTN_NORTH, BBus, SF_D, LCD_E, LCD_RS, LCD_RW);
 
 endmodule

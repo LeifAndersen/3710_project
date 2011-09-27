@@ -25,7 +25,6 @@
       <association xil_pn:name="PostRouteSimulation"/>
       <association xil_pn:name="PostTranslateSimulation"/>
     </file>
-    <file xil_pn:name="RegBusA.v" xil_pn:type="FILE_VERILOG"/>
     <file xil_pn:name="SixteenBuff.v" xil_pn:type="FILE_VERILOG">
       <association xil_pn:name="BehavioralSimulation"/>
       <association xil_pn:name="Implementation"/>
