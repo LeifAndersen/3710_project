@@ -31,7 +31,7 @@ module TopLevel(
 
     // clock divider and stuff
     wire clk;
-    ClockDivider(undividedClk, clk);
+    ClockDivider omgwtfbbq(undividedClk, clk);
 
     //
     //  inputs:
@@ -48,10 +48,10 @@ module TopLevel(
     //      regReset -- reset reg file
     //      regWriteEn --  enables writing to registers
     //
-    wire initialR;
-    wire regWrite;
-    wire regRead1;
-    wire regRead2;
+    wire [15:0] initialR;
+    wire [3:0] regWrite;
+    wire [3:0] regRead1;
+    wire [3:0] regRead2;
     wire [7:0] ALUOp;
     wire [2:0] buffCtrl;
     wire regReset;
