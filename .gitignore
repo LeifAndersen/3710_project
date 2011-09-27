@@ -40,3 +40,7 @@ xilinxsim.ini
 *.ngd
 *.bld
 *.bmm
+*_ngo*
+*webtalk*
+*xdb*
+*_pad*
