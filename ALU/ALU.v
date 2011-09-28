@@ -67,48 +67,7 @@ module ALU(
 			Flag = 0;
 		end
 
-		ADDI:
-		begin
-			C = A + B;
-			if( C == 0)
-				Zero = 1;
-			else
-				Zero = 0;
-				
-			Flag = (~A[15]&~B[15]&C[15]) | (A[15] & B[15] & ~C[15]);
-			
-			Carry = 0;
-			Low = $signed(A)<$signed(B);
-			Negative = $signed(A + B)<0;
-		end
-
-		ADDUI:
-		begin
-			{Carry, C} = A + B;
-			if (C == 0)
-				Zero = 1;
-			else
-				Zero = 0;
-			
-			Flag = 0;
-			Low = A<B;
-			Negative = 0;
-		end
-
 		ADDCU:
-		begin
-			{Carry, C} = A + B + CarryIn;
-			if ((C == 0) && (Carry == 0))
-				Zero = 1;
-			else
-				Zero = 0;
-			
-			Flag = 0;
-			Low = A<B;
-			Negative = 0;
-		end
-
-		ADDCUI:
 		begin
 			{Carry, C} = A + B + CarryIn;
 			if ((C == 0) && (Carry == 0))
@@ -136,22 +95,6 @@ module ALU(
 			Negative = C[15];
 		end
 
-		SUBI:
-		begin
-			C = A+D;
-			if (A == B)
-				Zero = 1;
-			else
-				Zero = 0;
-			
-			//Currently using -B[15], maybe a way to say D = -B, then use D.
-			Flag = (!A[15]&!(D[15])&C[15]) | (A[15] & (D[15]) & !C[15]);
-			
-			Low = $signed(A)<$signed(B);
-			Carry = 0;
-			Negative = C[15];
-		end
-
 		CMP:
 		begin
 			Low = A<B;
@@ -163,19 +106,6 @@ module ALU(
 			Carry = 1'b0;
 			C = 16'b0000000000000000;
 			Flag = 1'd0;
-		end
-
-		CMPI:
-		begin
-			Low = A<B;
-			Negative = $signed(A)<$signed(B);
-			if (A == B)
-				Zero = 1;
-			else
-				Zero = 0;
-			Flag = 1'd0;
-			Carry = 1'b0;
-			C = 16'b0000000000000000;
 		end
 
 		TEST:
@@ -257,35 +187,7 @@ module ALU(
 			Carry = 1'b0;
 		end
 
-		LSHI:
-		begin
-			C = A << B;
-			if (C == 0)
-				Zero = 1;
-			else
-				Zero = 0;
-			
-			Low = 1'b0;
-			Negative = 1'b0;
-			Flag = 1'b0;
-			Carry = 1'b0;
-		end
-
 		RSH:
-		begin
-			C = A >> B;
-			if (C == 0)
-				Zero = 1;
-			else
-				Zero = 0;
-			
-			Low = 1'b0;
-			Negative = 1'b0;
-			Flag = 1'b0;
-			Carry = 1'b0;
-		end
-
-		RSHI:
 		begin
 			C = A >> B;
 			if (C == 0)
