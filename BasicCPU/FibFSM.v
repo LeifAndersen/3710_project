@@ -52,7 +52,7 @@ module FibFSM(
 
     // reset sends 1 to R0, R1
 	always@(negedge clk, negedge reset) begin
-		if (reset == 0) begin
+		if (reset == 1) begin
             state = 0;
 		end
 		else begin

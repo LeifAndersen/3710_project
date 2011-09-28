@@ -29,7 +29,7 @@ module TopLevel(
 
     // clock divider and stuff
     wire clk;
-    ClockDivider omgwtfbbq(BTN_NORTH, CLK_50MHZ, clk);
+    ClockDivider omgwtfbbq(~BTN_NORTH, CLK_50MHZ, clk);
 
     //
     //  inputs:
@@ -53,7 +53,7 @@ module TopLevel(
     wire [7:0] ALUOp;
     wire [3:0] buffCtrl;
     wire regWriteEn;
-    FibFSM magic(clk, BTN_NORTH, initialR, regWrite, regRead1, regRead2, ALUOp, buffCtrl, regWriteEn);
+    FibFSM magic(clk, ~BTN_NORTH, initialR, regWrite, regRead1, regRead2, ALUOp, buffCtrl, regWriteEn);
 
     // Input buffers
     wire [15:0] ABusBuffed;
@@ -86,9 +86,9 @@ module TopLevel(
     FlagRegister yourmom(clk, carry, flag, zero, low, negative, carryFL, flagFL, zeroFL, lowFL, negativeFL);
 
     // regfile
-    Register omgbadname(clk, regRead1, regRead2, regWrite, regWriteEn, BTN_NORTH, writeBusBuffed, ABus, BBus);
+    Register omgbadname(clk, regRead1, regRead2, regWrite, regWriteEn, ~BTN_NORTH, writeBusBuffed, ABus, BBus);
 
 	// lcd controller
-	lcd_ctrl lcdctrl(CLK_50MHZ, BTN_NORTH, BBus, SF_D, LCD_E, LCD_RS, LCD_RW);
+	lcd_ctrl lcdctrl(CLK_50MHZ, ~BTN_NORTH, BBus, SF_D, LCD_E, LCD_RS, LCD_RW);
 
 endmodule

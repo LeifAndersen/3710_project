@@ -27,12 +27,12 @@ module ClockDivider(
     reg [31:0] count;
     
     always @ (negedge clock) begin
-		if (reset == 1'b0) begin
+		if (reset == 1'b1) begin
 			count = 0;
 			outClock = 0;
 		end
 		else begin
-			if (count == 2) begin
+			if (count == 25000000) begin
 				outClock = ~outClock;
 				count = 32'd0;
 			end
