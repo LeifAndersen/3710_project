@@ -36,6 +36,9 @@ module Register(
 			if(write == 1'b1) begin
 				value = inputReg;
 			end
+			else begin
+			    value = value;
+			end
 		end
 	end
 
