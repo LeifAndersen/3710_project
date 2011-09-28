@@ -53,7 +53,7 @@ module TopLevel(
     wire [3:0] regRead2;
     wire [7:0] ALUOp;
     wire [3:0] buffCtrl;
-    wire regWriteEn;
+    wire [15:0] regWriteEn;
     FibFSM magic(clk, BTN_NORTH, BTN_SOUTH, initialR, regWrite, regRead1, regRead2, ALUOp, buffCtrl, regWriteEn);
 
     // Input buffers

@@ -43,7 +43,7 @@ module FibFSM(
     output reg [3:0] regRead2,
     output reg [7:0] ALUOp,
     output reg [3:0] buffCtrl,
-    output reg regWriteEn
+    output reg [15:0] regWriteEn
     );
 
 	`include "../ALU/opcodesLOL.v"
@@ -68,15 +68,15 @@ module FibFSM(
 
 	always@(negedge clk) begin
         case(state)
-             4'd0: 
+             4'd0:
                 nextState = 4'd1;
-             4'd1:  
+             4'd1:
                 nextState = 4'd0;
-             4'd2:  
+             4'd2:
                 nextState = 4'd3;
              4'd3:
 				nextState = 4'd2;
-             default:  
+             default:
                 nextState = nextState;
          endcase
     end
@@ -94,7 +94,7 @@ module FibFSM(
 				regRead2 	<= 4'd0;
 				ALUOp 		<= NOP;
 				buffCtrl 	<= 4'b0001;
-				regWriteEn 	<= 1'd1;
+				regWriteEn 	<= 16'd1;
 			end
 			1: begin				// mov R1, $1
 				initialR 	<= 16'd1;
@@ -103,7 +103,7 @@ module FibFSM(
 				regRead2 	<= 4'd0;
 				ALUOp 		<= NOP;
 				buffCtrl 	<= 4'b0001;
-				regWriteEn 	<= 1'd1;
+				regWriteEn 	<= 16'd2;
 			end
 			2: begin				// add R1, R0
 				initialR 	<= 16'd0;
@@ -112,7 +112,7 @@ module FibFSM(
 				regRead2 	<= 4'd1;
 				ALUOp 		<= ADD;
 				buffCtrl 	<= 4'b1110;
-				regWriteEn 	<= 1'd1;
+				regWriteEn 	<= 16'd2;
 			end
 			3: begin				// add R0, R1
 				initialR 	<= 16'd0;
@@ -121,16 +121,7 @@ module FibFSM(
 				regRead2 	<= 4'd0;
 				ALUOp 		<= ADD;
 				buffCtrl 	<= 4'b1110;
-				regWriteEn 	<= 1'd1;
-			end
-			default: begin			// default
-				initialR 	<= 16'bxxxx_xxxx_xxxx_xxxx;
-				regWrite 	<= 4'bxxxx;
-				regRead1 	<= 4'bxxxx;
-				regRead2 	<= 4'bxxxx;
-				ALUOp    	<= 8'bxxxx_xxxx;
-				buffCtrl 	<= 4'bxxxx;
-				regWriteEn 	<= 1'bx;
+				regWriteEn 	<= 16'd1;
 			end
 		endcase
 	end
