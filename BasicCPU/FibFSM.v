@@ -73,20 +73,40 @@ module FibFSM(
 				 4'd2:
 					nextState = 4'd3;
 				 4'd3:
-					nextState = 4'd2;
+					nextState = 4'd4;
+				 4'd4:
+					nextState = 4'd5;
+				 4'd5:
+					nextState = 4'd6;
+				 4'd6:
+					nextState = 4'd7;
+				 4'd7:
+					nextState = 4'd8;
+				 4'd8:
+					nextState = 4'd9;
+				 4'd9:
+					nextState = 4'd10;
+				 4'd10:
+					nextState = 4'd11;
+				 4'd11:
+					nextState = 4'd12;
+				 4'd12:
+					nextState = 4'd13;
+				 4'd13:
+					nextState = 4'd14;
+				 4'd14:
+					nextState = 4'd15;
+				 4'd15:
+					nextState = 4'd15;
 				 default:
 					nextState = nextState;
 			 endcase
 		 end
     end
 
-    //  fib generation:
-    //      add R1, R0  // state 2
-    //      add R0, R1	// state 3
-
 	always@(posedge clk) begin
         case(state)
-			0: begin				// mov R0, $1
+			0: begin				// mov R0, $0
 				initialR 	<= 16'd0;
 				regWrite 	<= 4'd0;
 				regRead1 	<= 4'd0;
@@ -104,23 +124,131 @@ module FibFSM(
 				buffCtrl 	<= 4'b0001;
 				regWriteEn 	<= 1;
 			end
-			2: begin				// add R1, R0
+			2: begin				// add R2, R1
 				initialR 	<= 16'd0;
-				regWrite 	<= 4'd1;
-				regRead1 	<= 4'd0;
-				regRead2 	<= 4'd1;
-				ALUOp 		<= ADD;
-				buffCtrl 	<= 4'b1110;
-				regWriteEn 	<= 1;
-			end
-			3: begin				// add R0, R1
-				initialR 	<= 16'd0;
-				regWrite 	<= 4'd0;
+				regWrite 	<= 4'd2;
 				regRead1 	<= 4'd1;
 				regRead2 	<= 4'd0;
 				ALUOp 		<= ADD;
 				buffCtrl 	<= 4'b1110;
 				regWriteEn 	<= 1;
+			end
+			3: begin				// add R3, R2
+				initialR 	<= 16'd0;
+				regWrite 	<= 4'd3;
+				regRead1 	<= 4'd2;
+				regRead2 	<= 4'd1;
+				ALUOp 		<= ADD;
+				buffCtrl 	<= 4'b1110;
+				regWriteEn 	<= 1;
+			end
+			4: begin				// add R0, R1
+				initialR 	<= 16'd0;
+				regWrite 	<= 4'd4;
+				regRead1 	<= 4'd3;
+				regRead2 	<= 4'd2;
+				ALUOp 		<= ADD;
+				buffCtrl 	<= 4'b1110;
+				regWriteEn 	<= 1;
+			end
+			5: begin				// add R0, R1
+				initialR 	<= 16'd0;
+				regWrite 	<= 4'd5;
+				regRead1 	<= 4'd4;
+				regRead2 	<= 4'd3;
+				ALUOp 		<= ADD;
+				buffCtrl 	<= 4'b1110;
+				regWriteEn 	<= 1;
+			end
+			6: begin				// add R0, R1
+				initialR 	<= 16'd0;
+				regWrite 	<= 4'd6;
+				regRead1 	<= 4'd5;
+				regRead2 	<= 4'd4;
+				ALUOp 		<= ADD;
+				buffCtrl 	<= 4'b1110;
+				regWriteEn 	<= 1;
+			end
+			7: begin				// add R0, R1
+				initialR 	<= 16'd0;
+				regWrite 	<= 4'd7;
+				regRead1 	<= 4'd6;
+				regRead2 	<= 4'd5;
+				ALUOp 		<= ADD;
+				buffCtrl 	<= 4'b1110;
+				regWriteEn 	<= 1;
+			end
+			8: begin				// add R0, R1
+				initialR 	<= 16'd0;
+				regWrite 	<= 4'd8;
+				regRead1 	<= 4'd7;
+				regRead2 	<= 4'd6;
+				ALUOp 		<= ADD;
+				buffCtrl 	<= 4'b1110;
+				regWriteEn 	<= 1;
+			end
+			9: begin				// add R0, R1
+				initialR 	<= 16'd0;
+				regWrite 	<= 4'd9;
+				regRead1 	<= 4'd8;
+				regRead2 	<= 4'd7;
+				ALUOp 		<= ADD;
+				buffCtrl 	<= 4'b1110;
+				regWriteEn 	<= 1;
+			end
+			10: begin				// add R0, R1
+				initialR 	<= 16'd0;
+				regWrite 	<= 4'd10;
+				regRead1 	<= 4'd9;
+				regRead2 	<= 4'd8;
+				ALUOp 		<= ADD;
+				buffCtrl 	<= 4'b1110;
+				regWriteEn 	<= 1;
+			end
+			11: begin				// add R0, R1
+				initialR 	<= 16'd0;
+				regWrite 	<= 4'd11;
+				regRead1 	<= 4'd10;
+				regRead2 	<= 4'd9;
+				ALUOp 		<= ADD;
+				buffCtrl 	<= 4'b1110;
+				regWriteEn 	<= 1;
+			end
+			12: begin				// add R0, R1
+				initialR 	<= 16'd0;
+				regWrite 	<= 4'd12;
+				regRead1 	<= 4'd11;
+				regRead2 	<= 4'd10;
+				ALUOp 		<= ADD;
+				buffCtrl 	<= 4'b1110;
+				regWriteEn 	<= 1;
+			end
+			13: begin				// add R0, R1
+				initialR 	<= 16'd0;
+				regWrite 	<= 4'd13;
+				regRead1 	<= 4'd12;
+				regRead2 	<= 4'd11;
+				ALUOp 		<= ADD;
+				buffCtrl 	<= 4'b1110;
+				regWriteEn 	<= 1;
+			end
+			14: begin				// add R0, R1
+				initialR 	<= 16'd0;
+				regWrite 	<= 4'd14;
+				regRead1 	<= 4'd13;
+				regRead2 	<= 4'd12;
+				ALUOp 		<= ADD;
+				buffCtrl 	<= 4'b1110;
+				regWriteEn 	<= 1;
+			end
+			15: begin				// add R0, R1
+				initialR 	<= 16'd0;
+				regWrite 	<= 4'd15;
+				regRead1 	<= 4'd14;
+				regRead2 	<= 4'd13;
+				ALUOp 		<= ADD;
+				buffCtrl 	<= 4'b1110;
+				regWriteEn 	<= 0;
 			end
 		endcase
 	end
