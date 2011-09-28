@@ -64,13 +64,13 @@ module simulate_test;
 		
 		// Hey, reset
 		BTN_NORTH = 0;
-		#1000;
+		#650;
 		
 		// now start
 		BTN_NORTH = 1;
+		#650
 		BTN_SOUTH = 0;
-		#1000;
-		
+		#650
 		BTN_SOUTH = 1;
 	end
       

@@ -44,7 +44,7 @@ module Register(
 		output	reg[15:0] reg15
 		);
 
-	always@(posedge clk) begin
+	always@(negedge clk) begin
 		if(reset == 1'b1) begin
 			reg0 = 0;
 			reg1 = 0;

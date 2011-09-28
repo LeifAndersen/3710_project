@@ -51,104 +51,108 @@ module RegisterFile(
 
 		always@(read_select_1, reg0, reg1, reg2, reg3, reg4, reg5, reg6, reg7, reg8, reg9, reg10, reg11, reg12, reg13, reg14, reg15) begin
 			case(read_select_1)
-            4'd0: begin
-            output_reg_1 = reg0;
-            end
-            4'd1: begin
-            output_reg_1 = reg1;
-            end
-            4'd2: begin
-            output_reg_1 = reg2;
-            end
-            4'd3: begin
-            output_reg_1 = reg3;
-            end
-            4'd4: begin
-            output_reg_1 = reg4;
-            end
-            4'd5: begin
-            output_reg_1 = reg5;
-            end
-            4'd6: begin
-            output_reg_1 = reg6;
-            end
-            4'd7: begin
-            output_reg_1 = reg7;
-            end
-            4'd8: begin
-            output_reg_1 = reg8;
-            end
-            4'd9: begin
-            output_reg_1 = reg9;
-            end
-            4'd10: begin
-            output_reg_1 = reg10;
-            end
-            4'd11: begin
-            output_reg_1 = reg11;
-            end
-            4'd12: begin
-            output_reg_1 = reg12;
-            end
-            4'd13: begin
-            output_reg_1 = reg13;
-            end
-            4'd14: begin
-            output_reg_1 = reg14;
-            end
-            4'd15: begin
-            output_reg_1 = reg15;
+				4'd0: begin
+				output_reg_1 = reg0;
+				end
+				4'd1: begin
+				output_reg_1 = reg1;
+				end
+				4'd2: begin
+				output_reg_1 = reg2;
+				end
+				4'd3: begin
+				output_reg_1 = reg3;
+				end
+				4'd4: begin
+				output_reg_1 = reg4;
+				end
+				4'd5: begin
+				output_reg_1 = reg5;
+				end
+				4'd6: begin
+				output_reg_1 = reg6;
+				end
+				4'd7: begin
+				output_reg_1 = reg7;
+				end
+				4'd8: begin
+				output_reg_1 = reg8;
+				end
+				4'd9: begin
+				output_reg_1 = reg9;
+				end
+				4'd10: begin
+				output_reg_1 = reg10;
+				end
+				4'd11: begin
+				output_reg_1 = reg11;
+				end
+				4'd12: begin
+				output_reg_1 = reg12;
+				end
+				4'd13: begin
+				output_reg_1 = reg13;
+				end
+				4'd14: begin
+				output_reg_1 = reg14;
+				end
+				4'd15: begin
+				output_reg_1 = reg15;
+				end
+				default: output_reg_1 = 16'dx;
 			endcase
 		end
-		always@(read_select_1, reg0, reg1, reg2, reg3, reg4, reg5, reg6, reg7, reg8, reg9, reg10, reg11, reg12, reg13, reg14, reg15) begin
+		always@(read_select_2, reg0, reg1, reg2, reg3, reg4, reg5, reg6, reg7, reg8, reg9, reg10, reg11, reg12, reg13, reg14, reg15) begin
 			case(read_select_2)
-            4'd0: begin
-            output_reg_2 = reg0;
-            end
-            4'd1: begin
-            output_reg_2 = reg1;
-            end
-            4'd2: begin
-            output_reg_2 = reg2;
-            end
-            4'd3: begin
-            output_reg_2 = reg3;
-            end
-            4'd4: begin
-            output_reg_2 = reg4;
-            end
-            4'd5: begin
-            output_reg_2 = reg5;
-            end
-            4'd6: begin
-            output_reg_2 = reg6;
-            end
-            4'd7: begin
-            output_reg_2 = reg7;
-            end
-            4'd8: begin
-            output_reg_2 = reg8;
-            end
-            4'd9: begin
-            output_reg_2 = reg9;
-            end
-            4'd10: begin
-            output_reg_2 = reg10;
-            end
-            4'd11: begin
-            output_reg_2 = reg11;
-            end
-            4'd12: begin
-            output_reg_2 = reg12;
-            end
-            4'd13: begin
-            output_reg_2 = reg13;
-            end
-            4'd14: begin
-            output_reg_2 = reg14;
-            end
-            4'd15: begin
-            output_reg_2 = reg15;
+				4'd0: begin
+				output_reg_2 = reg0;
+				end
+				4'd1: begin
+				output_reg_2 = reg1;
+				end
+				4'd2: begin
+				output_reg_2 = reg2;
+				end
+				4'd3: begin
+				output_reg_2 = reg3;
+				end
+				4'd4: begin
+				output_reg_2 = reg4;
+				end
+				4'd5: begin
+				output_reg_2 = reg5;
+				end
+				4'd6: begin
+				output_reg_2 = reg6;
+				end
+				4'd7: begin
+				output_reg_2 = reg7;
+				end
+				4'd8: begin
+				output_reg_2 = reg8;
+				end
+				4'd9: begin
+				output_reg_2 = reg9;
+				end
+				4'd10: begin
+				output_reg_2 = reg10;
+				end
+				4'd11: begin
+				output_reg_2 = reg11;
+				end
+				4'd12: begin
+				output_reg_2 = reg12;
+				end
+				4'd13: begin
+				output_reg_2 = reg13;
+				end
+				4'd14: begin
+				output_reg_2 = reg14;
+				end
+				4'd15: begin
+				output_reg_2 = reg15;
+				end
+				default: output_reg_2 = 16'dx;
 			endcase
 		end
 

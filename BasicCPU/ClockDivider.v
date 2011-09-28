@@ -26,7 +26,7 @@ module ClockDivider(
     
     reg [31:0] count;
     
-    always @ (posedge clock) begin
+    always @ (negedge clock) begin
 		if (reset == 1'b0) begin
 			count = 0;
 			outClock = 0;
