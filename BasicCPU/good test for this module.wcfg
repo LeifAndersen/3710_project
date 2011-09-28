@@ -10,7 +10,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="38" />
+   <WVObjectSize size="37" />
    <wvobject fp_name="divider27" type="divider">
       <obj_property name="label">State Machine</obj_property>
       <obj_property name="DisplayName">label</obj_property>
@@ -24,10 +24,6 @@
    <wvobject fp_name="/simulate_test/uut/magic/reset" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">reset</obj_property>
       <obj_property name="ObjectShortName">reset</obj_property>
-   </wvobject>
-   <wvobject fp_name="/simulate_test/uut/magic/start" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">start</obj_property>
-      <obj_property name="ObjectShortName">start</obj_property>
    </wvobject>
    <wvobject fp_name="/simulate_test/uut/magic/state" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">state[3:0]</obj_property>
@@ -142,28 +138,28 @@
       <obj_property name="BkColor">128 128 255</obj_property>
       <obj_property name="TextColor">230 230 230</obj_property>
    </wvobject>
+   <wvobject fp_name="/simulate_test/uut/abuf/enable" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">enable</obj_property>
+      <obj_property name="ObjectShortName">enable</obj_property>
+   </wvobject>
    <wvobject fp_name="/simulate_test/uut/ABus" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">ABus[15:0]</obj_property>
       <obj_property name="ObjectShortName">ABus[15:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/simulate_test/uut/abuf/enable" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">enable</obj_property>
-      <obj_property name="ObjectShortName">enable</obj_property>
    </wvobject>
    <wvobject fp_name="/simulate_test/uut/ABusBuffed" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">ABusBuffed[15:0]</obj_property>
       <obj_property name="ObjectShortName">ABusBuffed[15:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
+   <wvobject fp_name="/simulate_test/uut/bbuf/enable" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">enable</obj_property>
+      <obj_property name="ObjectShortName">enable</obj_property>
+   </wvobject>
    <wvobject fp_name="/simulate_test/uut/BBus" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">BBus[15:0]</obj_property>
       <obj_property name="ObjectShortName">BBus[15:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/simulate_test/uut/bbuf/enable" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">enable</obj_property>
-      <obj_property name="ObjectShortName">enable</obj_property>
    </wvobject>
    <wvobject fp_name="/simulate_test/uut/BBusBuffed" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">BBusBuffed[15:0]</obj_property>
@@ -174,23 +170,23 @@
       <obj_property name="ElementShortName">enable</obj_property>
       <obj_property name="ObjectShortName">enable</obj_property>
    </wvobject>
-   <wvobject fp_name="/simulate_test/uut/writeBus" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">writeBus[15:0]</obj_property>
-      <obj_property name="ObjectShortName">writeBus[15:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
    <wvobject fp_name="/simulate_test/uut/initialR" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">initialR[15:0]</obj_property>
       <obj_property name="ObjectShortName">initialR[15:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
-   <wvobject fp_name="/simulate_test/uut/initialbuf/enable" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">enable</obj_property>
-      <obj_property name="ObjectShortName">enable</obj_property>
+   <wvobject fp_name="/simulate_test/uut/writeBus" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">writeBus[15:0]</obj_property>
+      <obj_property name="ObjectShortName">writeBus[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/simulate_test/uut/writeBusBuffed" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">writeBusBuffed[15:0]</obj_property>
       <obj_property name="ObjectShortName">writeBusBuffed[15:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simulate_test/uut/initialbuf/enable" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">enable</obj_property>
+      <obj_property name="ObjectShortName">enable</obj_property>
    </wvobject>
 </wave_config>

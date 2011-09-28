@@ -89,6 +89,6 @@ module TopLevel(
     Register omgbadname(clk, regRead1, regRead2, regWrite, regWriteEn, ~BTN_NORTH, writeBusBuffed, ABus, BBus);
 
 	// lcd controller
-	lcd_ctrl lcdctrl(CLK_50MHZ, ~BTN_NORTH, BBus, SF_D, LCD_E, LCD_RS, LCD_RW);
+	lcd_ctrl lcdctrl(CLK_50MHZ, ~BTN_NORTH, writeBusBuffed, SF_D, LCD_E, LCD_RS, LCD_RW);
 
 endmodule

@@ -51,8 +51,8 @@ module FibFSM(
 	reg [3:0] nextState;
 
     // reset sends 1 to R0, R1
-	always@(negedge clk, negedge reset) begin
-		if (reset == 1) begin
+	always@(posedge clk, posedge reset) begin
+		if (reset == 1'b1) begin
             state = 0;
 		end
 		else begin
@@ -60,29 +60,34 @@ module FibFSM(
 		end
 	end
 
-	always@(negedge clk) begin
-        case(state)
-             4'd0:
-                nextState = 4'd1;
-             4'd1:
-                nextState = 4'd2;
-             4'd2:
-                nextState = 4'd3;
-             4'd3:
-				nextState = 4'd2;
-             default:
-                nextState = nextState;
-         endcase
+	always@(posedge clk, posedge reset) begin
+        if (reset == 1'b1) begin
+            nextState = 0;
+		end
+		else begin
+			case(state)
+				 4'd0:
+					nextState = 4'd1;
+				 4'd1:
+					nextState = 4'd2;
+				 4'd2:
+					nextState = 4'd3;
+				 4'd3:
+					nextState = 4'd2;
+				 default:
+					nextState = nextState;
+			 endcase
+		 end
     end
 
     //  fib generation:
     //      add R1, R0  // state 2
     //      add R0, R1	// state 3
 
-	always@(negedge clk) begin
+	always@(posedge clk) begin
         case(state)
 			0: begin				// mov R0, $1
-				initialR 	<= 16'd1;
+				initialR 	<= 16'd0;
 				regWrite 	<= 4'd0;
 				regRead1 	<= 4'd0;
 				regRead2 	<= 4'd0;
