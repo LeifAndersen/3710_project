@@ -36,7 +36,6 @@
 module FibFSM(
 	input clk,
     input reset,
-    input start,
     output reg [15:0] initialR,
     output reg [3:0] regWrite,
     output reg [3:0] regRead1,
@@ -52,17 +51,12 @@ module FibFSM(
 	reg [3:0] nextState;
 
     // reset sends 1 to R0, R1
-	always@(negedge clk, negedge reset, negedge start) begin
+	always@(negedge clk, negedge reset) begin
 		if (reset == 0) begin
             state = 0;
 		end
 		else begin
-			if (start == 0) begin
-				state = 2;
-			end
-			else begin
-				state = nextState;
-			end
+			state = nextState;
 		end
 	end
 
@@ -71,7 +65,7 @@ module FibFSM(
              4'd0:
                 nextState = 4'd1;
              4'd1:
-                nextState = 4'd0;
+                nextState = 4'd2;
              4'd2:
                 nextState = 4'd3;
              4'd3:

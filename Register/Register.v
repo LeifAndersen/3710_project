@@ -50,7 +50,7 @@ module Register(
 	reg[15:0] reg15;
 
 	always@(posedge clk) begin
-		if(reset == 1'b1) begin
+		if(reset == 1'b0) begin
 			reg0 = 0;
 			reg1 = 0;
 			reg2 = 0;

@@ -20,7 +20,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 module TopLevel(
     input BTN_NORTH,
-    input BTN_SOUTH,
     input CLK_50MHZ,
     output [11:8] SF_D,
     output LCD_E,
@@ -54,7 +53,7 @@ module TopLevel(
     wire [7:0] ALUOp;
     wire [3:0] buffCtrl;
     wire regWriteEn;
-    FibFSM magic(clk, BTN_NORTH, BTN_SOUTH, initialR, regWrite, regRead1, regRead2, ALUOp, buffCtrl, regWriteEn);
+    FibFSM magic(clk, BTN_NORTH, initialR, regWrite, regRead1, regRead2, ALUOp, buffCtrl, regWriteEn);
 
     // Input buffers
     wire [15:0] ABusBuffed;

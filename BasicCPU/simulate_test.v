@@ -26,7 +26,6 @@ module simulate_test;
 
 	// Inputs
 	reg BTN_NORTH;
-	reg BTN_SOUTH;
 	reg CLK_50MHZ;
 
 	// Outputs
@@ -38,7 +37,6 @@ module simulate_test;
 	// Instantiate the Unit Under Test (UUT)
 	TopLevel uut (
 		.BTN_NORTH(BTN_NORTH), 
-		.BTN_SOUTH(BTN_SOUTH), 
 		.CLK_50MHZ(CLK_50MHZ), 
 		.SF_D(SF_D), 
 		.LCD_E(LCD_E), 
@@ -54,7 +52,6 @@ module simulate_test;
 	initial begin
 		// Initialize Inputs
 		BTN_NORTH = 1;
-		BTN_SOUTH = 1;
 		CLK_50MHZ = 0;
 
 		// Wait 100 ns for global reset to finish
@@ -68,10 +65,7 @@ module simulate_test;
 		
 		// now start
 		BTN_NORTH = 1;
-		#650
-		BTN_SOUTH = 0;
-		#650
-		BTN_SOUTH = 1;
+		#650;
 	end
       
 endmodule
