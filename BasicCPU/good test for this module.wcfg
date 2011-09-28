@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="C:/Users/Daniel/3710/BasicCPU/simulate_test_isim_beh.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="simulate_test" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="31" />
+   <wvobject fp_name="divider27" type="divider">
+      <obj_property name="label">State Machine</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="BkColor">128 128 255</obj_property>
+      <obj_property name="TextColor">230 230 230</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simulate_test/uut/magic/clk" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simulate_test/uut/magic/state" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">state[3:0]</obj_property>
+      <obj_property name="ObjectShortName">state[3:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simulate_test/uut/magic/nextState" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">nextState[3:0]</obj_property>
+      <obj_property name="ObjectShortName">nextState[3:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simulate_test/uut/magic/initialR" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">initialR[15:0]</obj_property>
+      <obj_property name="ObjectShortName">initialR[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider28" type="divider">
+      <obj_property name="label">Registers</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="BkColor">128 128 255</obj_property>
+      <obj_property name="TextColor">230 230 230</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simulate_test/uut/omgbadname/inputReg" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">inputReg[15:0]</obj_property>
+      <obj_property name="ObjectShortName">inputReg[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simulate_test/uut/omgbadname/regWire0" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">regWire0[15:0]</obj_property>
+      <obj_property name="ObjectShortName">regWire0[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simulate_test/uut/omgbadname/regWire1" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">regWire1[15:0]</obj_property>
+      <obj_property name="ObjectShortName">regWire1[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simulate_test/uut/magic/regWriteEn" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">regWriteEn[15:0]</obj_property>
+      <obj_property name="ObjectShortName">regWriteEn[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider26" type="divider">
+      <obj_property name="label">ALU Signals</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="BkColor">128 128 255</obj_property>
+      <obj_property name="TextColor">230 230 230</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simulate_test/uut/magic/ALUOp" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">ALUOp[7:0]</obj_property>
+      <obj_property name="ObjectShortName">ALUOp[7:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simulate_test/uut/myFirstALU/Opcode" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">Opcode[7:0]</obj_property>
+      <obj_property name="ObjectShortName">Opcode[7:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simulate_test/uut/myFirstALU/A" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">A[15:0]</obj_property>
+      <obj_property name="ObjectShortName">A[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simulate_test/uut/myFirstALU/B" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">B[15:0]</obj_property>
+      <obj_property name="ObjectShortName">B[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simulate_test/uut/myFirstALU/C" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">C[15:0]</obj_property>
+      <obj_property name="ObjectShortName">C[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider29" type="divider">
+      <obj_property name="label">Control</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="BkColor">128 128 255</obj_property>
+      <obj_property name="TextColor">230 230 230</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simulate_test/uut/magic/regWrite" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">regWrite[3:0]</obj_property>
+      <obj_property name="ObjectShortName">regWrite[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simulate_test/uut/magic/regRead1" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">regRead1[3:0]</obj_property>
+      <obj_property name="ObjectShortName">regRead1[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simulate_test/uut/magic/regRead2" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">regRead2[3:0]</obj_property>
+      <obj_property name="ObjectShortName">regRead2[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simulate_test/uut/magic/buffCtrl" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">buffCtrl[3:0]</obj_property>
+      <obj_property name="ObjectShortName">buffCtrl[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider25" type="divider">
+      <obj_property name="label">Buffers</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="BkColor">128 128 255</obj_property>
+      <obj_property name="TextColor">230 230 230</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simulate_test/uut/abuf/busIn" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">busIn[15:0]</obj_property>
+      <obj_property name="ObjectShortName">busIn[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simulate_test/uut/abuf/enable" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">enable</obj_property>
+      <obj_property name="ObjectShortName">enable</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simulate_test/uut/abuf/busOut" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">busOut[15:0]</obj_property>
+      <obj_property name="ObjectShortName">busOut[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simulate_test/uut/bbuf/busIn" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">busIn[15:0]</obj_property>
+      <obj_property name="ObjectShortName">busIn[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simulate_test/uut/bbuf/enable" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">enable</obj_property>
+      <obj_property name="ObjectShortName">enable</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simulate_test/uut/bbuf/busOut" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">busOut[15:0]</obj_property>
+      <obj_property name="ObjectShortName">busOut[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simulate_test/uut/cbuf/busIn" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">busIn[15:0]</obj_property>
+      <obj_property name="ObjectShortName">busIn[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simulate_test/uut/cbuf/enable" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">enable</obj_property>
+      <obj_property name="ObjectShortName">enable</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simulate_test/uut/cbuf/busOut" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">busOut[15:0]</obj_property>
+      <obj_property name="ObjectShortName">busOut[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+</wave_config>
