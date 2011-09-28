@@ -29,7 +29,7 @@ module RegisterFile(
 		output reg [15:0] outputRegOne,
 		output reg [15:0] outputRegTwo
 		);
-		
+
 		reg [15:0] writeEnable;
 
         // wires coming out of the registers
@@ -49,7 +49,7 @@ module RegisterFile(
 		wire [15:0] regWire13;
 		wire [15:0] regWire14;
 		wire [15:0] regWire15;
-		
+
 		// decode write value
 		always@(writeSelectEncoded, writeEnableBit) begin
 			case(writeSelectEncoded)
@@ -211,25 +211,25 @@ module RegisterFile(
 				end
 			endcase
 		end
-		
-		
+
+
 		 // Register instantiations
-		Register reg0(clk, writeEnable[0], reset, inputReg, regWire0);
-		Register reg1(clk, writeEnable[1], reset, inputReg, regWire1);
-		Register reg2(clk, writeEnable[2], reset, inputReg, regWire2);
-		Register reg3(clk, writeEnable[3], reset, inputReg, regWire3);
-		Register reg4(clk, writeEnable[4], reset, inputReg, regWire4);
-		Register reg5(clk, writeEnable[5], reset, inputReg, regWire5);
-		Register reg6(clk, writeEnable[6], reset, inputReg, regWire6);
-		Register reg7(clk, writeEnable[7], reset, inputReg, regWire7);
-		Register reg8(clk, writeEnable[8], reset, inputReg, regWire8);
-		Register reg9(clk, writeEnable[9], reset, inputReg, regWire9);
-		Register reg10(clk, writeEnable[10], reset, inputReg, regWire10);
-		Register reg11(clk, writeEnable[11], reset, inputReg, regWire11);
-		Register reg12(clk, writeEnable[12], reset, inputReg, regWire12);
-		Register reg13(clk, writeEnable[13], reset, inputReg, regWire13);
-		Register reg14(clk, writeEnable[14], reset, inputReg, regWire14);
-		Register reg15(clk, writeEnable[15], reset, inputReg, regWire15);
-		
+		RegisterModule reg0(clk, writeEnable[0], reset, inputReg, regWire0);
+		RegisterModule reg1(clk, writeEnable[1], reset, inputReg, regWire1);
+		RegisterModule reg2(clk, writeEnable[2], reset, inputReg, regWire2);
+		RegisterModule reg3(clk, writeEnable[3], reset, inputReg, regWire3);
+		RegisterModule reg4(clk, writeEnable[4], reset, inputReg, regWire4);
+		RegisterModule reg5(clk, writeEnable[5], reset, inputReg, regWire5);
+		RegisterModule reg6(clk, writeEnable[6], reset, inputReg, regWire6);
+		RegisterModule reg7(clk, writeEnable[7], reset, inputReg, regWire7);
+		RegisterModule reg8(clk, writeEnable[8], reset, inputReg, regWire8);
+		RegisterModule reg9(clk, writeEnable[9], reset, inputReg, regWire9);
+		RegisterModule reg10(clk, writeEnable[10], reset, inputReg, regWire10);
+		RegisterModule reg11(clk, writeEnable[11], reset, inputReg, regWire11);
+		RegisterModule reg12(clk, writeEnable[12], reset, inputReg, regWire12);
+		RegisterModule reg13(clk, writeEnable[13], reset, inputReg, regWire13);
+		RegisterModule reg14(clk, writeEnable[14], reset, inputReg, regWire14);
+		RegisterModule reg15(clk, writeEnable[15], reset, inputReg, regWire15);
+
 
 endmodule
