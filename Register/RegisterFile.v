@@ -22,157 +22,214 @@ module RegisterFile(
 		input clk,
 		input [3:0] readSelect1,
 		input [3:0] readSelect2,
-		input [3:0] writeSelect,
-		input [15:0] writeEnable,
+		input [3:0] writeSelectEncoded,
+		input writeEnableBit,
 		input reset,
 		input [15:0] inputReg,
-		output reg [15:0] outputReg1,
-		output reg [15:0] outputReg2
+		output reg [15:0] outputRegOne,
+		output reg [15:0] outputRegTwo
 		);
+		
+		reg [15:0] writeEnable;
 
         // wires coming out of the registers
-		wire [15:0] reg0wire;
-		wire [15:0] reg1wire;
-		wire [15:0] reg2wire;
-		wire [15:0] reg3wire;
-		wire [15:0] reg4wire;
-		wire [15:0] reg5wire;
-		wire [15:0] reg6wire;
-		wire [15:0] reg7wire;
-		wire [15:0] reg8wire;
-		wire [15:0] reg9wire;
-		wire [15:0] reg10wire;
-		wire [15:0] reg11wire;
-		wire [15:0] reg12wire;
-		wire [15:0] reg13wire;
-		wire [15:0] reg14wire;
-		wire [15:0] reg15wire;
-
-        // Register instantiations
-		Register reg0(clk, writeEnable[0], reset, inputReg, reg0Wire);
-		Register reg1(clk, writeEnable[1], reset, inputReg, reg1Wire);
-		Register reg2(clk, writeEnable[2], reset, inputReg, reg2Wire);
-		Register reg3(clk, writeEnable[3], reset, inputReg, reg3Wire);
-		Register reg4(clk, writeEnable[4], reset, inputReg, reg4Wire);
-		Register reg5(clk, writeEnable[5], reset, inputReg, reg5Wire);
-		Register reg6(clk, writeEnable[6], reset, inputReg, reg6Wire);
-		Register reg7(clk, writeEnable[7], reset, inputReg, reg7Wire);
-		Register reg8(clk, writeEnable[8], reset, inputReg, reg8Wire);
-		Register reg9(clk, writeEnable[9], reset, inputReg, reg9Wire);
-		Register reg10(clk, writeEnable[10], reset, inputReg, reg10Wire);
-		Register reg11(clk, writeEnable[11], reset, inputReg, reg11Wire);
-		Register reg12(clk, writeEnable[12], reset, inputReg, reg12Wire);
-		Register reg13(clk, writeEnable[13], reset, inputReg, reg13Wire);
-		Register reg14(clk, writeEnable[14], reset, inputReg, reg14Wire);
-		Register reg15(clk, writeEnable[15], reset, inputReg, reg15Wire);
-
-
-        // read first register
-		always@(readSelect1, reg0wire, reg1wire, reg2wire, reg3wire, reg4wire, reg5wire, reg6wire, reg7wire, reg8wire, reg9wire, reg10wire, reg11wire, reg12wire, reg13wire, reg14wire, reg15wire) begin
-			case(readSelect1)
+		wire [15:0] regWire0;
+		wire [15:0] regWire1;
+		wire [15:0] regWire2;
+		wire [15:0] regWire3;
+		wire [15:0] regWire4;
+		wire [15:0] regWire5;
+		wire [15:0] regWire6;
+		wire [15:0] regWire7;
+		wire [15:0] regWire8;
+		wire [15:0] regWire9;
+		wire [15:0] regWire10;
+		wire [15:0] regWire11;
+		wire [15:0] regWire12;
+		wire [15:0] regWire13;
+		wire [15:0] regWire14;
+		wire [15:0] regWire15;
+		
+		// decode write value
+		always@(writeSelectEncoded, writeEnableBit) begin
+			case(writeSelectEncoded)
 				4'd0: begin
-				outputReg1 = reg0wire;
+					writeEnable = {16{writeEnableBit}} & 16'd1;
 				end
 				4'd1: begin
-				outputReg1 = reg1wire;
+					writeEnable = {16{writeEnableBit}} & 16'd2;
 				end
 				4'd2: begin
-				outputReg1 = reg2wire;
+					writeEnable = {16{writeEnableBit}} & 16'd4;
 				end
 				4'd3: begin
-				outputReg1 = reg3wire;
+					writeEnable = {16{writeEnableBit}} & 16'd8;
 				end
 				4'd4: begin
-				outputReg1 = reg4wire;
+					writeEnable = {16{writeEnableBit}} & 16'd16;
 				end
 				4'd5: begin
-				outputReg1 = reg5wire;
+					writeEnable = {16{writeEnableBit}} & 16'd32;
 				end
 				4'd6: begin
-				outputReg1 = reg6wire;
+					writeEnable = {16{writeEnableBit}} & 16'd64;
 				end
 				4'd7: begin
-				outputReg1 = reg7wire;
+					writeEnable = {16{writeEnableBit}} & 16'd128;
 				end
 				4'd8: begin
-				outputReg1 = reg8wire;
+					writeEnable = {16{writeEnableBit}} & 16'd256;
 				end
 				4'd9: begin
-				outputReg1 = reg9wire;
+					writeEnable = {16{writeEnableBit}} & 16'd512;
 				end
 				4'd10: begin
-				outputReg1 = reg10wire;
+					writeEnable = {16{writeEnableBit}} & 16'd1024;
 				end
 				4'd11: begin
-				outputReg1 = reg11wire;
+					writeEnable = {16{writeEnableBit}} & 16'd2048;
 				end
 				4'd12: begin
-				outputReg1 = reg12wire;
+					writeEnable = {16{writeEnableBit}} & 16'd4096;
 				end
 				4'd13: begin
-				outputReg1 = reg13wire;
+					writeEnable = {16{writeEnableBit}} & 16'd8192;
 				end
 				4'd14: begin
-				outputReg1 = reg14wire;
+					writeEnable = {16{writeEnableBit}} & 16'd16384;
 				end
 				4'd15: begin
-				outputReg1 = reg15wire;
+					writeEnable = {16{writeEnableBit}} & 16'd36768;
+				end
+			endcase
+		end
+
+        // read first register
+		always@(readSelect1, regWire0, regWire1, regWire2, regWire3, regWire4, regWire5, regWire6, regWire7, regWire8, regWire9, regWire10, regWire11, regWire12, regWire13, regWire14, regWire15) begin
+			case(readSelect1)
+				4'd0: begin
+				outputRegOne = regWire0;
+				end
+				4'd1: begin
+				outputRegOne = regWire1;
+				end
+				4'd2: begin
+				outputRegOne = regWire2;
+				end
+				4'd3: begin
+				outputRegOne = regWire3;
+				end
+				4'd4: begin
+				outputRegOne = regWire4;
+				end
+				4'd5: begin
+				outputRegOne = regWire5;
+				end
+				4'd6: begin
+				outputRegOne = regWire6;
+				end
+				4'd7: begin
+				outputRegOne = regWire7;
+				end
+				4'd8: begin
+				outputRegOne = regWire8;
+				end
+				4'd9: begin
+				outputRegOne = regWire9;
+				end
+				4'd10: begin
+				outputRegOne = regWire10;
+				end
+				4'd11: begin
+				outputRegOne = regWire11;
+				end
+				4'd12: begin
+				outputRegOne = regWire12;
+				end
+				4'd13: begin
+				outputRegOne = regWire13;
+				end
+				4'd14: begin
+				outputRegOne = regWire14;
+				end
+				4'd15: begin
+				outputRegOne = regWire15;
 				end
 			endcase
 		end
 
 		// read second register
-		always@(readSelect2, reg0wire, reg1wire, reg2wire, reg3wire, reg4wire, reg5wire, reg6wire, reg7wire, reg8wire, reg9wire, reg10wire, reg11wire, reg12wire, reg13wire, reg14wire, reg15wire) begin
+		always@(readSelect2, regWire0, regWire1, regWire2, regWire3, regWire4, regWire5, regWire6, regWire7, regWire8, regWire9, regWire10, regWire11, regWire12, regWire13, regWire14, regWire15) begin
 			case(readSelect2)
 				4'd0: begin
-				outputReg2 = reg0wire;
+				outputRegTwo = regWire0;
 				end
 				4'd1: begin
-				outputReg2 = reg1wire;
+				outputRegTwo = regWire1;
 				end
 				4'd2: begin
-				outputReg2 = reg2wire;
+				outputRegTwo = regWire2;
 				end
 				4'd3: begin
-				outputReg2 = reg3wire;
+				outputRegTwo = regWire3;
 				end
 				4'd4: begin
-				outputReg2 = reg4wire;
+				outputRegTwo = regWire4;
 				end
 				4'd5: begin
-				outputReg2 = reg5wire;
+				outputRegTwo = regWire5;
 				end
 				4'd6: begin
-				outputReg2 = reg6wire;
+				outputRegTwo = regWire6;
 				end
 				4'd7: begin
-				outputReg2 = reg7wire;
+				outputRegTwo = regWire7;
 				end
 				4'd8: begin
-				outputReg2 = reg8wire;
+				outputRegTwo = regWire8;
 				end
 				4'd9: begin
-				outputReg2 = reg9wire;
+				outputRegTwo = regWire9;
 				end
 				4'd10: begin
-				outputReg2 = reg10wire;
+				outputRegTwo = regWire10;
 				end
 				4'd11: begin
-				outputReg2 = reg11wire;
+				outputRegTwo = regWire11;
 				end
 				4'd12: begin
-				outputReg2 = reg12wire;
+				outputRegTwo = regWire12;
 				end
 				4'd13: begin
-				outputReg2 = reg13wire;
+				outputRegTwo = regWire13;
 				end
 				4'd14: begin
-				outputReg2 = reg14wire;
+				outputRegTwo = regWire14;
 				end
 				4'd15: begin
-				outputReg2 = reg15wire;
+				outputRegTwo = regWire15;
 				end
 			endcase
 		end
+		
+		
+		 // Register instantiations
+		Register reg0(clk, writeEnable[0], reset, inputReg, regWire0);
+		Register reg1(clk, writeEnable[1], reset, inputReg, regWire1);
+		Register reg2(clk, writeEnable[2], reset, inputReg, regWire2);
+		Register reg3(clk, writeEnable[3], reset, inputReg, regWire3);
+		Register reg4(clk, writeEnable[4], reset, inputReg, regWire4);
+		Register reg5(clk, writeEnable[5], reset, inputReg, regWire5);
+		Register reg6(clk, writeEnable[6], reset, inputReg, regWire6);
+		Register reg7(clk, writeEnable[7], reset, inputReg, regWire7);
+		Register reg8(clk, writeEnable[8], reset, inputReg, regWire8);
+		Register reg9(clk, writeEnable[9], reset, inputReg, regWire9);
+		Register reg10(clk, writeEnable[10], reset, inputReg, regWire10);
+		Register reg11(clk, writeEnable[11], reset, inputReg, regWire11);
+		Register reg12(clk, writeEnable[12], reset, inputReg, regWire12);
+		Register reg13(clk, writeEnable[13], reset, inputReg, regWire13);
+		Register reg14(clk, writeEnable[14], reset, inputReg, regWire14);
+		Register reg15(clk, writeEnable[15], reset, inputReg, regWire15);
+		
 
 endmodule
