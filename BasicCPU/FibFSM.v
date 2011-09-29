@@ -107,7 +107,7 @@ module FibFSM(
 	always@(posedge clk) begin
         case(state)
 			0: begin				// mov R0, $0
-				initialR 	<= 16'd0;
+				initialR 	<= 16'd7;
 				regWrite 	<= 4'd0;
 				regRead1 	<= 4'd0;
 				regRead2 	<= 4'd0;
@@ -116,7 +116,7 @@ module FibFSM(
 				regWriteEn 	<= 1;
 			end
 			1: begin				// mov R1, $1
-				initialR 	<= 16'd1;
+				initialR 	<= 16'd13;
 				regWrite 	<= 4'd1;
 				regRead1 	<= 4'd0;
 				regRead2 	<= 4'd0;

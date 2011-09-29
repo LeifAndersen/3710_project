@@ -28,7 +28,7 @@ module TopLevel(
     ); // includes some of the outputs from the LCD controller (ionno how it works, tho).
 
 	wire reset;
-	assign reset = ~BTN_NORTH;
+	assign reset = BTN_NORTH;
 	
     // clock divider and stuff
     wire clk;

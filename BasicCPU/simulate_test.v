@@ -61,6 +61,7 @@ module simulate_test;
 		
 		// Hey, reset
 		BTN_NORTH = 0;
+		BTN_NORTH = 1;
 		#650;
 		
 		// now start
