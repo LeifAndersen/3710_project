@@ -1,0 +1,18 @@
+#-----------------------------------------------------------
+# PlanAhead v12.2
+# Build 65285 by hdbuild on Wed Jun 23 14:55:19 PDT 2010
+# Start of session at: Fri Sep 30 21:31:47 2011
+# Process ID: 7492
+# Log file: C:/Users/jhparker/Desktop/Scrap/VGA/planAhead_run_1/planAhead.log
+# Journal file: C:/Users/jhparker/Desktop/Scrap/VGA/planAhead_run_1/planAhead.jou
+#-----------------------------------------------------------
+source C:/Xilinx/12.2/ISE_DS/PlanAhead/scripts/sdc.tcl
+start_gui -source C:/Users/jhparker/Desktop/Scrap/VGA/pa.fromNetlist.tcl
+# create_project -name VGA -dir "C:/Users/jhparker/Desktop/Scrap/VGA/planAhead_run_1" -part xc3s500efg320-5
+# set_property design_mode GateLvl [get_property srcset [current_run -impl]]
+# set_property edif_top_file "C:/Users/jhparker/Desktop/Scrap/VGA/VGA_Controller.ngc" [ get_property srcset [ current_run ] ]
+# add_files -norecurse { {C:/Users/jhparker/Desktop/Scrap/VGA} }
+# set_param project.paUcfFile  "VGA_Controller.ucf"
+# add_files "VGA_Controller.ucf" -fileset [get_property constrset [current_run]]
+# open_netlist_design
+exit
