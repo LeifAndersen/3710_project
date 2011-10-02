@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <string>
 #include <vector>
+#include <map>
 
 // If you want to understand this code, read the
 // LLVM documentation on making a Kaleidoscope compiler.
@@ -58,7 +59,7 @@ static int gettok()
         return ThisChar;
 }
 
-// Abstract Syntax Tree
+// Abstract Syntax Tree, for recursive descent parsing
 class ExprAST
 {
 public:
@@ -117,7 +118,7 @@ public:
 
 // Some helper methods
 static int CurTok;
-static int getNextTok()
+static int getNextToken()
 {
     return CurTok = gettok();
 }
@@ -142,7 +143,121 @@ FunctionAST * ErrorF(const char *Str)
 
 // Basic expression parsing
 
+static ExprAST *ParseExpression();
+
+static ExprAST *ParseNumberExpr()
+{
+    ExprAST *Result = new NumberExprAST(NumVal);
+    getNextToken();
+    return Result;
+}
+
+static ExprAST *ParseParenExpr()
+{
+    getNextToken();  // eat '('.
+    ExprAST *V = ParseExpression();
+    if(!V)
+        return 0;
+    if(CurTok != ')')
+        return Error("expected )");
+    getNextToken();
+    return V;
+}
+
+static ExprAST *ParseIdentifierExpr()
+{
+    std::string IdName = IdentifierStr;
+    getNextToken();
+
+    // variable
+    if(CurTok != '(')
+        return new VariableExprAst(IdName);
+
+    // function
+    getNextToken();
+    std::vector<ExprAST*> Args;
+    if(CurTok != ')') {
+        while(1) {
+            ExprAST *Arg = ParseExpression();
+            if(!Arg) return 0;
+            Args.push_back(Arg);
+            if(CurTok == ')') break;
+            if(CurTok != ',')
+                return Error("Expected ) or , in arguement list");
+            getNextToken();
+        }
+    }
+
+    getNextToken(); // Eat closing ')'.
+    return new CallExprAst(IdName, Args);
+}
+
+static ExprAST *ParsePrimary()
+{
+    switch(CurTok) {
+    case '(':
+        return ParseParenExpr();
+    case tok_identifier:
+        return ParseIdentifierExpr();
+    case tok_number:
+        return ParseNumberExpr();
+    default:
+        return Error("unkown token when expecting an expression");
+    }
+}
+
+// Operator precidence parsing (binary operators)
+
+static int getTokPrecedence()
+{
+    if(!isascii(CurTok))
+        return -1;
+    switch(CurTok) {
+    case '<':
+        return 10;
+    case '+':
+        return 20;
+    case '-':
+        return 20;
+    case '*':
+        return 40;
+    default:
+        return -1;
+    }
+}
+
+static ExprAST *ParseBinOpRHS(int ExprPrec, ExprAST *LHS)
+{
+    while(1) {
+        int TocPrec = getTokPrecedence();
+        if(TocPrec < ExprPrec)
+            return LHS;
+
+        // We can eat the token
+        int Binop = CurTok;
+        getNextToken();
+
+        // Parse the primary expression after the RHS
+        ExprAST *RHS = ParsePrimary();
+        if(!RHS) return 0;
+
+        // Determin precidence (way op should be applied)
+        int NextPrec = getTokPrecedence();
+        if(TocPrec < NextPrec) {
+            RHS = ParseBinOpRHS(TocPrec+1, RHS);
+            if(RHS == 0) return 0;
+        }
+
+        LHS = new BinaryExprAST(Binop, LHS, RHS);
+    }
+}
+
+static ExprAST *ParseExpression() {
+    ExprAST *LHS = ParsePrimary();
+    if(!LHS) return 0;
+    return ParseBinOpRHS(0, LHS);
+}
+
 int main()
 {
-	return 0;
 }
