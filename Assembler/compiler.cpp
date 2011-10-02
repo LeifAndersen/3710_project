@@ -8,10 +8,10 @@
 // LLVM documentation on making a Kaleidoscope compiler.
 
 enum Token {
-	tok_eof = -1,
-	tok_def = -2,
-	tok_extern = -3,
-	tok_identifier = -4,
+    tok_eof = -1,
+    tok_def = -2,
+    tok_extern = -3,
+    tok_identifier = -4,
     tok_number = -5,
 };
 
@@ -21,42 +21,42 @@ static double NumVal;
 // Tokenizer
 static int gettok()
 {
-	static int LastChar = ' ';
-	while(isspace(LastChar))
-		LastChar = getchar();
-
-	if(isalpha(LastChar)) {
-		IdentifierStr = LastChar;
-		while(isalnum((LastChar = getchar())))
-			IdentifierStr += LastChar;
-		if(IdentifierStr == "def") return tok_def;
-		if(IdentifierStr == "extern") return tok_extern;
-		return tok_identifier;
-	}
-
-	if(isdigit(LastChar) || LastChar == '.') {
-                std::string NumStr;
-                do {
-                    NumStr = LastChar;
-                    LastChar = getchar();
-                } while(isdigit(LastChar) || LastChar == '.');
-                NumVal = strtod(NumStr.c_str(), 0);
-                return tok_number;
-	}
-
-        if(LastChar == '#') {
-            do LastChar = getchar();
-            while (LastChar != EOF && LastChar != '\n' && LastChar != '\r');
-            if(LastChar == EOF)
-                return gettok();
-        }
-
-        if(LastChar == EOF)
-            return tok_eof;
-
-        int ThisChar = LastChar;
+    static int LastChar = ' ';
+    while(isspace(LastChar))
         LastChar = getchar();
-        return ThisChar;
+
+    if(isalpha(LastChar)) {
+        IdentifierStr = LastChar;
+        while(isalnum((LastChar = getchar())))
+            IdentifierStr += LastChar;
+        if(IdentifierStr == "def") return tok_def;
+        if(IdentifierStr == "extern") return tok_extern;
+        return tok_identifier;
+    }
+
+    if(isdigit(LastChar) || LastChar == '.') {
+        std::string NumStr;
+        do {
+            NumStr = LastChar;
+            LastChar = getchar();
+        } while(isdigit(LastChar) || LastChar == '.');
+        NumVal = strtod(NumStr.c_str(), 0);
+        return tok_number;
+    }
+
+    if(LastChar == '#') {
+        do LastChar = getchar();
+        while (LastChar != EOF && LastChar != '\n' && LastChar != '\r');
+        if(LastChar == EOF)
+            return gettok();
+    }
+
+    if(LastChar == EOF)
+        return tok_eof;
+
+    int ThisChar = LastChar;
+    LastChar = getchar();
+    return ThisChar;
 }
 
 // Abstract Syntax Tree, for recursive descent parsing
@@ -258,6 +258,111 @@ static ExprAST *ParseExpression() {
     return ParseBinOpRHS(0, LHS);
 }
 
+static PrototypeAST *ParsePrototype()
+{
+    if(CurTok != tok_identifier)
+        return ErrorP("Function name in prototype");
+
+    std::string FrName = IdentifierStr;
+    getNextToken();
+    if(CurTok != '(')
+        return ErrorP("Expected ( in prototype");
+
+    std::vector<std::string> ArgNames;
+    while(getNextToken() == tok_identifier)
+        ArgNames.push_back(IdentifierStr);
+    if(CurTok != ')')
+        return ErrorP("Expected ) in prototype");
+    getNextToken();
+    return new PrototypeAST(FrName, ArgNames);
+}
+
+static FunctionAST *ParseDefinition()
+{
+    getNextToken(); // eat beginning def
+    PrototypeAST *Proto = ParsePrototype();
+    if(Proto == 0) return 0;
+    if(ExprAST *E = ParseExpression())
+        return new FunctionAST(Proto, E);
+    return 0;
+}
+
+static PrototypeAST *ParseExtern()
+{
+    getNextToken(); // Eat extern
+    return ParsePrototype();
+}
+
+static FunctionAST *ParseTopLopLevelExpr()
+{
+    if(ExprAST *E = ParseExpression())
+    {
+        PrototypeAST *Proto = new PrototypeAST("", std::vector<std::string>());
+        return new FunctionAST(Proto, E);
+    }
+    return 0;
+}
+
+// Top level demo stuff
+
+static void HandleDefinition() {
+    if (ParseDefinition()) {
+        fprintf(stderr, "Parsed a function definition.\n");
+    } else {
+        // Skip token for error recovery.
+        getNextToken();
+    }
+}
+
+static void HandleExtern() {
+    if (ParseExtern()) {
+        fprintf(stderr, "Parsed an extern\n");
+    } else {
+        // Skip token for error recovery.
+        getNextToken();
+    }
+}
+
+static void HandleTopLevelExpression() {
+    // Evaluate a top-level expression into an anonymous function.
+    if (ParseTopLopLevelExpr()) {
+        fprintf(stderr, "Parsed a top-level expr\n");
+    } else {
+        // Skip token for error recovery.
+        getNextToken();
+    }
+}
+
+static void MainLoop()
+{
+    while(1) {
+        fprintf(stderr, "ready>");
+        switch(CurTok) {
+        case tok_eof:
+            return;
+        case tok_def:
+            HandleDefinition();
+            break;
+        case tok_extern:
+            HandleExtern();
+            break;
+        case ';':
+            getNextToken();
+            break;
+        default:
+            HandleTopLevelExpression();
+        }
+    }
+}
+
 int main()
 {
+    // Prime the first token.
+    fprintf(stderr, "ready> ");
+    getNextToken();
+
+    // Run the main "interpreter loop" now.
+    MainLoop();
+
+    return 0;
 }
