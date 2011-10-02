@@ -1,0 +1,21 @@
+#-----------------------------------------------------------
+# PlanAhead v12.2
+# Build 65285 by hdbuild on Wed Jun 23 14:55:19 PDT 2010
+# Start of session at: Fri Sep 30 21:32:37 2011
+# Process ID: 3588
+# Log file: C:/Users/jhparker/Desktop/Scrap/VGA/planAhead_run_2/planAhead.log
+# Journal file: C:/Users/jhparker/Desktop/Scrap/VGA/planAhead_run_2/planAhead.jou
+#-----------------------------------------------------------
+source C:/Xilinx/12.2/ISE_DS/PlanAhead/scripts/sdc.tcl
+start_gui -source C:/Users/jhparker/Desktop/Scrap/VGA/pa.fromHdl.tcl
+# create_project -name VGA -dir "C:/Users/jhparker/Desktop/Scrap/VGA/planAhead_run_2" -part xc3s500efg320-5
+# set_param project.pinAheadLayout yes
+# set srcset [get_property srcset [current_run -impl]]
+# set_property top VGA_Controller $srcset
+# set_param project.paUcfFile  "VGA_Controller.ucf"
+# set hdlfile [add_files [list {VGA_Controller.v}]]
+# set_property file_type Verilog $hdlfile
+# set_property library work $hdlfile
+# add_files "VGA_Controller.ucf" -fileset [get_property constrset [current_run]]
+# open_rtl_design -part xc3s500efg320-5
+exit
