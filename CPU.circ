@@ -212,6 +212,9 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
     </comp>
     <comp loc="(140,280)" name="16Buff"/>
     <comp loc="(700,190)" name="RegFile"/>
+    <comp lib="0" loc="(597,568)" name="Text">
+      <a name="text" val="10"/>
+    </comp>
     <comp loc="(870,230)" name="16Buff"/>
     <comp loc="(600,580)" name="16Buff"/>
     <comp loc="(870,160)" name="16Buff"/>
@@ -220,6 +223,9 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
     </comp>
     <comp lib="0" loc="(717,355)" name="Text">
       <a name="text" val="BSel"/>
+    </comp>
+    <comp lib="0" loc="(869,149)" name="Text">
+      <a name="text" val="2"/>
     </comp>
     <comp lib="0" loc="(1018,382)" name="Text">
       <a name="text" val="B"/>
@@ -230,6 +236,9 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
     <comp lib="3" loc="(110,160)" name="Adder">
       <a name="width" val="16"/>
     </comp>
+    <comp lib="0" loc="(719,444)" name="Text">
+      <a name="text" val="4"/>
+    </comp>
     <comp lib="0" loc="(391,377)" name="Text">
       <a name="text" val="Flags"/>
     </comp>
@@ -237,8 +246,8 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
       <a name="fanout" val="5"/>
       <a name="incoming" val="5"/>
     </comp>
-    <comp lib="0" loc="(867,141)" name="Text">
-      <a name="text" val="immediate"/>
+    <comp lib="0" loc="(870,221)" name="Text">
+      <a name="text" val="0"/>
     </comp>
     <comp loc="(220,160)" name="PC"/>
     <comp lib="1" loc="(260,750)" name="Constant">
@@ -247,6 +256,9 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
     </comp>
     <comp lib="0" loc="(441,304)" name="Text">
       <a name="text" val="ALUOp"/>
+    </comp>
+    <comp lib="0" loc="(141,269)" name="Text">
+      <a name="text" val="9"/>
     </comp>
     <comp lib="0" loc="(397,644)" name="Text">
       <a name="text" val="MemWriteBus"/>
@@ -257,6 +269,9 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
     <comp loc="(240,440)" name="16Buff">
       <a name="facing" val="west"/>
     </comp>
+    <comp lib="0" loc="(807,694)" name="Text">
+      <a name="text" val="6"/>
+    </comp>
     <comp loc="(720,540)" name="16Buff">
       <a name="facing" val="west"/>
     </comp>
@@ -265,6 +280,9 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
     </comp>
     <comp lib="0" loc="(425,428)" name="Text">
       <a name="text" val="Addr"/>
+    </comp>
+    <comp lib="0" loc="(141,152)" name="Text">
+      <a name="text" val="8"/>
     </comp>
     <comp loc="(370,820)" name="MemCtrl"/>
     <comp loc="(1000,200)" name="ALU"/>
@@ -278,14 +296,24 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
       <a name="text" val="AddrBus"/>
     </comp>
     <comp loc="(870,320)" name="16Buff"/>
+    <comp lib="0" loc="(785,157)" name="Text">
+      <a name="text" val="immediate"/>
+    </comp>
     <comp lib="0" loc="(85,122)" name="Text">
       <a name="text" val="PC + 4"/>
     </comp>
+    <comp loc="(440,320)" name="Control"/>
     <comp lib="3" loc="(110,280)" name="Adder">
       <a name="width" val="16"/>
     </comp>
     <comp lib="0" loc="(1020,183)" name="Text">
       <a name="text" val="A"/>
+    </comp>
+    <comp lib="0" loc="(472,615)" name="Text">
+      <a name="text" val="7"/>
+    </comp>
+    <comp lib="0" loc="(926,613)" name="Text">
+      <a name="text" val="5"/>
     </comp>
     <comp lib="0" loc="(443,805)" name="Text">
       <a name="text" val="Data Port"/>
@@ -295,24 +323,15 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
       <a name="width" val="16"/>
       <a name="value" val="0x4"/>
     </comp>
+    <comp lib="0" loc="(870,311)" name="Text">
+      <a name="text" val="1"/>
+    </comp>
+    <comp lib="0" loc="(545,696)" name="Text">
+      <a name="text" val="12"/>
+    </comp>
     <comp lib="0" loc="(550,270)" name="Splitter">
-      <a name="fanout" val="14"/>
-      <a name="incoming" val="16"/>
-      <a name="bit1" val="0"/>
-      <a name="bit2" val="1"/>
-      <a name="bit3" val="1"/>
-      <a name="bit4" val="2"/>
-      <a name="bit5" val="3"/>
-      <a name="bit6" val="4"/>
-      <a name="bit7" val="5"/>
-      <a name="bit8" val="6"/>
-      <a name="bit9" val="7"/>
-      <a name="bit10" val="8"/>
-      <a name="bit11" val="9"/>
-      <a name="bit12" val="10"/>
-      <a name="bit13" val="11"/>
-      <a name="bit14" val="12"/>
-      <a name="bit15" val="13"/>
+      <a name="fanout" val="13"/>
+      <a name="incoming" val="13"/>
     </comp>
     <comp lib="0" loc="(1230,410)" name="Splitter">
       <a name="facing" val="west"/>
@@ -323,11 +342,17 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
     <comp lib="0" loc="(565,197)" name="Text">
       <a name="text" val="BuffCtrl"/>
     </comp>
+    <comp lib="0" loc="(240,461)" name="Text">
+      <a name="text" val="11"/>
+    </comp>
     <comp lib="0" loc="(290,807)" name="Text">
       <a name="text" val="Instruction Port"/>
     </comp>
     <comp loc="(530,690)" name="16Buff">
       <a name="facing" val="south"/>
+    </comp>
+    <comp lib="0" loc="(719,560)" name="Text">
+      <a name="text" val="3"/>
     </comp>
     <comp lib="0" loc="(968,296)" name="Text">
       <a name="text" val="BusB"/>
@@ -347,7 +372,6 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
     <comp lib="0" loc="(170,130)" name="Text">
       <a name="text" val="PCWriteBus"/>
     </comp>
-    <comp loc="(440,320)" name="Control"/>
     <comp loc="(1140,410)" name="FlagRegister"/>
     <comp lib="0" loc="(718,337)" name="Text">
       <a name="text" val="ASel"/>
@@ -755,7 +779,7 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
     <comp lib="0" loc="(400,230)" name="Pin">
       <a name="facing" val="west"/>
       <a name="output" val="true"/>
-      <a name="width" val="16"/>
+      <a name="width" val="13"/>
       <a name="label" val="BuffCtrl"/>
       <a name="labelloc" val="east"/>
     </comp>
