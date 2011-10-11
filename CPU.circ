@@ -814,7 +814,7 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
     <a name="labelfont" val="SansSerif plain 12"/>
     <appear>
       <rect fill="none" height="140" stroke="#000000" stroke-width="2" width="140" x="10" y="10"/>
-      <text font-family="SansSerif" font-size="9" text-anchor="middle" x="52" y="19">ALUOp</text>
+      <text font-family="SansSerif" font-size="9" text-anchor="middle" x="42" y="19">ALUOp</text>
       <text font-family="SansSerif" font-size="9" text-anchor="middle" x="40" y="54">Instruction</text>
       <text font-family="SansSerif" font-size="9" text-anchor="middle" x="27" y="114">Flags</text>
       <text font-family="SansSerif" font-size="9" text-anchor="middle" x="41" y="143">Addr</text>
@@ -823,10 +823,11 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
       <text font-family="SansSerif" font-size="9" text-anchor="middle" x="136" y="133">SrcSel</text>
       <text font-family="SansSerif" font-size="9" text-anchor="middle" x="131" y="73">BuffCtrl</text>
       <text font-family="SansSerif" font-size="9" text-anchor="middle" x="126" y="53">Immediate</text>
-      <text font-family="SansSerif" font-size="9" text-anchor="middle" x="111" y="18">RegWrite</text>
+      <text font-family="SansSerif" font-size="9" text-anchor="middle" x="81" y="18">RegWrite</text>
       <text font-family="SansSerif" font-size="9" text-anchor="middle" x="128" y="29">RegWrite2</text>
       <text font-family="SansSerif" font-size="9" text-anchor="middle" x="130" y="113">DestSel2</text>
-      <text font-family="SansSerif" font-size="9" text-anchor="middle" x="126" y="143">FlagWrite</text>
+      <text font-family="SansSerif" font-size="9" text-anchor="middle" x="123" y="18">FlagWrite</text>
+      <text font-family="SansSerif" font-size="9" text-anchor="middle" x="122" y="144">14Imm</text>
       <circ-port height="8" pin="200,240" width="8" x="6" y="46"/>
       <circ-port height="8" pin="200,340" width="8" x="6" y="106"/>
       <circ-port height="10" pin="400,230" width="10" x="145" y="65"/>
@@ -834,12 +835,13 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
       <circ-port height="10" pin="400,120" width="10" x="145" y="45"/>
       <circ-port height="10" pin="400,330" width="10" x="145" y="125"/>
       <circ-port height="10" pin="400,300" width="10" x="145" y="105"/>
-      <circ-port height="10" pin="300,80" width="10" x="45" y="5"/>
-      <circ-port height="10" pin="230,420" width="10" x="115" y="145"/>
-      <circ-port height="10" pin="400,370" width="10" x="105" y="5"/>
+      <circ-port height="10" pin="300,80" width="10" x="35" y="5"/>
+      <circ-port height="10" pin="230,420" width="10" x="115" y="5"/>
+      <circ-port height="10" pin="400,370" width="10" x="75" y="5"/>
       <circ-port height="10" pin="400,400" width="10" x="75" y="145"/>
       <circ-port height="10" pin="400,350" width="10" x="145" y="15"/>
       <circ-port height="10" pin="400,270" width="10" x="145" y="85"/>
+      <circ-port height="10" pin="400,170" width="10" x="115" y="145"/>
       <circ-anchor facing="east" height="6" width="6" x="77" y="57"/>
     </appear>
     <comp lib="0" loc="(230,420)" name="Pin">
@@ -857,6 +859,13 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
       <a name="output" val="true"/>
       <a name="width" val="8"/>
       <a name="label" val="ALUOp"/>
+      <a name="labelloc" val="east"/>
+    </comp>
+    <comp lib="0" loc="(400,170)" name="Pin">
+      <a name="facing" val="west"/>
+      <a name="output" val="true"/>
+      <a name="width" val="16"/>
+      <a name="label" val="14-Bit Immediate"/>
       <a name="labelloc" val="east"/>
     </comp>
     <comp lib="0" loc="(300,420)" name="Pin">
