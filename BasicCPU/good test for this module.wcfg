@@ -10,7 +10,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="36" />
+   <WVObjectSize size="38" />
    <wvobject fp_name="divider27" type="divider">
       <obj_property name="label">State Machine</obj_property>
       <obj_property name="DisplayName">label</obj_property>
@@ -53,6 +53,10 @@
    <wvobject fp_name="/simulate_test/uut/magic/regWriteEn" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">regWriteEn</obj_property>
       <obj_property name="ObjectShortName">regWriteEn</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simulate_test/uut/magic/regWriteEn2" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">regWriteEn2</obj_property>
+      <obj_property name="ObjectShortName">regWriteEn2</obj_property>
    </wvobject>
    <wvobject fp_name="/simulate_test/uut/omgbadname/reg0" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">reg0[15:0]</obj_property>
@@ -114,6 +118,11 @@
    <wvobject fp_name="/simulate_test/uut/magic/regWrite" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">regWrite[3:0]</obj_property>
       <obj_property name="ObjectShortName">regWrite[3:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simulate_test/uut/magic/regWrite2" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">regWrite2[3:0]</obj_property>
+      <obj_property name="ObjectShortName">regWrite2[3:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/simulate_test/uut/magic/regRead1" type="array" db_ref_id="1">
