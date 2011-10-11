@@ -38,6 +38,7 @@ module FibFSM(
     input reset,
     output reg [15:0] initialR,
     output reg [3:0] regWrite,
+	output reg [3:0] regWrite2,
     output reg [3:0] regRead1,
     output reg [3:0] regRead2,
     output reg [3:0] ALUOp,
@@ -110,6 +111,7 @@ module FibFSM(
 			0: begin				// mov R0, $0
 				initialR 	<= 16'd7;
 				regWrite 	<= 4'd0;
+				regWrite2	<= 4'd0;
 				regRead1 	<= 4'd0;
 				regRead2 	<= 4'd0;
 				ALUOp 		<= AND;
@@ -120,6 +122,7 @@ module FibFSM(
 			1: begin				// mov R1, $1
 				initialR 	<= 16'd13;
 				regWrite 	<= 4'd1;
+				regWrite2	<= 4'd0;
 				regRead1 	<= 4'd0;
 				regRead2 	<= 4'd0;
 				ALUOp 		<= AND;
@@ -130,6 +133,7 @@ module FibFSM(
 			2: begin				// add R2, R1
 				initialR 	<= 16'd0;
 				regWrite 	<= 4'd2;
+				regWrite2	<= 4'd0;
 				regRead1 	<= 4'd1;
 				regRead2 	<= 4'd0;
 				ALUOp 		<= ADD;
@@ -140,6 +144,7 @@ module FibFSM(
 			3: begin				// add R3, R2
 				initialR 	<= 16'd0;
 				regWrite 	<= 4'd3;
+				regWrite2	<= 4'd0;
 				regRead1 	<= 4'd2;
 				regRead2 	<= 4'd1;
 				ALUOp 		<= ADD;
@@ -150,6 +155,7 @@ module FibFSM(
 			4: begin				// add R0, R1
 				initialR 	<= 16'd0;
 				regWrite 	<= 4'd4;
+				regWrite2	<= 4'd0;
 				regRead1 	<= 4'd3;
 				regRead2 	<= 4'd2;
 				ALUOp 		<= ADD;
@@ -160,6 +166,7 @@ module FibFSM(
 			5: begin				// add R0, R1
 				initialR 	<= 16'd0;
 				regWrite 	<= 4'd5;
+				regWrite2	<= 4'd0;
 				regRead1 	<= 4'd4;
 				regRead2 	<= 4'd3;
 				ALUOp 		<= ADD;
@@ -170,6 +177,7 @@ module FibFSM(
 			6: begin				// add R0, R1
 				initialR 	<= 16'd0;
 				regWrite 	<= 4'd6;
+				regWrite2	<= 4'd0;
 				regRead1 	<= 4'd5;
 				regRead2 	<= 4'd4;
 				ALUOp 		<= ADD;
@@ -180,6 +188,7 @@ module FibFSM(
 			7: begin				// add R0, R1
 				initialR 	<= 16'd0;
 				regWrite 	<= 4'd7;
+				regWrite2	<= 4'd0;
 				regRead1 	<= 4'd6;
 				regRead2 	<= 4'd5;
 				ALUOp 		<= ADD;
@@ -190,6 +199,7 @@ module FibFSM(
 			8: begin				// add R0, R1
 				initialR 	<= 16'd0;
 				regWrite 	<= 4'd8;
+				regWrite2	<= 4'd0;
 				regRead1 	<= 4'd7;
 				regRead2 	<= 4'd6;
 				ALUOp 		<= ADD;
@@ -200,6 +210,7 @@ module FibFSM(
 			9: begin				// add R0, R1
 				initialR 	<= 16'd0;
 				regWrite 	<= 4'd9;
+				regWrite2	<= 4'd0;
 				regRead1 	<= 4'd8;
 				regRead2 	<= 4'd7;
 				ALUOp 		<= ADD;
@@ -210,6 +221,7 @@ module FibFSM(
 			10: begin				// add R0, R1
 				initialR 	<= 16'd0;
 				regWrite 	<= 4'd10;
+				regWrite2	<= 4'd0;
 				regRead1 	<= 4'd9;
 				regRead2 	<= 4'd8;
 				ALUOp 		<= ADD;
@@ -220,6 +232,7 @@ module FibFSM(
 			11: begin				// add R0, R1
 				initialR 	<= 16'd0;
 				regWrite 	<= 4'd11;
+				regWrite2	<= 4'd0;
 				regRead1 	<= 4'd10;
 				regRead2 	<= 4'd9;
 				ALUOp 		<= ADD;
@@ -229,27 +242,30 @@ module FibFSM(
 			end
 			12: begin				// add R0, R1
 				initialR 	<= 16'd0;
-				regWrite 	<= 4'd12;
+				regWrite 	<= 4'd0;
+				regWrite2	<= 4'd12;
 				regRead1 	<= 4'd11;
 				regRead2 	<= 4'd10;
 				ALUOp 		<= ADD;
 				buffCtrl 	<= 4'b1110;
-				regWriteEn 	<= 1;
-				regWriteEn2 <= 0;
+				regWriteEn 	<= 0;
+				regWriteEn2 <= 1;
 			end
 			13: begin				// add R0, R1
 				initialR 	<= 16'd0;
-				regWrite 	<= 4'd13;
+				regWrite 	<= 4'd0;
+				regWrite2	<= 4'd13;
 				regRead1 	<= 4'd12;
 				regRead2 	<= 4'd11;
 				ALUOp 		<= ADD;
 				buffCtrl 	<= 4'b1110;
-				regWriteEn 	<= 1;
-				regWriteEn2 <= 0;
+				regWriteEn 	<= 0;
+				regWriteEn2 <= 1;
 			end
 			14: begin				// add R0, R1
 				initialR 	<= 16'd0;
 				regWrite 	<= 4'd14;
+				regWrite2	<= 4'd0;
 				regRead1 	<= 4'd13;
 				regRead2 	<= 4'd12;
 				ALUOp 		<= ADD;
@@ -260,12 +276,13 @@ module FibFSM(
 			15: begin				// add R0, R1
 				initialR 	<= 16'd0;
 				regWrite 	<= 4'd15;
+				regWrite2	<= 4'd0;
 				regRead1 	<= 4'd14;
 				regRead2 	<= 4'd13;
 				ALUOp 		<= ADD;
 				buffCtrl 	<= 4'b1110;
 				regWriteEn 	<= 0;
-				regWriteEn2 <= 1;
+				regWriteEn2 <= 0;
 			end
 		endcase
 	end

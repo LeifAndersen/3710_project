@@ -25,6 +25,7 @@ module Register(
 		input [3:0] read_select_1,
 		input [3:0] read_select_2,
 		input [3:0] write_select_1,
+		input [3:0] write_select_2,
 		input write_1,
 		input write_2,
 		input reset,
@@ -85,14 +86,16 @@ module Register(
 					4'd9:reg9 = inputReg_1;
 					4'd10:reg10 = inputReg_1;
 					4'd11:reg11 = inputReg_1;
-					4'd12:reg12 = inputReg_1;
-					4'd13:reg13 = inputReg_1;
 					4'd14:reg14 = inputReg_1;
+					4'd15:reg15 = inputReg_1;
 				endcase
 			end
-			// There's a good reason this write happens on a separate port, guys, but at the time of writing, we hadn't thought of it yet
+			// There's a good reason these writes happens on a separate port, guys, but at the time of writing, we hadn't thought of it yet
 			if(write_2 == 1'b1) begin
-				reg15 = inputReg_2;
+				case(write_select_2)
+					4'd12:reg12 = inputReg_2;
+					4'd13:reg13 = inputReg_2;
+				endcase
 			end
 		end
 	end
