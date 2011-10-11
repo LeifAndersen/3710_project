@@ -65,7 +65,7 @@ module simulate_test;
 		#650;
 		
 		// now start
-		BTN_NORTH = 1;
+		BTN_NORTH = 0;
 		#650;
 	end
       

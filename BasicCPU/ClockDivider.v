@@ -32,7 +32,7 @@ module ClockDivider(
 			outClock = 0;
 		end
 		else begin
-			if (count == 12500000) begin
+			if (count == 1) begin
 				outClock = ~outClock;
 				count = 32'd0;
 			end

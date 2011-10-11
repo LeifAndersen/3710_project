@@ -23,7 +23,7 @@
 module ALU(
 		input [15:0] A,
 		input [15:0] B,
-		input [7:0] Opcode,
+		input [3:0] Opcode,
 		input CarryIn,
 		output reg [15:0] C,
 		output reg Carry,
@@ -52,32 +52,6 @@ module ALU(
 			Carry = 0;
 			Low = $signed(A)<$signed(B);
 			Negative = $signed(A + B)<0;
-		end
-
-		ADDU:
-		begin
-			{Carry, C} = A + B;
-			if (C == 0)
-				Zero = 1;
-			else
-				Zero = 0;
-			
-			Low = A<B;
-			Negative = 0;
-			Flag = 0;
-		end
-
-		ADDCU:
-		begin
-			{Carry, C} = A + B + CarryIn;
-			if ((C == 0) && (Carry == 0))
-				Zero = 1;
-			else
-				Zero = 0;
-			
-			Flag = 0;
-			Low = A<B;
-			Negative = 0;
 		end
 
 		SUB:
@@ -201,20 +175,6 @@ module ALU(
 			Carry = 1'b0;
 		end
 
-		ALSH:
-		begin
-			C = A << B;
-			if (C == 0)
-				Zero = 1;
-			else
-				Zero = 0;
-			
-			Low = 1'b0;
-			Negative = 1'b0;
-			Flag = 1'b0;
-			Carry = 1'b0;
-		end
-
 		ARSH:
 		begin
 			C = $signed(A) >>> B[3:0];
@@ -227,16 +187,6 @@ module ALU(
 			Negative = 1'b0;
 			Flag = 1'b0;
 			Carry = 1'b0;
-		end
-
-		NOP:
-		begin
-			C = 16'b0000000000000000;
-			Carry = 1'b0;
-			Flag = 1'b0;
-			Low = 1'b0;
-			Negative = 1'b0;
-			Zero = 1'b0;
 		end
 
 		default:
