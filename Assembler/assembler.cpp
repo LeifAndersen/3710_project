@@ -23,7 +23,7 @@ void assemble(string inFileName, string outFileName)
 {
     // Open files, other constants needed
     string line;
-    vector<short> output;
+    vector<opcode> output;
     map<string, int> labels;
     Instructions instructions;
     ifstream infile;

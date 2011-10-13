@@ -4,6 +4,8 @@
 #include <map>
 #include <string>
 
+typedef short opcode;
+
 class Instructions
 {
 public:
@@ -32,11 +34,13 @@ public:
     };
 
     instructionSet operator [](std::string instruction);
+    opcode operator [](instructionSet instruction);
 
     bool contains(std::string instruction);
 
 private:
     std::map<std::string, instructionSet> instructionMap;
+    std::map<instructionSet, opcode> opcodeMap;
 };
 
 #endif // INSTRUCTIONS_H
