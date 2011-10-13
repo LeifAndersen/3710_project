@@ -86,7 +86,7 @@
     DestSel2    = 11:8
     SrcSel      = 3:0
     BuffersOn   = 0, 2, 9
-    BuffersOff  = 2, 3, 5, 6, 8, 10, 11, 12, 13, 14, 15, 18, 19, 20, 21
+    BuffersOff  = 1, 2, 3, 5, 6, 8, 10, 11, 12, 13, 14, 15, 18, 19, 20, 21
     MemWrite    = 0;
     immediate   = 7:0;
     Addr        = 0;
@@ -235,7 +235,7 @@
             WriteEn2    = 0;
             DestSel     = 0;
             DestSel2    = 0;
-            BuffersOff  = 0, 1, 5;
+            BuffersOff  = 0, 1, 5, 18, 19, 21;
         end else begin
             WriteEn1    = 1;                // Write to operand reg
             WriteEn2    = 1;                // Write to SP
@@ -283,24 +283,24 @@
         if (11:8 == 12 || 11:8 == 13) begin
             WriteEn1    = 0
             WriteEn2    = 1
-            BuffersOn   = 21
-            BuffersOff  = 20
+            BuffersOn   = 18, 21
+            BuffersOff  = 19, 20
         end else begin
             WriteEn1    = 1
             WriteEn2    = 0
-            BuffersOn   = 20
-            BuffersOff  = 21
+            BuffersOn   = 18, 20
+            BuffersOff  = 19, 21
         end
 
     DECR:
         if (11:8 == 12 || 11:8 == 13) begin
             WriteEn1    = 0
             WriteEn2    = 1
-            BuffersOn   = 21
-            BuffersOff  = 20
+            BuffersOn   = 19, 21
+            BuffersOff  = 18, 20
         end else begin
             WriteEn1    = 1
             WriteEn2    = 0
-            BuffersOn   = 20
-            BuffersOff  = 21
+            BuffersOn   = 19, 20
+            BuffersOff  = 18, 21
         end
