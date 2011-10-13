@@ -20,9 +20,15 @@ Instructions::Instructions()
     instructionMap["JB"] = JB;
     instructionMap["JAE"] = JAE;
     instructionMap["JBE"] = JBE;
+    instructionMap["NOP"] = NOP;
 }
 
 Instructions::instructionSet Instructions::operator [](std::string instruction)
 {
     return instructionMap[instruction];
+}
+
+bool Instructions::contains(std::string instruction)
+{
+    return instructionMap.find(instruction) != instructionMap.end();
 }

@@ -28,9 +28,12 @@ public:
         JB,
         JAE,
         JBE,
+        NOP,
     };
 
     instructionSet operator [](std::string instruction);
+
+    bool contains(std::string instruction);
 
 private:
     std::map<std::string, instructionSet> instructionMap;

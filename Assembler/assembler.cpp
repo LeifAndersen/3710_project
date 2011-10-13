@@ -12,22 +12,50 @@
 #include "assembler.h"
 #include "instructions.h"
 
+#define START_MEM 0
+#define MEM_SKIP 1
 using namespace std;
 
 void assemble(string inFileName, string outFileName)
 {
+    // Open files, other constants needed
+    string line;
+    string command;
+    map<string, int> labels;
+    Instructions instructions;
     ifstream infile;
     ofstream outfile;
     infile.open(inFileName.c_str());
     outfile.open(outFileName.c_str());
 
-    string line;
-    string command;
-
-    Instructions instructions;
-
-    while(getline(infile, line)) {
+    // Set up tags
+    for(int i = START_MEM; getline(infile, line); i += MEM_SKIP) {
         command = line;
+        if(command[0] == '#')
+            continue;
+
+        if(!instructions.contains(command)) {
+            if(labels.find(command) == labels.end()) {
+                labels[command] = i;
+            } else {
+                cerr << "Duplicate label on line: " << labels[command]
+                     << " and line: " << i << endl;
+                exit(1);
+            }
+        }
+    }
+
+    // Reset stream
+    infile.clear();
+    infile.seekg(0, ios::beg);
+
+    // Assemble
+    for(int i = START_MEM; getline(infile, line); i += MEM_SKIP) {
+        command = line;
+
+        if(command[0] == '#')
+            continue;
+
         switch(instructions[command]) {
         case Instructions::ADD:
             break;
@@ -63,11 +91,14 @@ void assemble(string inFileName, string outFileName)
             break;
         case Instructions::JBE:
             break;
+        case Instructions::NOP:
+            break;
         default:
             break;
         }
     }
 
+    // Close Files
     infile.close();
     outfile.close();
 }
