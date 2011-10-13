@@ -1,6 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <streambuf>
+#include <sstream>
+#include <algorithm>
+#include <iterator>
 #include <vector>
 #include <string>
 #include <stdlib.h>
@@ -20,7 +23,6 @@ void assemble(string inFileName, string outFileName)
 {
     // Open files, other constants needed
     string line;
-    string command;
     map<string, int> labels;
     Instructions instructions;
     ifstream infile;
@@ -30,18 +32,35 @@ void assemble(string inFileName, string outFileName)
 
     // Set up tags
     for(int i = START_MEM; getline(infile, line); i += MEM_SKIP) {
-        command = line;
-        if(command[0] == '#')
-            continue;
 
-        if(!instructions.contains(command)) {
-            if(labels.find(command) == labels.end()) {
-                labels[command] = i;
+        istringstream iss(line);
+        vector<string> tokens;
+        copy(istream_iterator<string>(iss),
+                 istream_iterator<string>(),
+                 back_inserter<vector<string> >(tokens));
+
+        if(tokens.size() == 0) {
+            continue;
+        }
+
+        string label = tokens[0];
+        if(label[0] == '#') {
+            continue;
+        }
+
+        if(!instructions.contains(label)) {
+            if(labels.find(label) == labels.end()) {
+                labels[label] = i;
             } else {
-                cerr << "Duplicate label on line: " << labels[command]
+                cerr << "Duplicate label on line: " << labels[label]
                      << " and line: " << i << endl;
                 exit(1);
             }
+        }
+
+        if(tokens.size() > 1 && tokens[1][0] != '#') {
+            cerr << "Invalid label name on line: " << i << endl;
+            exit(1);
         }
     }
 
@@ -51,7 +70,7 @@ void assemble(string inFileName, string outFileName)
 
     // Assemble
     for(int i = START_MEM; getline(infile, line); i += MEM_SKIP) {
-        command = line;
+        string command = line;
 
         if(command[0] == '#')
             continue;
