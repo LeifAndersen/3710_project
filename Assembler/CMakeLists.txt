@@ -4,6 +4,8 @@ project(assembler)
 
 set(SOURCES
     compiler.cpp
+    assembler.cpp
+    instructions.cpp
 )
 
 add_executable(assembler WIN32 MACOSX_BUNDLE ${SOURCES})

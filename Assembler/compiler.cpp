@@ -355,7 +355,7 @@ static void MainLoop()
     }
 }
 
-int main()
+int main2()
 {
     // Prime the first token.
     fprintf(stderr, "ready> ");
