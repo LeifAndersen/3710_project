@@ -4,6 +4,8 @@
 #include <vector>
 #include <map>
 
+#include "compiler.h"
+
 // If you want to understand this code, read the
 // LLVM documentation on making a Kaleidoscope compiler.
 

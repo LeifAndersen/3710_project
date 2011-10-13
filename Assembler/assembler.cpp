@@ -7,7 +7,9 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
+#include <map>
 
+#include "assembler.h"
 #include "instructions.h"
 
 using namespace std;
@@ -68,12 +70,4 @@ void assemble(string inFileName, string outFileName)
 
     infile.close();
     outfile.close();
-}
-
-int main()
-{
-    string infilename = "test.s";
-    string outfilename = "test";
-    assemble(infilename, outfilename);
-    return 0;
 }
