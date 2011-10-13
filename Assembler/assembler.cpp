@@ -23,12 +23,11 @@ void assemble(string inFileName, string outFileName)
 {
     // Open files, other constants needed
     string line;
+    vector<short> output;
     map<string, int> labels;
     Instructions instructions;
     ifstream infile;
-    ofstream outfile;
     infile.open(inFileName.c_str());
-    outfile.open(outFileName.c_str());
 
     // Set up tags
     for(int i = START_MEM; getline(infile, line); i += MEM_SKIP) {
@@ -70,10 +69,21 @@ void assemble(string inFileName, string outFileName)
 
     // Assemble
     for(int i = START_MEM; getline(infile, line); i += MEM_SKIP) {
-        string command = line;
+        istringstream iss(line);
+        vector<string> tokens;
+        copy(istream_iterator<string>(iss),
+                 istream_iterator<string>(),
+                 back_inserter<vector<string> >(tokens));
 
-        if(command[0] == '#')
+        if(tokens.size() == 0) {
             continue;
+        }
+
+        string command = tokens[0];
+
+        if(command[0] == '#') {
+            continue;
+        }
 
         switch(instructions[command]) {
         case Instructions::ADD:
@@ -113,11 +123,22 @@ void assemble(string inFileName, string outFileName)
         case Instructions::NOP:
             break;
         default:
+            if(labels.find(command) == labels.end()) {
+                cerr << "Invalid instruction or label on line: " << i << endl;
+                exit(1);
+            }
             break;
         }
     }
 
-    // Close Files
+    // Close Input File
     infile.close();
+
+    // Write the output to a file
+    ofstream outfile;
+    outfile.open(outFileName.c_str());
+    for(unsigned int i = 0; i < output.size(); i++) {
+        outfile << output[i];
+    }
     outfile.close();
 }
