@@ -18,6 +18,16 @@ public:
         CMPI,
         TEST,
         TESTI,
+        JG,
+        JGE,
+        JL,
+        JLE,
+        JE,
+        JNE,
+        JA,
+        JB,
+        JAE,
+        JBE,
     };
 
     instructionSet operator [](std::string instruction);

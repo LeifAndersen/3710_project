@@ -22,10 +22,44 @@ void assemble(string inFileName, string outFileName)
     string line;
     string command;
 
+    Instructions instructions;
+
     while(getline(infile, line)) {
         command = line;
-        switch(5) {
-        case ADD:
+        switch(instructions[command]) {
+        case Instructions::ADD:
+            break;
+        case Instructions::ADDI:
+            break;
+        case Instructions::SUB:
+            break;
+        case Instructions::SUBI:
+            break;
+        case Instructions::CMP:
+            break;
+        case Instructions::CMPI:
+            break;
+        case Instructions::TEST:
+            break;
+        case Instructions::TESTI:
+            break;
+        case Instructions::JG:
+            break;
+        case Instructions::JGE:
+            break;
+        case Instructions::JL:
+            break;
+        case Instructions::JLE:
+            break;
+        case Instructions::JE:
+            break;
+        case Instructions::JNE:
+            break;
+        case Instructions::JA:
+            break;
+        case Instructions::JB:
+            break;
+        case Instructions::JBE:
             break;
         default:
             break;
