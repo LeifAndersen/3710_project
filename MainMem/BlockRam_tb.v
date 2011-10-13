@@ -50,6 +50,14 @@ module BlockRam_tb;
 		.doutb(doutb)
 	);
 
+integer i;
+
+always
+begin
+#10;
+clka = ~clka;
+end
+
 	initial begin
 		// Initialize Inputs
 		clka = 0;
@@ -62,8 +70,28 @@ module BlockRam_tb;
 
 		// Wait 100 ns for global reset to finish
 		#100;
-        
+		        
 		// Add stimulus here
+		wea = 1;
+		web = 1;
+		addra = 0;
+		addrb = 1;
+		dina = 1;
+		dinb = 1;
+		
+		for(i = 0; i < 1020; i = i + 1)
+		begin
+			#40;
+			wea = 1;
+			web = 0;
+			addra = addra + 2;
+			dina = douta + doutb;
+			#40;
+			wea = 0;
+			web = 1;
+			addrb = addrb + 2;
+			dinb = douta + doutb;
+		end
 
 	end
       
