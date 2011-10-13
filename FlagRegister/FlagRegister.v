@@ -27,6 +27,7 @@ module FlagRegister(
 		input ZeroIn,
 		input LowIn,
 		input NegativeIn,
+		input enable,
 		output reg Carry,
 		output reg Flag,
 		output reg Zero,
@@ -36,10 +37,12 @@ module FlagRegister(
 
 always@(posedge clk)
 begin
-	Carry = CarryIn;
-	Flag = FlagIn;
-	Zero = ZeroIn;
-	Low = LowIn;
-	Negative = NegativeIn;
+	if (enable) begin
+		Carry = CarryIn;
+		Flag = FlagIn;
+		Zero = ZeroIn;
+		Low = LowIn;
+		Negative = NegativeIn;
+	end
 end
 endmodule
