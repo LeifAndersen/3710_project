@@ -18,24 +18,23 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module BlockRam(
+module BlockRam#(parameter DATA = 18, parameter ADDR = 10, parameter SIZE = 1024, parameter FILE = "init.txt")(
 	input clka,
-	//input eA, //enable A
-	//input eB, //enable B
 	input wea, //write enable A
 	input web, //write enable B
-	input [15:0] addra,
-	input [15:0] addrb,
-	input [17:0] dina,
-	input [17:0] dinb,
-	output [17:0] douta,
-	output [17:0] doutb
+	input [ADDR-1:0] addra,
+	input [ADDR-1:0] addrb,
+	input [DATA-1:0] dina,
+	input [DATA-1:0] dinb,
+	output reg [DATA-1:0] douta,
+	output reg [DATA-1:0] doutb
 	 );
-	 
+	//synthesis attribute ram_style of mem is distributed
    parameter RAM_WIDTH = 18;
-   parameter RAM_ADDR_BITS = 1024;
+   parameter RAM_ADDR_BITS = 15;
 
-   reg [RAM_WIDTH-1:0] memory [(2**RAM_ADDR_BITS)-1:0];
+	//(* RAM_STYLE="{AUTO | BLOCK |  BLOCK_POWER1 | BLOCK_POWER2}" *)
+   reg [DATA-1:0] memory [SIZE-1:0];
    //reg [RAM_WIDTH-1:0] output_dataA, output_dataB;
 
 	//Shouldn't need these, addresses and data are inputs already.
@@ -43,22 +42,22 @@ module BlockRam(
    //<reg_or_wire> [RAM_WIDTH-1:0] <input_dataA>;
 
    //  The following code is only necessary if you wish to initialize the RAM 
-   //  contents via an external file (use $readmemb for binary data)
-   //initial
-      //$readmemh("<data_file_name>", <rom_name>, <begin_address>, <end_address>);
+   //  contents via an external file (use $readmemb for binary data	
+	initial
+		$readmemh(FILE, memory);
 
    always @(posedge clka)
-      if (ea) begin
+	begin
          if (wea)
             memory[addra] <= dina;
-         doutA <= memory[addrb];
-      end
+         douta <= memory[addra];
+	end
       
    always @(posedge clka)
-      if (eb) begin
+   begin
          if (web)
             memory[addrb] <= dinb;
-         doutB <= memory[addrb];
-      end
+         doutb <= memory[addrb];
+   end
 
 endmodule
