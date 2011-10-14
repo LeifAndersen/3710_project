@@ -122,6 +122,24 @@ void Assembler::assemble(string inFileName, string outFileName)
         case InstructionSet::XORI:
             output.push_back(assembleImmediateInstruction(tokens, instructions[InstructionSet::XORI], j));
             break;
+        case InstructionSet::LSH:
+            output.push_back(assembleNormalInstruction(tokens, instructions[InstructionSet::LSH], j));
+            break;
+        case InstructionSet::LSHI:
+            output.push_back(assembleImmediateInstruction(tokens, instructions[InstructionSet::LSHI], j));
+            break;
+        case InstructionSet::RSH:
+            output.push_back(assembleNormalInstruction(tokens, instructions[InstructionSet::RSH], j));
+            break;
+        case InstructionSet::RSHI:
+            output.push_back(assembleImmediateInstruction(tokens, instructions[InstructionSet::RSHI], j));
+            break;
+        case InstructionSet::ARSH:
+            output.push_back(assembleNormalInstruction(tokens, instructions[InstructionSet::ARSH], j));
+            break;
+        case InstructionSet::ARSHI:
+            output.push_back(assembleImmediateInstruction(tokens, instructions[InstructionSet::ARSHI], j));
+            break;
         case InstructionSet::CMP:
             output.push_back(assembleNormalInstruction(tokens, instructions[InstructionSet::CMP], j));
             break;
