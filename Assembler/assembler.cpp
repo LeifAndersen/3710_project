@@ -18,7 +18,12 @@
 
 #define START_MEM 0
 #define MEM_SKIP 1
+
 using namespace std;
+
+Instruction assembleNormalInstruction(const vector<string> tokens, int lineNum);
+Instruction assembleImmediateInstruction(const vector<string> tokens, int lineNum);
+
 
 void assemble(string inFileName, string outFileName)
 {
@@ -85,34 +90,12 @@ void assemble(string inFileName, string outFileName)
             continue;
         }
 
-        Instruction instruction;
-        Register dest;
-        Register sourceReg;
-        Immediate sourceImmediate;
+
 
         switch(instructions[command]) {
         case Instructions::ADD:
 
-            if(tokens.size() < 3 || !regFile.contains(tokens[1])
-                    || !regFile.contains(tokens[1])
-                    || (tokens.size() > 3 && tokens[3][0] != '#')) {
-                cerr << "Invalid instruction on line: " << j << endl;
-                exit(1);
-            }
-
-            dest = regFile[tokens[1]];
-            sourceReg = regFile[tokens[2]];
-
-            instruction = NON_SPECIAL_HEADER;
-            instruction <<= NON_SPECIAL_OFFSET;
-            instruction += NON_IMEDIATE_OPCODE;
-            instruction <<= NON_IMMEDIATE_OFFSET;
-            instruction += instructions[Instructions::ADD];
-            instruction <<= OPP_CODE_OFFSET;
-            instruction += dest;
-            instruction <<= REGISTER_ADDRESS_OFFSET;
-            instruction += sourceReg;
-            output.push_back(instruction);
+            output.push_back(assembleNormalInstruction(tokens, j));
             break;
         case Instructions::ADDI:
             break;
@@ -168,4 +151,39 @@ void assemble(string inFileName, string outFileName)
         outfile << output[i];
     }
     outfile.close();
+}
+
+Instruction assembleNormalInstruction(const vector<string> tokens, int lineNum)
+{
+    Instruction instruction;
+    Instructions instructions;
+    Register dest;
+    Register source;
+    RegisterFile regFile;
+
+    if(tokens.size() < 3 || !regFile.contains(tokens[1])
+            || !regFile.contains(tokens[1])
+            || (tokens.size() > 3 && tokens[3][0] != '#')) {
+        cerr << "Invalid instruction on line: " << lineNum << endl;
+        exit(1);
+    }
+
+    dest = regFile[tokens[1]];
+    source = regFile[tokens[2]];
+
+    instruction = NON_SPECIAL_HEADER;
+    instruction <<= NON_SPECIAL_OFFSET;
+    instruction += NON_IMEDIATE_OPCODE;
+    instruction <<= NON_IMMEDIATE_OFFSET;
+    instruction += instructions[Instructions::ADD];
+    instruction <<= OPP_CODE_OFFSET;
+    instruction += dest;
+    instruction <<= REGISTER_ADDRESS_OFFSET;
+    instruction += source;
+    return instruction;
+}
+
+Instruction assembleImmediateInstruction(const vector<string> tokens, int lineNum)
+{
+    return 0;
 }
