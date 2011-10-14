@@ -85,8 +85,6 @@ void Assembler::assemble(string inFileName, string outFileName)
             continue;
         }
 
-
-
         switch(instructions[command]) {
         case InstructionSet::ADD:
             output.push_back(assembleNormalInstruction(tokens, instructions[InstructionSet::ADD], j));
@@ -112,6 +110,8 @@ void Assembler::assemble(string inFileName, string outFileName)
         case InstructionSet::TESTI:
             output.push_back(assembleImmediateInstruction(tokens, instructions[InstructionSet::TESTI], j));
             break;
+        case InstructionSet::CALL:
+            break;
         case InstructionSet::JG:
             break;
         case InstructionSet::JGE:
@@ -131,6 +131,22 @@ void Assembler::assemble(string inFileName, string outFileName)
         case InstructionSet::JBE:
             break;
         case InstructionSet::NOP:
+            tokens.insert(tokens.begin()+1, 2, "a");
+            output.push_back(assembleNormalInstruction(tokens, instructions[InstructionSet::CMP], j));
+            break;
+        case InstructionSet::MOV:
+            if(tokens.size() < 3) {
+                cerr << "Invalid move instruction on line: " << j << endl;
+                exit(1);
+            }
+            tokens.insert(tokens.begin()+3, 1, "0");
+            output.push_back(assembleImmediateInstruction(tokens, instructions[InstructionSet::ADDI], j));
+            break;
+        case InstructionSet::LW:
+            break;
+        case InstructionSet::SW:
+            break;
+        case InstructionSet::LI:
             break;
         case InstructionSet::NOT_IN_SET:
         default:

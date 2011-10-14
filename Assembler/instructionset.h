@@ -28,6 +28,7 @@ public:
         CMPI,
         TEST,
         TESTI,
+        CALL,
         JG,
         JGE,
         JL,
@@ -39,6 +40,10 @@ public:
         JAE,
         JBE,
         NOP,
+        MOV,
+        LW,
+        SW,
+        LI,
         NOT_IN_SET
     };
 

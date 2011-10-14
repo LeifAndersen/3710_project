@@ -18,6 +18,8 @@ InstructionSet::InstructionSet()
     opcodeMap[TEST] = 0b0000;
     instructionMap["testi"] = TESTI;
     opcodeMap[TESTI] = 0b0000;
+    instructionMap["call"] = CALL;
+    opcodeMap[CALL] = 0b0000;
     instructionMap["jg"] = JG;
     opcodeMap[JG] = 0b0000;
     instructionMap["jge"] = JGE;
@@ -40,6 +42,14 @@ InstructionSet::InstructionSet()
     opcodeMap[JBE] = 0b0000;
     instructionMap["nop"] = NOP;
     opcodeMap[NOP] = 0b0000;
+    instructionMap["mov"] = MOV;
+    opcodeMap[MOV] = 0b0000;
+    instructionMap["lw"] = LW;
+    opcodeMap[LW] = 0b0000;
+    instructionMap["sw"] = SW;
+    opcodeMap[SW] = 0b0000;
+    instructionMap["li"] = LI;
+    opcodeMap[LI] = 0b0000;
 }
 
 InstructionSet::instructionSet InstructionSet::operator [](const std::string &instruction)
