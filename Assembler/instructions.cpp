@@ -2,43 +2,43 @@
 
 Instructions::Instructions()
 {
-    instructionMap["ADD"] = ADD;
+    instructionMap["add"] = ADD;
     opcodeMap[ADD] = 0b0000;
-    instructionMap["ADDI"] = ADDI;
+    instructionMap["addi"] = ADDI;
     opcodeMap[ADDI] = 0b0000;
-    instructionMap["SUB"] = SUB;
+    instructionMap["sub"] = SUB;
     opcodeMap[SUB] = 0b0000;
-    instructionMap["SUBI"] = SUBI;
+    instructionMap["subi"] = SUBI;
     opcodeMap[SUBI] = 0b0000;
-    instructionMap["CMP"] = CMP;
+    instructionMap["cmp"] = CMP;
     opcodeMap[CMP] = 0b0000;
-    instructionMap["CMPI"] = CMPI;
+    instructionMap["cmpi"] = CMPI;
     opcodeMap[CMPI] = 0b0000;
-    instructionMap["TEST"] = TEST;
+    instructionMap["test"] = TEST;
     opcodeMap[TEST] = 0b0000;
-    instructionMap["TESTI"] = TESTI;
+    instructionMap["testi"] = TESTI;
     opcodeMap[TESTI] = 0b0000;
-    instructionMap["JG"] = JG;
+    instructionMap["jg"] = JG;
     opcodeMap[JG] = 0b0000;
-    instructionMap["JGE"] = JGE;
+    instructionMap["jge"] = JGE;
     opcodeMap[JGE] = 0b0000;
-    instructionMap["JL"] = JL;
+    instructionMap["jl"] = JL;
     opcodeMap[JL] = 0b0000;
-    instructionMap["JLE"] = JLE;
+    instructionMap["jle"] = JLE;
     opcodeMap[JLE] = 0b0000;
-    instructionMap["JE"] = JE;
+    instructionMap["je"] = JE;
     opcodeMap[JE] = 0b0000;
-    instructionMap["JNE"] = JNE;
+    instructionMap["jne"] = JNE;
     opcodeMap[JNE] = 0b0000;
-    instructionMap["JA"] = JA;
+    instructionMap["ja"] = JA;
     opcodeMap[JA] = 0b0000;
-    instructionMap["JB"] = JB;
+    instructionMap["jb"] = JB;
     opcodeMap[JB] = 0b0000;
-    instructionMap["JAE"] = JAE;
+    instructionMap["jae"] = JAE;
     opcodeMap[JAE] = 0b0000;
-    instructionMap["JBE"] = JBE;
+    instructionMap["jbe"] = JBE;
     opcodeMap[JBE] = 0b0000;
-    instructionMap["NOP"] = NOP;
+    instructionMap["nop"] = NOP;
     opcodeMap[NOP] = 0b0000;
 }
 
