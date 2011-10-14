@@ -92,21 +92,25 @@ void Assembler::assemble(string inFileName, string outFileName)
             output.push_back(assembleNormalInstruction(tokens, instructions[InstructionSet::ADD], j));
             break;
         case InstructionSet::ADDI:
+            output.push_back(assembleImmediateInstruction(tokens, instructions[InstructionSet::ADDI], j));
             break;
         case InstructionSet::SUB:
             output.push_back(assembleNormalInstruction(tokens, instructions[InstructionSet::SUB], j));
             break;
         case InstructionSet::SUBI:
+            output.push_back(assembleImmediateInstruction(tokens, instructions[InstructionSet::SUBI], j));
             break;
         case InstructionSet::CMP:
             output.push_back(assembleNormalInstruction(tokens, instructions[InstructionSet::CMP], j));
             break;
         case InstructionSet::CMPI:
+            output.push_back(assembleImmediateInstruction(tokens, instructions[InstructionSet::CMPI], j));
             break;
         case InstructionSet::TEST:
             output.push_back(assembleNormalInstruction(tokens, instructions[InstructionSet::TEST], j));
             break;
         case InstructionSet::TESTI:
+            output.push_back(assembleImmediateInstruction(tokens, instructions[InstructionSet::TESTI], j));
             break;
         case InstructionSet::JG:
             break;
@@ -157,7 +161,7 @@ Instruction Assembler::assembleNormalInstruction(const vector<string> tokens, Op
     Register source;
 
     if(tokens.size() < 3 || !regFile.contains(tokens[1])
-            || !regFile.contains(tokens[1])
+            || !regFile.contains(tokens[2])
             || (tokens.size() > 3 && tokens[3][0] != '#')) {
         cerr << "Invalid instruction on line: " << lineNum << endl;
         exit(1);
@@ -180,5 +184,33 @@ Instruction Assembler::assembleNormalInstruction(const vector<string> tokens, Op
 
 Instruction Assembler::assembleImmediateInstruction(const vector<string> tokens, Opcode opcode, int lineNum)
 {
-    return 0;
+    Instruction instruction;
+    Register dest;
+    Immediate source;
+
+    if(tokens.size() < 3 || !regFile.contains(tokens[1])
+            || (tokens.size() > 3 && tokens[3][0] != '#')) {
+        cerr << "Invalid instruction on line: " << lineNum << endl;
+        exit(1);
+    }
+
+
+    for(unsigned i = 0; i < tokens[2].size(); i++) {
+        if(!isdigit(tokens[2][i])) {
+            cerr << "Invalid immediate on line: " << lineNum << endl;
+            exit(1);
+        }
+    }
+
+    dest = regFile[tokens[1]];
+    source = atoi(tokens[2].c_str());
+
+    instruction = NON_SPECIAL_HEADER;
+    instruction <<= NON_SPECIAL_OFFSET;
+    instruction += opcode;
+    instruction <<= OPP_CODE_OFFSET;
+    instruction += dest;
+    instruction <<= REGISTER_ADDRESS_OFFSET;
+    instruction += source;
+    return instruction;
 }
