@@ -39,12 +39,13 @@ public:
         JAE,
         JBE,
         NOP,
+        NOT_IN_SET
     };
 
-    instructionSet operator [](std::string instruction);
+    instructionSet operator [](const std::string &instruction);
     opcode operator [](instructionSet instruction);
 
-    bool contains(std::string instruction);
+    bool contains(const std::string &instruction);
 
 private:
     std::map<std::string, instructionSet> instructionMap;

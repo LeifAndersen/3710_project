@@ -32,7 +32,7 @@ void assemble(string inFileName, string outFileName)
     infile.open(inFileName.c_str());
 
     // Set up tags
-    for(int i = START_MEM; getline(infile, line); i += MEM_SKIP) {
+    for(int i = START_MEM, j = 0; getline(infile, line); i += MEM_SKIP, j++) {
 
         istringstream iss(line);
         vector<string> tokens;
@@ -45,22 +45,20 @@ void assemble(string inFileName, string outFileName)
         }
 
         string label = tokens[0];
-        if(label[0] == '#') {
+        if(label[0] == '#' || instructions.contains(label)) {
             continue;
         }
 
-        if(!instructions.contains(label)) {
-            if(labels.find(label) == labels.end()) {
-                labels[label] = i;
-            } else {
-                cerr << "Duplicate label on line: " << labels[label]
-                     << " and line: " << i << endl;
-                exit(1);
-            }
+        if(labels.find(label) == labels.end()) {
+            labels[label] = i;
+        } else {
+            cerr << "Duplicate label on line: " << labels[label]
+                 << " and line: " << j << endl;
+            exit(1);
         }
 
         if(tokens.size() > 1 && tokens[1][0] != '#') {
-            cerr << "Invalid label name on line: " << i << endl;
+            cerr << "Invalid label name on line: " << j << endl;
             exit(1);
         }
     }
@@ -70,7 +68,7 @@ void assemble(string inFileName, string outFileName)
     infile.seekg(0, ios::beg);
 
     // Assemble
-    for(int i = START_MEM; getline(infile, line); i += MEM_SKIP) {
+    for(int i = START_MEM, j = 0; getline(infile, line); i += MEM_SKIP, j++) {
         istringstream iss(line);
         vector<string> tokens;
         copy(istream_iterator<string>(iss),
@@ -98,7 +96,7 @@ void assemble(string inFileName, string outFileName)
             if(tokens.size() < 3 || !regFile.contains(tokens[1])
                     || !regFile.contains(tokens[1])
                     || (tokens.size() > 3 && tokens[3][0] != '#')) {
-                cerr << "Invalid instruction on line: " << i << endl;
+                cerr << "Invalid instruction on line: " << j << endl;
                 exit(1);
             }
 
@@ -114,6 +112,7 @@ void assemble(string inFileName, string outFileName)
             instruction += dest;
             instruction <<= REGISTER_ADDRESS_OFFSET;
             instruction += sourceReg;
+            output.push_back(instruction);
             break;
         case Instructions::ADDI:
             break;
@@ -149,9 +148,10 @@ void assemble(string inFileName, string outFileName)
             break;
         case Instructions::NOP:
             break;
+        case Instructions::NOT_IN_SET:
         default:
             if(labels.find(command) == labels.end()) {
-                cerr << "Invalid instruction or label on line: " << i << endl;
+                cerr << "Invalid instruction or label on line: " << j << endl;
                 exit(1);
             }
             break;

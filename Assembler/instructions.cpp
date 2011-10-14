@@ -42,9 +42,13 @@ Instructions::Instructions()
     opcodeMap[NOP] = 0b0000;
 }
 
-Instructions::instructionSet Instructions::operator [](std::string instruction)
+Instructions::instructionSet Instructions::operator [](const std::string &instruction)
 {
-    return instructionMap[instruction];
+    if(contains(instruction)) {
+        return instructionMap[instruction];
+    } else {
+        return NOT_IN_SET;
+    }
 }
 
 opcode Instructions::operator [](Instructions::instructionSet instruction)
@@ -52,7 +56,7 @@ opcode Instructions::operator [](Instructions::instructionSet instruction)
     return opcodeMap[instruction];
 }
 
-bool Instructions::contains(std::string instruction)
+bool Instructions::contains(const std::string &instruction)
 {
     return instructionMap.find(instruction) != instructionMap.end();
 }
