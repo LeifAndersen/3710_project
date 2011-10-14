@@ -1,6 +1,6 @@
-#include "instructions.h"
+#include "instructionset.h"
 
-Instructions::Instructions()
+InstructionSet::InstructionSet()
 {
     instructionMap["add"] = ADD;
     opcodeMap[ADD] = 0b0000;
@@ -42,7 +42,7 @@ Instructions::Instructions()
     opcodeMap[NOP] = 0b0000;
 }
 
-Instructions::instructionSet Instructions::operator [](const std::string &instruction)
+InstructionSet::instructionSet InstructionSet::operator [](const std::string &instruction)
 {
     if(contains(instruction)) {
         return instructionMap[instruction];
@@ -51,12 +51,12 @@ Instructions::instructionSet Instructions::operator [](const std::string &instru
     }
 }
 
-opcode Instructions::operator [](Instructions::instructionSet instruction)
+opcode InstructionSet::operator [](InstructionSet::instructionSet instruction)
 {
     return opcodeMap[instruction];
 }
 
-bool Instructions::contains(const std::string &instruction)
+bool InstructionSet::contains(const std::string &instruction)
 {
     return instructionMap.find(instruction) != instructionMap.end();
 }

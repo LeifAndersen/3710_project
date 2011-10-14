@@ -14,10 +14,10 @@
 typedef short opcode;
 typedef short Instruction;
 
-class Instructions
+class InstructionSet
 {
 public:
-    Instructions();
+    InstructionSet();
 
     enum instructionSet {
         ADD,

@@ -13,7 +13,7 @@
 #include <map>
 
 #include "assembler.h"
-#include "instructions.h"
+#include "instructionset.h"
 #include "registerfile.h"
 
 #define START_MEM 0
@@ -88,45 +88,45 @@ void Assembler::assemble(string inFileName, string outFileName)
 
 
         switch(instructions[command]) {
-        case Instructions::ADD:
+        case InstructionSet::ADD:
 
             output.push_back(assembleNormalInstruction(tokens, j));
             break;
-        case Instructions::ADDI:
+        case InstructionSet::ADDI:
             break;
-        case Instructions::SUB:
+        case InstructionSet::SUB:
             break;
-        case Instructions::SUBI:
+        case InstructionSet::SUBI:
             break;
-        case Instructions::CMP:
+        case InstructionSet::CMP:
             break;
-        case Instructions::CMPI:
+        case InstructionSet::CMPI:
             break;
-        case Instructions::TEST:
+        case InstructionSet::TEST:
             break;
-        case Instructions::TESTI:
+        case InstructionSet::TESTI:
             break;
-        case Instructions::JG:
+        case InstructionSet::JG:
             break;
-        case Instructions::JGE:
+        case InstructionSet::JGE:
             break;
-        case Instructions::JL:
+        case InstructionSet::JL:
             break;
-        case Instructions::JLE:
+        case InstructionSet::JLE:
             break;
-        case Instructions::JE:
+        case InstructionSet::JE:
             break;
-        case Instructions::JNE:
+        case InstructionSet::JNE:
             break;
-        case Instructions::JA:
+        case InstructionSet::JA:
             break;
-        case Instructions::JB:
+        case InstructionSet::JB:
             break;
-        case Instructions::JBE:
+        case InstructionSet::JBE:
             break;
-        case Instructions::NOP:
+        case InstructionSet::NOP:
             break;
-        case Instructions::NOT_IN_SET:
+        case InstructionSet::NOT_IN_SET:
         default:
             if(labels.find(command) == labels.end()) {
                 cerr << "Invalid instruction or label on line: " << j << endl;
@@ -168,7 +168,7 @@ Instruction Assembler::assembleNormalInstruction(const vector<string> tokens, in
     instruction <<= NON_SPECIAL_OFFSET;
     instruction += NON_IMEDIATE_OPCODE;
     instruction <<= NON_IMMEDIATE_OFFSET;
-    instruction += instructions[Instructions::ADD];
+    instruction += instructions[InstructionSet::ADD];
     instruction <<= OPP_CODE_OFFSET;
     instruction += dest;
     instruction <<= REGISTER_ADDRESS_OFFSET;

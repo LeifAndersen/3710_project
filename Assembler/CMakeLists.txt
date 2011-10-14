@@ -5,7 +5,7 @@ project(assembler)
 set(SOURCES
     compiler.cpp
     assembler.cpp
-    instructions.cpp
+    instructionset.cpp
     registerfile.cpp
     main.cpp
 )
