@@ -23,7 +23,7 @@ void assemble(string inFileName, string outFileName)
 {
     // Open files, other constants needed
     string line;
-    vector<opcode> output;
+    vector<Instruction> output;
     map<string, int> labels;
     Instructions instructions;
     ifstream infile;
@@ -85,8 +85,16 @@ void assemble(string inFileName, string outFileName)
             continue;
         }
 
+        Instruction instruction;
+        string dest;
+        string source;
         switch(instructions[command]) {
         case Instructions::ADD:
+            instruction = NON_SPECIAL_HEADER;
+            instruction <<= NON_SPECIAL_OFFSET;
+            instruction += instructions[Instructions::ADD];
+
+
             break;
         case Instructions::ADDI:
             break;

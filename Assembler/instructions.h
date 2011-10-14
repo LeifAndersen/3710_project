@@ -4,7 +4,13 @@
 #include <map>
 #include <string>
 
+#define NON_SPECIAL_HEADER 0b00
+#define NON_SPECIAL_OFFSET 2
+#define IMEDIATE_OPCODE 0b0000
+#define IMMEDIATE_OFFSET 4
+
 typedef short opcode;
+typedef short Instruction;
 
 class Instructions
 {
