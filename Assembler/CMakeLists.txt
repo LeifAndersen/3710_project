@@ -6,6 +6,7 @@ set(SOURCES
     compiler.cpp
     assembler.cpp
     instructions.cpp
+    registerfile.cpp
     main.cpp
 )
 

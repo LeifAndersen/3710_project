@@ -14,6 +14,7 @@
 
 #include "assembler.h"
 #include "instructions.h"
+#include "registerfile.h"
 
 #define START_MEM 0
 #define MEM_SKIP 1
@@ -93,7 +94,8 @@ void assemble(string inFileName, string outFileName)
             instruction = NON_SPECIAL_HEADER;
             instruction <<= NON_SPECIAL_OFFSET;
             instruction += instructions[Instructions::ADD];
-
+            instruction <<= NON_IMMEDIATE_OFFSET;
+            instruction += NON_IMEDIATE_OPCODE;
 
             break;
         case Instructions::ADDI:
