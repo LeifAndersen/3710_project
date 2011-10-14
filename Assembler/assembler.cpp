@@ -89,20 +89,22 @@ void Assembler::assemble(string inFileName, string outFileName)
 
         switch(instructions[command]) {
         case InstructionSet::ADD:
-
             output.push_back(assembleNormalInstruction(tokens, instructions[InstructionSet::ADD], j));
             break;
         case InstructionSet::ADDI:
             break;
         case InstructionSet::SUB:
+            output.push_back(assembleNormalInstruction(tokens, instructions[InstructionSet::SUB], j));
             break;
         case InstructionSet::SUBI:
             break;
         case InstructionSet::CMP:
+            output.push_back(assembleNormalInstruction(tokens, instructions[InstructionSet::CMP], j));
             break;
         case InstructionSet::CMPI:
             break;
         case InstructionSet::TEST:
+            output.push_back(assembleNormalInstruction(tokens, instructions[InstructionSet::TEST], j));
             break;
         case InstructionSet::TESTI:
             break;
