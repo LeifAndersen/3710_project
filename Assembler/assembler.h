@@ -16,8 +16,8 @@ private:
     InstructionSet instructions;
     RegisterFile regFile;
 
-    Instruction assembleNormalInstruction(const std::vector<std::string> tokens, int lineNum);
-    Instruction assembleImmediateInstruction(const std::vector<std::string> tokens, int lineNum);
+    Instruction assembleNormalInstruction(const std::vector<std::string> tokens, Opcode opcode, int lineNum);
+    Instruction assembleImmediateInstruction(const std::vector<std::string> tokens, Opcode opcode, int lineNum);
 };
 
 #endif // ASSEMBLER_H

@@ -51,7 +51,7 @@ InstructionSet::instructionSet InstructionSet::operator [](const std::string &in
     }
 }
 
-opcode InstructionSet::operator [](InstructionSet::instructionSet instruction)
+Opcode InstructionSet::operator [](InstructionSet::instructionSet instruction)
 {
     return opcodeMap[instruction];
 }

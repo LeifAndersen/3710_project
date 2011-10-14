@@ -11,7 +11,7 @@
 #define OPP_CODE_OFFSET 4
 #define REGISTER_ADDRESS_OFFSET 4
 
-typedef short opcode;
+typedef short Opcode;
 typedef short Instruction;
 
 class InstructionSet
@@ -43,13 +43,13 @@ public:
     };
 
     instructionSet operator [](const std::string &instruction);
-    opcode operator [](instructionSet instruction);
+    Opcode operator [](instructionSet instruction);
 
     bool contains(const std::string &instruction);
 
 private:
     std::map<std::string, instructionSet> instructionMap;
-    std::map<instructionSet, opcode> opcodeMap;
+    std::map<instructionSet, Opcode> opcodeMap;
 };
 
 #endif // INSTRUCTIONS_H

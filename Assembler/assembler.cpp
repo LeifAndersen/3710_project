@@ -90,7 +90,7 @@ void Assembler::assemble(string inFileName, string outFileName)
         switch(instructions[command]) {
         case InstructionSet::ADD:
 
-            output.push_back(assembleNormalInstruction(tokens, j));
+            output.push_back(assembleNormalInstruction(tokens, instructions[InstructionSet::ADD], j));
             break;
         case InstructionSet::ADDI:
             break;
@@ -148,7 +148,7 @@ void Assembler::assemble(string inFileName, string outFileName)
     outfile.close();
 }
 
-Instruction Assembler::assembleNormalInstruction(const vector<string> tokens, int lineNum)
+Instruction Assembler::assembleNormalInstruction(const vector<string> tokens, Opcode opcode, int lineNum)
 {
     Instruction instruction;
     Register dest;
@@ -168,7 +168,7 @@ Instruction Assembler::assembleNormalInstruction(const vector<string> tokens, in
     instruction <<= NON_SPECIAL_OFFSET;
     instruction += NON_IMEDIATE_OPCODE;
     instruction <<= NON_IMMEDIATE_OFFSET;
-    instruction += instructions[InstructionSet::ADD];
+    instruction += opcode;
     instruction <<= OPP_CODE_OFFSET;
     instruction += dest;
     instruction <<= REGISTER_ADDRESS_OFFSET;
@@ -176,7 +176,7 @@ Instruction Assembler::assembleNormalInstruction(const vector<string> tokens, in
     return instruction;
 }
 
-Instruction Assembler::assembleImmediateInstruction(const vector<string> tokens, int lineNum)
+Instruction Assembler::assembleImmediateInstruction(const vector<string> tokens, Opcode opcode, int lineNum)
 {
     return 0;
 }
