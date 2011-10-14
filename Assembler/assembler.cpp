@@ -166,6 +166,7 @@ void Assembler::assemble(string inFileName, string outFileName)
             output.push_back(assembleImmediateInstruction(tokens, instructions[InstructionSet::TESTI], j));
             break;
         case InstructionSet::CALL:
+            output.push_back(assembleSpecialInstruction(tokens, instructions[InstructionSet::CALL], j));
             break;
         case InstructionSet::JG:
             break;
@@ -198,8 +199,10 @@ void Assembler::assemble(string inFileName, string outFileName)
             output.push_back(assembleImmediateInstruction(tokens, instructions[InstructionSet::ADDI], j));
             break;
         case InstructionSet::LW:
+            output.push_back(assembleSpecialInstruction(tokens, instructions[InstructionSet::LW], j));
             break;
         case InstructionSet::SW:
+            output.push_back(assembleSpecialInstruction(tokens, instructions[InstructionSet::SW], j));
             break;
         case InstructionSet::LI:
             if(tokens.size() < 2) {
@@ -297,7 +300,7 @@ Instruction Assembler::assembleImmediateInstruction(const vector<string> tokens,
     return instruction;
 }
 
-Instruction assembleSpecialInstruction(const vector<std::string> tokens, Opcode opcode, int lineNum)
+Instruction Assembler::assembleSpecialInstruction(const vector<std::string> tokens, Opcode opcode, int lineNum)
 {
     Instruction instruction;
     Immediate source;
