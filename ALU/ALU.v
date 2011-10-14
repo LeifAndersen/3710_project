@@ -24,9 +24,7 @@ module ALU(
 		input [15:0] A,
 		input [15:0] B,
 		input [3:0] Opcode,
-		input CarryIn,
 		output reg [15:0] C,
-		output reg Carry,
 		output reg Flag,
 		output reg Low,
 		output reg Negative,
@@ -49,7 +47,6 @@ module ALU(
 				
 			Flag = (~A[15]&~B[15]&C[15]) | (A[15] & B[15] & ~C[15]);
 			
-			Carry = 0;
 			Low = $signed(A)<$signed(B);
 			Negative = $signed(A + B)<0;
 		end
@@ -65,7 +62,6 @@ module ALU(
 			Flag = ((~A[15])&(~D[15])&C[15]) | (A[15] & (D[15]) & (~C[15]));
 			
 			Low = $signed(A)<$signed(B);
-			Carry = 0;
 			Negative = C[15];
 		end
 
@@ -77,22 +73,20 @@ module ALU(
 				Zero = 1;
 			else
 				Zero = 0;
-			Carry = 1'b0;
 			C = 16'b0000000000000000;
 			Flag = 1'd0;
 		end
 
-		TEST:
+		CMPR:
 		begin
-			C = A&B;
-			if (C == 0)
+			Low = B<A;
+			Negative = $signed(B)<$signed(A);
+			if (A == B)
 				Zero = 1;
 			else
 				Zero = 0;
-			Low = A<B;
-			Negative = $signed(A)<$signed(B);
-			Flag = 1'b0;
-			Carry = 1'b0;
+			C = 16'b0000000000000000;
+			Flag = 1'd0;
 		end
 
 		AND:
@@ -105,7 +99,6 @@ module ALU(
 			Low = A<B;
 			Negative = C[15];
 			Flag = 1'b0;
-			Carry = 1'b0;
 		end
 
 		OR:
@@ -118,7 +111,6 @@ module ALU(
 			Low = A<B;
 			Negative = C[15];
 			Flag = 1'b0;
-			Carry = 1'b0;
 		end
 
 		XOR:
@@ -131,7 +123,6 @@ module ALU(
 			Low = A<B;
 			Negative = C[15];
 			Flag = 1'b0;
-			Carry = 1'b0;
 		end
 
 		NOT:
@@ -144,7 +135,6 @@ module ALU(
 			Low = C<A; //0?
 			Negative = $signed(~A)<0;
 			Flag = 1'b0;
-			Carry = 1'b0;
 		end
 
 		LSH:
@@ -158,7 +148,6 @@ module ALU(
 			Low = 1'b0;
 			Negative = 1'b0;
 			Flag = 1'b0;
-			Carry = 1'b0;
 		end
 
 		RSH:
@@ -172,7 +161,6 @@ module ALU(
 			Low = 1'b0;
 			Negative = 1'b0;
 			Flag = 1'b0;
-			Carry = 1'b0;
 		end
 
 		ARSH:
@@ -186,13 +174,11 @@ module ALU(
 			Low = 1'b0;
 			Negative = 1'b0;
 			Flag = 1'b0;
-			Carry = 1'b0;
 		end
 
 		default:
 		begin
 			C = 16'b0000000000000000;
-			Carry = 1'b0;
 			Flag = 1'b0;
 			Low = 1'b0;
 			Negative = 1'b0;

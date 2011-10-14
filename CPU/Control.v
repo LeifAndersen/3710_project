@@ -20,8 +20,8 @@
 //////////////////////////////////////////////////////////////////////////////////
 module Control(
 	input 		[17:0] 	instruction,
-	input 		 [4:0] 	flags,
-	output reg 	 [4:0] 	ALUOp,
+	input 		 [3:0] 	flags,
+	output reg 	 [3:0] 	ALUOp,
 	output reg			WriteEn1,
 	output reg			WriteEn2,
 	output reg 	[15:0] 	immediate,
@@ -377,7 +377,7 @@ module Control(
 
 			else if(instruction[17:14] == JL) begin
 				//JL:
-				if (flags[3] || flags[4]) begin
+				if (flags[2] || flags[3]) begin
 					BuffCtrl[10]	= 1;
 					BuffCtrl[5]		= 0;
 					BuffCtrl[9]		= 0;
@@ -399,7 +399,7 @@ module Control(
 
 			else if(instruction[17:14] == JLE) begin
 				//JLE:
-				if (flags[3] || flags[4] || flags[2]) begin
+				if (flags[2] || flags[3] || flags[1]) begin
 					BuffCtrl[10]	= 1;
 					BuffCtrl[5]		= 0;
 					BuffCtrl[9]		= 0;
@@ -420,7 +420,7 @@ module Control(
 
 			else if(instruction[17:14] == JNE) begin	
 				//JNE:
-				if (!flags[2]) begin
+				if (!flags[1]) begin
 					BuffCtrl[10]	= 1;
 					BuffCtrl[5]		= 0;
 					BuffCtrl[9]		= 0;
@@ -441,7 +441,7 @@ module Control(
 
 			else if(instruction[17:14] == JE) begin	
 				//JE:
-				if (flags[2]) begin
+				if (flags[1]) begin
 					BuffCtrl[10]	= 1;
 					BuffCtrl[5]		= 0;
 					BuffCtrl[9]		= 0;
