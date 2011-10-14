@@ -32,7 +32,7 @@ void Assembler::assemble(string inFileName, string outFileName)
     infile.open(inFileName.c_str());
 
     // Set up tags
-    for(int i = START_MEM, j = 0; getline(infile, line); i += MEM_SKIP, j++) {
+    for(int i = START_MEM, j = 1; getline(infile, line); i += MEM_SKIP, j++) {
 
         istringstream iss(line);
         vector<string> tokens;
@@ -68,7 +68,7 @@ void Assembler::assemble(string inFileName, string outFileName)
     infile.seekg(0, ios::beg);
 
     // Assemble
-    for(int i = START_MEM, j = 0; getline(infile, line); i += MEM_SKIP, j++) {
+    for(int i = START_MEM, j = 1; getline(infile, line); i += MEM_SKIP, j++) {
         istringstream iss(line);
         vector<string> tokens;
         copy(istream_iterator<string>(iss),
@@ -86,6 +86,7 @@ void Assembler::assemble(string inFileName, string outFileName)
         }
 
         vector<string> tempCommands;
+        stringstream ss;
         switch(instructions[command]) {
         case InstructionSet::ADD:
             output.push_back(assembleNormalInstruction(tokens, instructions[InstructionSet::ADD], j));
@@ -166,6 +167,17 @@ void Assembler::assemble(string inFileName, string outFileName)
             output.push_back(assembleImmediateInstruction(tokens, instructions[InstructionSet::TESTI], j));
             break;
         case InstructionSet::CALL:
+            if(tokens.size() < 2) {
+                cerr << "Invalid call instruction on line: " << j << endl;
+                exit(1);
+            }
+            if(labels.find(tokens[1]) == labels.end()) {
+                cerr << "Invalid label on line: " << j << endl;
+                exit(1);
+            }
+            // Make the label a number
+            ss << labels[tokens[1]];
+            tokens[1] = ss.str();
             output.push_back(assembleSpecialInstruction(tokens, instructions[InstructionSet::CALL], j));
             break;
         case InstructionSet::JG:
@@ -187,7 +199,7 @@ void Assembler::assemble(string inFileName, string outFileName)
         case InstructionSet::JBE:
             break;
         case InstructionSet::NOP:
-            tokens.insert(tokens.begin()+1, 2, "a");
+            tokens.insert(tokens.begin()+1, 2, "s0");
             output.push_back(assembleNormalInstruction(tokens, instructions[InstructionSet::CMP], j));
             break;
         case InstructionSet::MOV:
@@ -313,7 +325,7 @@ Instruction Assembler::assembleSpecialInstruction(const vector<std::string> toke
 
 
     for(unsigned i = 0; i < tokens[1].size(); i++) {
-        if(!isdigit(tokens[2][i])) {
+        if(!isdigit(tokens[1][i])) {
             cerr << "Invalid immediate on line: " << lineNum << endl;
             exit(1);
         }
