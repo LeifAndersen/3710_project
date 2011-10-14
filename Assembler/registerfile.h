@@ -4,8 +4,8 @@
 #include <map>
 #include <string>
 
-typedef short Register;
-typedef short Immediate;
+typedef unsigned short Register;
+typedef unsigned short Immediate;
 
 class RegisterFile
 {

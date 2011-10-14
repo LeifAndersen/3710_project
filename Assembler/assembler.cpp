@@ -221,9 +221,13 @@ void Assembler::assemble(string inFileName, string outFileName)
                 cerr << "Invalid load instruction on line: " << j << endl;
                 exit(1);
             }
+
+            // Set the register to be 0
             tempCommands.push_back("sub");
             tempCommands.push_back(tokens[1]);
             tempCommands.push_back(tokens[1]);
+
+            // Add it to the 0 register
             output.push_back(assembleNormalInstruction(tempCommands, instructions[InstructionSet::SUB], j));
             output.push_back(assembleImmediateInstruction(tokens, instructions[InstructionSet::ADDI], j));
             break;
@@ -244,7 +248,7 @@ void Assembler::assemble(string inFileName, string outFileName)
 
     // Write the output to a file
     ofstream outfile;
-    outfile.open(outFileName.c_str());
+    outfile.open(outFileName.c_str(), ios::out | ios::binary);
     for(unsigned int i = 0; i < output.size(); i++) {
         outfile << output[i];
     }

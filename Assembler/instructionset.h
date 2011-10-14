@@ -11,8 +11,8 @@
 #define OPP_CODE_OFFSET 4
 #define REGISTER_ADDRESS_OFFSET 4
 
-typedef short Opcode;
-typedef short Instruction;
+typedef unsigned short Opcode;
+typedef unsigned short Instruction;
 
 class InstructionSet
 {
