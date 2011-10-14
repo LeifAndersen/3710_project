@@ -167,8 +167,6 @@ void Assembler::assemble(string inFileName, string outFileName)
             break;
         case InstructionSet::CALL:
             break;
-        case InstructionSet::RET:
-            break;
         case InstructionSet::JG:
             break;
         case InstructionSet::JGE:
@@ -295,6 +293,33 @@ Instruction Assembler::assembleImmediateInstruction(const vector<string> tokens,
     instruction <<= OPP_CODE_OFFSET;
     instruction += dest;
     instruction <<= REGISTER_ADDRESS_OFFSET;
+    instruction += source;
+    return instruction;
+}
+
+Instruction assembleSpecialInstruction(const vector<std::string> tokens, Opcode opcode, int lineNum)
+{
+    Instruction instruction;
+    Immediate source;
+
+    if(tokens.size() < 2
+            || (tokens.size() > 2 && tokens[3][0] != '#')) {
+        cerr << "Invalid instruction on line: " << lineNum << endl;
+        exit(1);
+    }
+
+
+    for(unsigned i = 0; i < tokens[1].size(); i++) {
+        if(!isdigit(tokens[2][i])) {
+            cerr << "Invalid immediate on line: " << lineNum << endl;
+            exit(1);
+        }
+    }
+
+    source = atoi(tokens[1].c_str());
+
+    instruction = opcode;
+    instruction <<= OPP_CODE_OFFSET;
     instruction += source;
     return instruction;
 }
