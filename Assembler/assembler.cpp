@@ -21,18 +21,13 @@
 
 using namespace std;
 
-Instruction assembleNormalInstruction(const vector<string> tokens, int lineNum);
-Instruction assembleImmediateInstruction(const vector<string> tokens, int lineNum);
 
-
-void assemble(string inFileName, string outFileName)
+void Assembler::assemble(string inFileName, string outFileName)
 {
     // Open files, other constants needed
     string line;
     vector<Instruction> output;
     map<string, int> labels;
-    Instructions instructions;
-    RegisterFile regFile;
     ifstream infile;
     infile.open(inFileName.c_str());
 
@@ -153,13 +148,11 @@ void assemble(string inFileName, string outFileName)
     outfile.close();
 }
 
-Instruction assembleNormalInstruction(const vector<string> tokens, int lineNum)
+Instruction Assembler::assembleNormalInstruction(const vector<string> tokens, int lineNum)
 {
     Instruction instruction;
-    Instructions instructions;
     Register dest;
     Register source;
-    RegisterFile regFile;
 
     if(tokens.size() < 3 || !regFile.contains(tokens[1])
             || !regFile.contains(tokens[1])
@@ -183,7 +176,7 @@ Instruction assembleNormalInstruction(const vector<string> tokens, int lineNum)
     return instruction;
 }
 
-Instruction assembleImmediateInstruction(const vector<string> tokens, int lineNum)
+Instruction Assembler::assembleImmediateInstruction(const vector<string> tokens, int lineNum)
 {
     return 0;
 }

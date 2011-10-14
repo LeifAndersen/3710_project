@@ -9,6 +9,7 @@ int main()
 {
     string infilename = "test.s";
     string outfilename = "test";
-    assemble(infilename, outfilename);
+    Assembler assembler;
+    assembler.assemble(infilename, outfilename);
     return 0;
 }
