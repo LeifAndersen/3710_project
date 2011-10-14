@@ -140,6 +140,18 @@ void Assembler::assemble(string inFileName, string outFileName)
         case InstructionSet::ARSHI:
             output.push_back(assembleImmediateInstruction(tokens, instructions[InstructionSet::ARSHI], j));
             break;
+        case InstructionSet::MUL:
+            output.push_back(assembleNormalInstruction(tokens, instructions[InstructionSet::MUL], j));
+            break;
+        case InstructionSet::MULI:
+            output.push_back(assembleImmediateInstruction(tokens, instructions[InstructionSet::MULI], j));
+            break;
+        case InstructionSet::FMUL:
+            output.push_back(assembleNormalInstruction(tokens, instructions[InstructionSet::FMUL], j));
+            break;
+        case InstructionSet::FMULI:
+            output.push_back(assembleImmediateInstruction(tokens, instructions[InstructionSet::FMULI], j));
+            break;
         case InstructionSet::CMP:
             output.push_back(assembleNormalInstruction(tokens, instructions[InstructionSet::CMP], j));
             break;

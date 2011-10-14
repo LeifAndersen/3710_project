@@ -10,8 +10,6 @@ InstructionSet::InstructionSet()
     opcodeMap[SUB] = 0b0000;
     instructionMap["subi"] = SUBI;
     opcodeMap[SUBI] = 0b0000;
-    instructionMap["cmp"] = CMP;
-    opcodeMap[CMP] = 0b0000;
     instructionMap["and"] = AND;
     opcodeMap[AND] = 0b0000;
     instructionMap["andi"] = ANDI;
@@ -40,6 +38,16 @@ InstructionSet::InstructionSet()
     opcodeMap[ARSH] = 0b0000;
     instructionMap["arshi"] = ARSHI;
     opcodeMap[ARSHI] = 0b0000;
+    instructionMap["mul"] = MUL;
+    opcodeMap[MUL] = 0b0000;
+    instructionMap["muli"] = MULI;
+    opcodeMap[MULI] = 0b0000;
+    instructionMap["fmul"] = FMUL;
+    opcodeMap[FMUL] = 0b0000;
+    instructionMap["fmuli"] = FMULI;
+    opcodeMap[FMULI] = 0b0000;
+    instructionMap["cmp"] = CMP;
+    opcodeMap[CMP] = 0b0000;
     instructionMap["cmpi"] = CMPI;
     opcodeMap[CMPI] = 0b0000;
     instructionMap["test"] = TEST;
