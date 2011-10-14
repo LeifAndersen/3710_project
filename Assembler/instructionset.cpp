@@ -12,6 +12,22 @@ InstructionSet::InstructionSet()
     opcodeMap[SUBI] = 0b0000;
     instructionMap["cmp"] = CMP;
     opcodeMap[CMP] = 0b0000;
+    instructionMap["and"] = AND;
+    opcodeMap[AND] = 0b0000;
+    instructionMap["andi"] = ANDI;
+    opcodeMap[ANDI] = 0b0000;
+    instructionMap["or"] = OR;
+    opcodeMap[OR] = 0b0000;
+    instructionMap["ori"] = ORI;
+    opcodeMap[ORI] = 0b0000;
+    instructionMap["not"] = NOT;
+    opcodeMap[NOT] = 0b0000;
+    instructionMap["noti"] = NOTI;
+    opcodeMap[NOTI] = 0b0000;
+    instructionMap["xor"] = XOR;
+    opcodeMap[XOR] = 0b0000;
+    instructionMap["xori"] = XORI;
+    opcodeMap[XORI] = 0b0000;
     instructionMap["cmpi"] = CMPI;
     opcodeMap[CMPI] = 0b0000;
     instructionMap["test"] = TEST;
@@ -50,6 +66,8 @@ InstructionSet::InstructionSet()
     opcodeMap[SW] = 0b0000;
     instructionMap["li"] = LI;
     opcodeMap[LI] = 0b0000;
+    instructionMap["ret"] = RET;
+    opcodeMap[RET] = 0b0000;
 }
 
 InstructionSet::instructionSet InstructionSet::operator [](const std::string &instruction)

@@ -98,6 +98,30 @@ void Assembler::assemble(string inFileName, string outFileName)
         case InstructionSet::SUBI:
             output.push_back(assembleImmediateInstruction(tokens, instructions[InstructionSet::SUBI], j));
             break;
+        case InstructionSet::AND:
+            output.push_back(assembleNormalInstruction(tokens, instructions[InstructionSet::AND], j));
+            break;
+        case InstructionSet::ANDI:
+            output.push_back(assembleImmediateInstruction(tokens, instructions[InstructionSet::ANDI], j));
+            break;
+        case InstructionSet::OR:
+            output.push_back(assembleNormalInstruction(tokens, instructions[InstructionSet::OR], j));
+            break;
+        case InstructionSet::ORI:
+            output.push_back(assembleImmediateInstruction(tokens, instructions[InstructionSet::ORI], j));
+            break;
+        case InstructionSet::NOT:
+            output.push_back(assembleNormalInstruction(tokens, instructions[InstructionSet::NOT], j));
+            break;
+        case InstructionSet::NOTI:
+            output.push_back(assembleImmediateInstruction(tokens, instructions[InstructionSet::NOTI], j));
+            break;
+        case InstructionSet::XOR:
+            output.push_back(assembleNormalInstruction(tokens, instructions[InstructionSet::XOR], j));
+            break;
+        case InstructionSet::XORI:
+            output.push_back(assembleImmediateInstruction(tokens, instructions[InstructionSet::XORI], j));
+            break;
         case InstructionSet::CMP:
             output.push_back(assembleNormalInstruction(tokens, instructions[InstructionSet::CMP], j));
             break;
@@ -147,6 +171,8 @@ void Assembler::assemble(string inFileName, string outFileName)
         case InstructionSet::SW:
             break;
         case InstructionSet::LI:
+            break;
+        case InstructionSet::RET:
             break;
         case InstructionSet::NOT_IN_SET:
         default:
