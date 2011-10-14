@@ -85,6 +85,7 @@ void Assembler::assemble(string inFileName, string outFileName)
             continue;
         }
 
+        vector<string> tempCommands;
         switch(instructions[command]) {
         case InstructionSet::ADD:
             output.push_back(assembleNormalInstruction(tokens, instructions[InstructionSet::ADD], j));
@@ -166,6 +167,8 @@ void Assembler::assemble(string inFileName, string outFileName)
             break;
         case InstructionSet::CALL:
             break;
+        case InstructionSet::RET:
+            break;
         case InstructionSet::JG:
             break;
         case InstructionSet::JGE:
@@ -201,6 +204,15 @@ void Assembler::assemble(string inFileName, string outFileName)
         case InstructionSet::SW:
             break;
         case InstructionSet::LI:
+            if(tokens.size() < 2) {
+                cerr << "Invalid load instruction on line: " << j << endl;
+                exit(1);
+            }
+            tempCommands.push_back("sub");
+            tempCommands.push_back(tokens[1]);
+            tempCommands.push_back(tokens[1]);
+            output.push_back(assembleNormalInstruction(tempCommands, instructions[InstructionSet::SUB], j));
+            output.push_back(assembleImmediateInstruction(tokens, instructions[InstructionSet::ADDI], j));
             break;
         case InstructionSet::RET:
             break;

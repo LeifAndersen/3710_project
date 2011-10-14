@@ -6,17 +6,17 @@ using namespace std;
 
 RegisterFile::RegisterFile()
 {
-    regMap["a"] = 0;
-    regMap["b"] = 1;
-    regMap["c"] = 2;
-    regMap["d"] = 3;
-    regMap["e"] = 4;
-    regMap["f"] = 5;
-    regMap["g"] = 6;
-    regMap["h"] = 7;
-    regMap["i"] = 8;
-    regMap["j"] = 9;
-    regMap["k"] = 10;
+    regMap["s0"] = 0;
+    regMap["s1"] = 1;
+    regMap["s2"] = 2;
+    regMap["s3"] = 3;
+    regMap["s4"] = 4;
+    regMap["s5"] = 5;
+    regMap["t0"] = 6;
+    regMap["t1"] = 7;
+    regMap["t2"] = 8;
+    regMap["t3"] = 9;
+    regMap["t4"] = 10;
     regMap["lo"] = 11;
     regMap["hi"] = 12;
     regMap["sp"] = 13;
