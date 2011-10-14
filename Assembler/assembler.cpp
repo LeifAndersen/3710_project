@@ -27,6 +27,7 @@ void assemble(string inFileName, string outFileName)
     vector<Instruction> output;
     map<string, int> labels;
     Instructions instructions;
+    RegisterFile regFile;
     ifstream infile;
     infile.open(inFileName.c_str());
 
@@ -87,16 +88,32 @@ void assemble(string inFileName, string outFileName)
         }
 
         Instruction instruction;
-        string dest;
-        string source;
+        Register dest;
+        Register sourceReg;
+        Immediate sourceImmediate;
+
         switch(instructions[command]) {
         case Instructions::ADD:
+
+            if(tokens.size() < 3 || !regFile.contains(tokens[1])
+                    || !regFile.contains(tokens[1])
+                    || (tokens.size() > 3 && tokens[3][0] != '#')) {
+                cerr << "Invalid instruction on line: " << i << endl;
+                exit(1);
+            }
+
+            dest = regFile[tokens[1]];
+            sourceReg = regFile[tokens[2]];
+
             instruction = NON_SPECIAL_HEADER;
             instruction <<= NON_SPECIAL_OFFSET;
-            instruction += instructions[Instructions::ADD];
-            instruction <<= NON_IMMEDIATE_OFFSET;
             instruction += NON_IMEDIATE_OPCODE;
-
+            instruction <<= NON_IMMEDIATE_OFFSET;
+            instruction += instructions[Instructions::ADD];
+            instruction <<= OPP_CODE_OFFSET;
+            instruction += dest;
+            instruction <<= REGISTER_ADDRESS_OFFSET;
+            instruction += sourceReg;
             break;
         case Instructions::ADDI:
             break;

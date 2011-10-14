@@ -8,6 +8,8 @@
 #define NON_SPECIAL_OFFSET 2
 #define NON_IMEDIATE_OPCODE 0b0000
 #define NON_IMMEDIATE_OFFSET 4
+#define OPP_CODE_OFFSET 4
+#define REGISTER_ADDRESS_OFFSET 4
 
 typedef short opcode;
 typedef short Instruction;

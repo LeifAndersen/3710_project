@@ -5,13 +5,14 @@
 #include <string>
 
 typedef short Register;
+typedef short Immediate;
 
 class RegisterFile
 {
 public:
     RegisterFile();
 
-    Register getRegister(const std::string &reg);
+    Register operator [](const std::string &reg);
 
     bool contains(const std::string &reg);
 

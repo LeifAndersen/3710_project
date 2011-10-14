@@ -24,7 +24,7 @@ RegisterFile::RegisterFile()
     regMap["assem"] = 15;
 }
 
-Register RegisterFile::getRegister(const string &reg)
+Register RegisterFile::operator [](const string &reg)
 {
     return regMap[reg];
 }
