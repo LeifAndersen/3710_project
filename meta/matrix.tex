@@ -1,0 +1,32 @@
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+Rotates $(x_0, y_0, z_0)$, $angle$ degrees around the $(x, y, z)$ pole.
+
+$$
+\begin{bmatrix}
+		$x^2(1-c)+c$ & $xy(1-c)-zs$ & $xz(1-c)+ys$ & $0$ \\
+		$yx(1-c)+zs$ & $y^2(1-c)+c$ & $yz(1-c)-ys$ & $0$ \\
+		$zx(1-c)-ys$ & $yz(1-c)+xs$ & $z^2(1-c)+c$ & $0$ \\
+		$0$          & $0$          & $0$          & $1$ \\
+\end{bmatrix}
+\begin{bmatrix}
+		$x_0$ \\
+		$y_0$ \\
+		$z_0$ \\
+		$1$   \\
+\end{bmatrix}
+=
+\begin{bmatrix}
+		$x_1$ \\
+		$y_1$ \\
+		$z_1$ \\
+		$1$   \\
+\end{bmatrix}
+$$
+
+$$c = cos(angle)$$
+$$s = sin(angle)$$
+\end{document}
