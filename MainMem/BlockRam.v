@@ -53,7 +53,7 @@ module BlockRam#(parameter DATA = 18, parameter ADDR = 10, parameter SIZE = 1024
          douta <= memory[addra];
 	end
       
-   always @(posedge clka)
+   always @(negedge clka)
    begin
          if (web)
             memory[addrb] <= dinb;
