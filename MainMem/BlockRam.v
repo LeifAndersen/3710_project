@@ -18,7 +18,7 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module BlockRam#(parameter DATA = 18, parameter ADDR = 10, parameter SIZE = 1024, parameter FILE = "init.txt")(
+module BlockRam#(parameter DATA = 18, parameter ADDR = 14, parameter SIZE = 12288, parameter FILE = "init.txt")(
 	input clka,
 	input wea, //write enable A
 	input web, //write enable B
