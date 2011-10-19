@@ -239,7 +239,7 @@ module Control(
 			BuffCtrl[15:10] = 6'd0;
 			BuffCtrl[21:18] = 4'd0;
 			MemWrite    	= 0;
-			immediate   	= {{8}instruction[7],instruction[7:0]};
+			immediate   	= {{8{instruction[7]}},instruction[7:0]};
 			Addr        	= 0;
 
 			if (instruction[15:12] == ADD ||
@@ -329,7 +329,7 @@ module Control(
 			BuffCtrl[14:13]	= 2'd0;
 			BuffCtrl[21:16]	= 6'd0;
 			immediate   	= 16'd0;
-			Addr        	= {{2}instruction[13],instruction[13:0]};
+			Addr        	= {{2{instruction[13]}},instruction[13:0]};
 
 			if(instruction[17:14] == CALL) begin
 				//CALL:
