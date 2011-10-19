@@ -1,21 +1,21 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date:    14:32:05 10/06/2011 
-// Design Name: 
-// Module Name:    Control 
-// Project Name: 
-// Target Devices: 
-// Tool versions: 
-// Description: 
+// Company:
+// Engineer:
 //
-// Dependencies: 
+// Create Date:    14:32:05 10/06/2011
+// Design Name:
+// Module Name:    Control
+// Project Name:
+// Target Devices:
+// Tool versions:
+// Description:
 //
-// Revision: 
+// Dependencies:
+//
+// Revision:
 // Revision 0.01 - File Created
-// Additional Comments: 
+// Additional Comments:
 //
 //////////////////////////////////////////////////////////////////////////////////
 module Control(
@@ -33,16 +33,16 @@ module Control(
 	output reg 			MemWrite,
 	output reg	[15:0]	Addr
     );
-	
+
 	`include "..\ALU\opcodesLOL.v"
 	`include "InstructionTypes.v"
-	
+
 	/* Control flow is outlined in comments */
 	reg [2:0] instType;
-	
+
 	// Intruction fetch and $PC++ is automatic
 		// nothing to do, not doing anything
-		
+
 	// Top Level Decode
 	always@(*) begin
 		if (instruction[17:16] == 2'b00) begin
@@ -78,7 +78,7 @@ module Control(
 			end
 		end
 	end
-	
+
 	always@(*) begin
 		// I-Capable with no immediate
 		if (instType == N0000) begin
@@ -96,7 +96,7 @@ module Control(
 			MemWrite    	= 0;
 			immediate   	= 16'd0;
 			Addr        	= 0;
-	
+
 			if (instruction[7:4] == ADD ||
 				instruction[7:4] == SUB ||
 				instruction[7:4] == CMP ||
@@ -183,7 +183,7 @@ module Control(
 			immediate   	= 16'd0;
 			FlagWrite   	= 0;
 			Addr        	= 16'd0;
-	
+
 			if (instruction[7:4] == MOVMR) begin
 				//MOVMR:
 				MemWrite    	= 0;
@@ -222,7 +222,7 @@ module Control(
 				WriteEn2    	= 0;
 			end
 		end
-		
+
 		// I-Capable with immediate
 		else if (instType == N0000I) begin
 			ALUOp       	= instruction[15:12];
@@ -239,7 +239,7 @@ module Control(
 			BuffCtrl[15:10] = 6'd0;
 			BuffCtrl[21:18] = 4'd0;
 			MemWrite    	= 0;
-			immediate   	= instruction[7:0];
+			immediate   	= {{8{instruction[7]}},instruction[7:0]};
 			Addr        	= 0;
 
 			if (instruction[15:12] == ADD ||
@@ -329,7 +329,7 @@ module Control(
 			BuffCtrl[14:13]	= 2'd0;
 			BuffCtrl[21:16]	= 6'd0;
 			immediate   	= 16'd0;
-			Addr        	= instruction[13:0];
+			Addr        	= {{2{instruction[13]}},instruction[13:0]};
 
 			if(instruction[17:14] == CALL) begin
 				//CALL:
@@ -352,7 +352,7 @@ module Control(
 				WriteEn1    	= 1;
 				MemWrite    	= 0;
 			end
-				
+
 			else if(instruction[17:14] == MOVRMI) begin
 				//MOVRMI:
 				BuffCtrl[9]		= 1;
@@ -385,7 +385,7 @@ module Control(
 					BuffCtrl[15]	= 0;
 					WriteEn1    	= 0;
 					MemWrite    	= 0;
-				end 
+				end
 				else begin
 					BuffCtrl[9]		= 1;
 					BuffCtrl[5]		= 0;
@@ -418,7 +418,7 @@ module Control(
 				end
 			end
 
-			else if(instruction[17:14] == JNE) begin	
+			else if(instruction[17:14] == JNE) begin
 				//JNE:
 				if (!flags[1]) begin
 					BuffCtrl[10]	= 1;
@@ -439,7 +439,7 @@ module Control(
 				end
 			end
 
-			else if(instruction[17:14] == JE) begin	
+			else if(instruction[17:14] == JE) begin
 				//JE:
 				if (flags[1]) begin
 					BuffCtrl[10]	= 1;
@@ -467,7 +467,7 @@ module Control(
 					BuffCtrl[15]	= 0;
 					WriteEn1    	= 0;
 					MemWrite    	= 0;
-			end	
+			end
 		end
 
 		// POP, PUSH, and PUSHI
@@ -502,7 +502,7 @@ module Control(
 					BuffCtrl[5]		= 0;
 					BuffCtrl[19:18]	= 2'd0;
 					BuffCtrl[21]	= 0;
-				end 
+				end
 				else begin
 					WriteEn1    	= 1;                	// Write to operand reg
 					WriteEn2    	= 1;                	// Write to SP
@@ -533,7 +533,7 @@ module Control(
 				BuffCtrl[19]	= 0;
 			end
 
-			else if(instruction[17:14] == PUSHI) begin	
+			else if(instruction[17:14] == PUSHI) begin
 				//PUSHI:
 				SrcSel      	= 13;
 				MemWrite    	= 1;
@@ -552,9 +552,9 @@ module Control(
 				SrcSel      	= 0;
 				MemWrite    	= 0;
 				WriteEn1    	= 0;
-				WriteEn2    	= 0;                
+				WriteEn2    	= 0;
 				DestSel     	= 0;
-				DestSel2    	= 0;               
+				DestSel2    	= 0;
 				BuffCtrl[0]		= 0;
 				BuffCtrl[18]	= 0;
 				BuffCtrl[21]	= 0;
