@@ -6,22 +6,22 @@ using namespace std;
 
 RegisterFile::RegisterFile()
 {
-    regMap["s0"] = 0;
-    regMap["s1"] = 1;
-    regMap["s2"] = 2;
-    regMap["s3"] = 3;
-    regMap["s4"] = 4;
-    regMap["s5"] = 5;
-    regMap["t0"] = 6;
-    regMap["t1"] = 7;
-    regMap["t2"] = 8;
-    regMap["t3"] = 9;
-    regMap["t4"] = 10;
-    regMap["lo"] = 11;
-    regMap["hi"] = 12;
-    regMap["sp"] = 13;
-    regMap["fp"] = 14;
-    regMap["assem"] = 15;
+    regMap["$0"] = 0;
+    regMap["$1"] = 1;
+    regMap["$2"] = 2;
+    regMap["$3"] = 3;
+    regMap["$4"] = 4;
+    regMap["$5"] = 5;
+    regMap["$6"] = 6;
+    regMap["$7"] = 7;
+    regMap["$8"] = 8;
+    regMap["$9"] = 9;
+    regMap["$mr"] = 10;
+    regMap["$lo"] = 11;
+    regMap["$hi"] = 12;
+    regMap["$sp"] = 13;
+    regMap["$fp"] = 14;
+    regMap["$assem"] = 15;
 }
 
 Register RegisterFile::operator [](const string &reg)

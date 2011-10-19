@@ -3,6 +3,7 @@
 
 #include <map>
 #include <string>
+#include <inttypes.h>
 
 #define NON_SPECIAL_HEADER 0b00
 #define NON_SPECIAL_OFFSET 2
@@ -11,8 +12,8 @@
 #define OPP_CODE_OFFSET 4
 #define REGISTER_ADDRESS_OFFSET 4
 
-typedef unsigned short Opcode;
-typedef unsigned short Instruction;
+typedef uint16_t Opcode;
+typedef uint16_t Instruction;
 
 class InstructionSet
 {

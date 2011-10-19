@@ -3,9 +3,10 @@
 
 #include <map>
 #include <string>
+#include <inttypes.h>
 
-typedef unsigned short Register;
-typedef unsigned short Immediate;
+typedef uint16_t Register;
+typedef uint16_t Immediate;
 
 class RegisterFile
 {

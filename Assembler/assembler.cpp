@@ -6,11 +6,13 @@
 #include <iterator>
 #include <vector>
 #include <string>
+#include <map>
+#include <bitset>
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
-#include <map>
+#include <inttypes.h>
 
 #include "assembler.h"
 #include "instructionset.h"
@@ -250,7 +252,9 @@ void Assembler::assemble(string inFileName, string outFileName)
     ofstream outfile;
     outfile.open(outFileName.c_str(), ios::out | ios::binary);
     for(unsigned int i = 0; i < output.size(); i++) {
-        outfile << output[i];
+        //outfile.write(&output[i], 2);
+        unsigned short f = 10;
+        outfile.write(reinterpret_cast<const char*>(&f), sizeof(i));
     }
     outfile.close();
 }
