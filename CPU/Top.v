@@ -29,10 +29,6 @@ module Top(
 
 	wire reset;
 	assign reset = ~BTN_NORTH;
-	
-    // clock divider
-    wire clk;
-    ClockDivider DivideClock(reset, CLK_50MHZ, clk);
 
 	// Buffers and wires
 	wire [15:0] aBus;
@@ -93,17 +89,17 @@ module Top(
 	Decrementer DECR(bBus, decrTo19);
 	
 	// PC
-	ProgramCounter PC(clk, pcWriteBus, pc);
+	ProgramCounter PC(CLK_50MHZ, pcWriteBus, pc);
 	Incrementer PCINCR(pc, pcPlus1);
 	
 	// alu
     ALU ALUinstance(aBus, bBus, aluOp, aluC, flags[0], flags[1], flags[2], flags[3]);
 
 	// flag reg
-    FlagRegister FlagReg(clk, flags[0], flags[1], flags[2], flags[3], flagWrite, flagsToControl[0], flagsToControl[1], flagsToControl[2], flagsToControl[3]);
+    FlagRegister FlagReg(CLK_50MHZ, flags[0], flags[1], flags[2], flags[3], flagWrite, flagsToControl[0], flagsToControl[1], flagsToControl[2], flagsToControl[3]);
 
     // regfile
-    Register RegisterFile(clk, destSel, srcSel, destSel, destSel2, regWriteEn, regWriteEn2, reset, writeBus, writeBus2, regTo1, regTo2);
+    Register RegisterFile(CLK_50MHZ, destSel, srcSel, destSel, destSel2, regWriteEn, regWriteEn2, reset, writeBus, writeBus2, regTo1, regTo2);
 	
 	// memory
 	// some inputs are always 0.
@@ -112,7 +108,7 @@ module Top(
 	wire [15:0] memWriteDataA;
 	assign memWriteDataA = 16'b0;
 	// a is instructions, b is data
-	BlockRam MainMemory(clk, memWriteEnA, memWriteEn, pc, memAddrBus, memWriteDataA, memWriteBus, instruction, memOut);
+	BlockRam MainMemory(CLK_50MHZ, memWriteEnA, memWriteEn, pc, memAddrBus, memWriteDataA, memWriteBus, instruction, memOut);
 	
 	// control
 	Control MasterControl(instruction, flagsToControl, aluOp, regWriteEn, regWriteEn2, immTo0, buffCtrl, destSel, destSel2, srcSel, flagWrite, memWriteEn, addr);
