@@ -1,5 +1,4 @@
 import sys
-from os.path import basename
 from os.path import splitext
 from collections import deque
 
@@ -31,12 +30,12 @@ def trim_reg(reg_str):
 
 # error reporting for bad instructions
 def explode_bomb(line_num, line):
-	print "Bad instruction on line " + str(line_num) + ": \"" + line + "\""
+	print "Bad instruction on line " + str(line_num) + ": \"" + line.strip() + "\""
 	exit(1)
 
 # error reporting for mismatched parens
 def delim_mismatch(line_num, line):
-	print "Delimiter mismatch on line " + str(line_num) + ": \"" + line + "\""
+	print "Delimiter mismatch on line " + str(line_num) + ": \"" + line.strip() + "\""
 	exit(1)
 
 # truncates number to the bottom 'bits' bits.
@@ -145,7 +144,7 @@ def parse(infile_str, outfile_str):
 				else:
 					if tokens[1][1] == "$":	# MOV ($R), $R
 						# MOVMR
-						first_pass_queue.append(str(hex(0x1000 + (int(tokens[2][1:]) << 8) + (OP_CODES["MOVMR"] << 4) + int(tokens[1][2:-1]))))
+						first_pass_queue.append(str(hex(0x1000 + (trim_reg(tokens[2]) << 8) + (OP_CODES["MOVMR"] << 4) + trim_reg(tokens[1]))))
 					else:					# MOV (Imm), $R
 						# psuedoinstruction becomes
 						#     MOVMRI Imm
@@ -211,13 +210,12 @@ def parse(infile_str, outfile_str):
 		# call encode_14_Bit_Imm_instruction() on jumps (lines with more than one token)
 		if len(tokens) > 1:
 			# encode and save to instruction stream with label address
-			outfile.write(encode_14_Bit_Imm_instruction([tokens[0], str(labels[tokens[1]])]) + "\n")
+			outfile.write(encode_14_Bit_Imm_instruction([tokens[0], str(labels[tokens[1]])])[2:] + "\n")
 		else:
-			outfile.write(instruction + "\n")
+			outfile.write(instruction[2:] + "\n")
 
 	infile.close()
 	outfile.close()
-
 
 def main():
 	filestring = sys.argv[1]
@@ -227,4 +225,3 @@ def main():
 
 if __name__ == '__main__':
 	main()
-

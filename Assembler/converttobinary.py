@@ -1,5 +1,4 @@
 import sys
-from os.path import basename
 from os.path import splitext
 
 def convert(infile_str, outfile_str):
