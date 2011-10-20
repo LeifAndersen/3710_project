@@ -9,9 +9,9 @@ I_CAPABLE = ["ADD", "SUB", "AND", "OR", "XOR", "NOT", "LSH", "RSH", "ARSH", "MUL
 SPECIAL_14_BIT = ["CALL", "RET"]
 
 # Dictionary of instructions and their opcodes
-INSTRUCTION_OP_CODES = {"ADD": 2, "SUB": 3, "AND": 6, "OR": 7, "XOR": 8, "NOT": 9, "LSH": 10, "RSH": 11, "ARSH" 12, "FMUL": 13, "FMUL": 14, "MOVR": 15, "CMP": 4, "CMPR": 5, "MOVMR": 2, "MOVRM": 3, "CALL": 4, "MOVMRI": 5, "MOVRMI": 6, "RET": 7, "JL": 8, "JLE": 9, "JNE": 10, "JE": 11, "POP": 12, "PUSH": 13, "PUSHI": 14, "INCR": 60, "ADD": 61}
+OP_CODES = {"ADD": 2, "SUB": 3, "AND": 6, "OR": 7, "XOR": 8, "NOT": 9, "LSH": 10, "RSH": 11, "ARSH": 12, "FMUL": 13, "FMUL": 14, "MOVR": 15, "CMP": 4, "CMPR": 5, "MOVMR": 2, "MOVRM": 3, "CALL": 4, "MOVMRI": 5, "MOVRMI": 6, "RET": 7, "JL": 8, "JLE": 9, "JNE": 10, "JE": 11, "POP": 12, "PUSH": 13, "PUSHI": 14, "INCR": 60, "DECR": 61}
 
-
+# get the class of parse that should be performed
 def get_instruction_type(OP):
 	if OP in I_CAPABLE:
 		return "I-Capable"
@@ -20,18 +20,47 @@ def get_instruction_type(OP):
 	else:
 		return OP
 
+# error reporting for bad instructions
 def explode_bomb(line_num):
 	print "Bad instruction on line: " + str(line)
 	exit(1)
+
+# error reporting for mismatched parens
 def delim_mismatch(line_num):
 	print "Delimiter mismatch on line: " + str(line)
 	exit(1)
-def encode_R_to_R_instruction():
-	pass
-def encode_Imm_to_R_instruction():
-	pass
-def encode_14_Bit_Imm_instruction():
-	pass
+
+# truncates number to the bottom 'bits' bits.
+def truncate_bits(num, bits):
+	return num % pow(2, bits)
+
+# takes tokens of R-Type instruction and encodes to a string of the hex
+def encode_R_to_R_instruction(tokens, upper_op_code):
+	return str(hex((upper_op_code << 12) + (int(tokens[2][1:-1]) << 8) + (OP_CODES[tokens[0]] << 4) + int(tokens[1][1:-1])))
+
+# takes tokens of I-Type instruction and encodes to a string of the hex
+def encode_Imm_to_R_instruction(tokens):
+	immediate = 0
+	if check_for_hex(tokens[1]):
+		immediate = int(tokens[1], 16)
+	else:
+		immediate = int(tokens[1])
+	return  str(hex((OP_CODES[tokens[0]] << 12) + (int(tokens[2][1:-1]) << 8) + truncate(immediate, 8)))
+
+# takes tokens of Special I-Type instruction and encodes to a string of the hex
+def encode_14_Bit_Imm_instruction(tokens):
+	immediate = 0
+	if check_for_hex(tokens[1]):
+		immediate = int(tokens[1], 16)
+	else:
+		immediate = int(tokens[1])
+	return  str(hex((OP_CODES[tokens[0]] << 14) + truncate(immediate, 14)))
+
+def check_for_hex(string):
+	if string[1] == "x":
+		return True
+	else:
+		return False
 
 def verify_token_count(line_num, tokens, count):
 	if len(tokens) < count or (len(tokens) > count and tokens[count][0] != '#'):
@@ -53,7 +82,13 @@ def parse(infile_str, outfile_str):
 			# empty lines, comments, and labels
 			continue
 
+		if tokens[0][-1] == ":":
+			# Label, push to instruction queue
+			instruction_queue_first_pass.enqueu(tokens[0])
+
 		instruction_type = get_instruction_type(tokens[0])
+
+		# for each instruction, get the opcode using OP_CODES[tokens[0]]
 
 		if instruction_type == "I-Capable":
 			if tokens[0] == "NOT":
@@ -62,7 +97,7 @@ def parse(infile_str, outfile_str):
 				verify_token_count(i - MEM_START, tokens, 3)
 			if tokens[1][0] == "$":
 				# push this
-				encode_R_to_R_instruction(tokens)
+				encode_R_to_R_instruction(tokens, 0)
 			else:
 				# push this
 				encode_Imm_to_R_instruction(tokens)
@@ -116,13 +151,13 @@ def parse(infile_str, outfile_str):
 			else: # Other MOV: MOV $R, $R and MOV Imm, $R
 				if tokens[1][0] == "$":
 					# push this
-					encode_R_to_R_instruction(tokens)
+					encode_R_to_R_instruction(tokens, 1)
 				else:
 					# push this
 					encode_Imm_to_R_instruction(tokens)
 
-		elif tokens[0][-1] == ":":
-			# Label, push to instruction Queue
+		elif instruction_type == "JE" or instruction_type == "JNE" or instruction_type == "JLE" or instruction_type == "JL":
+			# push jumps directly, don't encode on first pass
 
 		else:
 			# bad instruction, explode
@@ -144,8 +179,7 @@ def parse(infile_str, outfile_str):
 		# of the next instruction as their value.  Enqueue only the instructions
 		# into second pass deque
 		if tokens[-1] = ':':
-			label_len = len(tokens[0]) - 1
-			label = tokens[0][label_len]
+			label = tokens[0][0:-2]
 			labels[label] = i
 		else:
 			# push instruction to second pass deque
