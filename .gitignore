@@ -1,6 +1,7 @@
 .DS_Store
 
-
+*.b
+*.o
 *.user
 *isim*
 *_beh*
