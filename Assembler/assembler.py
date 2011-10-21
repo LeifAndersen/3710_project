@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import sys
 from os.path import splitext
 from collections import deque
