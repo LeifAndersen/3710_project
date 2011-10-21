@@ -24,5 +24,5 @@ EVEN:
 WASTELOOP:
 	SUB 0, $1	# 1984 is now the current fib value in hex.  Hold it on the write line
 	OR 0, $1
-	NOT 0, $5
+	NOT $5
 	JNE WASTELOOP

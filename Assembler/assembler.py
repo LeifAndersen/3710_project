@@ -72,7 +72,7 @@ def encode_14_Bit_Imm_instruction(tokens):
 
 def verify_token_count(line_num, tokens, count):
 	if len(tokens) < count or (len(tokens) > count and tokens[count][0] != '#'):
-		print "Invalid instruction on line: " + str(line)
+		print "Invalid instruction on line: " + str(line_num)
 		exit(1)
 
 def parse(infile_str, outfile_str):
