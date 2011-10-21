@@ -108,7 +108,7 @@ module Top(
 	wire [15:0] memWriteDataA;
 	assign memWriteDataA = 16'b0;
 	// a is instructions, b is data
-	BlockRam MainMemory(CLK_50MHZ, memWriteEnA, memWriteEn, pc, memAddrBus, memWriteDataA, memWriteBus, instruction, memOut);
+	BlockRam #(.DATA(18), .ADDR(14), .SIZE(12288), .FILE("init.txt")) MainMemory(CLK_50MHZ, memWriteEnA, memWriteEn, pc, memAddrBus, memWriteDataA, memWriteBus, instruction, memOut);
 	
 	// control
 	Control MasterControl(instruction, flagsToControl, aluOp, regWriteEn, regWriteEn2, immTo0, buffCtrl, destSel, destSel2, srcSel, flagWrite, memWriteEn, addr);
