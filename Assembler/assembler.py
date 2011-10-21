@@ -86,7 +86,6 @@ def parse(infile_str, outfile_str):
 	for line in infile:
 		line_num += 1
 
-		# we also need to remove the commas
 		tokens = line.split()
 		if len(tokens) == 0 or tokens[0][0] == '#':
 			# empty lines, comments, and labels
@@ -104,9 +103,12 @@ def parse(infile_str, outfile_str):
 
 		instruction_type = get_instruction_type(tokens[0])
 
-		# remove the comma after the second token
+		# enforce and remove comma after second of three tokens
 		if len(tokens) >= 3:
-			tokens[1] = tokens[1][:-1]
+			if tokens[1][-1] == ",":
+				tokens[1] = tokens[1][:-1]
+			else:
+				explode_bomb(line_num, line)
 
 		# encode instructions specifically for each op type
 		if instruction_type == "I-Capable":
