@@ -68,6 +68,10 @@ begin
 					left <= PRAM[13:7];
 					right <= PRAM[6:0];
 					state <= read2;
+					if (rdPtr == 1023) //Probly not necessary, this should overflow correctly anyways.  If necessary, then above comparisons are wrong.
+						rdPtr <= 0;
+					else
+						rdPtr <= rdPtr + 1;
 				end
 		end
 		
@@ -78,6 +82,10 @@ begin
 					line <= PRAM[9:3];
 					data <= PRAM[2:0];
 					state <= paint;
+					if (rdPtr == 1023)
+						rdPtr <= 0;
+					else
+						rdPtr <= rdPtr + 1;
 				end
 		end
 		
