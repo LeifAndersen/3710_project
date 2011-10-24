@@ -123,7 +123,9 @@ BlockRam #(.DATA(3),.ADDR(11),.SIZE(1600),.FILE("init.txt")) specialBuffer(  //1
 	.dina(color[2:0]),
 	.dinb(0),
 	.douta(0),
-	.doutb(vgaB)
+	.doutb(vgaS)
 	 );
+
+
 
 endmodule
