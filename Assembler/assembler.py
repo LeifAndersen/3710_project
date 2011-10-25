@@ -24,7 +24,7 @@ def get_instruction_type(OP):
 
 # get the class of parse that should be performed
 def trim_reg(reg_str):
-	if reg_str[0] == "(":
+	if reg_str[0] == "[":
 		return truncate_bits(int(reg_str[2:-1]), 4)
 	else:
 		return truncate_bits(int(reg_str[1:]), 4)
@@ -139,13 +139,13 @@ def parse(infile_str, outfile_str):
 			first_pass_queue.append(str(hex((OP_CODES[tokens[0]] << 14) + (trim_reg(tokens[1]) << 10) + 0)))
 
 		elif instruction_type == "MOV":
-			if tokens[1][0] == '(' and tokens[2][0] == '(':
+			if tokens[1][0] == '[' and tokens[2][0] == '[':
 				explode_bomb(line_num, line)
-			if tokens[2][0] == '(':
-				if tokens[2][-1] != ')':
+			if tokens[2][0] == '[':
+				if tokens[2][-1] != ']':
 					delim_mismatch(line_num, line)
 				else:
-					if tokens[1][1] == "$":	# MOV $R, ($R)
+					if tokens[2][1] == "$":	# MOV $R, ($R)
 						# MOVMR
 						first_pass_queue.append(str(hex(0x1000 + (trim_reg(tokens[1]) << 8) + (OP_CODES["MOVMR"] << 4) + trim_reg(tokens[2]))))
 					else:					# MOV $R, (Imm)
@@ -154,8 +154,8 @@ def parse(infile_str, outfile_str):
 						#     MOVR $R, $MR
 						first_pass_queue.append(encode_14_Bit_Imm_instruction(["MOVMRI", tokens[2][1:-1]]))
 						first_pass_queue.append(str(hex((trim_reg(tokens[2]) << 8) + (OP_CODES["MOVR"] << 4) + 15)))
-			elif tokens[1][0] == '(':
-				if tokens[1][-1] != ')':
+			elif tokens[1][0] == '[':
+				if tokens[1][-1] != ']':
 					delim_mismatch(line_num)
 				else:
 					if tokens[1][1] == "$":	# MOV ($R), $R
