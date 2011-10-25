@@ -1,6 +1,6 @@
 # simple loop test with no stack usage.
-	MOV $0, 1984
-	MOV [1984], $0
+	MOV $0, 0x1984
+	MOV [0x1984], $0
 	MOV $1, 14			# counter
 	MOV $2, 7			# first
 	MOV $3, 13			# second
