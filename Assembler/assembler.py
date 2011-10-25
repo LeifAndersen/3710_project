@@ -100,6 +100,8 @@ def parse(infile_str, outfile_str):
 		if tokens[0] == "JE" or tokens[0] == "JNE" or tokens[0] == "JLE" or tokens[0] == "JL":
 			# push jumps directly, don't encode on first pass (only first two tokens)
 			first_pass_queue.append(tokens[0] + " " + tokens[1])
+			# nop after jump
+			first_pass_queue.append(str(hex((OP_CODES["AND"] << 4))))
 			continue
 
 		instruction_type = get_instruction_type(tokens[0])
