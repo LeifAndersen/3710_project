@@ -1,5 +1,8 @@
 # simple loop test with no stack usage.
-	MOV $0, 0x1984
+	MOV $0, 0x19
+	LSH $0, 8
+	MOV $5, 0x84
+	ADD $0, $5
 	MOV [0x1984], $0
 	MOV $1, 14			# counter
 	MOV $2, 7			# first
