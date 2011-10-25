@@ -165,7 +165,7 @@ def parse(infile_str, outfile_str):
 						# psuedoinstruction becomes
 						#     MOVR $MR, $R
 						#     MOVRMI Imm
-						first_pass_queue.append(str(hex((15 << 8) + (OP_CODES["MOVR"] << 4) + trim_reg(tokens[1]))))
+						first_pass_queue.append(str(hex((15 << 8) + (OP_CODES["MOVR"] << 4) + trim_reg(tokens[2]))))
 						first_pass_queue.append(encode_14_Bit_Imm_instruction(["MOVRMI", tokens[1][1:-1]]))
 			else: # Other MOV: MOV $R, $R and MOV $R, Imm
 				if tokens[1][0] == "$" and tokens[2][0] == "$":
