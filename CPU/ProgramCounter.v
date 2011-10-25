@@ -19,13 +19,19 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 module ProgramCounter(
+	input reset,
     input clk,
     input [15:0] pcin,
     output reg [15:0] pc
     );
 
 	always@(posedge clk) begin
-		pc <= pcin;
+		if(reset == 1'b1) begin
+			pc <= 16'd0;
+		end
+		else begin
+			pc <= pcin;
+		end
 	end
 
 endmodule

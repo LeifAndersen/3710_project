@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <report-views version="2.0" >
  <header>
-  <DateModified>2011-10-13T20:50:25</DateModified>
+  <DateModified>2011-10-25T16:18:28</DateModified>
   <ModuleName>TopLevel</ModuleName>
   <SummaryTimeStamp>Unknown</SummaryTimeStamp>
-  <SavedFilePath>C:/Users/Daniel/3710/BasicCPU/iseconfig/TopLevel.xreport</SavedFilePath>
-  <ImplementationReportsDirectory>C:/Users/Daniel/3710/BasicCPU\</ImplementationReportsDirectory>
+  <SavedFilePath>//wannsee/users/u0346997/desktop/3710/3710/BasicCPU/iseconfig/TopLevel.xreport</SavedFilePath>
+  <ImplementationReportsDirectory>U:/3710/3710/BasicCPU\</ImplementationReportsDirectory>
   <DateInitialized>2011-09-22T22:59:38</DateInitialized>
   <EnableMessageFiltering>false</EnableMessageFiltering>
  </header>

@@ -89,7 +89,7 @@ module Top(
 	Decrementer DECR(bBus, decrTo19);
 	
 	// PC
-	ProgramCounter PC(CLK_50MHZ, pcWriteBus, pc);
+	ProgramCounter PC(reset, CLK_50MHZ, pcWriteBus, pc);
 	Incrementer PCINCR(pc, pcPlus1);
 	
 	// alu
@@ -114,6 +114,6 @@ module Top(
 	Control MasterControl(instruction, flagsToControl, aluOp, regWriteEn, regWriteEn2, immTo0, buffCtrl, destSel, destSel2, srcSel, flagWrite, memWriteEn, addr);
 
 	// lcd controller
-	lcd_ctrl lcdctrl(CLK_50MHZ, reset, writeBus, SF_D, LCD_E, LCD_RS, LCD_RW);
+	lcd_ctrl lcdctrl(CLK_50MHZ, reset, aluC, SF_D, LCD_E, LCD_RS, LCD_RW);
 
 endmodule
