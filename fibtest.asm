@@ -1,4 +1,5 @@
 # simple loop test with no stack usage.
+	AND $0, $0
 	MOV $0, 0x19
 	LSH $0, 8
 	MOV $5, 0x84
