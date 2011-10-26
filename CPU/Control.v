@@ -99,8 +99,6 @@ module Control(
 
 			if (instruction[7:4] == ADD ||
 				instruction[7:4] == SUB ||
-				instruction[7:4] == CMP ||
-				instruction[7:4] == CMPR ||
 				instruction[7:4] == AND ||
 				instruction[7:4] == OR ||
 				instruction[7:4] == XOR ||
@@ -123,6 +121,18 @@ module Control(
 					BuffCtrl[4] <= 1;
 					BuffCtrl[7] <= 0;
 				end
+			end
+			
+			if (instruction[7:4] == CMP ||
+				instruction[7:4] == CMPR) begin
+				//Compares which should not write back
+				BuffCtrl[3]  <= 0;
+				BuffCtrl[6]  <= 0;
+				FlagWrite    <= 1;
+				WriteEn1    <= 0;
+				WriteEn2    <= 0;
+				BuffCtrl[7] <= 0;
+				BuffCtrl[4] <= 0;
 			end
 
 			else if (instruction[7:4] == MUL || instruction[7:4] == FMUL) begin
@@ -244,8 +254,6 @@ module Control(
 
 			if (instruction[15:12] == ADD ||
 				instruction[15:12] == SUB ||
-				instruction[15:12] == CMP ||
-				instruction[15:12] == CMPR ||
 				instruction[15:12] == AND ||
 				instruction[15:12] == OR ||
 				instruction[15:12] == XOR ||
@@ -267,6 +275,17 @@ module Control(
 					BuffCtrl[4] <= 1;
 					BuffCtrl[7] <= 0;
 				end
+			end
+			
+			if (instruction[15:12] == CMP ||
+				instruction[15:12] == CMPR) begin
+				//Compares which should not write back
+				BuffCtrl[17:16] <= 2'b0;
+				FlagWrite    <= 1;
+				WriteEn1    <= 0;
+				WriteEn2    <= 0;
+				BuffCtrl[7] <= 0;
+				BuffCtrl[4] <= 0;
 			end
 
 			else if (instruction[15:12] == MUL || instruction[15:12] == FMUL) begin

@@ -21,6 +21,7 @@
 
 
 module FlagRegister(
+		input reset,
 		input clk,
 		input FlagIn,
 		input ZeroIn,
@@ -35,11 +36,19 @@ module FlagRegister(
 
 always@(posedge clk)
 begin
-	if (enable) begin
-		Flag = FlagIn;
-		Zero = ZeroIn;
-		Low = LowIn;
-		Negative = NegativeIn;
+	if (reset == 1'b1) begin
+		Flag = 0;
+		Zero = 0;
+		Low = 0;
+		Negative = 0;
+	end
+	else begin
+		if (enable) begin
+			Flag = FlagIn;
+			Zero = ZeroIn;
+			Low = LowIn;
+			Negative = NegativeIn;
+		end
 	end
 end
 endmodule
