@@ -36,6 +36,16 @@ module Control(
 
 	`include "..\ALU\opcodesLOL.v"
 	`include "InstructionTypes.v"
+	
+	//translate flags for easy reading
+	wire Flag;
+	wire Low;
+	wire Negative;
+	wire Zero;
+	assign Flag = flags[3];
+	assign Low = flags[2];
+	assign Negative = flags[1];
+	assign Zero = flags[0];
 
 	/* Control flow is outlined in comments */
 	reg [2:0] instType;
@@ -395,8 +405,8 @@ module Control(
 			end
 
 			else if(instruction[17:14] == JL) begin
-				//JL:
-				if (flags[2] || flags[3]) begin
+				//JL: low or negative
+				if (Low || Negative) begin
 					BuffCtrl[10] <= 1;
 					BuffCtrl[5]	 <= 0;
 					BuffCtrl[9]	 <= 0;
@@ -417,8 +427,8 @@ module Control(
 			end
 
 			else if(instruction[17:14] == JLE) begin
-				//JLE:
-				if (flags[2] || flags[3] || flags[1]) begin
+				//JLE: low, negative, or zero
+				if (Low || Negative || Zero) begin
 					BuffCtrl[10] <= 1;
 					BuffCtrl[5]	 <= 0;
 					BuffCtrl[9]	 <= 0;
@@ -438,8 +448,8 @@ module Control(
 			end
 
 			else if(instruction[17:14] == JNE) begin
-				//JNE:
-				if (!flags[1]) begin
+				//JNE: not zero
+				if (!Zero) begin
 					BuffCtrl[10] <= 1;
 					BuffCtrl[5]	 <= 0;
 					BuffCtrl[9]	 <= 0;
@@ -460,7 +470,7 @@ module Control(
 
 			else if(instruction[17:14] == JE) begin
 				//JE:
-				if (flags[1]) begin
+				if (Zero) begin
 					BuffCtrl[10] <= 1;
 					BuffCtrl[5]	 <= 0;
 					BuffCtrl[9]	 <= 0;

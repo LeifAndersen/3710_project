@@ -93,10 +93,10 @@ module Top(
 	Incrementer PCINCR(pc, pcPlus1);
 	
 	// alu
-    ALU ALUinstance(aBus, bBus, aluOp, aluC, flags[0], flags[1], flags[2], flags[3]);
+    ALU ALUinstance(aBus, bBus, aluOp, aluC, flags[3], flags[2], flags[1], flags[0]);
 
 	// flag reg
-    FlagRegister FlagReg(reset, CLK_50MHZ, flags[0], flags[1], flags[2], flags[3], flagWrite, flagsToControl[0], flagsToControl[1], flagsToControl[2], flagsToControl[3]);
+    FlagRegister FlagReg(reset, CLK_50MHZ, flags[3], flags[2], flags[1], flags[0], flagWrite, flagsToControl[3], flagsToControl[2], flagsToControl[1], flagsToControl[0]);
 
     // regfile
     Register RegisterFile(CLK_50MHZ, destSel, srcSel, destSel, destSel2, regWriteEn, regWriteEn2, reset, writeBus, writeBus2, regTo1, regTo2);

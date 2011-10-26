@@ -24,14 +24,14 @@ module FlagRegister(
 		input reset,
 		input clk,
 		input FlagIn,
-		input ZeroIn,
 		input LowIn,
 		input NegativeIn,
+		input ZeroIn,
 		input enable,
 		output reg Flag,
-		output reg Zero,
 		output reg Low,
-		output reg Negative
+		output reg Negative,
+		output reg Zero
 	);
 
 always@(posedge clk)
