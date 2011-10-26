@@ -3,22 +3,17 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="U:/3710/3710/CPU/testdatapath_isim_beh.wdb" id="1" type="auto">
+      <db_ref path="C:/Users/Daniel/3710/CPU/testdatapath_isim_beh.wdb" id="1" type="auto">
          <top_modules>
             <top_module name="glbl" />
             <top_module name="testdatapath" />
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="23" />
+   <WVObjectSize size="26" />
    <wvobject fp_name="/testdatapath/uut/reset" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">reset</obj_property>
       <obj_property name="ObjectShortName">reset</obj_property>
-   </wvobject>
-   <wvobject fp_name="/testdatapath/uut/aluC" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">aluC[15:0]</obj_property>
-      <obj_property name="ObjectShortName">aluC[15:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/testdatapath/uut/regTo2" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">regTo2[15:0]</obj_property>
@@ -78,19 +73,34 @@
       <obj_property name="ObjectShortName">aBus[15:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
+   <wvobject fp_name="/testdatapath/uut/ALUinstance/A" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">A[15:0]</obj_property>
+      <obj_property name="ObjectShortName">A[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
    <wvobject fp_name="/testdatapath/uut/bBus" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">bBus[15:0]</obj_property>
       <obj_property name="ObjectShortName">bBus[15:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
+   <wvobject fp_name="/testdatapath/uut/ALUinstance/B" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">B[15:0]</obj_property>
+      <obj_property name="ObjectShortName">B[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/aluC" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">aluC[15:0]</obj_property>
+      <obj_property name="ObjectShortName">aluC[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/ALUinstance/C" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">C[15:0]</obj_property>
+      <obj_property name="ObjectShortName">C[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
    <wvobject fp_name="/testdatapath/uut/MasterControl/Addr" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">Addr[15:0]</obj_property>
       <obj_property name="ObjectShortName">Addr[15:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/testdatapath/uut/instruction" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">instruction[17:0]</obj_property>
-      <obj_property name="ObjectShortName">instruction[17:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/testdatapath/uut/MasterControl/instType" type="array" db_ref_id="1">
@@ -117,5 +127,10 @@
       <obj_property name="ElementShortName">BuffCtrl[21:0]</obj_property>
       <obj_property name="ObjectShortName">BuffCtrl[21:0]</obj_property>
       <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/instruction" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">instruction[17:0]</obj_property>
+      <obj_property name="ObjectShortName">instruction[17:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
 </wave_config>
