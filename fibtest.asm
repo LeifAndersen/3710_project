@@ -27,4 +27,4 @@ ERRORLOOP:				# otherwise, fall through and display error message
 	ADD $4, 0xDEAD
 
 END:
-	AND $0, $0
+	MOV [8192], $4
