@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 module Control(
 	input 		[17:0] 	instruction,
-	input 		 [3:0] 	flags,
+	input 		 [2:0] 	flags,
 	output reg 	 [3:0] 	ALUOp,
 	output reg			WriteEn1,
 	output reg			WriteEn2,
@@ -42,7 +42,6 @@ module Control(
 	wire Low;
 	wire Negative;
 	wire Zero;
-	assign Flag = flags[3];
 	assign Low = flags[2];
 	assign Negative = flags[1];
 	assign Zero = flags[0];
