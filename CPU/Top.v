@@ -55,8 +55,8 @@ module Top(
 	wire  [3:0] destSel;
 	wire  [3:0] destSel2;
 	wire  [3:0] srcSel;
-	wire  [3:0] flags;
-	wire  [3:0] flagsToControl;
+	wire  [2:0] flags;
+	wire  [2:0] flagsToControl;
 	wire 		flagWrite;
 	wire 		regWriteEn;
 	wire 		regWriteEn2;
@@ -93,10 +93,10 @@ module Top(
 	Incrementer PCINCR(pc, pcPlus1);
 	
 	// alu
-    ALU ALUinstance(aBus, bBus, aluOp, aluC, flags[3], flags[2], flags[1], flags[0]);
+    ALU ALUinstance(aBus, bBus, aluOp, aluC, flags[2], flags[1], flags[0]);
 
 	// flag reg
-    FlagRegister FlagReg(reset, CLK_50MHZ, flags[3], flags[2], flags[1], flags[0], flagWrite, flagsToControl[3], flagsToControl[2], flagsToControl[1], flagsToControl[0]);
+    FlagRegister FlagReg(reset, CLK_50MHZ, flags[2], flags[1], flags[0], flagWrite, flagsToControl[2], flagsToControl[1], flagsToControl[0]);
 
     // regfile
     Register RegisterFile(CLK_50MHZ, destSel, srcSel, destSel, destSel2, regWriteEn, regWriteEn2, reset, writeBus, writeBus2, regTo1, regTo2);
