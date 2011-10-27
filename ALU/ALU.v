@@ -139,7 +139,7 @@ module ALU(
 
 		LSH:
 		begin
-			C = A << B;
+			C = B << A;
 			if (C == 0)
 				Zero = 1;
 			else
@@ -152,7 +152,7 @@ module ALU(
 
 		RSH:
 		begin
-			C = A >> B;
+			C = B >> A;
 			if (C == 0)
 				Zero = 1;
 			else
@@ -165,7 +165,7 @@ module ALU(
 
 		ARSH:
 		begin
-			C = $signed(A) >>> B[3:0];
+			C = $signed(B) >>> A[3:0];
 			if (C == 0)
 				Zero = 1;
 			else
