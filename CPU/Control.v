@@ -133,7 +133,7 @@ module Control(
 				end
 			end
 			
-			if (instruction[7:4] == CMP ||
+			else if (instruction[7:4] == CMP ||
 				instruction[7:4] == CMPR) begin
 				//Compares which should not write back
 				BuffCtrl[3]  <= 0;
@@ -287,7 +287,7 @@ module Control(
 				end
 			end
 			
-			if (instruction[15:12] == CMP ||
+			else if (instruction[15:12] == CMP ||
 				instruction[15:12] == CMPR) begin
 				//Compares which should not write back
 				BuffCtrl[17:16] <= 2'b0;
