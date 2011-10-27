@@ -20,10 +20,14 @@
 //////////////////////////////////////////////////////////////////////////////////
 module DrawUnit(
 	input clk,
+	input vgaClk,
 	input reset,
 	input we,
 	input data,
-	output full
+	output full,
+	output reg[2:0] color2, //{R, G, B}
+	output reg hsync,
+	output reg vsync
     );
 
 reg[9:0] rdPtr; //Queue index for painter into PRAM
@@ -42,14 +46,33 @@ wire vgaG;
 wire vgaB;
 wire[2:0] vgaS;
 
+wire pixelAddr2;
+assign pixelAddr2 = vgaAddr - 36800;
+
 always@(posedge clk)
 begin
 	if (!full) //Don't write to PRAM queue while it's full.
-		if (wrtPtr != rdPtr - 1) //Make sure write can't lap read (that means overwriting start of queue instead of adding to end).
+		if ((wrtPtr != rdPtr - 1) && we == 1) //Make sure write can't lap read (that means overwriting start of queue instead of adding to end).
 			begin
 				wrtPtr <= wrtPtr + 1;
 				PRAMWe <= 1;
 			end
+		else
+			begin
+				PRAMWe <= 0;
+			end
+	
+	//4 buffers memory controller
+	if (pixelAddr >= 36800)
+		begin
+			pixelWe1 <= 0;
+			pixelWe2 <= pixelWe;
+		end
+	else
+		begin
+			pixelWe1 <= pixelWe;
+			pixelWe2 <= 0;
+		end
 end
 
 
@@ -80,7 +103,7 @@ BlockRam #(.DATA(16),.ADDR(10),.SIZE(1024),.FILE("init.txt")) PRAM(
 
 BlockRam #(.DATA(1),.ADDR(16),.SIZE(36864),.FILE("init.txt")) redBuffer(  //115 horizontal lines of pixels, out of the full 120.
 	.clka(clk),
-	.wea(pixelWe),
+	.wea(pixelWe1),
 	.web(0),
 	.addra(pixelAddr),
 	.addrb(vgaAddr),
@@ -92,7 +115,7 @@ BlockRam #(.DATA(1),.ADDR(16),.SIZE(36864),.FILE("init.txt")) redBuffer(  //115 
 	 
 BlockRam #(.DATA(1),.ADDR(16),.SIZE(36864),.FILE("init.txt")) greenBuffer(  //115 horizontal lines of pixels, out of the full 120.
 	.clka(clk),
-	.wea(pixelWe),
+	.wea(pixelWe1),
 	.web(0),
 	.addra(pixelAddr),
 	.addrb(vgaAddr),
@@ -104,7 +127,7 @@ BlockRam #(.DATA(1),.ADDR(16),.SIZE(36864),.FILE("init.txt")) greenBuffer(  //11
 	 
 BlockRam #(.DATA(1),.ADDR(16),.SIZE(36864),.FILE("init.txt")) blueBuffer(  //115 horizontal lines of pixels, out of the full 120.
 	.clka(clk),
-	.wea(pixelWe),
+	.wea(pixelWe1),
 	.web(0),
 	.addra(pixelAddr),
 	.addrb(vgaAddr),
@@ -114,18 +137,28 @@ BlockRam #(.DATA(1),.ADDR(16),.SIZE(36864),.FILE("init.txt")) blueBuffer(  //115
 	.doutb(vgaB)
 	 );
 	 
-BlockRam #(.DATA(3),.ADDR(11),.SIZE(1600),.FILE("init.txt")) specialBuffer(  //115 horizontal lines of pixels, out of the full 120.
+BlockRam #(.DATA(3),.ADDR(11),.SIZE(1600),.FILE("init.txt")) specialBuffer(  //5 horizontal lines of pixels, out of the full 120.
 	.clka(clk),
-	.wea(pixelWe),
+	.wea(pixelWe2),
 	.web(0),
-	.addra(pixelAddr),
-	.addrb(vgaAddr[10:0]),
+	.addra(pixelAddr2),
+	.addrb(vgaAddr),
 	.dina(color[2:0]),
 	.dinb(0),
 	.douta(0),
 	.doutb(vgaS)
 	 );
 
-
+module VGA_Controller(
+	.clk(vgaClk),  //Expected to be 25MHz.
+	.reset(reset),
+	.r(vgaR),
+	.g(vgaG),
+	.b(vgaB),
+	.fbAddr(vgaAddr), //Frame buffer address.  TOBO done.
+	.color(color2), //{R, G, B}
+	.hsync(hsync),
+	.vsync(vsync)
+    );
 
 endmodule

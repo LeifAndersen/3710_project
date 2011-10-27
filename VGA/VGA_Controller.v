@@ -24,6 +24,7 @@ module VGA_Controller(
 	input r,
 	input g,
 	input b,
+	output reg[17:0] fbAddr, //Address into frame buffer.
 	output reg[2:0] color, //{R, G, B}
 	output reg hsync,
 	output reg vsync
@@ -63,9 +64,10 @@ begin
 			totalPix <= 1;
 			Henable <= 0;
 			color <= 0;
+			fbAddr <= 0;//ADDED THIS
 		end
 	else
-	begin
+	begin	
 		case(totalPix)
 			VTpw:
 			begin
@@ -82,6 +84,7 @@ begin
 				Henable <= 0;
 				hsync <= 0;
 				totalPix <= totalPix + 1;
+				fbAddr <= 0;
 			end
 			VTs: //One full Line is complete.
 			begin
@@ -103,7 +106,10 @@ begin
 				Tbp+Tpw: //Time to start outputting colors, this is pixel 1.
 				begin
 					if(Henable)
+					begin
 						color <= {r,g,b};
+						fbAddr <= fbAddr + 1;
+					end
 					else
 						color <= 0;
 					pixCount <= pixCount + 1;
@@ -112,6 +118,8 @@ begin
 				begin
 					color <= 0;
 					pixCount <= pixCount + 1;
+					//if (Henable)
+						//fbAddr <= fbAddr + 1;
 				end
 				Ts: //One full Line is complete.
 				begin
@@ -119,7 +127,11 @@ begin
 					pixCount <= 1;
 				end
 				default:
+				begin
+					if (pixCount >= 144 && pixCount <= 784 && Henable)
+						fbAddr <= fbAddr + 1;
 					pixCount <= pixCount + 1; //Keep counting
+				end
 			endcase
 		end
 		

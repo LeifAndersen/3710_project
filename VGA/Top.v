@@ -24,6 +24,7 @@ module Top(
 	input rp, //East
 	input gp, //South
 	input bp, //West
+	output[17:0] fbAddr,
 	output[2:0] color,
 	output hsync,
 	output vsync
@@ -46,11 +47,12 @@ begin
 end
 
 VGA_Controller v(
-		.clk(pixClk), 
-		.reset(reset), 
-		.r(r), 
-		.g(g), 
+		.clk(pixClk),
+		.reset(reset),
+		.r(r),
+		.g(g),
 		.b(b),
+		.fbAddr(fbAddr),
 		.color(color),
 		.hsync(hsync),
 		.vsync(vsync)
