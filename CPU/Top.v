@@ -55,8 +55,8 @@ module Top(
 	wire  [3:0] destSel;
 	wire  [3:0] destSel2;
 	wire  [3:0] srcSel;
-	wire  [3:0] flags;
-	wire  [3:0] flagsToControl;
+	wire  [2:0] flags;
+	wire  [2:0] flagsToControl;
 	wire 		flagWrite;
 	wire 		regWriteEn;
 	wire 		regWriteEn2;
@@ -89,14 +89,14 @@ module Top(
 	Decrementer DECR(bBus, decrTo19);
 	
 	// PC
-	ProgramCounter PC(CLK_50MHZ, pcWriteBus, pc);
+	ProgramCounter PC(reset, CLK_50MHZ, pcWriteBus, pc);
 	Incrementer PCINCR(pc, pcPlus1);
 	
 	// alu
-    ALU ALUinstance(aBus, bBus, aluOp, aluC, flags[0], flags[1], flags[2], flags[3]);
+    ALU ALUinstance(aBus, bBus, aluOp, aluC, flags[2], flags[1], flags[0]);
 
 	// flag reg
-    FlagRegister FlagReg(CLK_50MHZ, flags[0], flags[1], flags[2], flags[3], flagWrite, flagsToControl[0], flagsToControl[1], flagsToControl[2], flagsToControl[3]);
+    FlagRegister FlagReg(reset, CLK_50MHZ, flags[2], flags[1], flags[0], flagWrite, flagsToControl[2], flagsToControl[1], flagsToControl[0]);
 
     // regfile
     Register RegisterFile(CLK_50MHZ, destSel, srcSel, destSel, destSel2, regWriteEn, regWriteEn2, reset, writeBus, writeBus2, regTo1, regTo2);
@@ -114,6 +114,6 @@ module Top(
 	Control MasterControl(instruction, flagsToControl, aluOp, regWriteEn, regWriteEn2, immTo0, buffCtrl, destSel, destSel2, srcSel, flagWrite, memWriteEn, addr);
 
 	// lcd controller
-	lcd_ctrl lcdctrl(CLK_50MHZ, reset, writeBus, SF_D, LCD_E, LCD_RS, LCD_RW);
+	lcd_ctrl lcdctrl(CLK_50MHZ, reset, aluC, SF_D, LCD_E, LCD_RS, LCD_RW);
 
 endmodule

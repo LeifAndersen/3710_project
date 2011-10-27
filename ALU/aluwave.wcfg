@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="C:/Users/Daniel/3710/ALU/ALU_tests_isim_beh.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="ALU_tests" />
+            <top_module name="glbl" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="10" />
+   <wvobject fp_name="/ALU_tests/C" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">C[15:0]</obj_property>
+      <obj_property name="ObjectShortName">C[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/ALU_tests/Flag" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">Flag</obj_property>
+      <obj_property name="ObjectShortName">Flag</obj_property>
+   </wvobject>
+   <wvobject fp_name="/ALU_tests/Low" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">Low</obj_property>
+      <obj_property name="ObjectShortName">Low</obj_property>
+   </wvobject>
+   <wvobject fp_name="/ALU_tests/Negative" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">Negative</obj_property>
+      <obj_property name="ObjectShortName">Negative</obj_property>
+   </wvobject>
+   <wvobject fp_name="/ALU_tests/Zero" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">Zero</obj_property>
+      <obj_property name="ObjectShortName">Zero</obj_property>
+   </wvobject>
+   <wvobject fp_name="/ALU_tests/A" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">A[15:0]</obj_property>
+      <obj_property name="ObjectShortName">A[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/ALU_tests/B" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">B[15:0]</obj_property>
+      <obj_property name="ObjectShortName">B[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/ALU_tests/Opcode" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">Opcode[7:0]</obj_property>
+      <obj_property name="ObjectShortName">Opcode[7:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/ALU_tests/CarryIn" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">CarryIn</obj_property>
+      <obj_property name="ObjectShortName">CarryIn</obj_property>
+   </wvobject>
+   <wvobject fp_name="/ALU_tests/flags" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">flags[4:0]</obj_property>
+      <obj_property name="ObjectShortName">flags[4:0]</obj_property>
+   </wvobject>
+</wave_config>
