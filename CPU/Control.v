@@ -38,7 +38,6 @@ module Control(
 	`include "InstructionTypes.v"
 	
 	//translate flags for easy reading
-	wire Flag;
 	wire Low;
 	wire Negative;
 	wire Zero;
@@ -405,7 +404,7 @@ module Control(
 
 			else if(instruction[17:14] == JL) begin
 				//JL: low or negative
-				if (Low || Negative) begin
+				if (Low == 1'b1 || Negative == 1'b1) begin
 					BuffCtrl[10] <= 1;
 					BuffCtrl[5]	 <= 0;
 					BuffCtrl[9]	 <= 0;
@@ -427,7 +426,7 @@ module Control(
 
 			else if(instruction[17:14] == JLE) begin
 				//JLE: low, negative, or zero
-				if (Low || Negative || Zero) begin
+				if (Low == 1'b1 || Negative == 1'b1 || Zero == 1'b1) begin
 					BuffCtrl[10] <= 1;
 					BuffCtrl[5]	 <= 0;
 					BuffCtrl[9]	 <= 0;
@@ -448,7 +447,7 @@ module Control(
 
 			else if(instruction[17:14] == JNE) begin
 				//JNE: not zero
-				if (!Zero) begin
+				if (!(Zero == 1'b1)) begin
 					BuffCtrl[10] <= 1;
 					BuffCtrl[5]	 <= 0;
 					BuffCtrl[9]	 <= 0;
@@ -469,7 +468,7 @@ module Control(
 
 			else if(instruction[17:14] == JE) begin
 				//JE:
-				if (Zero) begin
+				if (Zero == 1'b1) begin
 					BuffCtrl[10] <= 1;
 					BuffCtrl[5]	 <= 0;
 					BuffCtrl[9]	 <= 0;

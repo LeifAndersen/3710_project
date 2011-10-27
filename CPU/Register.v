@@ -1,9 +1,9 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: Potato
+// Company: 
 // Engineer: 
 // 
-// Create Date:    16:21:14 09/08/2011 
+// Create Date:    16:50:58 10/27/2011 
 // Design Name: 
 // Module Name:    Register 
 // Project Name: 
@@ -18,33 +18,27 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-
-
-module FlagRegister(
-		input reset,
-		input clk,
-		input LowIn,
-		input NegativeIn,
-		input ZeroIn,
-		input enable,
-		output reg Low,
-		output reg Negative,
-		output reg Zero
-	);
-
-always@(posedge clk)
-begin
-	if (reset == 1'b1) begin
-		Zero = 0;
-		Low = 0;
-		Negative = 0;
-	end
-	else begin
-		if (enable == 1'b1) begin
-			Zero = ZeroIn;
-			Low = LowIn;
-			Negative = NegativeIn;
+module Register16(
+    input reset,
+    input clk,
+	input en,
+    input [15:0] D,
+    output reg [15:0] Q
+    );
+	
+	always@(posedge clk) begin
+		if (reset == 1'b1) begin
+			Q = 0;
+		end
+		else begin
+			if (en == 1'b1) begin
+				Q = D;
+			end
+			else begin
+				Q = Q;
+			end
 		end
 	end
-end
+
+
 endmodule
