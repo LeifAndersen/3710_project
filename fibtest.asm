@@ -19,19 +19,12 @@ FIBLIOOP:				# Fun stuff.  Prints out the value of fib after running 14 times
 	JNE FIBLIOOP
 
 WASTELOOP:				# 1984 is now the current fib value in hex.  Hold it on the write line
-	ADD $2, 0			# (put the value we got on the write line so the LCD shows it)
-	ADD $2, 0
-	ADD $2, 0
-	ADD $2, 0
-	ADD $2, 0
-	ADD $2, 0
-	ADD $2, 0
-	ADD $2, 0
 	MOV $4, [$2]		# Go to the memory location with address of the final number of the fib we generated
 	CMP $4, $2			# if it was correct, it should have loaded 1984 from address 1984 and thus should be equal to 1984
-	JE WASTELOOP
+	JE END
 
 ERRORLOOP:				# otherwise, fall through and display error message
 	ADD $4, 0xDEAD
-	CMP $4, 0xDEAD
-	JE ERRORLOOP
+
+END:
+	AND $0, $0
