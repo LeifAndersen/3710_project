@@ -10,7 +10,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="39" />
+   <WVObjectSize size="41" />
    <wvobject fp_name="divider45" type="divider">
       <obj_property name="label">Globals</obj_property>
       <obj_property name="DisplayName">label</obj_property>
@@ -33,6 +33,20 @@
    <wvobject fp_name="/testdatapath/uut/instruction" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">instruction[17:0]</obj_property>
       <obj_property name="ObjectShortName">instruction[17:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/lcd_data" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">lcd_data[15:0]</obj_property>
+      <obj_property name="ObjectShortName">lcd_data[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/lcd_en" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">lcd_en</obj_property>
+      <obj_property name="ObjectShortName">lcd_en</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/lcdreg_to_lcd" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">lcdreg_to_lcd[15:0]</obj_property>
+      <obj_property name="ObjectShortName">lcdreg_to_lcd[15:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="divider35" type="divider">
@@ -177,10 +191,6 @@
    <wvobject fp_name="/testdatapath/uut/MasterControl/instType" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">instType[2:0]</obj_property>
       <obj_property name="ObjectShortName">instType[2:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/testdatapath/uut/MasterControl/Flag" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">Flag</obj_property>
-      <obj_property name="ObjectShortName">Flag</obj_property>
    </wvobject>
    <wvobject fp_name="/testdatapath/uut/MasterControl/Low" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">Low</obj_property>

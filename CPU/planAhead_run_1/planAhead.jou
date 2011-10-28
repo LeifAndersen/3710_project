@@ -1,0 +1,23 @@
+#-----------------------------------------------------------
+# PlanAhead v12.2
+# Build 65285 by hdbuild on Wed Jun 23 14:55:19 PDT 2010
+# Start of session at: Thu Oct 27 18:36:38 2011
+# Process ID: 2512
+# Log file: U:/3710/3710/CPU/planAhead_run_1/planAhead.log
+# Journal file: U:/3710/3710/CPU/planAhead_run_1/planAhead.jou
+#-----------------------------------------------------------
+source C:/Xilinx/12.2/ISE_DS/PlanAhead/scripts/sdc.tcl
+start_gui -source U:/3710/3710/CPU/pa.fromNcd.tcl
+# create_project -name CPU -dir "U:/3710/3710/CPU/planAhead_run_1" -part xc3s500efg320-4
+# set srcset [get_property srcset [current_run -impl]]
+# set_property design_mode GateLvl $srcset
+# set_property edif_top_file "U:/3710/3710/CPU/Top.ngc" [ get_property srcset [ current_run ] ]
+# add_files -norecurse { {U:/3710/3710/CPU} }
+# set_param project.paUcfFile  "Top.ucf"
+# add_files "Top.ucf" -fileset [get_property constrset [current_run]]
+# open_netlist_design
+# read_xdl -file "U:/3710/3710/CPU/Top.ncd"
+# if {[catch {read_twx -name results_1 -file "U:/3710/3710/CPU/Top.twx"} eInfo]} {
+#    puts "WARNING: there was a problem importing \"U:/3710/3710/CPU/Top.twx\": $eInfo"
+# }
+exit
