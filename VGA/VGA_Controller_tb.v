@@ -32,6 +32,7 @@ module VGA_Controller_tb;
 	reg b;
 	
 	// Outputs
+	wire[17:0] fbAddr;
 	wire[2:0] color;
 	wire hsync;
 	wire vsync;
@@ -43,6 +44,7 @@ module VGA_Controller_tb;
 		.rp(r), 
 		.gp(g), 
 		.bp(b),
+		.fbAddr(fbAddr),
 		.color(color),
 		.hsync(hsync),
 		.vsync(vsync)
