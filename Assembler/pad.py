@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# usage
+#	./pad.py AssembledFile NumOfAddresses
 import sys
 from os.path import splitext
 
