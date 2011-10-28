@@ -103,17 +103,35 @@ module Top(
 	
 	// memory
 	// some inputs are always 0.
+	wire [15:0] data_to_controller;
+	wire [17:0] instruction_to_controller;
+	wire [15:0] data_to_main;
+	wire [15:0] data_addr_to_main;
+	wire 		data_wr_en_to_main;
+	wire [17:0] inst_addr_to_main;
+	wire [15:0] pram_out;
+	wire 		pram_wr_en;
+	wire 		lcd_en;
+	wire [15:0] lcd_data;
+	wire [15:0] lcdreg_to_lcd;
+	
 	wire memWriteEnA;
 	assign memWriteEnA = 0;
 	wire [15:0] memWriteDataA;
 	assign memWriteDataA = 16'b0;
 	// a is instructions, b is data
-	BlockRam #(.DATA(18), .ADDR(14), .SIZE(12288), .FILE("init.txt")) MainMemory(CLK_50MHZ, memWriteEnA, memWriteEn, pc, memAddrBus, memWriteDataA, memWriteBus, instruction, memOut);
+	BlockRam #(.DATA(18), .ADDR(14), .SIZE(12288), .FILE("init.txt")) MainMemory(CLK_50MHZ, memWriteEnA, data_wr_en_to_main, inst_addr_to_main, data_addr_to_main, memWriteDataA, data_to_main, instruction_to_controller, data_to_controller);
+	
+	// Memory controller
+	MemoryController sadface(memWriteBus, memAddrBus, memWriteEn, pc, data_to_controller, instruction_to_controller, memOut, instruction, data_to_main, data_addr_to_main, data_wr_en_to_main, inst_addr_to_main, pram_out, pram_wr_en, lcd_data, lcd_en);
 	
 	// control
 	Control MasterControl(instruction, flagsToControl, aluOp, regWriteEn, regWriteEn2, immTo0, buffCtrl, destSel, destSel2, srcSel, flagWrite, memWriteEn, addr);
 
+	// lcd register
+	Register16 lcdReg(reset, CLK_50MHZ, lcd_en, lcd_data, lcdreg_to_lcd);
+
 	// lcd controller
-	lcd_ctrl lcdctrl(CLK_50MHZ, reset, aluC, SF_D, LCD_E, LCD_RS, LCD_RW);
+	lcd_ctrl lcdctrl(CLK_50MHZ, reset, lcdreg_to_lcd, SF_D, LCD_E, LCD_RS, LCD_RW);
 
 endmodule
