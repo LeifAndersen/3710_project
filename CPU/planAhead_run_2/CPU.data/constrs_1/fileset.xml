@@ -2,7 +2,7 @@
 <DARoots Version="1" Minor="6">
 	<FileSet Name="constrs_1" Type="Constrs" RelSrcDir="$PSRCDIR/constrs_1">
 		<Filter Type="Constrs"/>
-		<Root Path="C:/Users/Daniel/3710/CPU/s3e.ucf">
+		<Root Path="C:/Users/Daniel/3710/CPU/Top.ucf">
 		</Root>
 		<Config>
 			<Option Name="TargetPart" Val="xc3s500efg320-4"/>
