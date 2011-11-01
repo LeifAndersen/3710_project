@@ -24,7 +24,9 @@ WASTELOOP:				# 1984 is now the current fib value in hex.  Hold it on the write 
 	JE END
 
 ERRORLOOP:				# otherwise, fall through and display error message
-	MOV $4, 0xDEAD
+	MOV $4, 0xAD
+	LSH $4, 8
+	ADD $4, 0xDE
 
 END:
 	MOV [8192], $4
