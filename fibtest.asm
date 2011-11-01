@@ -5,7 +5,7 @@
 	MOV $5, 0x84
 	ADD $0, $5
 	MOV [0x1984], $0
-	MOV $1, 14			# counter
+	MOV $1, 12			# counter
 	MOV $2, 7			# first
 	MOV $3, 13			# second
 
