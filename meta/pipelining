@@ -1,0 +1,15 @@
+			_________       _________       _________       _________       _________
+		____|		|_______|		|_______|		|_______|		|_______|		|___
+MOV $4, 10	 [     IFEX     ][      MW      ]
+ADD $5, $4	 				 [     IFEX     ][      MW      ]
+
+state 0:
+	Read instruction
+	Set inputs (to memory)
+state 1:
+	info goes into memory (for a write or push)
+	comes out of memory (for a read or jump or pop)
+
+
+
+
