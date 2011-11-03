@@ -139,36 +139,37 @@
     ALUOp       = 15:12;
     DestSel     = 15;
     DestSel2    = 0;
-    SrcSel      = 0;
+    SrcSel      = 13;
     BuffersOn   = 1, 16;
-    BuffersOff  = 0, 6, 2, 7, 3, 13, 8, 11, 4, 5, 20, 19, 17, 19;
+    BuffersOff  = 0, 6, 2, 7, 3, 13, 4, 5, 20, 19, 17, 19;
     immediate   = 0;
     Addr        = 13:0;
 
-    CALL:
-        BuffersOn   = 15;
+    CALL:							// also pushes the PC to mem at the stack pointer
+        BuffersOn   = 8, 11, 15;
         BuffersOff  = 12, 16, 14, 10;
         WriteEn1    = 0;
-        MemWrite    = 0;
+        MemWrite    = 1;
         MemRead		= 0;
 
     MOVMRI:
+
         BuffersOn   = 12, 16;
-        BuffersOff  = 15, 14, 10;
+        BuffersOff  = 15, 14, 10, 11;
         WriteEn1    = 1;
         MemWrite    = 0;
         MemRead		= 1;
 
     MOVRMI:
         BuffersOn   = 16, 10;
-        BuffersOff  = 12, 15, 14;
+        BuffersOff  = 12, 15, 14, 11;
         WriteEn1    = 0;
         MemWrite    = 1;
         MemRead		= 0;
 
     RET:
         BuffersOn   = 14;
-        BuffersOff  = 12, 16, 15, 10;
+        BuffersOff  = 12, 16, 15, 10, 11;
         WriteEn1    = 0;
         MemWrite    = 0;
         MemRead		= 0;
@@ -177,12 +178,12 @@
     	MemRead		= 0;
         if (low || signed) begin
             BuffersOn   = 15;
-            BuffersOff  = 12, 16, 14, 10;
+            BuffersOff  = 12, 16, 14, 10, 11;
             WriteEn1    = 0;
             MemWrite    = 0;
         end else begin
             BuffersOn   = 16;
-            BuffersOff  = 12, 15, 14, 10;
+            BuffersOff  = 12, 15, 14, 10, 11;
             WriteEn1    = 0;
             MemWrite    = 0;
         end
@@ -191,12 +192,12 @@
     	MemRead		= 0;
         if (low || signed || zero) begin
             BuffersOn   = 15;
-            BuffersOff  = 12, 16, 14, 10;
+            BuffersOff  = 12, 16, 14, 10, 11;
             WriteEn1    = 0;
             MemWrite    = 0;
         end else begin
             BuffersOn   = 16;
-            BuffersOff  = 12, 15, 14, 10;
+            BuffersOff  = 12, 15, 14, 10, 11;
             WriteEn1    = 0;
             MemWrite    = 0;
         end
@@ -205,12 +206,12 @@
     	MemRead		= 0;
         if (!zero) begin
             BuffersOn   = 15;
-            BuffersOff  = 12, 16, 14, 10;
+            BuffersOff  = 12, 16, 14, 10, 11;
             WriteEn1    = 0;
             MemWrite    = 0;
         end else begin
             BuffersOn   = 16;
-            BuffersOff  = 12, 15, 14, 10;
+            BuffersOff  = 12, 15, 14, 10, 11;
             WriteEn1    = 0;
             MemWrite    = 0;
         end
@@ -219,12 +220,12 @@
     	MemRead		= 0;
         if (zero) begin
             BuffersOn   = 15;
-            BuffersOff  = 12, 16, 14, 10;
+            BuffersOff  = 12, 16, 14, 10, 11;
             WriteEn1    = 0;
             MemWrite    = 0;
         end else begin
             BuffersOn   = 16;
-            BuffersOff  = 12, 15, 14, 10;
+            BuffersOff  = 12, 15, 14, 10, 11;
             WriteEn1    = 0;
             MemWrite    = 0;
         end
