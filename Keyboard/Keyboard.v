@@ -74,22 +74,28 @@ begin
 	end
 	
 	if(buttons[0] == 1'b1) begin
-		up = up + 1;
+		if(up != 16'b1111111111111111)
+			up = up + 1;
 	end
 	if(buttons[1] == 1'b1) begin
-		down = down + 1;
+		if(down != 16'b1111111111111111)
+			down = down + 1;
 	end
 	if(buttons[2] == 1'b1) begin
-		left = left + 1;
+		if(left != 16'b1111111111111111)
+				left = left + 1;
 	end
 	if(buttons[3] == 1'b1) begin
-		right = right + 1;
+		if(right != 16'b1111111111111111)
+			right = right + 1;
 	end
 	if(buttons[4] == 1'b1) begin
-		a = a + 1;
+		if(a != 16'b1111111111111111)
+			a = a + 1;
 	end
 	if(buttons[5] == 1'b1) begin
-		b = b + 1;
+		if(b != 16'b1111111111111111)
+			b = b + 1;
 	end
 end
 
