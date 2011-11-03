@@ -1,0 +1,306 @@
+// I-Capable with no immediate
+0000-type
+    ALUOp       = 7:4
+    DestSel     = 11:8
+    DestSel2    = 11:8
+    SrcSel      = 3:0
+    BuffersOn   = 1, 2, 9
+    BuffersOff  = 0, 5, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21
+    MemWrite    = 0;
+    immediate   = 0;
+    Addr        = 0;
+
+    ADD-ARSH
+        BuffersOff  = 3, 6
+        FlagWrite   = 1;
+        if (11:8 == 12 || 11:8 == 13) begin
+            WriteEn1    = 0
+            WriteEn2    = 1
+            BuffersOn   = 7
+            BuffersOff  = 4
+        end else begin
+            WriteEn1    = 1
+            WriteEn2    = 0
+            BuffersOn   = 4
+            BuffersOff  = 7
+        end
+
+    MUL-FMUL
+        // TODO
+
+    MOVR
+        BuffersOff  = 4, 7
+        FlagWrite   = 0;
+        if (11:8 == 12 || 11:8 == 13) begin
+            WriteEn1    = 0
+            WriteEn2    = 1
+            BuffersOn   = 6
+            BuffersOff  = 3
+        end else begin
+            WriteEn1    = 1
+            WriteEn2    = 0
+            BuffersOn   = 3
+            BuffersOff  = 6
+        end
+
+// I-Incapable
+0001-type:
+    ALUOp       = 7:4
+    DestSel     = 11:8
+    DestSel2    = 11:8
+    SrcSel      = 3:0
+    BuffersOn   = 1, 2, 9
+    BuffersOff  = 0, 3, 4, 6, 7, 10, 11, 12, 14, 16, 17, 18, 19, 20, 21
+    immediate   = 0;
+    immediate14 = 0;
+    FlagWrite   = 0;
+    Addr        = 0;
+
+    MOVMR:
+        MemWrite    = 0;
+        BuffersOn   = 13;
+        BuffersOff  = 15;
+        if (11:8 == 12 || 11:8 == 13) begin
+            WriteEn1    = 0
+            WriteEn2    = 1
+            BuffersOn   = 8
+            BuffersOff  = 5
+        end else begin
+            WriteEn1    = 1
+            WriteEn2    = 0
+            BuffersOn   = 5
+            BuffersOff  = 8
+        end
+
+    MOVRM:
+        MemWrite    = 1;
+        BuffersOn   = 13, 15;
+        BuffersOff  = 5, 8;
+        WriteEn1    = 0;
+        WriteEn2    = 0;
+
+// I-Capable with immediate
+0010-1111:
+    ALUOp       = 15:12
+    DestSel     = 11:8
+    DestSel2    = 11:8
+    SrcSel      = 3:0
+    BuffersOn   = 0, 2, 9
+    BuffersOff  = 1, 2, 3, 5, 6, 8, 10, 11, 12, 13, 14, 15, 18, 19, 20, 21
+    MemWrite    = 0;
+    immediate   = 7:0;
+    Addr        = 0;
+
+    ADD-ARSH
+        BuffersOff  = 16, 17
+        FlagWrite   = 1;
+        if (11:8 == 12 || 11:8 == 13) begin
+            WriteEn1    = 0
+            WriteEn2    = 1
+            BuffersOn   = 7
+            BuffersOff  = 4
+        end else begin
+            WriteEn1    = 1
+            WriteEn2    = 0
+            BuffersOn   = 4
+            BuffersOff  = 7
+        end
+
+    MUL-FMUL
+        // TODO
+
+    MOVR
+        BuffersOff  = 4, 7
+        FlagWrite   = 0;
+        if (11:8 == 12 || 11:8 == 13) begin
+            WriteEn1    = 0
+            WriteEn2    = 1
+            BuffersOn   = 17
+            BuffersOff  = 16
+        end else begin
+            WriteEn1    = 1
+            WriteEn2    = 0
+            BuffersOn   = 16
+            BuffersOff  = 17
+        end
+
+
+
+/* Special instructions */
+
+// 14-Bit immediate instructions
+0100-1011:
+    FlagWrite   = 0;
+    WriteEn2    = 0;
+    ALUOp       = 15:12;
+    DestSel     = 15;
+    DestSel2    = 0;
+    SrcSel      = 0;
+    BuffersOn   = 1, 12;
+    BuffersOff  = 0, 2, 3, 4, 6, 7, 8, 13, 14, 16, 17, 18, 19, 20, 21;
+    immediate   = 0;
+    Addr        = 13:0;
+
+    CALL:
+        BuffersOn   = 10;
+        BuffersOff  = 5, 9, 11, 15;
+        WriteEn1    = 0;
+        MemWrite    = 0;
+
+    MOVMRI:
+        BuffersOn   = 5, 9;
+        BuffersOff  = 10, 11, 15;
+        WriteEn1    = 1;
+        MemWrite    = 0;
+
+    MOVRMI:
+        BuffersOn   = 9, 15;
+        BuffersOff  = 5, 10, 11;
+        WriteEn1    = 0;
+        MemWrite    = 1;
+
+    RET:
+        BuffersOn   = 11;
+        BuffersOff  = 5, 9, 10, 15;
+        WriteEn1    = 0;
+        MemWrite    = 0;
+
+    JL:
+        if (low || signed) begin
+            BuffersOn   = 10;
+            BuffersOff  = 5, 9, 11, 15;
+            WriteEn1    = 0;
+            MemWrite    = 0;
+        end else begin
+            BuffersOn   = 9;
+            BuffersOff  = 5, 10, 11, 15;
+            WriteEn1    = 0;
+            MemWrite    = 0;
+        end
+
+    JLE:
+        if (low || signed || zero) begin
+            BuffersOn   = 10;
+            BuffersOff  = 5, 9, 11, 15;
+            WriteEn1    = 0;
+            MemWrite    = 0;
+        end else begin
+            BuffersOn   = 9;
+            BuffersOff  = 5, 10, 11, 15;
+            WriteEn1    = 0;
+            MemWrite    = 0;
+        end
+
+    JNE:
+        if (!zero) begin
+            BuffersOn   = 10;
+            BuffersOff  = 5, 9, 11, 15;
+            WriteEn1    = 0;
+            MemWrite    = 0;
+        end else begin
+            BuffersOn   = 9;
+            BuffersOff  = 5, 10, 11, 15;
+            WriteEn1    = 0;
+            MemWrite    = 0;
+        end
+
+    JE:
+        if (zero) begin
+            BuffersOn   = 10;
+            BuffersOff  = 5, 9, 11, 15;
+            WriteEn1    = 0;
+            MemWrite    = 0;
+        end else begin
+            BuffersOn   = 9;
+            BuffersOff  = 5, 10, 11, 15;
+            WriteEn1    = 0;
+            MemWrite    = 0;
+        end
+
+// POP, PUSH, and PUSHI
+1100-1110:
+    FlagWrite   = 0;
+    BuffersOn   = 2, 9, 13, 15;
+    BuffersOff  = 3, 4, 6, 7, 8, 10, 11, 12, 14, 16, 17, 20;
+    immediate   = 0;
+    Addr        = 0;
+    ALUOp       = 0;
+
+    POP:
+        SrcSel      = 13;
+        MemWrite    = 0;
+        if (13:10 == 13 || 13:10 == 12) begin
+            // NEVER POP INTO THE STACK POINTER!
+            WriteEn1    = 0;
+            WriteEn2    = 0;
+            DestSel     = 0;
+            DestSel2    = 0;
+            BuffersOff  = 0, 1, 5, 18, 19, 21;
+        end else begin
+            WriteEn1    = 1;                // Write to operand reg
+            WriteEn2    = 1;                // Write to SP
+            DestSel     = 13:10;            // Operand reg
+            DestSel2    = 13;               // SP
+            BuffersOn   = 1, 19, 21;        // decrement SP
+            BuffersOff  = 0, 5, 18;
+        end
+
+    PUSH:
+        SrcSel      = 13;
+        MemWrite    = 1;
+        WriteEn1    = 0;
+        WriteEn2    = 1;                // Write to SP
+        DestSel     = 13:10;
+        DestSel2    = 13;               // SP
+        BuffersOn   = 1, 18, 21;        // increment SP
+        BuffersOff  = 0, 5, 19;
+
+    PUSHI:
+        SrcSel      = 13;
+        MemWrite    = 1;
+        WriteEn1    = 0;
+        WriteEn2    = 1;                // Write to SP
+        DestSel     = 0;
+        DestSel2    = 13;               // SP
+        BuffersOn   = 0, 18, 21;        // increment SP
+        BuffersOff  = 1, 5, 19;
+
+
+// INCR and DECR
+111100-111101:
+    FlagWrite   = 0;
+    BuffersOn   = 2, 9;
+    BuffersOff  = 0, 1, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17;
+    immediate   = 0;
+    Addr        = 0;
+    ALUOp       = 0;
+    MemWrite    = 0;
+    SrcSel      = 11:8;
+    DestSel     = 11:8;
+    DestSel2    = 11:8;
+
+    INCR:
+        if (11:8 == 12 || 11:8 == 13) begin
+            WriteEn1    = 0
+            WriteEn2    = 1
+            BuffersOn   = 18, 21
+            BuffersOff  = 19, 20
+        end else begin
+            WriteEn1    = 1
+            WriteEn2    = 0
+            BuffersOn   = 18, 20
+            BuffersOff  = 19, 21
+        end
+
+    DECR:
+        if (11:8 == 12 || 11:8 == 13) begin
+            WriteEn1    = 0
+            WriteEn2    = 1
+            BuffersOn   = 19, 21
+            BuffersOff  = 18, 20
+        end else begin
+            WriteEn1    = 1
+            WriteEn2    = 0
+            BuffersOn   = 19, 20
+            BuffersOff  = 18, 21
+        end
