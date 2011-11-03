@@ -11,5 +11,26 @@ state 1:
 	comes out of memory (for a read or jump or pop)
 
 
-
-
+Buffer changes:
+0	0
+1	1
+2	[removed]
+3	6
+4	2
+5	12
+6	7
+7	3
+8	13
+9	16
+10	15
+11	14
+12	9
+13	8
+14	11
+15	10
+16	4
+17	5
+18	20
+19	19
+20	17
+21	18
