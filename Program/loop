@@ -1,0 +1,23 @@
+1.  Check Inputs
+2.  Process State (Physics, inputs, ai, etc.)
+	a. Apply AI
+		i.   Move tank, if possible
+		ii.  or turn tank toward player
+		iii. or shoot
+	b.  Move Player, if button pressed, and possible
+	c.  Update bullet position
+		i.   Move by velocity
+		ii.  If hits tank, restart.
+3.  Output Graphics
+	a.  Update each tank by the world matrix
+	b.  Multiply by projection matrix
+	c.  Add to memory for drawing
+
+Drool Features:
+	1.  menu
+	2.  health
+	3.  Three dimensional motion
+	4.  mouse
+	5.  powerups
+	6.  more tanks
+	7.  zombieeeeeessssssszzzzs
