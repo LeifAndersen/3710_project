@@ -36,7 +36,7 @@ wire [15:0] right;
 wire [15:0] a;
 wire [15:0] b;
 
-Keyboard kps2_clk, data, reset, up, down, left, right, a, b);
-LCD_CTRl(clk, 
+Keyboard keyboard(ps2_clk, data, reset, up, down, left, right, a, b);
+lcd_ctrl lcd(clk, reset, a, SF_D, LCD_E, LCD_RS, LCD_RW);
 
 endmodule
