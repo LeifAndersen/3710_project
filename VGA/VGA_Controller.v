@@ -25,6 +25,8 @@ module VGA_Controller(
 	input g,
 	input b,
 	output reg[17:0] fbAddr, //Address into frame buffer.
+	output reg[8:0] line,
+	output reg[9:0] offset,
 	output reg[2:0] color, //{R, G, B}
 	output reg hsync,
 	output reg vsync
@@ -65,6 +67,8 @@ begin
 			Henable <= 0;
 			color <= 0;
 			fbAddr <= 0;//ADDED THIS
+			line <= 0;
+			offset <= 0;
 		end
 	else
 	begin	
@@ -85,6 +89,8 @@ begin
 				hsync <= 0;
 				totalPix <= totalPix + 1;
 				fbAddr <= 0;
+				line <= 0;
+				offset <= 0;
 			end
 			VTs: //One full Line is complete.
 			begin
@@ -109,6 +115,7 @@ begin
 					begin
 						color <= {r,g,b};
 						fbAddr <= fbAddr + 1;
+						offset <= offset + 1;
 					end
 					else
 						color <= 0;
@@ -118,8 +125,9 @@ begin
 				begin
 					color <= 0;
 					pixCount <= pixCount + 1;
-					//if (Henable)
-						//fbAddr <= fbAddr + 1;
+					offset <= 0;
+					if (Henable && line != 479)
+						line <= line + 1;
 				end
 				Ts: //One full Line is complete.
 				begin
@@ -128,8 +136,11 @@ begin
 				end
 				default:
 				begin
-					if (pixCount >= 144 && pixCount <= 784 && Henable)
+					if (pixCount >= 144 && pixCount <= 782 && Henable)
+						begin
 						fbAddr <= fbAddr + 1;
+						offset <= offset + 1;
+						end
 					pixCount <= pixCount + 1; //Keep counting
 				end
 			endcase
