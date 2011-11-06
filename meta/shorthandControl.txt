@@ -17,13 +17,13 @@
         if (11:8 == 12 || 11:8 == 13) begin
             WriteEn1    = 0
             WriteEn2    = 1
-            BuffersOn   = 2
-            BuffersOff  = 3
+            BuffersOn   = 3
+            BuffersOff  = 2
         end else begin
             WriteEn1    = 1
             WriteEn2    = 0
-            BuffersOn   = 3
-            BuffersOff  = 2
+            BuffersOn   = 2
+            BuffersOff  = 3
         end
 
     MUL-FMUL
@@ -35,13 +35,13 @@
         if (11:8 == 12 || 11:8 == 13) begin
             WriteEn1    = 0
             WriteEn2    = 1
-            BuffersOn   = 6
-            BuffersOff  = 7
+            BuffersOn   = 7
+            BuffersOff  = 6
         end else begin
             WriteEn1    = 1
             WriteEn2    = 0
-            BuffersOn   = 7
-            BuffersOff  = 6
+            BuffersOn   = 6
+            BuffersOff  = 7
         end
 
 // I-Incapable
@@ -140,8 +140,8 @@
     DestSel     = 15;
     DestSel2    = 0;
     SrcSel      = 13;
-    BuffersOn   = 1, 16;
-    BuffersOff  = 0, 6, 2, 7, 3, 13, 4, 5, 20, 19, 17, 19;
+	BuffersOn   = 1, 9;
+	BuffersOff  = 0, 2, 3, 4, 5, 6, 7, 8, 11, 13, 17, 19, 20;
     immediate   = 0;
     Addr        = 13:0;
 
@@ -234,7 +234,7 @@
 1100-1110:
     FlagWrite   = 0;
     BuffersOn   = 16, 8, 10;
-    BuffersOff  = 6, 2, 7, 3, 13, 15, 14, 9, 11, 4, 5, 17;
+    BuffersOff  = 2, 3, 4, 5, 6, 7, 9, 11, 13, 14, 15, 17;
     immediate   = 0;
     Addr        = 0;
     ALUOp       = 0;
@@ -287,7 +287,7 @@
 111100-111101:
     FlagWrite   = 0;
     BuffersOn   = 16;
-    BuffersOff  = 0, 1, 6, 2, 12, 7, 3, 13, 15, 14, 9, 8, 11, 10, 4, 5;
+    BuffersOff  = 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15;
     immediate   = 0;
     Addr        = 0;
     ALUOp       = 0;
