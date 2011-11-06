@@ -45,6 +45,9 @@ wire vgaR;
 wire vgaG;
 wire vgaB;
 wire[2:0] vgaS;
+wire vgaLine;
+wire vgaOffset;
+wire[2:0] BUFFERtoVGA;
 
 wire pixelAddr2;
 assign pixelAddr2 = vgaAddr - 36800;
@@ -63,15 +66,17 @@ begin
 			end
 	
 	//4 buffers memory controller
-	if (pixelAddr >= 36800)
+	if (pixelAddr >= 36800) //This means it exceeds the 3 regular buffer, goes into the special.
 		begin
 			pixelWe1 <= 0;
 			pixelWe2 <= pixelWe;
+			BUFFERtoVGA <= vgaS;
 		end
 	else
 		begin
 			pixelWe1 <= pixelWe;
 			pixelWe2 <= 0;
+			BUFFERtoVGA <= {vgaR, vgaG, vgaB};
 		end
 end
 
@@ -149,13 +154,14 @@ BlockRam #(.DATA(3),.ADDR(11),.SIZE(1600),.FILE("init.txt")) specialBuffer(  //5
 	.doutb(vgaS)
 	 );
 
-module VGA_Controller(
+VGA_Controller vga_controller(
 	.clk(vgaClk),  //Expected to be 25MHz.
 	.reset(reset),
-	.r(vgaR),
-	.g(vgaG),
-	.b(vgaB),
-	.fbAddr(vgaAddr), //Frame buffer address.  TOBO done.
+	.r(BUFFERtoVGA[2]),
+	.g(BUFFERtoVGA[1]),
+	.b(BUFFERtoVGA[0]),
+	.line(vgaLine), //Frame buffer address.  TOBO done.
+	.offset(vgaOffset),
 	.color(color2), //{R, G, B}
 	.hsync(hsync),
 	.vsync(vsync)
