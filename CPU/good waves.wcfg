@@ -3,14 +3,14 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="U:/3710/3710/CPU/testdatapath_isim_beh.wdb" id="1" type="auto">
+      <db_ref path="C:/Users/Daniel/3710/CPU/testdatapath_isim_beh.wdb" id="1" type="auto">
          <top_modules>
             <top_module name="glbl" />
             <top_module name="testdatapath" />
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="41" />
+   <WVObjectSize size="55" />
    <wvobject fp_name="divider45" type="divider">
       <obj_property name="label">Globals</obj_property>
       <obj_property name="DisplayName">label</obj_property>
@@ -147,11 +147,6 @@
       <obj_property name="ObjectShortName">bBus[15:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
-   <wvobject fp_name="/testdatapath/uut/aluC" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">aluC[15:0]</obj_property>
-      <obj_property name="ObjectShortName">aluC[15:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
    <wvobject fp_name="divider38" type="divider">
       <obj_property name="label">Control I/O</obj_property>
       <obj_property name="DisplayName">label</obj_property>
@@ -169,8 +164,8 @@
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/testdatapath/uut/MasterControl/BuffCtrl" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">BuffCtrl[21:0]</obj_property>
-      <obj_property name="ObjectShortName">BuffCtrl[21:0]</obj_property>
+      <obj_property name="ElementShortName">BuffCtrl[20:0]</obj_property>
+      <obj_property name="ObjectShortName">BuffCtrl[20:0]</obj_property>
       <obj_property name="Radix">BINARYRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/testdatapath/uut/MasterControl/instType" type="array" db_ref_id="1">
@@ -207,5 +202,74 @@
    <wvobject fp_name="/testdatapath/uut/MasterControl/FlagWrite" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">FlagWrite</obj_property>
       <obj_property name="ObjectShortName">FlagWrite</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider51" type="divider">
+      <obj_property name="label">Forwarding</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="BkColor">128 128 255</obj_property>
+      <obj_property name="TextColor">230 230 230</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/MasterControl/MemRead" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">MemRead</obj_property>
+      <obj_property name="ObjectShortName">MemRead</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/memReadP" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">memReadP</obj_property>
+      <obj_property name="ObjectShortName">memReadP</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/regWriteEn" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">regWriteEn</obj_property>
+      <obj_property name="ObjectShortName">regWriteEn</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/regWriteEnP" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">regWriteEnP</obj_property>
+      <obj_property name="ObjectShortName">regWriteEnP</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/regWriteEn2" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">regWriteEn2</obj_property>
+      <obj_property name="ObjectShortName">regWriteEn2</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/regWriteEn2P" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">regWriteEn2P</obj_property>
+      <obj_property name="ObjectShortName">regWriteEn2P</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/destSelP" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">destSelP[3:0]</obj_property>
+      <obj_property name="ObjectShortName">destSelP[3:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/destSel" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">destSel[3:0]</obj_property>
+      <obj_property name="ObjectShortName">destSel[3:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider60" type="divider">
+      <obj_property name="label">Memory</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="BkColor">128 128 255</obj_property>
+      <obj_property name="TextColor">230 230 230</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/memWriteEn" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">memWriteEn</obj_property>
+      <obj_property name="ObjectShortName">memWriteEn</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/memReadP" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">memReadP</obj_property>
+      <obj_property name="ObjectShortName">memReadP</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/memWriteBus" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">memWriteBus[15:0]</obj_property>
+      <obj_property name="ObjectShortName">memWriteBus[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/memAddrBus" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">memAddrBus[15:0]</obj_property>
+      <obj_property name="ObjectShortName">memAddrBus[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/memDataOut" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">memDataOut[15:0]</obj_property>
+      <obj_property name="ObjectShortName">memDataOut[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
 </wave_config>

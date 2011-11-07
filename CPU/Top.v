@@ -147,6 +147,16 @@ module Top(
 			regWriteEnF  = regWriteEn;
 			regWriteEn2F = regWriteEn2;
 		end
+		if(memRead == 1'b1) begin
+			destSelF     = destSel;
+			regWriteEnF  = 0;
+			regWriteEn2F = 0;
+		end
+		else begin
+			destSelF     = destSel;
+			regWriteEnF  = regWriteEn;
+			regWriteEn2F = regWriteEn2;
+		end
 	end
 
 	// regfile

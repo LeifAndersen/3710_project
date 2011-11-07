@@ -16,7 +16,7 @@ NET "BTN_NORTH" LOC = "V4" | IOSTANDARD = LVTTL | PULLDOWN ;
 
 # ==== Clock inputs (CLK) ====
 # Define clock period for 50 MHz oscillator (40%/60% duty-cycle)
-NET "CLK_50MHZ" LOC = "C9" | IOSTANDARD = LVCMOS33 | PERIOD = 35.0ns HIGH 80%;
+NET "CLK_50MHZ" LOC = "C9" | IOSTANDARD = LVCMOS33 | PERIOD = 20.0ns HIGH 40%;
 NET "CLK_AUX" LOC = "B8" | IOSTANDARD = LVCMOS33 ;
 NET "CLK_SMA" LOC = "A10" | IOSTANDARD = LVCMOS33 ;
 

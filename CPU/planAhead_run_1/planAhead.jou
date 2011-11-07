@@ -1,8 +1,8 @@
 #-----------------------------------------------------------
 # PlanAhead v12.1
 # Build 61553 by hdbuild on Fri Apr 23 10:13:54 PDT 2010
-# Start of session at: 10/28/11 12:58:58 AM
-# Process ID: 5868
+# Start of session at: 11/6/11 3:56:51 PM
+# Process ID: 6852
 #-----------------------------------------------------------
 source C:/Users/Daniel/3710/CPU/pa.fromNetlist.tcl
 # create_project -name CPU -dir "C:/Users/Daniel/3710/CPU/planAhead_run_1" -part xc3s500efg320-4
@@ -13,6 +13,6 @@ source C:/Users/Daniel/3710/CPU/pa.fromNetlist.tcl
 # add_files "s3e.ucf" -fileset [get_property constrset [current_run]]
 # open_netlist_design
 #-----------------------------------------------------------
-# End of session at: 10/28/11 12:59:08 AM
-# Process ID: 5868
+# End of session at: 11/6/11 3:57:05 PM
+# Process ID: 6852
 #-----------------------------------------------------------
