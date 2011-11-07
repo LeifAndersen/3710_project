@@ -40,17 +40,17 @@ module Top(
 	wire [15:0] memAddrBus;
 	wire [15:0] incrDecrBus;
 	wire [15:0] regTo1;
-	wire [15:0] regTo2;
-	wire [15:0] immTo0;
-	wire [15:0] aluC;
-	wire [15:0] memOut;
+	wire [15:0] immediate;
+	wire [15:0] aluOut;
+	wire [15:0] memDataOut;
 	wire [15:0] pcPlus1;
-	wire [15:0] addr;
+	wire [15:0] specialAddr;
 	wire [15:0] pc;
-	wire [15:0] incrTo18;
-	wire [15:0] decrTo19;
+	wire [15:0] incrReg;
+	wire [15:0] decrReg;
 	wire [17:0] instruction;
-	wire [21:0] buffCtrl;
+	wire [20:0] buffCtrl;
+	wire [14:12] buffCtrlP;
 	wire  [3:0] aluOp;
 	wire  [3:0] destSel;
 	wire  [3:0] destSel2;
@@ -61,45 +61,41 @@ module Top(
 	wire 		regWriteEn;
 	wire 		regWriteEn2;
 	wire 		memWriteEn;
-    SixteenBuff buf0(      immTo0,  buffCtrl[0], aBus);
-    SixteenBuff buf1(      regTo1,  buffCtrl[1], aBus);
-    SixteenBuff buf2(      regTo2,  buffCtrl[2], bBus);
-    SixteenBuff buf3(        bBus,  buffCtrl[3], writeBus);
-    SixteenBuff buf4(        aluC,  buffCtrl[4], writeBus);
-    SixteenBuff buf5(      memOut,  buffCtrl[5], writeBus);
-    SixteenBuff buf6(        bBus,  buffCtrl[6], writeBus2);
-    SixteenBuff buf7(        aluC,  buffCtrl[7], writeBus2);
-    SixteenBuff buf8(      memOut,  buffCtrl[8], writeBus2);
-    SixteenBuff buf9(     pcPlus1,  buffCtrl[9], pcWriteBus);
-    SixteenBuff buf10(       addr, buffCtrl[10], pcWriteBus);
-    SixteenBuff buf11(     memOut, buffCtrl[11], pcWriteBus);
-    SixteenBuff buf12(       addr, buffCtrl[12], memAddrBus);
-    SixteenBuff buf13(       bBus, buffCtrl[13], memAddrBus);
-    SixteenBuff buf14(         pc, buffCtrl[14], memWriteBus);
-    SixteenBuff buf15(       aBus, buffCtrl[15], memWriteBus);
-    SixteenBuff buf16(       aBus, buffCtrl[16], writeBus);
-    SixteenBuff buf17(       aBus, buffCtrl[17], writeBus2);
-    SixteenBuff buf18(   incrTo18, buffCtrl[18], incrDecrBus);
-    SixteenBuff buf19(   decrTo19, buffCtrl[19], incrDecrBus);
-    SixteenBuff buf20(incrDecrBus, buffCtrl[20], writeBus);
-    SixteenBuff buf21(incrDecrBus, buffCtrl[21], writeBus2);
+    SixteenBuff buf0(   immediate,   buffCtrl[0], aBus);
+    SixteenBuff buf1(      regTo1,   buffCtrl[1], aBus);
+    SixteenBuff buf2(      aluOut,   buffCtrl[2], writeBus);
+    SixteenBuff buf3(      aluOut,   buffCtrl[3], writeBus2);
+    SixteenBuff buf4(        aBus,   buffCtrl[4], writeBus);
+    SixteenBuff buf5(        aBus,   buffCtrl[5], writeBus2);
+    SixteenBuff buf6(        bBus,   buffCtrl[6], writeBus);
+    SixteenBuff buf7(        bBus,   buffCtrl[7], writeBus2);
+    SixteenBuff buf8(        bBus,   buffCtrl[8], memAddrBus);
+    SixteenBuff buf9( specialAddr,   buffCtrl[9], memAddrBus);
+    SixteenBuff buf10(       aBus,  buffCtrl[10], memWriteBus);
+    SixteenBuff buf11(         pc,  buffCtrl[11], memWriteBus);
+    SixteenBuff buf12( memDataOut, buffCtrlP[12], writeBus);
+    SixteenBuff buf13( memDataOut, buffCtrlP[13], writeBus2);
+    SixteenBuff buf14( memDataOut, buffCtrlP[14], pcWriteBus);
+    SixteenBuff buf15(specialAddr,  buffCtrl[15], pcWriteBus);
+    SixteenBuff buf16(    pcPlus1,  buffCtrl[16], pcWriteBus);
+    SixteenBuff buf17(incrDecrBus,  buffCtrl[17], writeBus);
+    SixteenBuff buf18(incrDecrBus,  buffCtrl[18], writeBus2);
+    SixteenBuff buf19(    decrReg,  buffCtrl[19], incrDecrBus);
+    SixteenBuff buf20(    incrReg,  buffCtrl[20], incrDecrBus);
 	
 	// increment and decrement
-	Incrementer INCR(bBus, incrTo18);
-	Decrementer DECR(bBus, decrTo19);
+	Incrementer INCR(bBus, incrReg);
+	Decrementer DECR(bBus, decrReg);
 	
 	// PC
 	ProgramCounter PC(reset, CLK_50MHZ, pcWriteBus, pc);
 	Incrementer PCINCR(pc, pcPlus1);
 	
 	// alu
-    ALU ALUinstance(aBus, bBus, aluOp, aluC, flags[2], flags[1], flags[0]);
+    ALU ALUinstance(aBus, bBus, aluOp, aluOut, flags[2], flags[1], flags[0]);
 
 	// flag reg
     FlagRegister FlagReg(reset, CLK_50MHZ, flags[2], flags[1], flags[0], flagWrite, flagsToControl[2], flagsToControl[1], flagsToControl[0]);
-
-    // regfile
-    Register RegisterFile(CLK_50MHZ, destSel, srcSel, destSel, destSel2, regWriteEn, regWriteEn2, reset, writeBus, writeBus2, regTo1, regTo2);
 	
 	// memory
 	// some inputs are always 0.
@@ -123,10 +119,38 @@ module Top(
 	BlockRam #(.DATA(18), .ADDR(14), .SIZE(12288), .FILE("init.mem")) MainMemory(CLK_50MHZ, memWriteEnA, data_wr_en_to_main, inst_addr_to_main, data_addr_to_main, memWriteDataA, data_to_main, instruction_to_controller, data_to_controller);
 	
 	// Memory controller
-	MemoryController sadface(memWriteBus, memAddrBus, memWriteEn, pc, data_to_controller, instruction_to_controller, memOut, instruction, data_to_main, data_addr_to_main, data_wr_en_to_main, inst_addr_to_main, pram_out, pram_wr_en, lcd_data, lcd_en);
+	MemoryController MemCtrl(memWriteBus, memAddrBus, memWriteEn, pc, data_to_controller, instruction_to_controller, memDataOut, instruction, data_to_main, data_addr_to_main, data_wr_en_to_main, inst_addr_to_main, pram_out, pram_wr_en, lcd_data, lcd_en);
 	
 	// control
-	Control MasterControl(instruction, flagsToControl, aluOp, regWriteEn, regWriteEn2, immTo0, buffCtrl, destSel, destSel2, srcSel, flagWrite, memWriteEn, addr);
+	//     Has some forwarding logic around it
+	wire [3:0] destSelP;
+	reg  [3:0] destSelF;
+	reg        regWriteEnF;
+	reg        regWriteEn2F;
+	wire       regWriteEnP;
+	wire       regWriteEn2P;
+	wire       memRead;
+	wire       memReadP;
+	//     Pipeline Register
+	PipelineRegister PReg(CLK_50MHZ, reset, memRead, memReadP, regWriteEn, regWriteEnP, regWriteEn2, regWriteEn2P, buffCtrl[14:12], buffCtrlP[14:12], destSel, destSelP);
+	//     Control
+	Control MasterControl(instruction, flagsToControl, aluOp, regWriteEn, regWriteEn2, immediate, buffCtrl, destSel, destSel2, srcSel, flagWrite, memWriteEn, memRead, specialAddr);
+	//     Forwarding logic
+	always@(destSel, destSelP, regWriteEn, regWriteEn2, regWriteEnP, regWriteEn2P, memReadP) begin
+		if(memReadP == 1'b1) begin
+			destSelF     = destSelP;
+			regWriteEnF  = regWriteEnP;
+			regWriteEn2F = regWriteEn2P;
+		end
+		else begin
+			destSelF     = destSel;
+			regWriteEnF  = regWriteEn;
+			regWriteEn2F = regWriteEn2;
+		end
+	end
+
+	// regfile
+    Register RegisterFile(CLK_50MHZ, destSelF, srcSel, destSelF, destSel2, regWriteEnF, regWriteEn2F, reset, writeBus, writeBus2, regTo1, bBus);
 
 	// lcd register
 	Register16 lcdReg(reset, CLK_50MHZ, lcd_en, lcd_data, lcdreg_to_lcd);
