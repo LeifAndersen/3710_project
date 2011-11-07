@@ -4,15 +4,15 @@
 // Company: 
 // Engineer:
 //
-// Create Date:   22:02:27 11/04/2011
-// Design Name:   DrawUnit
-// Module Name:   C:/Users/jhparker/3710/Painter/DrawUnit_tb.v
+// Create Date:   21:22:50 11/06/2011
+// Design Name:   Painter
+// Module Name:   C:/Users/jhparker/3710/Painter/Painter_tb.v
 // Project Name:  Painter
 // Target Device:  
 // Tool versions:  
 // Description: 
 //
-// Verilog Test Fixture created by ISE for module: DrawUnit
+// Verilog Test Fixture created by ISE for module: Painter
 //
 // Dependencies:
 // 
@@ -22,54 +22,59 @@
 // 
 ////////////////////////////////////////////////////////////////////////////////
 
-module DrawUnit_tb;
+module Painter_tb;
 
 	// Inputs
 	reg clk;
-	reg vgaClk;
 	reg reset;
-	reg we;
-	reg data;
+	reg [9:0] wrtPtr;
+	reg [15:0] PRAM;
 
 	// Outputs
+	wire [9:0] rdPtr;
 	wire full;
-	wire [2:0] color2;
-	wire hsync;
-	wire vsync;
+	wire [14:0] addr;
+	wire [2:0] data;
+	wire we;
 
 	// Instantiate the Unit Under Test (UUT)
-	DrawUnit uut (
+	Painter uut (
 		.clk(clk), 
-		.vgaClk(vgaClk), 
 		.reset(reset), 
-		.we(we), 
-		.data(data), 
+		.wrtPtr(wrtPtr), 
+		.PRAMdata(PRAM), 
+		.rdPtr(rdPtr), 
 		.full(full), 
-		.color2(color2), 
-		.hsync(hsync), 
-		.vsync(vsync)
+		.addr(addr), 
+		.data(data), 
+		.we(we)
 	);
+integer i;
 
 always
 begin
 #10;
 clk = ~clk;
-#10;
-vgaClk = !vgaClk;
 end
 
 	initial begin
 		// Initialize Inputs
 		clk = 0;
-		vgaClk = 0;
+		reset = 1;
+		wrtPtr = 0;
+		PRAM = 0;
+		#20;
 		reset = 0;
-		we = 0;
-		data = 0;
-
 		// Wait 100 ns for global reset to finish
-		#100;
-      
+		#110;
+        
 		// Add stimulus here
+		for (i = 0; i < 1000; i = i + 1)
+		begin
+			wrtPtr <= wrtPtr + 1;
+			PRAM <= 16'hffff - i;
+			#20;
+		end
 
 	end
       
