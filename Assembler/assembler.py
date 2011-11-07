@@ -134,7 +134,7 @@ def parse(infile_str, outfile_str):
 			first_pass_queue.append(encode_14_Bit_Imm_instruction(tokens))
 			# NOP
 			if instruction_type == "RET":
-				first_pass_queue.append(str(0))
+				first_pass_queue.append(str(hex(0)))
 
 		elif instruction_type == "INCR" or instruction_type == "DECR":
 			# encode by hand
@@ -145,7 +145,7 @@ def parse(infile_str, outfile_str):
 			first_pass_queue.append(str(hex((OP_CODES[tokens[0]] << 14) + (trim_reg(tokens[1]) << 10) + 0)))
 			# NOP
 			if instruction_type == "POP":
-				first_pass_queue.append(str(0))
+				first_pass_queue.append(str(hex(0)))
 
 		elif instruction_type == "MOV":
 			if tokens[1][0] == '[' and tokens[2][0] == '[':
@@ -158,14 +158,14 @@ def parse(infile_str, outfile_str):
 						# MOVMR
 						# NOP
 						first_pass_queue.append(str(hex(0x1000 + (trim_reg(tokens[1]) << 8) + (OP_CODES["MOVMR"] << 4) + trim_reg(tokens[2]))))
-						first_pass_queue.append(str(0))
+						first_pass_queue.append(str(hex(0)))
 					else:					# MOV $R, (Imm)
 						# psuedoinstruction becomes
 						#     MOVMRI Imm
 						#     NOP
 						#     MOVR $R, $MR
 						first_pass_queue.append(encode_14_Bit_Imm_instruction(["MOVMRI", tokens[2][1:-1]]))
-						first_pass_queue.append(str(0))
+						first_pass_queue.append(str(hex(0)))
 						first_pass_queue.append(str(hex((trim_reg(tokens[2]) << 8) + (OP_CODES["MOVR"] << 4) + 15)))
 			elif tokens[1][0] == '[':
 				if tokens[1][-1] != ']':
