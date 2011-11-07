@@ -81,6 +81,7 @@ def parse(infile_str, outfile_str):
 	infile = open(infile_str, 'r')
 	first_pass_queue = deque()
 
+	print ".",
 	# Parse
 	infile.seek(0)
 	line_num = 0
@@ -185,6 +186,7 @@ def parse(infile_str, outfile_str):
 			# bad instruction, explode
 			explode_bomb(line_num, line)
 
+	print ".",
 	# Get labels (must be done after first pass to allow for psuedo instructions to expand)
 	address = MEM_START
 	second_pass_queue = deque()
@@ -206,6 +208,7 @@ def parse(infile_str, outfile_str):
 			second_pass_queue.append(instruction);
 			address += MEM_INCR
 
+	print ".",
 	# Output
 	outfile = open(outfile_str, 'w')
 	for instruction in second_pass_queue:
