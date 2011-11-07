@@ -136,11 +136,16 @@ module Top(
 	//     Control
 	Control MasterControl(instruction, flagsToControl, aluOp, regWriteEn, regWriteEn2, immediate, buffCtrl, destSel, destSel2, srcSel, flagWrite, memWriteEn, memRead, specialAddr);
 	//     Forwarding logic
-	always@(destSel, destSelP, regWriteEn, regWriteEn2, regWriteEnP, regWriteEn2P, memReadP) begin
+	always@(destSel, destSelP, regWriteEn, regWriteEn2, regWriteEnP, regWriteEn2P, memReadP, memRead) begin
 		if(memReadP == 1'b1) begin
 			destSelF     = destSelP;
 			regWriteEnF  = regWriteEnP;
 			regWriteEn2F = regWriteEn2P;
+		end
+		else if(memRead == 1'b1) begin
+			destSelF     = destSel;
+			regWriteEnF  = 0;
+			regWriteEn2F = 0;
 		end
 		else begin
 			destSelF     = destSel;
