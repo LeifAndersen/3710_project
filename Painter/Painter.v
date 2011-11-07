@@ -27,7 +27,7 @@ module Painter(
 	output reg full, //This signal tells the CPU to NOP on its write until queue has space, also tells PRAM not to latch CPU'S value.
 	output reg [14:0] addr, //Address (pixel location) in frame buffer.  Only need addressing for 1 buffer.  Which buffer is determined externally.
 	output reg [2:0] data, //1 bit routed to each bit-addressed buffer, or all 3 bits if it's the special buffer.
-	output reg we //write enable
+	output reg we //write enable to frame buffer.
     );
 
 parameter read1 = 0;

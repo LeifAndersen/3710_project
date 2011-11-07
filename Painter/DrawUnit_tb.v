@@ -45,7 +45,7 @@ module DrawUnit_tb;
 		.we(we), 
 		.data(data), 
 		.full(full), 
-		.color2(color2), 
+		.color(color2), 
 		.hsync(hsync), 
 		.vsync(vsync)
 	);
@@ -55,22 +55,25 @@ begin
 #10;
 clk = ~clk;
 #10;
-vgaClk = !vgaClk;
+clk = ~clk;
+vgaClk = ~vgaClk;
 end
 
 	initial begin
 		// Initialize Inputs
 		clk = 0;
 		vgaClk = 0;
-		reset = 0;
+		reset = 1;
 		we = 0;
 		data = 0;
 
 		// Wait 100 ns for global reset to finish
 		#100;
-      
+      reset = 0;
+		#20;
 		// Add stimulus here
-
+		we = 1;
+		data = 16'hffff;
 	end
       
 endmodule
