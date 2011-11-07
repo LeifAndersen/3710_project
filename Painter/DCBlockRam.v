@@ -18,8 +18,9 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module BlockRam#(parameter DATA = 18, parameter ADDR = 14, parameter SIZE = 12288, parameter FILE = "init.txt")(
+module DCBlockRam#(parameter DATA = 18, parameter ADDR = 14, parameter SIZE = 12288, parameter FILE = "init.txt")(
 	input clka,
+	input clkb,
 	input wea, //write enable A
 	input web, //write enable B
 	input [ADDR-1:0] addra,
@@ -30,7 +31,7 @@ module BlockRam#(parameter DATA = 18, parameter ADDR = 14, parameter SIZE = 1228
 	output reg [DATA-1:0] doutb
 	 );
 	//synthesis attribute ram_style of mem is distributed
-   //parameter RAM_WIDTH = 18;
+//   parameter RAM_WIDTH = 18;
    //parameter RAM_ADDR_BITS = 15;
 
 	//(* RAM_STYLE="{AUTO | BLOCK |  BLOCK_POWER1 | BLOCK_POWER2}" *)
@@ -53,7 +54,7 @@ module BlockRam#(parameter DATA = 18, parameter ADDR = 14, parameter SIZE = 1228
          douta <= memory[addra];
 	end
       
-   always @(posedge clka)
+   always @(negedge clkb)
    begin
          if (web)
             memory[addrb] <= dinb;
