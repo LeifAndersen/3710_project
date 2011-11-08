@@ -22,12 +22,12 @@ module Painter(
 	input clk,
 	input reset,
 	input [9:0] wrtPtr, //Write pointer, location in PRAM that CPU is writing to.
-	input [15:0] PRAM, //The line, right, left, and color stored in two lines of PRAM by CPU.
+	input [15:0] PRAMdata, //The line, right, left, and color stored in two lines of PRAM by CPU.
 	output reg [9:0] rdPtr, //Read pointer, location in PRAM that Painter is reading from.
 	output reg full, //This signal tells the CPU to NOP on its write until queue has space, also tells PRAM not to latch CPU'S value.
-	output reg [11:0] addr, //Address (pixel location) in frame buffer.  Only need addressing for 1 buffer.  Which buffer is determined externally.
+	output reg [14:0] addr, //Address (pixel location) in frame buffer.  Only need addressing for 1 buffer.  Which buffer is determined externally.
 	output reg [2:0] data, //1 bit routed to each bit-addressed buffer, or all 3 bits if it's the special buffer.
-	output reg we //write enable
+	output reg we //write enable to frame buffer.
     );
 
 parameter read1 = 0;
@@ -63,10 +63,11 @@ begin
 	read1:
 		begin
 			we <= 0;
+			addr <= 0;
 			if (wrtPtr != rdPtr)  //New data to read.
 				begin
-					left <= PRAM[13:7];
-					right <= PRAM[6:0];
+					left <= PRAMdata[13:7];
+					right <= PRAMdata[6:0];
 					state <= read2;
 					if (rdPtr == 1023) //Probly not necessary, this should overflow correctly anyways.  If necessary, then above comparisons are wrong.
 						rdPtr <= 0;
@@ -79,8 +80,8 @@ begin
 		begin
 			if (wrtPtr != rdPtr)  //New data to read.
 				begin
-					line <= PRAM[9:3];
-					data <= PRAM[2:0];
+					line <= PRAMdata[9:3];
+					data <= PRAMdata[2:0];
 					state <= paint;
 					if (rdPtr == 1023)
 						rdPtr <= 0;
@@ -95,7 +96,7 @@ begin
 				begin
 					we <= 1;
 					addr <= line * 160 + left; //Optimizable to line << 7 + line << 5 (Meaning line * 128 + line * 32) if necessary.
-					if (right == left)
+					if (right <= left)
 						begin
 							newline <= 1;
 							state <= read1;
@@ -110,7 +111,9 @@ begin
 					state <= read1;
 				end
 			else
-				addr <= addr + 1; 
+				begin
+					addr <= addr + 1;
+				end
 		end
 	endcase
 	end //END reset else.

@@ -7,16 +7,19 @@ from os.path import splitext
 def pad(infile_str, outfile_str, size):
 	infile = open(infile_str, 'r')
 	outfile = open(outfile_str, 'w')
+	print ".",
 	for line in infile:
 		if len(line) > 0:
 			outfile.write(line)
 			size -= 1
 
+	print ".",
 	for i in range(size):
 		outfile.write("0\n")
 
 	infile.close()
 	outfile.close()
+	print ".",
 
 def main():
 	filestring = sys.argv[1]

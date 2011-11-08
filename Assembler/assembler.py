@@ -81,6 +81,7 @@ def parse(infile_str, outfile_str):
 	infile = open(infile_str, 'r')
 	first_pass_queue = deque()
 
+	print ".",
 	# Parse
 	infile.seek(0)
 	line_num = 0
@@ -131,6 +132,9 @@ def parse(infile_str, outfile_str):
 		elif instruction_type == "14-Bit Immediate":
 			# push this
 			first_pass_queue.append(encode_14_Bit_Imm_instruction(tokens))
+			# NOP
+			if instruction_type == "RET":
+				first_pass_queue.append(str(hex(0)))
 
 		elif instruction_type == "INCR" or instruction_type == "DECR":
 			# encode by hand
@@ -139,6 +143,9 @@ def parse(infile_str, outfile_str):
 		elif instruction_type == "POP" or instruction_type == "PUSH":
 			# encode by hand
 			first_pass_queue.append(str(hex((OP_CODES[tokens[0]] << 14) + (trim_reg(tokens[1]) << 10) + 0)))
+			# NOP
+			if instruction_type == "POP":
+				first_pass_queue.append(str(hex(0)))
 
 		elif instruction_type == "MOV":
 			if tokens[1][0] == '[' and tokens[2][0] == '[':
@@ -149,12 +156,16 @@ def parse(infile_str, outfile_str):
 				else:
 					if tokens[2][1] == "$":	# MOV $R, ($R)
 						# MOVMR
+						# NOP
 						first_pass_queue.append(str(hex(0x1000 + (trim_reg(tokens[1]) << 8) + (OP_CODES["MOVMR"] << 4) + trim_reg(tokens[2]))))
+						first_pass_queue.append(str(hex(0)))
 					else:					# MOV $R, (Imm)
 						# psuedoinstruction becomes
 						#     MOVMRI Imm
+						#     NOP
 						#     MOVR $R, $MR
 						first_pass_queue.append(encode_14_Bit_Imm_instruction(["MOVMRI", tokens[2][1:-1]]))
+						first_pass_queue.append(str(hex(0)))
 						first_pass_queue.append(str(hex((trim_reg(tokens[2]) << 8) + (OP_CODES["MOVR"] << 4) + 15)))
 			elif tokens[1][0] == '[':
 				if tokens[1][-1] != ']':
@@ -185,6 +196,7 @@ def parse(infile_str, outfile_str):
 			# bad instruction, explode
 			explode_bomb(line_num, line)
 
+	print ".",
 	# Get labels (must be done after first pass to allow for psuedo instructions to expand)
 	address = MEM_START
 	second_pass_queue = deque()
@@ -206,6 +218,7 @@ def parse(infile_str, outfile_str):
 			second_pass_queue.append(instruction);
 			address += MEM_INCR
 
+	print ".",
 	# Output
 	outfile = open(outfile_str, 'w')
 	for instruction in second_pass_queue:
