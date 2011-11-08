@@ -117,13 +117,13 @@ def parse(infile_str, outfile_str):
 		# encode instructions specifically for each op type
 		if instruction_type == "I-Capable":
 			verify_token_count(line_num, tokens, 3)
-			if tokens[1][0] == "$" and tokens[2][0] == "$":
+			if tokens[1][0] == "%" and tokens[2][0] == "%":
 				# push this
 				first_pass_queue.append(encode_R_to_R_instruction(tokens, 0))
-			elif tokens [1][0] == "$" and tokens[2][0] != "$":
+			elif tokens [1][0] == "%" and tokens[2][0] != "%":
 				# push this
 				first_pass_queue.append(encode_Imm_to_R_instruction(tokens))
-			elif tokens[0] == "CMP" and tokens [1][0] != "$" and tokens[2][0] == "$":
+			elif tokens[0] == "CMP" and tokens [1][0] != "%" and tokens[2][0] == "%":
 				# push this
 				first_pass_queue.append(encode_Imm_to_R_instruction(["CMPR", tokens[2], tokens[1]]))
 			else:
@@ -154,16 +154,16 @@ def parse(infile_str, outfile_str):
 				if tokens[2][-1] != ']':
 					delim_mismatch(line_num, line)
 				else:
-					if tokens[2][1] == "$":	# MOV $R, ($R)
+					if tokens[2][1] == "%":	# MOV %R, (%R)
 						# MOVMR
 						# NOP
 						first_pass_queue.append(str(hex(0x1000 + (trim_reg(tokens[1]) << 8) + (OP_CODES["MOVMR"] << 4) + trim_reg(tokens[2]))))
 						first_pass_queue.append(str(hex(0)))
-					else:					# MOV $R, (Imm)
+					else:					# MOV %R, (Imm)
 						# psuedoinstruction becomes
 						#     MOVMRI Imm
 						#     NOP
-						#     MOVR $R, $MR
+						#     MOVR %R, %MR
 						first_pass_queue.append(encode_14_Bit_Imm_instruction(["MOVMRI", tokens[2][1:-1]]))
 						first_pass_queue.append(str(hex(0)))
 						first_pass_queue.append(str(hex((trim_reg(tokens[2]) << 8) + (OP_CODES["MOVR"] << 4) + 15)))
@@ -171,21 +171,21 @@ def parse(infile_str, outfile_str):
 				if tokens[1][-1] != ']':
 					delim_mismatch(line_num)
 				else:
-					if tokens[1][1] == "$":	# MOV ($R), $R
+					if tokens[1][1] == "%":	# MOV (%R), %R
 						# MOVRM
 						first_pass_queue.append(str(hex(0x1000 + (trim_reg(tokens[2]) << 8) + (OP_CODES["MOVRM"] << 4) + trim_reg(tokens[1]))))
-					else:					# MOV (Imm), $R
+					else:					# MOV (Imm), %R
 						# psuedoinstruction becomes
-						#     MOVR $MR, $R
+						#     MOVR %MR, %R
 						#     MOVRMI Imm
 						first_pass_queue.append(str(hex((15 << 8) + (OP_CODES["MOVR"] << 4) + trim_reg(tokens[2]))))
 						first_pass_queue.append(encode_14_Bit_Imm_instruction(["MOVRMI", tokens[1][1:-1]]))
-			else: # Other MOV: MOV $R, $R and MOV $R, Imm
-				if tokens[1][0] == "$" and tokens[2][0] == "$":
+			else: # Other MOV: MOV %R, %R and MOV %R, Imm
+				if tokens[1][0] == "%" and tokens[2][0] == "%":
 					# push this
 					tokens[0] = "MOVR"
 					first_pass_queue.append(encode_R_to_R_instruction(tokens, 0))
-				elif tokens [1][0] == "$" and tokens[2][0] != "$":
+				elif tokens [1][0] == "%" and tokens[2][0] != "%":
 					# push this
 					tokens[0] = "MOVR"
 					first_pass_queue.append(encode_Imm_to_R_instruction(tokens))
