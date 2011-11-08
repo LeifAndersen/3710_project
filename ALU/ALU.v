@@ -33,7 +33,7 @@ module ALU(
 	
 	`include "opcodesLOL.v"
 
-	wire[15:0] D = -B;//~B + 1;
+	wire[15:0] notB = -B;//~B + 1;
 	reg[31:0] temp;
 
 	always@(*) begin
@@ -53,7 +53,7 @@ module ALU(
 
 		SUB:
 		begin
-			C <= A+D;
+			C <= A+notB;
 			if (A == B)
 				Zero <= 1;
 			else
