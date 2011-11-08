@@ -42,6 +42,7 @@ module Top(
 	wire [15:0] regTo1;
 	wire [15:0] immediate;
 	wire [15:0] aluOut;
+	wire [15:0] aluD;
 	wire [15:0] memDataOut;
 	wire [15:0] pcPlus1;
 	wire [15:0] specialAddr;
@@ -49,7 +50,7 @@ module Top(
 	wire [15:0] incrReg;
 	wire [15:0] decrReg;
 	wire [17:0] instruction;
-	wire [20:0] buffCtrl;
+	wire [21:0] buffCtrl;
 	wire [14:12] buffCtrlP;
 	wire  [3:0] aluOp;
 	wire  [3:0] destSel;
@@ -82,6 +83,7 @@ module Top(
     SixteenBuff buf18(incrDecrBus,  buffCtrl[18], writeBus2);
     SixteenBuff buf19(    decrReg,  buffCtrl[19], incrDecrBus);
     SixteenBuff buf20(    incrReg,  buffCtrl[20], incrDecrBus);
+    SixteenBuff buf21(       aluD,  buffCtrl[21], writeBus2);
 	
 	// increment and decrement
 	Incrementer INCR(bBus, incrReg);
@@ -92,7 +94,7 @@ module Top(
 	Incrementer PCINCR(pc, pcPlus1);
 	
 	// alu
-    ALU ALUinstance(aBus, bBus, aluOp, aluOut, flags[2], flags[1], flags[0]);
+    ALU ALUinstance(aBus, bBus, aluOp, aluOut, aluD, flags[2], flags[1], flags[0]);
 
 	// flag reg
     FlagRegister FlagReg(reset, CLK_50MHZ, flags[2], flags[1], flags[0], flagWrite, flagsToControl[2], flagsToControl[1], flagsToControl[0]);

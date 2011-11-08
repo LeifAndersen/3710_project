@@ -25,7 +25,7 @@ module Control(
 	output reg			WriteEn1,
 	output reg			WriteEn2,
 	output reg 	[15:0] 	immediate,
-	output reg 	[20:0] 	BuffCtrl,
+	output reg 	[21:0] 	BuffCtrl,
 	output reg 	 [3:0] 	DestSel,
 	output reg   [3:0]	DestSel2,
 	output reg 	 [3:0] 	SrcSel,
@@ -114,6 +114,7 @@ module Control(
 				instruction[7:4] == NOT ||
 				instruction[7:4] == LSH ||
 				instruction[7:4] == RSH ||
+				instruction[7:4] == FMUL ||
 				instruction[7:4] == ARSH) begin
 				//ADD-ARSH
 				BuffCtrl[6]  <= 0;
@@ -144,16 +145,23 @@ module Control(
 				BuffCtrl[7] <= 0;
 			end
 
-			else if (instruction[7:4] == MUL || instruction[7:4] == FMUL) begin
-				//MUL-FMUL
-				// TODO
-				BuffCtrl[2] <= 0;
+			else if (instruction[7:4] == MUL) begin
 				BuffCtrl[3] <= 0;
-				FlagWrite   <= 0;
-				WriteEn1    <= 0;
-				WriteEn2    <= 0;
 				BuffCtrl[6] <= 0;
 				BuffCtrl[7] <= 0;
+				if (instruction[11:8] == 12) begin
+					FlagWrite	<= 1;
+					WriteEn1    <= 1;
+					WriteEn2    <= 1;
+					BuffCtrl[21]<= 1;
+					BuffCtrl[2] <= 1;
+				end else begin
+					FlagWrite	<= 0;
+					WriteEn1    <= 0;
+					WriteEn2    <= 0;
+					BuffCtrl[21]<= 0;
+					BuffCtrl[2] <= 0;
+				end
 			end
 
 			else if (instruction[7:4] == MOVR) begin
@@ -197,7 +205,7 @@ module Control(
 			BuffCtrl[9]     <= 0;
 			BuffCtrl[11]    <= 0;
 			BuffCtrl[15:14] <= 2'd0;
-			BuffCtrl[20:17] <= 4'd0;
+			BuffCtrl[21:17] <= 5'd0;
 			immediate       <= 16'd0;
 			FlagWrite       <= 0;
 			Addr            <= 16'd0;
@@ -254,7 +262,7 @@ module Control(
 			BuffCtrl[16]    <= 1;
 			BuffCtrl[1]     <= 0;
 			BuffCtrl[15:6]  <= 10'd0;
-			BuffCtrl[20:17] <= 4'd0;
+			BuffCtrl[21:17] <= 5'd0;
 			MemWrite        <= 0;
 			immediate       <= {8'd0,instruction[7:0]};
 			Addr            <= 0;
@@ -354,7 +362,7 @@ module Control(
 			BuffCtrl[7:2]   <= 6'd0;
 			BuffCtrl[11]    <= 0;
 			BuffCtrl[13]    <= 0;
-			BuffCtrl[20:17] <= 4'd0;
+			BuffCtrl[21:17] <= 5'd0;
 			immediate       <= 16'd0;
 			Addr            <= {2'd0,instruction[13:0]};
 
@@ -539,6 +547,7 @@ module Control(
 			BuffCtrl[11]    <= 0;
 			BuffCtrl[15:13] <= 3'd0;
 			BuffCtrl[17]    <= 0;
+			BuffCtrl[21]    <= 0;
 			immediate       <= 16'd0;
 			Addr            <= 16'd0;
 			ALUOp           <= 4'd0;
@@ -630,6 +639,7 @@ module Control(
 			FlagWrite       <= 0;
 			BuffCtrl[16]    <= 1;
 			BuffCtrl[15:0]  <= 16'd0;
+			BuffCtrl[21]    <= 0;
 			immediate       <= 16'd0;
 			Addr            <= 16'd0;
 			ALUOp           <= 0;
