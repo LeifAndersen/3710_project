@@ -98,6 +98,7 @@ def parse(infile_str, outfile_str):
 			first_pass_queue.append(tokens[0])
 			continue
 
+		tokens[0] = tokens[0].upper() # Upper case instruction.
 		if tokens[0] == "JE" or tokens[0] == "JNE" or tokens[0] == "JLE" or tokens[0] == "JL" or tokens[0] == "CALL":
 			# push jumps and calls directly, don't encode on first pass (only first two tokens)
 			first_pass_queue.append(tokens[0] + " " + tokens[1])
