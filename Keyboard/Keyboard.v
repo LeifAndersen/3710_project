@@ -39,63 +39,67 @@ reg rel;
 
 always@(negedge clk)
 begin
-	if(reset == 1'b1) begin
-		shiftReg = 11'b11111111111;
-		rel = 1'd0;
-		buttons = 16'd0;
+	if(reset == 1'b1 || shiftReg[10] == 1'd0) begin
+		shiftReg <= 11'b11111111111;
 	end else begin
-		shiftReg[10:1] = shiftReg[9:0];
-		shiftReg[0] = data;
+		shiftReg[10:1] <= shiftReg[9:0];
+		shiftReg[0] <= data;
 	end
-	
+end
+
+always@(negedge shiftReg[10])
+begin
+	if(reset == 1'b1) begin
+			rel <= 1'd0;
+			buttons <= 16'd0;
+	end
 	if(shiftReg[10] == 1'b0) begin
 		if(rel == 1'b0) begin
 			case(shiftReg)
-			UP: buttons[0] = 1'b1;
-			DOWN: buttons[1] = 1'b1;
-			LEFT: buttons[2] = 1'b1;
-			RIGHT: buttons[3] = 1'b1;
-			A: buttons[4] = 1'b1;
-			B: buttons[5] = 1'b1;
-			REL: rel = 1'b1;
+			UP: buttons[0] <= 1'b1;
+			DOWN: buttons[1] <= 1'b1;
+			LEFT: buttons[2] <= 1'b1;
+			RIGHT: buttons[3] <= 1'b1;
+			A: buttons[4] <= 1'b1;
+			B: buttons[5] <= 1'b1;
+			REL: rel <= 1'b1;
 			endcase
 		end else begin
 			case(shiftReg)
-			UP: buttons[0] = 1'b0;
-			DOWN: buttons[1] = 1'b0;
-			LEFT: buttons[2] = 1'b0;
-			RIGHT: buttons[3] = 1'b0;
-			A: buttons[4] = 1'b0;
-			B: buttons[5] = 1'b0;
+			UP: buttons[0] <= 1'b0;
+			DOWN: buttons[1] <= 1'b0;
+			LEFT: buttons[2] <= 1'b0;
+			RIGHT: buttons[3] <= 1'b0;
+			A: buttons[4] <= 1'b0;
+			B: buttons[5] <= 1'b0;
 			endcase
-			rel = 1'b0;
+			rel <= 1'b0;
 		end
-		shiftReg = 11'b11111111111;
 	end
 	
 	if(buttons[0] == 1'b1) begin
 		if(up != 16'b1111111111111111)
-			up = up + 1;
+			up <= up + 1;
 	end
 	if(buttons[1] == 1'b1) begin
 		if(down != 16'b1111111111111111)
-			down = down + 1;
+			down <= down + 1;
 	end
 	if(buttons[2] == 1'b1) begin
 		if(left != 16'b1111111111111111)
-				left = left + 1;
+				left <= left + 1;
 	end
 	if(buttons[3] == 1'b1) begin
 		if(right != 16'b1111111111111111)
-			right = right + 1;
+			right <= right + 1;
 	end
 	if(buttons[4] == 1'b1) begin
 		if(a != 16'b1111111111111111)
-			a = a + 1;
+			a <= a + 1;
 	end
 	if(buttons[5] == 1'b1) begin
 		if(b != 16'b1111111111111111)
-			b = b + 1;
+			b <= b + 1;
 	end
 end
 
