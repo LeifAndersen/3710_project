@@ -8,7 +8,7 @@ MEM_INCR = 1
 
 # Lists of instruction ops categorized by type (types unique to assembler)
 I_CAPABLE = ["ADD", "SUB", "AND", "OR", "XOR", "NOT", "LSH", "RSH", "ARSH", "MUL", "FMUL", "CMP"]
-SPECIAL_14_BIT = ["CALL", "RET", "PUSHI"]
+SPECIAL_14_BIT = ["RET", "PUSHI"]
 
 # Dictionary of instructions and their opcodes
 OP_CODES = {"ADD": 2, "SUB": 3, "AND": 6, "OR": 7, "XOR": 8, "NOT": 9, "LSH": 10, "RSH": 11, "ARSH": 12, "FMUL": 13, "FMUL": 14, "MOVR": 15, "CMP": 4, "CMPR": 5, "MOVMR": 2, "MOVRM": 3, "CALL": 4, "MOVMRI": 5, "MOVRMI": 6, "RET": 7, "JL": 8, "JLE": 9, "JNE": 10, "JE": 11, "POP": 12, "PUSH": 13, "PUSHI": 14, "INCR": 60, "DECR": 61}
@@ -98,8 +98,8 @@ def parse(infile_str, outfile_str):
 			first_pass_queue.append(tokens[0])
 			continue
 
-		if tokens[0] == "JE" or tokens[0] == "JNE" or tokens[0] == "JLE" or tokens[0] == "JL":
-			# push jumps directly, don't encode on first pass (only first two tokens)
+		if tokens[0] == "JE" or tokens[0] == "JNE" or tokens[0] == "JLE" or tokens[0] == "JL" or tokens[0] == "CALL":
+			# push jumps and calls directly, don't encode on first pass (only first two tokens)
 			first_pass_queue.append(tokens[0] + " " + tokens[1])
 			# nop after jump
 			first_pass_queue.append(str(hex((OP_CODES["AND"] << 4))))
@@ -225,11 +225,12 @@ def parse(infile_str, outfile_str):
 		tokens = instruction.split()
 		# write each instruction to the instruction stream replacing labels as you
 		# go.
-		# call encode_14_Bit_Imm_instruction() on jumps (lines with more than one token)
+		# call encode_14_Bit_Imm_instruction() on jumps and calls (lines with more than one token)
 		if len(tokens) > 1:
 			# encode and save to instruction stream with label address
 			outfile.write(encode_14_Bit_Imm_instruction([tokens[0], str(labels[tokens[1]])])[2:] + "\n")
 		else:
+			# remove 0x
 			outfile.write(instruction[2:] + "\n")
 
 	infile.close()
