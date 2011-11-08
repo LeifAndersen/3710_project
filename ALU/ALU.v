@@ -25,6 +25,7 @@ module ALU(
 		input [15:0] B,
 		input [3:0] Opcode,
 		output reg [15:0] C,
+		output reg [15:0] D,
 		output reg Low,
 		output reg Negative,
 		output reg Zero
@@ -33,141 +34,179 @@ module ALU(
 	`include "opcodesLOL.v"
 
 	wire[15:0] D = -B;//~B + 1;
+	reg[31:0] temp;
 
 	always@(*) begin
 		case(Opcode)
 		ADD:
 		begin
-			C = A + B;
+			C <= A + B;
 			if (C == 0)
-				Zero = 1;
+				Zero <= 1;
 			else
-				Zero = 0;
-							
-			Low = $signed(A)<$signed(B);
-			Negative = $signed(A + B)<0;
+				Zero <= 0;
+			
+			Low <= $signed(A)<$signed(B);
+			Negative <= $signed(A + B)<0;
+			D <= 0;
 		end
 
 		SUB:
 		begin
-			C = A+D;
+			C <= A+D;
 			if (A == B)
-				Zero = 1;
+				Zero <= 1;
 			else
-				Zero = 0;
+				Zero <= 0;
 						
-			Low = $signed(A)<$signed(B);
-			Negative = C[15];
+			Low <= $signed(A)<$signed(B);
+			Negative <= C[15];
+			D <= 0;
 		end
 
 		CMP:
 		begin
-			Low = A<B;
-			Negative = $signed(A)<$signed(B);
+			Low <= A<B;
+			Negative <= $signed(A)<$signed(B);
 			if (A == B)
-				Zero = 1;
+				Zero <= 1;
 			else
-				Zero = 0;
-			C = 16'b0000000000000000;
+				Zero <= 0;
+			C <= 16'b0000000000000000;
+			D <= 0;
 		end
 
 		CMPR:
 		begin
-			Low = B<A;
-			Negative = $signed(B)<$signed(A);
+			Low <= B<A;
+			Negative <= $signed(B)<$signed(A);
 			if (A == B)
-				Zero = 1;
+				Zero <= 1;
 			else
 				Zero = 0;
-			C = 16'b0000000000000000;
+			C <= 16'b0000000000000000;
+			D <= 0;
 		end
 
 		AND:
 		begin
-			C = A&B;
+			C <= A&B;
 			if (C == 0)
-				Zero = 1;
+				Zero <= 1;
 			else
-				Zero = 0;
-			Low = A<B;
-			Negative = C[15];
+				Zero <= 0;
+			Low <= A<B;
+			Negative <= C[15];
+			D <= 0;
 		end
 
 		OR:
 		begin
-			C = A|B;
+			C <= A|B;
 			if (C == 0)
-				Zero = 1;
+				Zero <= 1;
 			else
-				Zero = 0;
-			Low = A<B;
-			Negative = C[15];
+				Zero <= 0;
+			Low <= A<B;
+			Negative <= C[15];
+			D <= 0;
 		end
 
 		XOR:
 		begin
-			C = A^B;
+			C <= A^B;
 			if (C == 0)
-				Zero = 1;
+				Zero <= 1;
 			else
-				Zero = 0;
-			Low = A<B;
-			Negative = C[15];
+				Zero <= 0;
+			Low <= A<B;
+			Negative <= C[15];
+			D <= 0;
 		end
 
 		NOT:
 		begin
-			C = ~A;
+			C <= ~A;
 			if (C == 0)
-				Zero = 1;
+				Zero <= 1;
 			else
-				Zero = 0;
-			Low = C<A; //0?
-			Negative = $signed(~A)<0;
+				Zero <= 0;
+			Low <= C<A; //0?
+			Negative <= $signed(~A)<0;
+			D <= 0;
 		end
 
 		LSH:
 		begin
-			C = B << A;
+			C <= B << A;
 			if (C == 0)
-				Zero = 1;
+				Zero <= 1;
 			else
-				Zero = 0;
+				Zero <= 0;
 			
-			Low = 1'b0;
-			Negative = 1'b0;
+			Low <= 1'b0;
+			Negative <= 1'b0;
+			D <= 0;
 		end
 
 		RSH:
 		begin
-			C = B >> A;
+			C <= B >> A;
 			if (C == 0)
-				Zero = 1;
+				Zero <= 1;
 			else
-				Zero = 0;
+				Zero <= 0;
 			
-			Low = 1'b0;
-			Negative = 1'b0;
+			Low <= 1'b0;
+			Negative <= 1'b0;
+			D <= 0;
 		end
 
 		ARSH:
 		begin
-			C = $signed(B) >>> A[3:0];
+			C <= $signed(B) >>> A[3:0];
 			if (C == 0)
-				Zero = 1;
+				Zero <= 1;
 			else
-				Zero = 0;
+				Zero <= 0;
 			
-			Low = 1'b0;
-			Negative = 1'b0;
+			Low <= 1'b0;
+			Negative <= 1'b0;
+			D <= 0;
+		end
+
+		MUL:
+		begin
+			{C, D} = A * B;
+			if (C == 0)
+				Zero <= 1;
+			else
+				Zero <= 0;
+				
+			Low <= 1'b0;
+			Negative <= 1'b0;
+		end
+		
+		FMUL:
+		begin
+			temp = A * B;
+			C = temp[29:14];
+			if (C == 0)
+				Zero <= 1;
+			else
+				Zero <= 0;
+				
+			Low <= 1'b0;
+			Negative <= 1'b0;
+			D <= 0;			
 		end
 
 		default:
 		begin
-			C = 16'b0000000000000000;
-			Low = 1'b0;
-			Negative = 1'b0;
-			Zero = 1'b0;
+			C <= 16'b0000000000000000;
+			Low <= 1'b0;
+			Negative <= 1'b0;
+			Zero <= 1'b0;
 		end
 
 		endcase
