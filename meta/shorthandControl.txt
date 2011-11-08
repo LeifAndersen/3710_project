@@ -11,9 +11,10 @@
     Addr        = 0;
     MemRead		= 0;
 
-    ADD-ARSH
+    ADD-ARSH including FMUL
         BuffersOff  = 6, 7
         FlagWrite   = 1;
+        BuffersOff  = 21
         if (11:8 == 12 || 11:8 == 13) begin
             WriteEn1    = 0
             WriteEn2    = 1
@@ -26,12 +27,24 @@
             BuffersOff  = 3
         end
 
-    MUL-FMUL
-        // TODO
+    MUL
+		BuffersOff	= 3, 6, 7
+		FlagWrite	= 1
+		if (11:8 == 12) begin
+            WriteEn1    = 1
+            WriteEn2    = 1
+            BuffersOn   = 2, 21
+        end else begin
+        	// NEVER!!!!!!!!!!!!!!!!!!!!
+            WriteEn1    = 0
+            WriteEn2    = 0
+            BuffersOff  = 2, 21
+        end
 
     MOVR
         BuffersOff  = 2, 3
         FlagWrite   = 0;
+        BuffersOff  = 21
         if (11:8 == 12 || 11:8 == 13) begin
             WriteEn1    = 0
             WriteEn2    = 1
@@ -51,7 +64,7 @@
     DestSel2    = 11:8
     SrcSel      = 3:0
     BuffersOn   = 1, 16
-    BuffersOff  = 0, 2, 3, 4, 5, 6, 7, 9, 11, 14, 15, 17, 18, 19, 20
+    BuffersOff  = 0, 2, 3, 4, 5, 6, 7, 9, 11, 14, 15, 17, 18, 19, 20, 21
     immediate   = 0;
     immediate14 = 0;
     FlagWrite   = 0;
@@ -89,7 +102,7 @@
     DestSel2    = 11:8
     SrcSel      = 3:0
     BuffersOn   = 0, 16
-    BuffersOff  = 1, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 17, 18, 19, 20
+    BuffersOff  = 1, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 17, 18, 19, 20, 21
     MemWrite    = 0;
     immediate   = 7:0;
     Addr        = 0;
@@ -109,9 +122,6 @@
             BuffersOn   = 2
             BuffersOff  = 3
         end
-
-    MUL-FMUL
-        // TODO
 
     MOVR
         BuffersOff  = 2, 3
@@ -141,7 +151,7 @@
     DestSel2    = 0;
     SrcSel      = 13;
 	BuffersOn   = 1, 9;
-	BuffersOff  = 0, 2, 3, 4, 5, 6, 7, 8, 11, 13, 17, 19, 20;
+	BuffersOff  = 0, 2, 3, 4, 5, 6, 7, 8, 11, 13, 17, 19, 20, 21;
     immediate   = 0;
     Addr        = 13:0;
 
@@ -234,7 +244,7 @@
 1100-1110:
     FlagWrite   = 0;
     BuffersOn   = 16, 8, 10;
-    BuffersOff  = 2, 3, 4, 5, 6, 7, 9, 11, 13, 14, 15, 17;
+    BuffersOff  = 2, 3, 4, 5, 6, 7, 9, 11, 13, 14, 15, 17, 21;
     immediate   = 0;
     Addr        = 0;
     ALUOp       = 0;
@@ -287,7 +297,7 @@
 111100-111101:
     FlagWrite   = 0;
     BuffersOn   = 16;
-    BuffersOff  = 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15;
+    BuffersOff  = 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 21;
     immediate   = 0;
     Addr        = 0;
     ALUOp       = 0;
