@@ -76,6 +76,19 @@ def verify_token_count(line_num, tokens, count):
 		print "Invalid instruction on line: " + str(line_num)
 		exit(1)
 
+def encode_cmps(tokens, line_num, line):
+	if tokens[1][0] == "%" and tokens[2][0] == "%":
+		# push this
+		return encode_R_to_R_instruction(tokens, 0)
+	elif tokens [1][0] == "%" and tokens[2][0] != "%":
+		# push this
+		return encode_Imm_to_R_instruction(tokens)
+	elif tokens[0] == "CMP" and tokens [1][0] != "%" and tokens[2][0] == "%":
+		# push this
+		return encode_Imm_to_R_instruction(["CMPR", tokens[2], tokens[1]])
+	else:
+		explode_bomb(line_num, line)
+
 def parse(infile_str, outfile_str):
 	labels = {}
 	infile = open(infile_str, 'r')
@@ -90,7 +103,7 @@ def parse(infile_str, outfile_str):
 
 		tokens = line.split()
 		if len(tokens) == 0 or tokens[0][0] == '#':
-			# empty lines, comments, and labels
+			# empty lines and comments
 			continue
 
 		if tokens[0][-1] == ":":
@@ -98,13 +111,81 @@ def parse(infile_str, outfile_str):
 			first_pass_queue.append(tokens[0])
 			continue
 
-		tokens[0] = tokens[0].upper() # Upper case instruction.
-		if tokens[0] == "JE" or tokens[0] == "JNE" or tokens[0] == "JLE" or tokens[0] == "JL" or tokens[0] == "CALL":
-			# push jumps and calls directly, don't encode on first pass (only first two tokens)
-			first_pass_queue.append(tokens[0] + " " + tokens[1])
-			# nop after jump
-			first_pass_queue.append(str(hex((OP_CODES["AND"] << 4))))
-			continue
+		# uppercase the instructions
+		tokens[0] = tokens[0].upper()
+
+		if tokens[0][0] == "J" or tokens[0] == "CALL":
+			# normal jumps and call
+			if len(tokens) == 2 || (len(tokens) && tokens[2]):
+				# push jumps and calls directly, don't encode on first pass (only first two tokens)
+				first_pass_queue.append(tokens[0] + " " + tokens[1])
+				# nop after jump
+				first_pass_queue.append(str(hex(0)))
+				continue
+			# special Jon jumps
+			else if len(tokens) >= 4:
+				# remove commas
+				if tokens[1][-1] == ",":
+					tokens[1] = tokens[1][:-1]
+				else:
+					explode_bomb(line_num, line)
+				if tokens[2][-1] == ",":
+					tokens[2] = tokens[2][:-1]
+				else:
+					explode_bomb(line_num, line)
+				# switch on jump type
+				if tokens[0] == "JG":
+					# CMPR
+					# jmp
+					# NOP
+					first_pass_queue.append(encode_cmps([OP_CODES["CMPR"], tokens[1], tokens[2]], line_num, line))
+					first_pass_queue.append("JL " + tokens[3])
+				else if tokens[0] == "JGE":
+					# CMPR
+					# jmp
+					# NOP
+					first_pass_queue.append(encode_cmps([OP_CODES["CMPR"], tokens[1], tokens[2]], line_num, line))
+					first_pass_queue.append("JLE " + tokens[3])
+				else if tokens[0] == "JA":
+					# CMPR
+					# jmp
+					# NOP
+					first_pass_queue.append(encode_cmps([OP_CODES["CMPR"], tokens[1], tokens[2]], line_num, line))
+					first_pass_queue.append("JB " + tokens[3])
+				else if tokens[0] == "JAE":
+					# CMPR
+					# jmp
+					# NOP
+					first_pass_queue.append(encode_cmps([OP_CODES["CMPR"], tokens[1], tokens[2]], line_num, line))
+					first_pass_queue.append("JBE " + tokens[3])
+				else if tokens[0] == "JB":
+					# CMPR
+					# jmp
+					# NOP
+					first_pass_queue.append(encode_cmps([OP_CODES["CMP"], tokens[1], tokens[2]], line_num, line))
+					first_pass_queue.append("JB " + tokens[3])
+				else if tokens[0] == "JBE":
+					# CMPR
+					# jmp
+					# NOP
+					first_pass_queue.append(encode_cmps([OP_CODES["CMP"], tokens[1], tokens[2]], line_num, line))
+					first_pass_queue.append("JBE " + tokens[3])
+				else if tokens[0] == "JL":
+					# CMPR
+					# jmp
+					# NOP
+					first_pass_queue.append(encode_cmps([OP_CODES["CMP"], tokens[1], tokens[2]], line_num, line))
+					first_pass_queue.append("JL " + tokens[3])
+				else if tokens[0] == "JLE":
+					# CMPR
+					# jmp
+					# NOP
+					first_pass_queue.append(encode_cmps([OP_CODES["CMP"], tokens[1], tokens[2]], line_num, line))
+					first_pass_queue.append("JLE " + tokens[3])
+				else
+					explode_bomb(line_num, line)
+				first_pass_queue.append(str(hex(0)))
+				continue
 
 		instruction_type = get_instruction_type(tokens[0])
 
