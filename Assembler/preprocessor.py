@@ -39,7 +39,7 @@ def parse(infile_name, outfile_name):
 				line_out += tokens[token[0:-1]] + ','
 			elif token[0] == '[' and token[-1] == ']' and token[1:-1] in tokens:
 				line_out += '[' + tokens[token[1:-1]] + ']'
-			elif token[0] == '[' and token[-1] == ',' and token[-2] = ']' and token[1:-1] in tokens:
+			elif token[0] == '[' and token[-1] == ',' and token[-2] == ']' and token[1:-2] in tokens:
 				line_out += '[' + tokens[token[1:-2]] + '],'
 			else:
 				line_out += token
