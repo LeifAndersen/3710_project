@@ -39,10 +39,13 @@ parameter CALL		= 4'b0100;
 parameter MOVMRI	= 4'b0101;
 parameter MOVRMI	= 4'b0110;
 parameter RET		= 4'b0111;
-parameter JL		= 4'b1000;
-parameter JLE		= 4'b1001;
-parameter JNE		= 4'b1010;
-parameter JE		= 4'b1011;
+parameter JL		= 5'b10000;
+parameter JLE		= 5'b10001;
+parameter JNE		= 5'b10010;
+parameter JE		= 5'b10011;
+parameter J			= 5'b10100;
+parameter JBE		= 5'b10101;
+parameter JB		= 5'b10110;
 
 parameter POP		= 4'b1100;
 parameter PUSH		= 4'b1101;

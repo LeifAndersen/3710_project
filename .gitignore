@@ -1,6 +1,6 @@
 .DS_Store
 *.pyc
-
+*.pp
 *.b
 *.o
 *.user

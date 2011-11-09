@@ -30,3 +30,4 @@ ERRORLOOP:				# otherwise, fall through and display error message
 
 END:
 	MOV [8192], %4
+	MOV $9, [0x404]
