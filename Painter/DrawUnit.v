@@ -71,6 +71,7 @@ begin
 	begin
 		pixelAddrOffset <= 19200;
 		vgaAddrOffset <= 0;
+		wrtPtr <= 0;
 	end
 
 	if (!full) //Don't write to PRAM queue while it's full.
