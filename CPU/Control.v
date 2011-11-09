@@ -426,7 +426,7 @@ module Control(
 				//JL: low or negative
 				MemRead      <= 0;
 				BuffCtrl[8]  <= 0;
-				if (Low == 1'b1 || Negative == 1'b1) begin
+				if (Negative == 1'b1) begin
 					BuffCtrl[15] <= 1;
 					BuffCtrl[12] <= 0;
 					BuffCtrl[16] <= 0;
@@ -452,7 +452,7 @@ module Control(
 				//JLE: low, negative, or zero
 				MemRead      <= 0;
 				BuffCtrl[8]  <= 0;
-				if (Low == 1'b1 || Negative == 1'b1 || Zero == 1'b1) begin
+				if (Negative == 1'b1 || Zero == 1'b1) begin
 					BuffCtrl[15] <= 1;
 					BuffCtrl[12] <= 0;
 					BuffCtrl[16] <= 0;
@@ -503,6 +503,67 @@ module Control(
 				MemRead      <= 0;
 				BuffCtrl[8]  <= 0;
 				if (Zero == 1'b1) begin
+					BuffCtrl[15] <= 1;
+					BuffCtrl[12] <= 0;
+					BuffCtrl[16] <= 0;
+					BuffCtrl[14] <= 0;
+					BuffCtrl[10] <= 0;
+					BuffCtrl[11] <= 0;
+					WriteEn1     <= 0;
+					MemWrite     <= 0;
+				end else begin
+					BuffCtrl[16] <= 1;
+					BuffCtrl[12] <= 0;
+					BuffCtrl[15] <= 0;
+					BuffCtrl[14] <= 0;
+					BuffCtrl[10] <= 0;
+					BuffCtrl[11] <= 0;
+					WriteEn1     <= 0;
+					MemWrite     <= 0;
+				end
+			end
+			else if(instruction[17:14] == J) begin
+				//JE:
+				MemRead      <= 0;
+				BuffCtrl[8]  <= 0;
+				BuffCtrl[15] <= 1;
+				BuffCtrl[12] <= 0;
+				BuffCtrl[16] <= 0;
+				BuffCtrl[14] <= 0;
+				BuffCtrl[10] <= 0;
+				BuffCtrl[11] <= 0;
+				WriteEn1     <= 0;
+				MemWrite     <= 0;
+			end
+			else if(instruction[17:14] == JBE) begin
+				//JE:
+				MemRead      <= 0;
+				BuffCtrl[8]  <= 0;
+				if (Low == 1'b1 || Zero == 1'b1) begin
+					BuffCtrl[15] <= 1;
+					BuffCtrl[12] <= 0;
+					BuffCtrl[16] <= 0;
+					BuffCtrl[14] <= 0;
+					BuffCtrl[10] <= 0;
+					BuffCtrl[11] <= 0;
+					WriteEn1     <= 0;
+					MemWrite     <= 0;
+				end else begin
+					BuffCtrl[16] <= 1;
+					BuffCtrl[12] <= 0;
+					BuffCtrl[15] <= 0;
+					BuffCtrl[14] <= 0;
+					BuffCtrl[10] <= 0;
+					BuffCtrl[11] <= 0;
+					WriteEn1     <= 0;
+					MemWrite     <= 0;
+				end
+			end
+			else if(instruction[17:14] == JB) begin
+				//JE:
+				MemRead      <= 0;
+				BuffCtrl[8]  <= 0;
+				if (Low == 1'b1) begin
 					BuffCtrl[15] <= 1;
 					BuffCtrl[12] <= 0;
 					BuffCtrl[16] <= 0;
