@@ -48,15 +48,26 @@ reg[2:0] BUFFERtoVGA; //Data out of frame buffer to VGA output, mux of vgaR, vga
 reg bufferWe1; //Write enable to red/green/blue buffers.
 reg bufferWe2; //Write enable to special buffer.
 reg swapBuffers; //Signals when it's time to switch buffers.
+wire bufferWrtPtr;
+wire bufferRdPtr;
+
+reg pixelAddrOffset; //19200 or 0.
+reg vgaAddrOffset; //19200 or 0.
 
 wire pixelAddr2; //The address used to read from special buffer.
-assign pixelAddr2 = vgaAddr - 36800; //Convert the address calculated by vgaAddr into the right one. 160*115*2 for front and back buffer of red/green/blue.  Above that is special.
+assign bufferWrtPtr2 = vgaAddr - 36800; //Convert the address calculated by vgaAddr into the right one. 160*115*2 for front and back buffer of red/green/blue.  Above that is special.
 assign vgaAddr = vgaLine * 160 + vgaOffset;
+assign bufferWrtPtr = pixelAddr + pixelAddrOffset;
+assign bufferRdPtr = vgaAddr + vgaAddrOffset;
 
 always@(posedge clk)
 begin
 	if (reset)
-		
+	begin
+		pixelAddrOffset <= 19200;
+		vgaAddrOffset <= 0;
+	end
+
 	if (!full) //Don't write to PRAM queue while it's full.
 		if ((wrtPtr != rdPtr - 1) && we == 1) //Make sure write can't lap read (that means overwriting start of queue instead of adding to end).
 			begin
@@ -69,7 +80,7 @@ begin
 			end
 	
 	//4 buffers memory controller
-	if (pixelAddr >= 36800) //This means it exceeds the 3 regular buffer, goes into the special.
+	if (pixelAddr + pixelAddrOffset >= 36800) //This means it exceeds the 3 regular buffer, goes into the special.
 		begin
 			bufferWe1 <= 0;
 			bufferWe2 <= bufferWe; //If painter wants to write a color, enable special buffer write.
@@ -82,7 +93,7 @@ begin
 			//BUFFERtoVGA <= {vgaR, vgaG, vgaB}; Junk, wrong place i think.
 		end
 		
-	if (vgaAddr >= 36800) //This means it exceeds the 3 regular buffer, goes into the special.
+	if (vgaAddr + vgaAddrOffset >= 36800) //This means it exceeds the 3 regular buffer, goes into the special.
 		begin
 			BUFFERtoVGA <= vgaS; //This is junk, wrong place i think.
 		end
@@ -91,15 +102,15 @@ begin
 			BUFFERtoVGA <= {vgaR, vgaG, vgaB}; //Junk, wrong place i think.
 		end
 		
-	if (swapBuffers && vgaAddr >= 19200) //First 19200 addresses are one buffer, following addresses are second buffer.
+	if (swapBuffers && pixelAddrOffset == 19200) //First 19200 addresses are one buffer, following addresses are second buffer.
 		begin
-			vgaAddr <= vgaAddr - 19200;
-			pixelAddr <= pixelAddr + 19200;
+			pixelAddrOffset <= 0;
+			vgaAddrOffset <= 19200;
 		end
 	else
 		begin
-			vgaAddr <= vgaAddr + 19200;
-			pixelAddr <= pixelAddr - 19200;
+			pixelAddrOffset <= 19200;
+			vgaAddrOffset <= 0;
 		end
 end
 
@@ -135,7 +146,7 @@ DCBlockRam #(.DATA(1),.ADDR(16),.SIZE(36864),.FILE("init.txt")) redBuffer(  //11
 	.clkb(vgaClk), //VGA reads at 25Mhz.
 	.wea(bufferWe1), //Determined by address in buffer.
 	.web(0),
-	.addra(pixelAddr), //Which pixel to write to, determined by painter.
+	.addra(bufferWrtPtr), //Which pixel to write to, determined by painter.
 	.addrb(vgaAddr), //Which pixel to read from, determined by vga.
 	.dina(color2[2]),
 	.dinb(0),
@@ -148,7 +159,7 @@ DCBlockRam #(.DATA(1),.ADDR(16),.SIZE(36864),.FILE("init.txt")) greenBuffer(  //
 	.clkb(vgaClk), //VGA reads at 25Mhz.
 	.wea(bufferWe1),
 	.web(0),
-	.addra(pixelAddr), //Which pixel to write to, determined by painter.
+	.addra(bufferWrtPtr), //Which pixel to write to, determined by painter.
 	.addrb(vgaAddr), //Which pixel to read from, determined by vga.
 	.dina(color2[1]),
 	.dinb(0),
@@ -161,7 +172,7 @@ DCBlockRam #(.DATA(1),.ADDR(16),.SIZE(36864),.FILE("init.txt")) blueBuffer(  //1
 	.clkb(vgaClk), //VGA reads at 25Mhz.
 	.wea(bufferWe1),
 	.web(0),
-	.addra(pixelAddr), //Which pixel to write to, determined by painter.
+	.addra(bufferWrtPtr), //Which pixel to write to, determined by painter.
 	.addrb(vgaAddr), //Which pixel to read from, determined by vga.
 	.dina(color2[0]),
 	.dinb(0),
@@ -174,7 +185,7 @@ DCBlockRam #(.DATA(3),.ADDR(11),.SIZE(1600),.FILE("init.txt")) specialBuffer(  /
 	.clkb(vgaClk), //VGA reads at 25Mhz.
 	.wea(bufferWe2),
 	.web(0),
-	.addra(pixelAddr2), //Which pixels to write to (3 instead of 1 at a time here), determined by painter.
+	.addra(bufferWrtPtr2), //Which pixels to write to (3 instead of 1 at a time here), determined by painter.
 	.addrb(vgaAddr), //Which pixel to read from (all 3 come from this buffer instead of 3 separate buffers), determined by vga.
 	.dina(color2[2:0]),
 	.dinb(0),
