@@ -25,8 +25,8 @@ module VGA_Controller(
 	input g,
 	input b,
 	//output reg[17:0] fbAddr, //Address into frame buffer.
-	output reg[6:0] line,
-	output reg[7:0] offset,
+	output reg[8:0] line,
+	output reg[9:0] offset,
 	output reg[2:0] color, //{R, G, B}
 	output reg hsync,
 	output reg vsync
@@ -34,18 +34,18 @@ module VGA_Controller(
 
 //All parameters are in units of Clocks.
 //HSYNC
-parameter Ts = 800; //Total line time
-parameter Tdisp = 640; //Total horizontal resolution.
-parameter Tpw = 96; //The time hsync stays low.
-parameter Tfp = 16; //Front porch
-parameter Tbp = 48; //Back porch
+parameter Ts = 10'd800; //Total line time
+parameter Tdisp = 10'd640; //Total horizontal resolution.
+parameter Tpw = 10'd96; //The time hsync stays low.
+parameter Tfp = 10'd16; //Front porch
+parameter Tbp = 10'd48; //Back porch
 
 //VSYNC
-parameter VTs = 416800; //Total line time
-parameter VTdisp = 384000; //Total horizontal resolution.
-parameter VTpw = 1600; //The time hsync stays low.
-parameter VTfp = 8000; //Back porch
-parameter VTbp = 23200; //Front porch
+parameter VTs = 20'd416800; //Total line time
+parameter VTdisp = 20'd384000; //Total horizontal resolution.
+parameter VTpw = 20'd1600; //The time hsync stays low.
+parameter VTfp = 20'd8000; //Back porch
+parameter VTbp = 20'd23200; //Front porch
 
 reg[9:0] pixCount; 	// 800 (big enuf to hold Ts)
 reg[19:0] totalPix; 	// 416,800 (big enough for VTs)

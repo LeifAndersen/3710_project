@@ -36,6 +36,7 @@ module Painter_tb;
 	wire [14:0] addr;
 	wire [2:0] data;
 	wire we;
+	wire swapBuffers;
 
 	// Instantiate the Unit Under Test (UUT)
 	Painter uut (
@@ -47,7 +48,8 @@ module Painter_tb;
 		.full(full), 
 		.addr(addr), 
 		.data(data), 
-		.we(we)
+		.we(we),
+		.swapBuffers
 	);
 integer i;
 

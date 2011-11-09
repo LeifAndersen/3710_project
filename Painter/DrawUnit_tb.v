@@ -29,7 +29,7 @@ module DrawUnit_tb;
 	reg vgaClk;
 	reg reset;
 	reg we;
-	reg data;
+	reg [15:0] data;
 
 	// Outputs
 	wire full;
