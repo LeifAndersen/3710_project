@@ -248,7 +248,7 @@ def parse(infile_str, outfile_str):
 						#     MOVR %R, %MR
 						first_pass_queue.append(encode_14_Bit_Imm_instruction(["MOVMRI", tokens[2][1:-1]]))
 						first_pass_queue.append(str(hex(0)))
-						first_pass_queue.append(str(hex((trim_reg(tokens[2]) << 8) + (OP_CODES["MOVR"] << 4) + 15)))
+						first_pass_queue.append(str(hex((trim_reg(tokens[1]) << 8) + (OP_CODES["MOVR"] << 4) + 15)))
 			elif tokens[1][0] == '[':
 				if tokens[1][-1] != ']':
 					delim_mismatch(line_num)
