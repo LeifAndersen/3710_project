@@ -25,8 +25,8 @@ module VGA_Controller(
 	input g,
 	input b,
 	//output reg[17:0] fbAddr, //Address into frame buffer.
-	output reg[8:0] line,
-	output reg[9:0] offset,
+	output reg[6:0] line,
+	output reg[7:0] offset,
 	output reg[2:0] color, //{R, G, B}
 	output reg hsync,
 	output reg vsync

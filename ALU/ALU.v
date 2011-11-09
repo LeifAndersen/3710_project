@@ -83,7 +83,7 @@ module ALU(
 			if (A == B)
 				Zero <= 1;
 			else
-				Zero = 0;
+				Zero <= 0;
 			C <= 16'b0000000000000000;
 			D <= 0;
 		end
@@ -177,7 +177,7 @@ module ALU(
 
 		MUL:
 		begin
-			{C, D} = A * B;
+			{D, C} = A * B;
 			if (C == 0)
 				Zero <= 1;
 			else
@@ -190,7 +190,7 @@ module ALU(
 		FMUL:
 		begin
 			temp = A * B;
-			C = temp[29:14];
+			C = temp[31:16];
 			if (C == 0)
 				Zero <= 1;
 			else
