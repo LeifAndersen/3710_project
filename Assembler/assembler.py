@@ -71,6 +71,15 @@ def encode_14_Bit_Imm_instruction(tokens):
 		immediate = int(tokens[1])
 	return  str(hex((OP_CODES[tokens[0]] << 14) + truncate_bits(immediate, 14)))
 
+# takes tokens of Special I-Type instruction and encodes to a string of the hex
+def encode_jumps(tokens):
+	immediate = 0
+	if check_for_hex(tokens[1]):
+		immediate = int(tokens[1], 16)
+	else:
+		immediate = int(tokens[1])
+	return  str(hex((OP_CODES[tokens[0]] << 13) + truncate_bits(immediate, 13)))
+
 def verify_token_count(line_num, tokens, count):
 	if len(tokens) < count or (len(tokens) > count and tokens[count][0] != '#'):
 		print "Invalid instruction on line: " + str(line_num)
@@ -307,10 +316,14 @@ def parse(infile_str, outfile_str):
 		tokens = instruction.split()
 		# write each instruction to the instruction stream replacing labels as you
 		# go.
-		# call encode_14_Bit_Imm_instruction() on jumps and calls (lines with more than one token)
+		# call encode_14_Bit_Imm_instruction() on calls and encode_jumps() on jumps (lines with more than one token)
 		if len(tokens) > 1:
-			# encode and save to instruction stream with label address
-			outfile.write(encode_14_Bit_Imm_instruction([tokens[0], str(labels[tokens[1]])])[2:] + "\n")
+			if tokens[1] == "CALL":
+				# encode call and save to instruction stream with label address
+				outfile.write(encode_14_Bit_Imm_instruction([tokens[0], str(labels[tokens[1]])])[2:] + "\n")
+			else:
+				# encode jump and save
+				outfile.write(encode_jumps([tokens[0], str(labels[tokens[1]])])[2:] + "\n")
 		else:
 			# remove 0x
 			outfile.write(instruction[2:] + "\n")
