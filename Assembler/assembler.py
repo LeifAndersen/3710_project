@@ -116,14 +116,14 @@ def parse(infile_str, outfile_str):
 
 		if tokens[0][0] == "J" or tokens[0] == "CALL":
 			# normal jumps and call
-			if len(tokens) == 2 || (len(tokens) && tokens[2]):
+			if len(tokens) == 2 or (len(tokens) and tokens[2]):
 				# push jumps and calls directly, don't encode on first pass (only first two tokens)
 				first_pass_queue.append(tokens[0] + " " + tokens[1])
 				# nop after jump
 				first_pass_queue.append(str(hex(0)))
 				continue
 			# special Jon jumps
-			else if len(tokens) >= 4:
+			elif len(tokens) >= 4:
 				# remove commas
 				if tokens[1][-1] == ",":
 					tokens[1] = tokens[1][:-1]
@@ -140,49 +140,49 @@ def parse(infile_str, outfile_str):
 					# NOP
 					first_pass_queue.append(encode_cmps([OP_CODES["CMPR"], tokens[1], tokens[2]], line_num, line))
 					first_pass_queue.append("JL " + tokens[3])
-				else if tokens[0] == "JGE":
+				elif tokens[0] == "JGE":
 					# CMPR
 					# jmp
 					# NOP
 					first_pass_queue.append(encode_cmps([OP_CODES["CMPR"], tokens[1], tokens[2]], line_num, line))
 					first_pass_queue.append("JLE " + tokens[3])
-				else if tokens[0] == "JA":
+				elif tokens[0] == "JA":
 					# CMPR
 					# jmp
 					# NOP
 					first_pass_queue.append(encode_cmps([OP_CODES["CMPR"], tokens[1], tokens[2]], line_num, line))
 					first_pass_queue.append("JB " + tokens[3])
-				else if tokens[0] == "JAE":
+				elif tokens[0] == "JAE":
 					# CMPR
 					# jmp
 					# NOP
 					first_pass_queue.append(encode_cmps([OP_CODES["CMPR"], tokens[1], tokens[2]], line_num, line))
 					first_pass_queue.append("JBE " + tokens[3])
-				else if tokens[0] == "JB":
+				elif tokens[0] == "JB":
 					# CMPR
 					# jmp
 					# NOP
 					first_pass_queue.append(encode_cmps([OP_CODES["CMP"], tokens[1], tokens[2]], line_num, line))
 					first_pass_queue.append("JB " + tokens[3])
-				else if tokens[0] == "JBE":
+				elif tokens[0] == "JBE":
 					# CMPR
 					# jmp
 					# NOP
 					first_pass_queue.append(encode_cmps([OP_CODES["CMP"], tokens[1], tokens[2]], line_num, line))
 					first_pass_queue.append("JBE " + tokens[3])
-				else if tokens[0] == "JL":
+				elif tokens[0] == "JL":
 					# CMPR
 					# jmp
 					# NOP
 					first_pass_queue.append(encode_cmps([OP_CODES["CMP"], tokens[1], tokens[2]], line_num, line))
 					first_pass_queue.append("JL " + tokens[3])
-				else if tokens[0] == "JLE":
+				elif tokens[0] == "JLE":
 					# CMPR
 					# jmp
 					# NOP
 					first_pass_queue.append(encode_cmps([OP_CODES["CMP"], tokens[1], tokens[2]], line_num, line))
 					first_pass_queue.append("JLE " + tokens[3])
-				else
+				else:
 					explode_bomb(line_num, line)
 				first_pass_queue.append(str(hex(0)))
 				continue
