@@ -42,17 +42,21 @@ wire vgaR; //Data out of frame buffer to VGA output.
 wire vgaG; //Data out of frame buffer to VGA output.
 wire vgaB; //Data out of frame buffer to VGA output.
 wire[2:0] vgaS; //Data out of frame buffer to VGA output.
-wire vgaLine; //Line of pixels vga is drawing to.
-wire vgaOffset; //Specific pixel (offset from left of line) vga is drawing to.
+wire[6:0] vgaLine; //Line of pixels vga is drawing to.
+wire[7:0] vgaOffset; //Specific pixel (offset from left of line) vga is drawing to.
 reg[2:0] BUFFERtoVGA; //Data out of frame buffer to VGA output, mux of vgaR, vgaG, vgaB, and vgaS.
 reg bufferWe1; //Write enable to red/green/blue buffers.
 reg bufferWe2; //Write enable to special buffer.
+reg swapBuffers; //Signals when it's time to switch buffers.
 
 wire pixelAddr2; //The address used to read from special buffer.
 assign pixelAddr2 = vgaAddr - 36800; //Convert the address calculated by vgaAddr into the right one. 160*115*2 for front and back buffer of red/green/blue.  Above that is special.
+assign vgaAddr = vgaLine * 160 + vgaOffset;
 
 always@(posedge clk)
 begin
+	if (reset)
+		
 	if (!full) //Don't write to PRAM queue while it's full.
 		if ((wrtPtr != rdPtr - 1) && we == 1) //Make sure write can't lap read (that means overwriting start of queue instead of adding to end).
 			begin
@@ -77,6 +81,26 @@ begin
 			bufferWe2 <= 0;
 			//BUFFERtoVGA <= {vgaR, vgaG, vgaB}; Junk, wrong place i think.
 		end
+		
+	if (vgaAddr >= 36800) //This means it exceeds the 3 regular buffer, goes into the special.
+		begin
+			BUFFERtoVGA <= vgaS; //This is junk, wrong place i think.
+		end
+	else
+		begin
+			BUFFERtoVGA <= {vgaR, vgaG, vgaB}; //Junk, wrong place i think.
+		end
+		
+	if (swapBuffers && vgaAddr >= 19200) //First 19200 addresses are one buffer, following addresses are second buffer.
+		begin
+			vgaAddr <= vgaAddr - 19200;
+			pixelAddr <= pixelAddr + 19200;
+		end
+	else
+		begin
+			vgaAddr <= vgaAddr + 19200;
+			pixelAddr <= pixelAddr - 19200;
+		end
 end
 
 
@@ -90,7 +114,8 @@ Painter painter(
 	.full(full), //This signal tells the CPU to NOP on its write until queue has space, also tells PRAM not to latch CPU'S value.
 	.addr(pixelAddr), //Address (pixel location) in frame buffer.  Only need addressing for 1 buffer.  Which buffer is determined externally.
 	.data(color2), //1 bit routed to each bit-addressed buffer, or all 3 bits if it's the special buffer.
-	.we(bufferWe) //write enable to frame buffer.
+	.we(bufferWe), //write enable to frame buffer.
+	.swapBuffers(swapBuffers)
     );
 
 BlockRam #(.DATA(16),.ADDR(10),.SIZE(1024),.FILE("init.txt")) PRAM(
@@ -102,18 +127,18 @@ BlockRam #(.DATA(16),.ADDR(10),.SIZE(1024),.FILE("init.txt")) PRAM(
 	.dina(data), //Data from CPU to write.
 	.dinb(0), //Port B is read only.
 	//.douta(0), Port A is write only
-	.doutb(PData)
+	.doutb(Pdata)
 	 );
 
 DCBlockRam #(.DATA(1),.ADDR(16),.SIZE(36864),.FILE("init.txt")) redBuffer(  //115 horizontal lines of pixels, out of the full 120.
 	.clka(clk),
 	.clkb(vgaClk), //VGA reads at 25Mhz.
 	.wea(bufferWe1), //Determined by address in buffer.
-	//.web(0),
+	.web(0),
 	.addra(pixelAddr), //Which pixel to write to, determined by painter.
 	.addrb(vgaAddr), //Which pixel to read from, determined by vga.
 	.dina(color2[2]),
-	//.dinb(0),
+	.dinb(0),
 	//.douta(0),
 	.doutb(vgaR)
 	 );
@@ -163,6 +188,7 @@ VGA_Controller vga_controller(
 	.r(BUFFERtoVGA[2]),
 	.g(BUFFERtoVGA[1]),
 	.b(BUFFERtoVGA[0]),
+	//.fbAddr(vgaAddr),
 	.line(vgaLine), //Frame buffer address.  TOBO done.
 	.offset(vgaOffset),
 	.color(color), //{R, G, B}

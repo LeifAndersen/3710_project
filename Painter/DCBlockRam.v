@@ -44,8 +44,8 @@ module DCBlockRam#(parameter DATA = 18, parameter ADDR = 14, parameter SIZE = 12
 
    //  The following code is only necessary if you wish to initialize the RAM 
    //  contents via an external file (use $readmemb for binary data	
-	initial
-		$readmemh(FILE, memory);
+	//initial
+		//$readmemh(FILE, memory);
 
    always @(posedge clka)
 	begin
