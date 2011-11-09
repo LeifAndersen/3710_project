@@ -27,7 +27,8 @@ module Painter(
 	output reg full, //This signal tells the CPU to NOP on its write until queue has space, also tells PRAM not to latch CPU'S value.
 	output reg [14:0] addr, //Address (pixel location) in frame buffer.  Only need addressing for 1 buffer.  Which buffer is determined externally.
 	output reg [2:0] data, //1 bit routed to each bit-addressed buffer, or all 3 bits if it's the special buffer.
-	output reg we //write enable to frame buffer.
+	output reg we, //write enable to frame buffer.
+	output reg swapBuffers //1 when CPU writes 16'hffff to PRAM, time to swap front and back buffer.
     );
 
 parameter read1 = 0;
@@ -49,6 +50,7 @@ begin
 			rdPtr <= 0;
 			we <= 0;
 			full <= 0;
+			swapBuffers <= 0;
 		end
 	else begin
 	
@@ -66,22 +68,33 @@ begin
 			addr <= 0;
 			if (wrtPtr != rdPtr)  //New data to read.
 				begin
-					left <= PRAMdata[13:7];
-					right <= PRAMdata[6:0];
-					state <= read2;
-					if (rdPtr == 1023) //Probly not necessary, this should overflow correctly anyways.  If necessary, then above comparisons are wrong.
-						rdPtr <= 0;
-					else
+					if(PRAMdata == 16'hffff)
+					begin
+						swapBuffers <= 1;
 						rdPtr <= rdPtr + 1;
+					end
+					else
+					begin
+						swapBuffers <= 0;
+						line <= PRAMdata[9:3];
+						data <= PRAMdata[2:0];
+						state <= read2;
+						if (rdPtr == 1023) //Probly not necessary, this should overflow correctly anyways.  If necessary, then above comparisons are wrong.
+							rdPtr <= 0;
+						else
+							rdPtr <= rdPtr + 1;
+					end
 				end
+			else
+				swapBuffers <= 0;
 		end
 		
 	read2:
 		begin
 			if (wrtPtr != rdPtr)  //New data to read.
 				begin
-					line <= PRAMdata[9:3];
-					data <= PRAMdata[2:0];
+					left <= PRAMdata[15:8];
+					right <= PRAMdata[7:0];
 					state <= paint;
 					if (rdPtr == 1023)
 						rdPtr <= 0;
