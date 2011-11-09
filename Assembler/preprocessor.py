@@ -10,6 +10,7 @@ def parse(infile_name, outfile_name):
 
 	tokens = {}
 	
+	print '.', 
 	# Get the tokens
 	i = 0
 	for line in infile:
@@ -22,6 +23,7 @@ def parse(infile_name, outfile_name):
 			tokens[line_tokens[1]] = line_tokens[2]
 		i+=1
 
+	print '.', 
 	# Kill the pre-processor commands
 	infile.seek(0)	
 	for line in infile:
@@ -43,6 +45,7 @@ def parse(infile_name, outfile_name):
 
 	infile.close()
 	outfile.close()
+	print '.', 
 
 def main():
 	filestring = sys.argv[1]
