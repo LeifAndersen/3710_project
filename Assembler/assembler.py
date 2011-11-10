@@ -255,9 +255,12 @@ def parse(infile_str, outfile_str):
 						#     MOVMRI Imm
 						#     NOP
 						#     MOVR %R, %MR
-						first_pass_queue.append(encode_14_Bit_Imm_instruction(["MOVMRI", tokens[2][1:-1]]))
-						first_pass_queue.append(str(hex(0)))
-						first_pass_queue.append(str(hex((trim_reg(tokens[1]) << 8) + (OP_CODES["MOVR"] << 4) + 15)))
+						if tokens[1][0] != "%":
+							explode_bomb(line_num, line)
+						else:
+							first_pass_queue.append(encode_14_Bit_Imm_instruction(["MOVMRI", tokens[2][1:-1]]))
+							first_pass_queue.append(str(hex(0)))
+							first_pass_queue.append(str(hex((trim_reg(tokens[1]) << 8) + (OP_CODES["MOVR"] << 4) + 15)))
 			elif tokens[1][0] == '[':
 				if tokens[1][-1] != ']':
 					delim_mismatch(line_num)
@@ -269,8 +272,11 @@ def parse(infile_str, outfile_str):
 						# psuedoinstruction becomes
 						#     MOVR %MR, %R
 						#     MOVRMI Imm
-						first_pass_queue.append(str(hex((15 << 8) + (OP_CODES["MOVR"] << 4) + trim_reg(tokens[2]))))
-						first_pass_queue.append(encode_14_Bit_Imm_instruction(["MOVRMI", tokens[1][1:-1]]))
+						if tokens[2][0] != "%":
+							explode_bomb(line_num, line)
+						else:
+							first_pass_queue.append(str(hex((15 << 8) + (OP_CODES["MOVR"] << 4) + trim_reg(tokens[2]))))
+							first_pass_queue.append(encode_14_Bit_Imm_instruction(["MOVRMI", tokens[1][1:-1]]))
 			else: # Other MOV: MOV %R, %R and MOV %R, Imm
 				if tokens[1][0] == "%" and tokens[2][0] == "%":
 					# push this
