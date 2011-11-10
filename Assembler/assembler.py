@@ -221,11 +221,11 @@ def parse(infile_str, outfile_str):
 				explode_bomb(line_num, line)
 
 		elif instruction_type == "14-Bit Immediate":
-			# push this
-			first_pass_queue.append(encode_14_Bit_Imm_instruction(tokens))
-			# NOP
-			if instruction_type == "RET":
+			if tokens[0] == "RET":
+				first_pass_queue.append(str(hex(OP_CODES[tokens[0]] << 14)))
 				first_pass_queue.append(str(hex(0)))
+			else:
+				first_pass_queue.append(encode_14_Bit_Imm_instruction(tokens))
 
 		elif instruction_type == "INCR" or instruction_type == "DECR":
 			# encode by hand
