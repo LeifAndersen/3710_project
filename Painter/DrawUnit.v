@@ -30,6 +30,9 @@ module DrawUnit(
 	output vsync
     );
 
+parameter noWrite = 0;
+parameter justWrote = 1;
+
 wire[9:0] rdPtr; //Queue index for painter into PRAM
 reg[9:0] wrtPtr; //Queue index for data from CPU to PRAM
 wire[15:0] Pdata; //Data from PRAM to Painter
@@ -55,8 +58,10 @@ wire[10:0] bufferWrtPtrS;
 wire[15:0] bufferRdPtr;
 wire[10:0] bufferRdPtrS;
 
-reg pixelAddrOffset; //19200 or 0.
-reg vgaAddrOffset; //19200 or 0.
+reg[1:0] writeState; //Used to make delayedWrtPtr the correct value to pass to painter.
+reg[9:0] delayedWrtPtr; //Used because after the write, painter needs to wait a couple cycles before reading.
+reg[14:0] pixelAddrOffset; //19200 or 0.
+reg[14:0] vgaAddrOffset; //19200 or 0.
 
 assign bufferWrtPtrS = bufferWrtPtr - 36800; //Convert the address calculated by vgaAddr into the right one. 160*120 + 160 * 110 for front and back buffer of red/green/blue.  Above that (last 10 lines of buffer2) is special.
 assign bufferWrtPtr = pixelAddr + pixelAddrOffset;
@@ -72,18 +77,44 @@ begin
 		pixelAddrOffset <= 19200;
 		vgaAddrOffset <= 0;
 		wrtPtr <= 0;
+		writeState <= 0;
 	end
 
 	if (!full) //Don't write to PRAM queue while it's full.
-		if ((wrtPtr != rdPtr - 1) && we == 1) //Make sure write can't lap read (that means overwriting start of queue instead of adding to end).
-			begin
-				wrtPtr <= wrtPtr + 1;
-				PRAMWe <= 1;
-			end
-		else
-			begin
-				PRAMWe <= 0;
-			end
+	case(writeState)
+		noWrite:
+		begin
+			if ((wrtPtr != rdPtr - 1) && we == 1) //Make sure write can't lap read (that means overwriting start of queue instead of adding to end).
+				begin
+					//wrtPtr <= wrtPtr + 1;
+					writeState <= justWrote;
+					PRAMWe <= 1;
+				end
+			else
+				begin
+					PRAMWe <= 0;
+				end
+		end
+		
+		justWrote:
+		begin
+			if ((wrtPtr != rdPtr - 1) && we == 1) //Make sure write can't lap read (that means overwriting start of queue instead of adding to end).
+				begin
+					wrtPtr <= wrtPtr + 1;
+					writeState <= justWrote;
+					PRAMWe <= 1;
+					delayedWrtPtr <= wrtPtr;
+				end
+			else
+				begin
+					wrtPtr <= wrtPtr + 1;
+					writeState <= noWrite;
+					PRAMWe <= 0;
+					delayedWrtPtr <= wrtPtr;
+				end			
+		end
+		
+	endcase
 	
 	//4 buffers memory controller
 	if (bufferWrtPtr >= 36800) //This means it exceeds the 3 regular buffer, goes into the special.
@@ -125,7 +156,7 @@ end
 Painter painter(
 	.clk(clk),
 	.reset(reset),
-	.wrtPtr(wrtPtr), //Write pointer, location in PRAM that CPU is writing to.
+	.wrtPtr(delayedWrtPtr), //Write pointer, location in PRAM that CPU is writing to.
 	.PRAMdata(Pdata), //The line, right, left, and color stored in two lines of PRAM by CPU.
 	.rdPtr(rdPtr), //Read pointer, location in PRAM that Painter is reading from.
 	.full(full), //This signal tells the CPU to NOP on its write until queue has space, also tells PRAM not to latch CPU'S value.

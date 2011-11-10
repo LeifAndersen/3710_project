@@ -50,6 +50,8 @@ module DrawUnit_tb;
 		.vsync(vsync)
 	);
 
+integer i;
+
 always
 begin
 #10;
@@ -72,8 +74,22 @@ end
       reset = 0;
 		#20;
 		// Add stimulus here
+		//data = 16'hffff;
+		//
+		#310;
+		 
 		we = 1;
-		data = 16'hffff;
+		//Add stimulus here
+		for (i = 0; i < 1000; i = i + 1)
+		begin
+			data[15:10] = 0;
+			data[9:3] = i%120;
+			data[2:0] = i%8;
+			#20;
+			data[15:8] = i%80;
+			data[7:0] = 159 - i%80;
+			#20;
+		end
 	end
       
 endmodule

@@ -79,10 +79,7 @@ begin
 						line <= PRAMdata[9:3];
 						data <= PRAMdata[2:0];
 						state <= read2;
-						if (rdPtr == 1023) //Probly not necessary, this should overflow correctly anyways.  If necessary, then above comparisons are wrong.
-							rdPtr <= 0;
-						else
-							rdPtr <= rdPtr + 1;
+						rdPtr <= rdPtr + 1;
 					end
 				end
 			else
