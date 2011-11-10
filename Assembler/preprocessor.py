@@ -29,6 +29,7 @@ def parse(infile_name, outfile_name):
 	for line in infile:
 		line_tokens = line.split()
 		if len(line_tokens) == 0 or line_tokens[0][0] == '`':
+			outfile.write('\n')
 			continue
 
 		line_out = ""
