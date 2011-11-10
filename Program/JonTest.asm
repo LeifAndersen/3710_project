@@ -1,4 +1,4 @@
-`define LCD_MEM 0
+`define LCD_MEM 0x8192
 
 init:
 	call main
@@ -8,7 +8,7 @@ skipMe:
 	j errorEnd
 
 back:
-	mov [LCD_MEM] 0x1984
+	mov [LCD_MEM], 0x1984
 	mov %2, -1
 	jae %2, 1, realend
 	j errorEnd
