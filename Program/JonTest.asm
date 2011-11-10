@@ -22,5 +22,6 @@ realend:
 	ret
 
 errorEnd:
-	mov [LCD_MEM], 0xdead
+	mv %1, 0xdead
+	mov [LCD_MEM], %1
 	j errorEnd
