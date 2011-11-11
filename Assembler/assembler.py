@@ -132,192 +132,203 @@ def parse(infile_str, outfile_str):
 			# empty lines and comments
 			continue
 
+		# push labels and continue
 		if tokens[0][-1] == ":":
 			# Label, push to instruction queue
 			first_pass_queue.append(tokens[0])
 			continue
 
-		# uppercase the instructions
-		tokens[0] = tokens[0].upper()
+		if tokens[0] == ".data":
+			# now entering data section, flip flag
+			isdata = 1
+			continue
 
-		if tokens[0][0] == "J" or tokens[0] == "CALL":
-			# normal jumps and call
-			if len(tokens) == 2 or (len(tokens) > 2 and tokens[2][0] == "#"):
-				# push jumps and calls directly, don't encode on first pass (only first two tokens)
-				first_pass_queue.append(tokens[0] + " " + tokens[1])
-				# nop after jump
-				first_pass_queue.append(str(hex(0)))
-				continue
-			# special Jon jumps
-			elif len(tokens) >= 4:
-				# remove commas
+		if isdata == 1:
+			# push data directly
+			first_pass_queue.append(tokens[0])
+		else:
+			# encode instructions
+			# uppercase the instructions
+			tokens[0] = tokens[0].upper()
+
+			if tokens[0][0] == "J" or tokens[0] == "CALL":
+				# normal jumps and call
+				if len(tokens) == 2 or (len(tokens) > 2 and tokens[2][0] == "#"):
+					# push jumps and calls directly, don't encode on first pass (only first two tokens)
+					first_pass_queue.append(tokens[0] + " " + tokens[1])
+					# nop after jump
+					first_pass_queue.append(str(hex(0)))
+					continue
+				# special Jon jumps
+				elif len(tokens) >= 4:
+					# remove commas
+					if tokens[1][-1] == ",":
+						tokens[1] = tokens[1][:-1]
+					else:
+						explode_bomb(line_num, line)
+					if tokens[2][-1] == ",":
+						tokens[2] = tokens[2][:-1]
+					else:
+						explode_bomb(line_num, line)
+					# switch on jump type
+					if tokens[0] == "JG":
+						# CMPR
+						# jmp
+						# NOP
+						first_pass_queue.append(encode_cmps(["CMPR", tokens[1], tokens[2]], line_num, line))
+						first_pass_queue.append("JL " + tokens[3])
+					elif tokens[0] == "JGE":
+						# CMPR
+						# jmp
+						# NOP
+						first_pass_queue.append(encode_cmps(["CMPR", tokens[1], tokens[2]], line_num, line))
+						first_pass_queue.append("JLE " + tokens[3])
+					elif tokens[0] == "JA":
+						# CMPR
+						# jmp
+						# NOP
+						first_pass_queue.append(encode_cmps(["CMPR", tokens[1], tokens[2]], line_num, line))
+						first_pass_queue.append("JB " + tokens[3])
+					elif tokens[0] == "JAE":
+						# CMPR
+						# jmp
+						# NOP
+						first_pass_queue.append(encode_cmps(["CMPR", tokens[1], tokens[2]], line_num, line))
+						first_pass_queue.append("JBE " + tokens[3])
+					elif tokens[0] == "JB":
+						# CMPR
+						# jmp
+						# NOP
+						first_pass_queue.append(encode_cmps(["CMP", tokens[1], tokens[2]], line_num, line))
+						first_pass_queue.append("JB " + tokens[3])
+					elif tokens[0] == "JBE":
+						# CMPR
+						# jmp
+						# NOP
+						first_pass_queue.append(encode_cmps(["CMP", tokens[1], tokens[2]], line_num, line))
+						first_pass_queue.append("JBE " + tokens[3])
+					elif tokens[0] == "JL":
+						# CMPR
+						# jmp
+						# NOP
+						first_pass_queue.append(encode_cmps(["CMP", tokens[1], tokens[2]], line_num, line))
+						first_pass_queue.append("JL " + tokens[3])
+					elif tokens[0] == "JLE":
+						# CMPR
+						# jmp
+						# NOP
+						first_pass_queue.append(encode_cmps(["CMP", tokens[1], tokens[2]], line_num, line))
+						first_pass_queue.append("JLE " + tokens[3])
+					else:
+						explode_bomb(line_num, line)
+					first_pass_queue.append(str(hex(0)))
+					continue
+
+			instruction_type = get_instruction_type(tokens[0])
+
+			# enforce and remove comma after second of three tokens
+			if len(tokens) >= 3:
 				if tokens[1][-1] == ",":
 					tokens[1] = tokens[1][:-1]
 				else:
 					explode_bomb(line_num, line)
-				if tokens[2][-1] == ",":
-					tokens[2] = tokens[2][:-1]
-				else:
-					explode_bomb(line_num, line)
-				# switch on jump type
-				if tokens[0] == "JG":
-					# CMPR
-					# jmp
-					# NOP
-					first_pass_queue.append(encode_cmps(["CMPR", tokens[1], tokens[2]], line_num, line))
-					first_pass_queue.append("JL " + tokens[3])
-				elif tokens[0] == "JGE":
-					# CMPR
-					# jmp
-					# NOP
-					first_pass_queue.append(encode_cmps(["CMPR", tokens[1], tokens[2]], line_num, line))
-					first_pass_queue.append("JLE " + tokens[3])
-				elif tokens[0] == "JA":
-					# CMPR
-					# jmp
-					# NOP
-					first_pass_queue.append(encode_cmps(["CMPR", tokens[1], tokens[2]], line_num, line))
-					first_pass_queue.append("JB " + tokens[3])
-				elif tokens[0] == "JAE":
-					# CMPR
-					# jmp
-					# NOP
-					first_pass_queue.append(encode_cmps(["CMPR", tokens[1], tokens[2]], line_num, line))
-					first_pass_queue.append("JBE " + tokens[3])
-				elif tokens[0] == "JB":
-					# CMPR
-					# jmp
-					# NOP
-					first_pass_queue.append(encode_cmps(["CMP", tokens[1], tokens[2]], line_num, line))
-					first_pass_queue.append("JB " + tokens[3])
-				elif tokens[0] == "JBE":
-					# CMPR
-					# jmp
-					# NOP
-					first_pass_queue.append(encode_cmps(["CMP", tokens[1], tokens[2]], line_num, line))
-					first_pass_queue.append("JBE " + tokens[3])
-				elif tokens[0] == "JL":
-					# CMPR
-					# jmp
-					# NOP
-					first_pass_queue.append(encode_cmps(["CMP", tokens[1], tokens[2]], line_num, line))
-					first_pass_queue.append("JL " + tokens[3])
-				elif tokens[0] == "JLE":
-					# CMPR
-					# jmp
-					# NOP
-					first_pass_queue.append(encode_cmps(["CMP", tokens[1], tokens[2]], line_num, line))
-					first_pass_queue.append("JLE " + tokens[3])
-				else:
-					explode_bomb(line_num, line)
-				first_pass_queue.append(str(hex(0)))
-				continue
 
-		instruction_type = get_instruction_type(tokens[0])
-
-		# enforce and remove comma after second of three tokens
-		if len(tokens) >= 3:
-			if tokens[1][-1] == ",":
-				tokens[1] = tokens[1][:-1]
-			else:
-				explode_bomb(line_num, line)
-
-		# encode instructions specifically for each op type
-		if instruction_type == "I-Capable":
-			verify_token_count(line_num, tokens, 3)
-			if tokens[1][0] == "%" and tokens[2][0] == "%":
-				# push this
-				first_pass_queue.append(encode_R_to_R_instruction(tokens, 0))
-			elif tokens [1][0] == "%" and tokens[2][0] != "%":
-				# push this
-				first_pass_queue.append(encode_Imm_to_R_instruction(tokens))
-			elif tokens[0] == "CMP" and tokens [1][0] != "%" and tokens[2][0] == "%":
-				# push this
-				first_pass_queue.append(encode_Imm_to_R_instruction(["CMPR", tokens[2], tokens[1]]))
-			else:
-				explode_bomb(line_num, line)
-
-		elif instruction_type == "14-Bit Immediate":
-			if tokens[0] == "RET":
-				first_pass_queue.append(str(hex(OP_CODES[tokens[0]] << 14)))
-				first_pass_queue.append(str(hex(0)))
-			else:
-				first_pass_queue.append(encode_14_Bit_Imm_instruction(tokens))
-
-		elif instruction_type == "INCR" or instruction_type == "DECR":
-			# encode by hand
-			first_pass_queue.append(str(hex((OP_CODES[tokens[0]] << 12) + (trim_reg(tokens[1]) << 8) + 0)))
-
-		elif instruction_type == "POP" or instruction_type == "PUSH":
-			# encode by hand
-			first_pass_queue.append(str(hex((OP_CODES[tokens[0]] << 14) + (trim_reg(tokens[1]) << 10) + 0)))
-			# NOP
-			if instruction_type == "POP":
-				first_pass_queue.append(str(hex(0)))
-
-		elif instruction_type == "MOV":
-			if tokens[1][0] == '[' and tokens[2][0] == '[':
-				explode_bomb(line_num, line)
-			if tokens[2][0] == '[':
-				if tokens[2][-1] != ']':
-					delim_mismatch(line_num, line)
-				else:
-					if tokens[2][1] == "%":	# MOV %R, (%R)
-						# MOVMR
-						# NOP
-						first_pass_queue.append(str(hex(0x1000 + (trim_reg(tokens[1]) << 8) + (OP_CODES["MOVMR"] << 4) + trim_reg(tokens[2]))))
-						first_pass_queue.append(str(hex(0)))
-					else:					# MOV %R, (Imm)
-						# psuedoinstruction becomes
-						#     MOVMRI Imm
-						#     NOP
-						#     MOVR %R, %MR
-						if tokens[1][0] != "%":
-							invalid_arg(line_num, line)
-						else:
-							if (is_number(tokens[2][1:-1])):
-								first_pass_queue.append(encode_14_Bit_Imm_instruction(["MOVMRI", tokens[2][1:-1]]))
-								first_pass_queue.append(str(hex(0)))
-								first_pass_queue.append(str(hex((trim_reg(tokens[1]) << 8) + (OP_CODES["MOVR"] << 4) + 15)))
-							else:
-								first_pass_queue.append("MOVMRI" + " " + tokens[2][1:-1])
-								first_pass_queue.append(str(hex(0)))
-								first_pass_queue.append(str(hex((trim_reg(tokens[1]) << 8) + (OP_CODES["MOVR"] << 4) + 15)))
-			elif tokens[1][0] == '[':
-				if tokens[1][-1] != ']':
-					delim_mismatch(line_num)
-				else:
-					if tokens[1][1] == "%":	# MOV (%R), %R
-						# MOVRM
-						first_pass_queue.append(str(hex(0x1000 + (trim_reg(tokens[2]) << 8) + (OP_CODES["MOVRM"] << 4) + trim_reg(tokens[1]))))
-					else:					# MOV (Imm), %R
-						# psuedoinstruction becomes
-						#     MOVR %MR, %R
-						#     MOVRMI Imm
-						if tokens[2][0] != "%":
-							invalid_arg(line_num, line)
-						else:
-							if (is_number(tokens[1][1:-1])):
-								first_pass_queue.append(str(hex((15 << 8) + (OP_CODES["MOVR"] << 4) + trim_reg(tokens[2]))))
-								first_pass_queue.append(encode_14_Bit_Imm_instruction(["MOVRMI", tokens[1][1:-1]]))
-							else:
-								first_pass_queue.append(str(hex((15 << 8) + (OP_CODES["MOVR"] << 4) + trim_reg(tokens[2]))))
-								first_pass_queue.append("MOVRMI" + " " + tokens[1][1:-1])
-			else: # Other MOV: MOV %R, %R and MOV %R, Imm
+			# encode instructions specifically for each op type
+			if instruction_type == "I-Capable":
+				verify_token_count(line_num, tokens, 3)
 				if tokens[1][0] == "%" and tokens[2][0] == "%":
 					# push this
-					tokens[0] = "MOVR"
 					first_pass_queue.append(encode_R_to_R_instruction(tokens, 0))
 				elif tokens [1][0] == "%" and tokens[2][0] != "%":
 					# push this
-					tokens[0] = "MOVR"
 					first_pass_queue.append(encode_Imm_to_R_instruction(tokens))
+				elif tokens[0] == "CMP" and tokens [1][0] != "%" and tokens[2][0] == "%":
+					# push this
+					first_pass_queue.append(encode_Imm_to_R_instruction(["CMPR", tokens[2], tokens[1]]))
 				else:
 					explode_bomb(line_num, line)
 
-		else:
-			# bad instruction, explode
-			explode_bomb(line_num, line)
+			elif instruction_type == "14-Bit Immediate":
+				if tokens[0] == "RET":
+					first_pass_queue.append(str(hex(OP_CODES[tokens[0]] << 14)))
+					first_pass_queue.append(str(hex(0)))
+				else:
+					first_pass_queue.append(encode_14_Bit_Imm_instruction(tokens))
+
+			elif instruction_type == "INCR" or instruction_type == "DECR":
+				# encode by hand
+				first_pass_queue.append(str(hex((OP_CODES[tokens[0]] << 12) + (trim_reg(tokens[1]) << 8) + 0)))
+
+			elif instruction_type == "POP" or instruction_type == "PUSH":
+				# encode by hand
+				first_pass_queue.append(str(hex((OP_CODES[tokens[0]] << 14) + (trim_reg(tokens[1]) << 10) + 0)))
+				# NOP
+				if instruction_type == "POP":
+					first_pass_queue.append(str(hex(0)))
+
+			elif instruction_type == "MOV":
+				if tokens[1][0] == '[' and tokens[2][0] == '[':
+					explode_bomb(line_num, line)
+				if tokens[2][0] == '[':
+					if tokens[2][-1] != ']':
+						delim_mismatch(line_num, line)
+					else:
+						if tokens[2][1] == "%":	# MOV %R, (%R)
+							# MOVMR
+							# NOP
+							first_pass_queue.append(str(hex(0x1000 + (trim_reg(tokens[1]) << 8) + (OP_CODES["MOVMR"] << 4) + trim_reg(tokens[2]))))
+							first_pass_queue.append(str(hex(0)))
+						else:					# MOV %R, (Imm)
+							# psuedoinstruction becomes
+							#     MOVMRI Imm
+							#     NOP
+							#     MOVR %R, %MR
+							if tokens[1][0] != "%":
+								invalid_arg(line_num, line)
+							else:
+								if (is_number(tokens[2][1:-1])):
+									first_pass_queue.append(encode_14_Bit_Imm_instruction(["MOVMRI", tokens[2][1:-1]]))
+									first_pass_queue.append(str(hex(0)))
+									first_pass_queue.append(str(hex((trim_reg(tokens[1]) << 8) + (OP_CODES["MOVR"] << 4) + 15)))
+								else:
+									first_pass_queue.append("MOVMRI" + " " + tokens[2][1:-1])
+									first_pass_queue.append(str(hex(0)))
+									first_pass_queue.append(str(hex((trim_reg(tokens[1]) << 8) + (OP_CODES["MOVR"] << 4) + 15)))
+				elif tokens[1][0] == '[':
+					if tokens[1][-1] != ']':
+						delim_mismatch(line_num)
+					else:
+						if tokens[1][1] == "%":	# MOV (%R), %R
+							# MOVRM
+							first_pass_queue.append(str(hex(0x1000 + (trim_reg(tokens[2]) << 8) + (OP_CODES["MOVRM"] << 4) + trim_reg(tokens[1]))))
+						else:					# MOV (Imm), %R
+							# psuedoinstruction becomes
+							#     MOVR %MR, %R
+							#     MOVRMI Imm
+							if tokens[2][0] != "%":
+								invalid_arg(line_num, line)
+							else:
+								if (is_number(tokens[1][1:-1])):
+									first_pass_queue.append(str(hex((15 << 8) + (OP_CODES["MOVR"] << 4) + trim_reg(tokens[2]))))
+									first_pass_queue.append(encode_14_Bit_Imm_instruction(["MOVRMI", tokens[1][1:-1]]))
+								else:
+									first_pass_queue.append(str(hex((15 << 8) + (OP_CODES["MOVR"] << 4) + trim_reg(tokens[2]))))
+									first_pass_queue.append("MOVRMI" + " " + tokens[1][1:-1])
+				else: # Other MOV: MOV %R, %R and MOV %R, Imm
+					if tokens[1][0] == "%" and tokens[2][0] == "%":
+						# push this
+						tokens[0] = "MOVR"
+						first_pass_queue.append(encode_R_to_R_instruction(tokens, 0))
+					elif tokens [1][0] == "%" and tokens[2][0] != "%":
+						# push this
+						tokens[0] = "MOVR"
+						first_pass_queue.append(encode_Imm_to_R_instruction(tokens))
+					else:
+						explode_bomb(line_num, line)
+
+			else:
+				# bad instruction, explode
+				explode_bomb(line_num, line)
 
 	print ".",
 	# Get labels (must be done after first pass to allow for psuedo instructions to expand)
