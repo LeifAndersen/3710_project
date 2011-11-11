@@ -23,222 +23,99 @@ module DrawUnit(
 	input vgaClk,
 	input reset,
 	input we,
-	input[15:0] data,
+	input[15:0] dataIn,
 	output full,
 	output[2:0] color, //{R, G, B}
 	output hsync,
 	output vsync
     );
 
-parameter noWrite = 0;
-parameter justWrote = 1;
+wire re; //painter to queue read enable.
+wire empty; //queue to painter empty signal.
+wire[31:0] PRAMdata; //line, right, left, color data written by CPU to queue, read by painter.
+wire[14:0] wrtPtr; //write pointer from painter to framebuffer.
+wire[14:0] rdPtr; //read pointer from vga Controller.
+wire[2:0] data; //Color data from painter to fram buffer.
+wire fbwe; //frame buffer write enable sent from painter.
+wire swapBuffersCommand; //1 when CPU says time to swap buffers, waits until vga done with current line.
+reg swapBuffersOnVsync;
+reg swapBuffers; //1 when swapBufferCommand is 1 and vga finishes frame.
+wire[2:0] fbout; //Color from frameBuffer to vga controller.
+wire[8:0] line; //Line
+wire[9:0] offset;
 
-wire[9:0] rdPtr; //Queue index for painter into PRAM
-reg[9:0] wrtPtr; //Queue index for data from CPU to PRAM
-wire[15:0] Pdata; //Data from PRAM to Painter
-wire[14:0] pixelAddr; //address from painter to frame buffer.
-wire[2:0] color2; //color2 from painter to frame buffer.
-wire bufferWe; //write enable from painter to frame buffer.
-reg PRAMWe; //PRAM write enable (essentially the CPU write enable gated when queue is full).
-//wire[15:0] vgaAddr; //Address from VGA read for frame buffer. If >38600, read from Special. vgaAddr = line * 160 + offset outputted by vga controller.
-wire vgaR; //Data out of frame buffer to VGA output.
-wire vgaG; //Data out of frame buffer to VGA output.
-wire vgaB; //Data out of frame buffer to VGA output.
-wire[2:0] vgaS; //Data out of frame buffer to VGA output.
-wire[8:0] lineTemp;
-wire[9:0] offsetTemp;
-wire[6:0] vgaLine; //Line of pixels vga is drawing to.
-wire[7:0] vgaOffset; //Specific pixel (offset from left of line) vga is drawing to.
-reg[2:0] BUFFERtoVGA; //Data out of frame buffer to VGA output, mux of vgaR, vgaG, vgaB, and vgaS.
-reg bufferWe1; //Write enable to red/green/blue buffers.
-reg bufferWe2; //Write enable to special buffer.
-wire swapBuffers; //Signals when it's time to switch buffers.
-wire[15:0] bufferWrtPtr;
-wire[10:0] bufferWrtPtrS;
-wire[15:0] bufferRdPtr;
-wire[10:0] bufferRdPtrS;
-
-reg[1:0] writeState; //Used to make delayedWrtPtr the correct value to pass to painter.
-reg[9:0] delayedWrtPtr; //Used because after the write, painter needs to wait a couple cycles before reading.
-reg[14:0] pixelAddrOffset; //19200 or 0.
-reg[14:0] vgaAddrOffset; //19200 or 0.
-
-assign bufferWrtPtrS = bufferWrtPtr - 36800; //Convert the address calculated by vgaAddr into the right one. 160*120 + 160 * 110 for front and back buffer of red/green/blue.  Above that (last 10 lines of buffer2) is special.
-assign bufferWrtPtr = pixelAddr + pixelAddrOffset;
-assign bufferRdPtr = vgaLine * 160 + vgaOffset + vgaAddrOffset;
-assign bufferRdPtrS = bufferRdPtr -36800;
-assign vgaLine = lineTemp[8:2];
-assign vgaOffset = offsetTemp[9:2];
+assign rdPtr = line[8:2] * 160 + offset[9:2]; //Divide each by 4 to change 640x480 to 160x120.
 
 always@(posedge clk)
 begin
-	if (reset)
-	begin
-		pixelAddrOffset <= 19200;
-		vgaAddrOffset <= 0;
-		wrtPtr <= 0;
-		writeState <= 0;
-	end
-
-	if (!full) //Don't write to PRAM queue while it's full.
-	case(writeState)
-		noWrite:
+	if (swapBuffersCommand)
+		swapBufferOnVsync <= 1;
+	else if (vsync == 0 && swapBuffersOnVsync == 1)
 		begin
-			if ((wrtPtr != rdPtr - 1) && we == 1) //Make sure write can't lap read (that means overwriting start of queue instead of adding to end).
-				begin
-					//wrtPtr <= wrtPtr + 1;
-					writeState <= justWrote;
-					PRAMWe <= 1;
-				end
-			else
-				begin
-					PRAMWe <= 0;
-				end
-		end
-		
-		justWrote:
-		begin
-			if ((wrtPtr != rdPtr - 1) && we == 1) //Make sure write can't lap read (that means overwriting start of queue instead of adding to end).
-				begin
-					wrtPtr <= wrtPtr + 1;
-					writeState <= justWrote;
-					PRAMWe <= 1;
-					delayedWrtPtr <= wrtPtr;
-				end
-			else
-				begin
-					wrtPtr <= wrtPtr + 1;
-					writeState <= noWrite;
-					PRAMWe <= 0;
-					delayedWrtPtr <= wrtPtr;
-				end			
-		end
-		
-	endcase
-	
-	//4 buffers memory controller
-	if (bufferWrtPtr >= 36800) //This means it exceeds the 3 regular buffer, goes into the special.
-		begin
-			bufferWe1 <= 0;
-			bufferWe2 <= bufferWe; //If painter wants to write a color, enable special buffer write.
-			//BUFFERtoVGA <= vgaS; This is junk, wrong place i think.
+			swapBuffers <= 1;
+			swapBuffersOnVsync <= 0;
 		end
 	else
 		begin
-			bufferWe1 <= bufferWe; //If painter wants to write a color, enable red/green/blue buffer write.
-			bufferWe2 <= 0;
-			//BUFFERtoVGA <= {vgaR, vgaG, vgaB}; Junk, wrong place i think.
-		end
-		
-	if (bufferRdPtr >= 36800) //This means it exceeds the 3 regular buffer, goes into the special.
-		begin
-			BUFFERtoVGA <= vgaS;
-		end
-	else
-		begin
-			BUFFERtoVGA <= {vgaR, vgaG, vgaB};
-		end
-		
-	if ((swapBuffers == 1) && (pixelAddrOffset == 19200)) //First 19200 addresses are one buffer, following addresses are second buffer.
-		begin
-			pixelAddrOffset <= 0;
-			vgaAddrOffset <= 19200;
-		end
-	else
-		begin
-			pixelAddrOffset <= 19200;
-			vgaAddrOffset <= 0;
+			swapBuffers <= 0;
 		end
 end
 
+always@(negedge vsync)
+begin
+	if (swapBuffersOnVsync)
+	begin
+		swapBuffers <= 1;
+		swapBuffersOnVsync <= 0;
+	end
+	else
+		swapBuffers <= 0;
+end
 
+Queue queue(
+	.clk(clk),
+	.reset(reset),
+	.we(we),
+	.re(re),
+	.wrtData(dataIn),
+	.rdData(PRAMdata),
+	.full(full),
+	.empty(empty)
+    );
 
 Painter painter(
 	.clk(clk),
 	.reset(reset),
-	.wrtPtr(delayedWrtPtr), //Write pointer, location in PRAM that CPU is writing to.
-	.PRAMdata(Pdata), //The line, right, left, and color stored in two lines of PRAM by CPU.
-	.rdPtr(rdPtr), //Read pointer, location in PRAM that Painter is reading from.
-	.full(full), //This signal tells the CPU to NOP on its write until queue has space, also tells PRAM not to latch CPU'S value.
-	.addr(pixelAddr), //Address (pixel location) in frame buffer.  Only need addressing for 1 buffer.  Which buffer is determined externally.
-	.data(color2), //1 bit routed to each bit-addressed buffer, or all 3 bits if it's the special buffer.
-	.we(bufferWe), //write enable to frame buffer.
-	.swapBuffers(swapBuffers)
+	.empty(empty),
+	.swapBuffers(swapBuffers),
+	.PRAMdata(PRAMdata), //The line, right, left, and color stored in two lines of PRAM by CPU.
+	.addr(wrtPtr), //Address (pixel location) in frame buffer.  Only need addressing for 1 buffer.  Which buffer is determined externally.
+	.data(data), //1 bit routed to each bit-addressed buffer, or all 3 bits if it's the special buffer.
+	.we(fbwe), //write enable to frame buffer.
+	.re(re),
+	.swapBuffersCommand(swapBuffersCommand) //1 when CPU writes 16'hffffffff to PRAM, time to swap front and back buffer.
     );
 
-BlockRam #(.DATA(16),.ADDR(10),.SIZE(1024),.FILE("init.txt")) PRAM(
-	.clka(clk),
-	.wea(PRAMWe), //Gated CPU write enable.
-	.web(1'b0),
-	.addra(wrtPtr), //Address in queue to write to.
-	.addrb(rdPtr), //Where painter reads from.
-	.dina(data), //Data from CPU to write.
-	.dinb(16'b0), //Port B is read only.
-	//.douta(0), Port A is write only
-	.doutb(Pdata)
-	 );
-
-DCBlockRam #(.DATA(1),.ADDR(16),.SIZE(36864),.FILE("init.txt")) redBuffer(  //115 horizontal lines of pixels, out of the full 120.
-	.clka(clk),
-	.clkb(vgaClk), //VGA reads at 25Mhz.
-	.wea(bufferWe1), //Determined by address in buffer.
-	.web(1'b0),
-	.addra(bufferWrtPtr), //Which pixel to write to, determined by painter.
-	.addrb(bufferRdPtr), //Which pixel to read from, determined by vga.
-	.dina(color2[2]),
-	.dinb(1'b0),
-	//.douta(0),
-	.doutb(vgaR)
-	 );
-	 
-DCBlockRam #(.DATA(1),.ADDR(16),.SIZE(36864),.FILE("init.txt")) greenBuffer(  //115 horizontal lines of pixels, out of the full 120.
-	.clka(clk),
-	.clkb(vgaClk), //VGA reads at 25Mhz.
-	.wea(bufferWe1),
-	.web(1'b0),
-	.addra(bufferWrtPtr), //Which pixel to write to, determined by painter.
-	.addrb(bufferRdPtr), //Which pixel to read from, determined by vga.
-	.dina(color2[1]),
-	.dinb(1'b0),
-	//.douta(0),
-	.doutb(vgaG)
-	 );
-	 
-DCBlockRam #(.DATA(1),.ADDR(16),.SIZE(36864),.FILE("init.txt")) blueBuffer(  //115 horizontal lines of pixels, out of the full 120.
-	.clka(clk),
-	.clkb(vgaClk), //VGA reads at 25Mhz.
-	.wea(bufferWe1),
-	.web(1'b0),
-	.addra(bufferWrtPtr), //Which pixel to write to, determined by painter.
-	.addrb(bufferRdPtr), //Which pixel to read from, determined by vga.
-	.dina(color2[0]),
-	.dinb(1'b0),
-	//.douta(0),
-	.doutb(vgaB)
-	 );
-	 
-DCBlockRam #(.DATA(3),.ADDR(11),.SIZE(1600),.FILE("init.txt")) specialBuffer(  //5 horizontal lines of pixels, out of the full 120.
-	.clka(clk),
-	.clkb(vgaClk), //VGA reads at 25Mhz.
-	.wea(bufferWe2),
-	.web(1'b0),
-	.addra(bufferWrtPtrS), //Which pixels to write to (3 instead of 1 at a time here), determined by painter.
-	.addrb(bufferRdPtrS), //Which pixel to read from (all 3 come from this buffer instead of 3 separate buffers), determined by vga.
-	.dina(color2[2:0]),
-	.dinb(3'b0),
-	//.douta(0),
-	.doutb(vgaS)
-	 );
+FrameBuffer framebuffer(
+	.clk(clk),
+	.vgaClk(vgaClk),
+	.reset(reset),
+	.swapBuffers(swapBuffers),
+	.we(fbwe),
+	.dataIn(data),
+	.rdPtr(rdPtr),
+	.wrtPtr(wrtPtr),
+	.color(fbout)
+    );
 
 VGA_Controller vga_controller(
 	.clk(vgaClk), //Must be 25MHz. Please use DCM.
 	.reset(reset),
-	.r(BUFFERtoVGA[2]),
-	.g(BUFFERtoVGA[1]),
-	.b(BUFFERtoVGA[0]),
-	//.fbAddr(vgaAddr),
-	.line(lineTemp), //Frame buffer address.  TOBO done.
-	.offset(offsetTemp),
+	.r(fbout[2]),
+	.g(fbout[1]),
+	.b(fbout[0]),
+	.line(line), //Frame buffer address.
+	.offset(offset), //Frame buffer address.
 	.color(color), //{R, G, B}
 	.hsync(hsync),
 	.vsync(vsync)
