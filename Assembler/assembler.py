@@ -22,6 +22,18 @@ def get_instruction_type(OP):
 	else:
 		return OP
 
+def is_number(s):
+    try:
+        int(s, 10)
+        return True
+    except:
+        pass
+    try:
+        int(s, 16)
+        return True
+    except:
+        return False
+
 # get the class of parse that should be performed
 def trim_reg(reg_str):
 	if reg_str[0] == "[":
@@ -31,7 +43,11 @@ def trim_reg(reg_str):
 
 # error reporting for bad instructions
 def explode_bomb(line_num, line):
-	print "Bad instruction on line " + str(line_num) + ": \"" + line.strip() + "\""
+	print "Invalid instruction on line " + str(line_num) + ": \"" + line.strip() + "\""
+	exit(1)
+
+def invalid_arg(line_num, line):
+	print "Invalid argument on line " + str(line_num) + ": \"" + line.strip() + "\""
 	exit(1)
 
 # error reporting for mismatched parens
@@ -99,6 +115,7 @@ def encode_cmps(tokens, line_num, line):
 		explode_bomb(line_num, line)
 
 def parse(infile_str, outfile_str):
+	isdata = 0
 	labels = {}
 	infile = open(infile_str, 'r')
 	first_pass_queue = deque()
@@ -256,11 +273,16 @@ def parse(infile_str, outfile_str):
 						#     NOP
 						#     MOVR %R, %MR
 						if tokens[1][0] != "%":
-							explode_bomb(line_num, line)
+							invalid_arg(line_num, line)
 						else:
-							first_pass_queue.append(encode_14_Bit_Imm_instruction(["MOVMRI", tokens[2][1:-1]]))
-							first_pass_queue.append(str(hex(0)))
-							first_pass_queue.append(str(hex((trim_reg(tokens[1]) << 8) + (OP_CODES["MOVR"] << 4) + 15)))
+							if (is_number(tokens[2][1:-1])):
+								first_pass_queue.append(encode_14_Bit_Imm_instruction(["MOVMRI", tokens[2][1:-1]]))
+								first_pass_queue.append(str(hex(0)))
+								first_pass_queue.append(str(hex((trim_reg(tokens[1]) << 8) + (OP_CODES["MOVR"] << 4) + 15)))
+							else:
+								first_pass_queue.append("MOVMRI" + " " + tokens[2][1:-1])
+								first_pass_queue.append(str(hex(0)))
+								first_pass_queue.append(str(hex((trim_reg(tokens[1]) << 8) + (OP_CODES["MOVR"] << 4) + 15)))
 			elif tokens[1][0] == '[':
 				if tokens[1][-1] != ']':
 					delim_mismatch(line_num)
@@ -273,10 +295,14 @@ def parse(infile_str, outfile_str):
 						#     MOVR %MR, %R
 						#     MOVRMI Imm
 						if tokens[2][0] != "%":
-							explode_bomb(line_num, line)
+							invalid_arg(line_num, line)
 						else:
-							first_pass_queue.append(str(hex((15 << 8) + (OP_CODES["MOVR"] << 4) + trim_reg(tokens[2]))))
-							first_pass_queue.append(encode_14_Bit_Imm_instruction(["MOVRMI", tokens[1][1:-1]]))
+							if (is_number(tokens[1][1:-1])):
+								first_pass_queue.append(str(hex((15 << 8) + (OP_CODES["MOVR"] << 4) + trim_reg(tokens[2]))))
+								first_pass_queue.append(encode_14_Bit_Imm_instruction(["MOVRMI", tokens[1][1:-1]]))
+							else:
+								first_pass_queue.append(str(hex((15 << 8) + (OP_CODES["MOVR"] << 4) + trim_reg(tokens[2]))))
+								first_pass_queue.append("MOVRMI" + " " + tokens[1][1:-1])
 			else: # Other MOV: MOV %R, %R and MOV %R, Imm
 				if tokens[1][0] == "%" and tokens[2][0] == "%":
 					# push this
@@ -324,9 +350,11 @@ def parse(infile_str, outfile_str):
 		# go.
 		# call encode_14_Bit_Imm_instruction() on calls and encode_jumps() on jumps (lines with more than one token)
 		if len(tokens) > 1:
-			if tokens[1] == "CALL":
+			if tokens[0] == "CALL":
 				# encode call and save to instruction stream with label address
 				outfile.write(encode_14_Bit_Imm_instruction([tokens[0], str(labels[tokens[1]])])[2:] + "\n")
+			elif tokens[0] == "MOVMRI" or tokens[0] == "MOVRMI":
+				first_pass_queue.append(encode_14_Bit_Imm_instruction([tokens[0], str(labels[tokens[1]])])[2:] + "\n")
 			else:
 				# encode jump and save
 				outfile.write(encode_jumps([tokens[0], str(labels[tokens[1]])])[2:] + "\n")
