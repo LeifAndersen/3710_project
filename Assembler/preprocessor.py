@@ -29,6 +29,7 @@ def parse(infile_name, outfile_name):
 	for line in infile:
 		line_tokens = line.split()
 		if len(line_tokens) == 0 or line_tokens[0][0] == '`':
+			outfile.write('\n')
 			continue
 
 		line_out = ""
@@ -39,7 +40,7 @@ def parse(infile_name, outfile_name):
 				line_out += tokens[token[0:-1]] + ','
 			elif token[0] == '[' and token[-1] == ']' and token[1:-1] in tokens:
 				line_out += '[' + tokens[token[1:-1]] + ']'
-			elif token[0] == '[' and token[-1] == ',' and token[-2] = ']' and token[1:-1] in tokens:
+			elif token[0] == '[' and token[-1] == ',' and token[-2] == ']' and token[1:-2] in tokens:
 				line_out += '[' + tokens[token[1:-2]] + '],'
 			else:
 				line_out += token
