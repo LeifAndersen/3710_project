@@ -43,7 +43,7 @@ module DrawUnit_tb;
 		.vgaClk(vgaClk), 
 		.reset(reset), 
 		.we(we), 
-		.data(data), 
+		.dataIn(data), 
 		.full(full), 
 		.color(color2), 
 		.hsync(hsync), 
@@ -78,19 +78,52 @@ end
 		//
 		#310;
 		 
-		we = 1;
-		//Add stimulus here
+//		Add stimulus here
+//		for (i = 0; i < 1000; i = i + 1)
+//		begin
+//			if (!full)
+//				we = 1;
+//			else
+//				we = 0;
+//			data[15:10] = 0;
+//			data[9:7] = i%8;
+//			data[6:0] = i%120;
+//			#20;
+//			if (!full)
+//				we = 1;
+//			else
+//				we = 0;		
+//			data[15:8] = i%80;
+//			data[7:0] = 159 - i%80;
+//			#20;
+//		end
+
 		for (i = 0; i < 1000; i = i + 1)
 		begin
+			if (!full)
+				we = 1;
+			else
+				we = 0;
 			data[15:10] = 0;
-			data[9:3] = i%120;
-			data[2:0] = i%8;
+			data[9:7] = i%8;
+			data[6:0] = i%120;
 			#20;
-			data[15:8] = i%80;
-			data[7:0] = 159 - i%80;
+			if (!full)
+				we = 1;
+			else
+				we = 0;		
+			data[15:8] = 0;
+			data[7:0] = 159;
 			#20;
 		end
+		we = 0;
+		
+		#1000000;
+		we = 1;
+		data[15:0] = 16'hffff;
+		#60;
+		we = 0;
 	end
-      
+	
 endmodule
 

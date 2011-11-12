@@ -48,8 +48,13 @@ assign rdPtr = line[8:2] * 160 + offset[9:2]; //Divide each by 4 to change 640x4
 
 always@(posedge clk)
 begin
+	if(reset)
+	begin
+		swapBuffersOnVsync <= 0;
+	end
+
 	if (swapBuffersCommand)
-		swapBufferOnVsync <= 1;
+		swapBuffersOnVsync <= 1;
 	else if (vsync == 0 && swapBuffersOnVsync == 1)
 		begin
 			swapBuffers <= 1;
@@ -61,16 +66,16 @@ begin
 		end
 end
 
-always@(negedge vsync)
-begin
-	if (swapBuffersOnVsync)
-	begin
-		swapBuffers <= 1;
-		swapBuffersOnVsync <= 0;
-	end
-	else
-		swapBuffers <= 0;
-end
+//always@(negedge vsync)
+//begin
+//	if (swapBuffersOnVsync)
+//	begin
+//		swapBuffers <= 1;
+//		swapBuffersOnVsync <= 0;
+//	end
+//	else
+//		swapBuffers <= 0;
+//end
 
 Queue queue(
 	.clk(clk),

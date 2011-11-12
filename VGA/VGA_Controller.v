@@ -139,6 +139,7 @@ begin
 					if (pixCount >= 144 && pixCount <= 782 && Henable)
 						begin
 						//fbAddr <= fbAddr + 1;
+						color <= {r, g, b};
 						offset <= offset + 1;
 						end
 					pixCount <= pixCount + 1; //Keep counting

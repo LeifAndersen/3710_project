@@ -27,7 +27,7 @@ module FrameBuffer(
 	input[2:0] dataIn,
 	input[14:0] rdPtr,
 	input[14:0] wrtPtr,
-	output[2:0] color
+	output reg[2:0] color
     );
 
 parameter frontLow = 0;
@@ -35,15 +35,15 @@ parameter frontHigh = 1;
 
 reg state;
 
-wire[15:0] bufferWrtPtr;
-wire[15:0] bufferRdPtr;
-wire bufferWe; //regular buffer wrt enable.
-wire bufferWeS; //special buffer wrt enable.
+reg[15:0] bufferWrtPtr;
+reg[15:0] bufferRdPtr;
+reg bufferWe; //regular buffer wrt enable.
+reg bufferWeS; //special buffer wrt enable.
 
-reg R;
-reg G;
-reg B;
-reg[2:0] S;
+wire R;
+wire G;
+wire B;
+wire[2:0] S;
 
 always@(posedge clk)
 begin

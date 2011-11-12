@@ -41,14 +41,16 @@ parameter high = 0;
 parameter low = 1;
 
 reg state;
+
 reg[31:0] temp;//Holds the high value CPU writes in until CPU writes a low value too, then this writes to the PRAM.
+reg delayedWe; //A one-cycle delayed write enable because temp is delayed by a cycle from the wrtData.
 
 reg[8:0] rdPtr;
 reg[8:0] wrtPtr;
 reg[9:0] count;
 wire[31:0] dataOut;
 
-assign full = (count == 511);
+assign full = (count >= 511);
 assign empty = (count == 0);
 
 always@(posedge clk)
@@ -59,6 +61,7 @@ begin
 	rdPtr <= 0;
 	rdData <= 0;
 	count <= 0;
+	state <= high;
 end
 else
 begin
@@ -69,14 +72,24 @@ begin
 			begin
 				temp[31:16] <= wrtData;
 				state <= low;
+				delayedWe <= 0;
 			end		
 			low:
 			begin
 				temp[15:0] <= wrtData;
-				wrtPtr <= wrtPtr + 1;
 				state <= high;
+				delayedWe <= 1;
 			end
 		endcase
+	end
+	else
+	begin
+		delayedWe <= 0;
+	end
+
+	if (delayedWe)
+	begin
+		wrtPtr <= wrtPtr + 1;
 	end
 	
 	if (re)
@@ -85,12 +98,12 @@ begin
 		rdData <= dataOut;
 	end
 	
-	if (re && !we && count != 0)
+	if (re && !delayedWe && count != 0)
 	begin
 		count <= count - 1;
 	end
 	
-	if (we && !re && count != 512)
+	else if (delayedWe && !re && count != 512)
 	begin
 		count <= count + 1;
 	end
@@ -101,12 +114,12 @@ end
 
 BlockRam #(.DATA(32),.ADDR(9),.SIZE(512),.FILE("init.txt")) PRAM(
 	.clka(clk),
-	.wea(we),
+	.wea(delayedWe),
 	.web(1'b0),
-	.addra(temp), //Address in queue to write to.
+	.addra(wrtPtr), //Address in queue to write to.
 	.addrb(rdPtr), //Where painter reads from.
-	.dina(wrtData), //Data from CPU to write.
-	.dinb(16'b0), //Port B is read only.
+	.dina(temp), //Data from CPU to write.
+	.dinb(32'b0), //Port B is read only.
 	//.douta(0), Port A is write only
 	.doutb(dataOut)
 	 );

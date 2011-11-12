@@ -35,9 +35,10 @@ parameter read1 = 0;
 parameter read2 = 1;
 parameter read3 = 2;
 parameter paint = 3;
+parameter pause = 4;
 
 reg newline; //Set to one when it's time to read in the next line.
-reg [1:0] state; //Either paused, read line 1 of mem, read line 2 of mem.
+reg [2:0] state; //Either paused, read line 1 of mem, read line 2 of mem.
 reg[7:0] left; //Start of pixel line, 0-159
 reg[7:0] right; //End of pixel line, 0-159
 reg[6:0] line; //Horizontal line of pixels, 0-119
@@ -52,7 +53,6 @@ begin
 			data <= 0;
 			we <= 0;
 			re <= 0;
-			full <= 0;
 			swapBuffersCommand <= 0;
 		end
 	else begin
@@ -60,7 +60,7 @@ begin
 	case(state)
 	read1:
 	begin
-		swapBuffersCommand <= 0;
+		//swapBuffersCommand <= 0;
 		we <= 0;
 		addr <= 0;
 		if (!empty)
@@ -78,7 +78,7 @@ begin
 	
 	read3:	
 	begin
-		if (PRAMdata == 16'hffffffff)
+		if (PRAMdata == 32'hffffffff)
 		begin
 			swapBuffersCommand <= 1;
 			state <= pause;
@@ -123,6 +123,7 @@ begin
 		begin
 			if (swapBuffers)
 				state <= read1;
+			swapBuffersCommand <= 0;
 		end
 	endcase
 	end //END reset else.
