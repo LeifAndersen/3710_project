@@ -57,7 +57,7 @@ main:
 	call cos           # %1 has cos(theta)
 	mov %HIGH, %1      # 
 	mul %HIGH, %6      # %LOW/HIGH has (UP-DOWN)*cos(theta)
-	add %5, %LOW%5, %LOW%5, %LOW%5, %LOW
+	add %5, %LOW
  
 
 	# Store Final Values
