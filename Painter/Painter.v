@@ -31,14 +31,14 @@ module Painter(
 	output reg swapBuffersCommand //1 when CPU writes 16'hffff to PRAM, time to swap front and back buffer.
     );
 
-parameter read1 = 0;
-parameter read2 = 1;
-parameter read3 = 2;
-parameter paint = 3;
-parameter pause = 4;
+parameter read1 = 3'd0;
+parameter read2 = 3'd1;
+parameter read3 = 3'd2;
+parameter paint = 3'd3;
+parameter pause = 3'd4;
 
 reg newline; //Set to one when it's time to read in the next line.
-reg [2:0] state; //Either paused, read line 1 of mem, read line 2 of mem.
+reg[2:0] state; //Either paused, read line 1 of mem, read line 2 of mem.
 reg[7:0] left; //Start of pixel line, 0-159
 reg[7:0] right; //End of pixel line, 0-159
 reg[6:0] line; //Horizontal line of pixels, 0-119

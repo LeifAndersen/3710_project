@@ -56,9 +56,9 @@ always
 begin
 #10;
 clk = ~clk;
+vgaClk = ~vgaClk;
 #10;
 clk = ~clk;
-vgaClk = ~vgaClk;
 end
 
 	initial begin

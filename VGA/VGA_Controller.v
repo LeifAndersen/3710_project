@@ -136,11 +136,16 @@ begin
 				end
 				default:
 				begin
-					if (pixCount >= 144 && pixCount <= 782 && Henable)
+					//When to request color from memory:
+					if (pixCount >= Tbp+Tpw-3 && pixCount < Tbp+Tpw+Tdisp-3 && Henable)
 						begin
-						//fbAddr <= fbAddr + 1;
-						color <= {r, g, b};
-						offset <= offset + 1;
+							//fbAddr <= fbAddr + 1;
+							offset <= offset + 1;
+						end					
+					//When to output color:
+					if (pixCount >= Tbp+Tpw && pixCount < Tbp+Tpw+Tdisp && Henable)
+						begin
+							color <= {r, g, b};
 						end
 					pixCount <= pixCount + 1; //Keep counting
 				end

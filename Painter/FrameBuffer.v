@@ -39,19 +39,22 @@ reg[15:0] bufferWrtPtr;
 reg[15:0] bufferRdPtr;
 reg bufferWe; //regular buffer wrt enable.
 reg bufferWeS; //special buffer wrt enable.
+reg[2:0] ddataIn; //Delayed data in by 1 clock to match with the 1 clock delay on we and wrtPtr.
 
 wire R;
 wire G;
 wire B;
 wire[2:0] S;
 
+//All write logic in here.
 always@(posedge clk)
 begin
 	if (reset)
 	begin
 		state <= frontLow;
-		color <= 0;
 	end
+	else begin
+	ddataIn <= dataIn;
 
 	if (swapBuffers)
 	begin
@@ -61,18 +64,16 @@ begin
 	case(state)	
 		frontLow:
 		begin
-			bufferRdPtr <= rdPtr;
-			color <= {R, G, B};
 			if (wrtPtr >= 17600) //Special buffer, part of high buffer, begins at 36800, and right now rdPtr already is at 19200. 36800 - 19200 = 17600 is end of regular buffer.
 			begin
 				bufferWrtPtr <= wrtPtr - 17600; //Ptr is for special buffer.
 				bufferWe <= 0;
-				bufferWeS <= 1;
+				bufferWeS <= we;
 			end
 			else
 			begin
 				bufferWrtPtr <= wrtPtr + 19200; //19200 is where high buffer starts, low buffer ends.
-				bufferWe <= 1;
+				bufferWe <= we;
 				bufferWeS <= 0;
 			end
 		end
@@ -80,6 +81,29 @@ begin
 		frontHigh:
 		begin
 			bufferWrtPtr <= wrtPtr;
+		end
+	endcase
+	end //end reset else.
+end
+
+//All read logic in here.
+always@(posedge vgaClk)
+begin
+	if (reset)
+	begin
+		color <= 0;
+	end
+	else begin
+
+	case(state)	
+		frontLow:
+		begin
+			bufferRdPtr <= rdPtr;
+			color <= {R, G, B};
+		end
+		
+		frontHigh:
+		begin
 			if (rdPtr >= 17600) //Special buffer, part of high buffer, begins at 36800, and right now rdPtr already is at 19200. 36800 - 19200 = 17600 is end of regular buffer.
 			begin
 				bufferRdPtr <= rdPtr - 17600;
@@ -92,6 +116,7 @@ begin
 			end
 		end
 	endcase
+	end //end reset else.
 end
 	 
 DCBlockRam #(.DATA(1),.ADDR(16),.SIZE(36864),.FILE("init.txt")) redBuffer(  //115 horizontal lines of pixels, out of the full 120.
@@ -101,7 +126,7 @@ DCBlockRam #(.DATA(1),.ADDR(16),.SIZE(36864),.FILE("init.txt")) redBuffer(  //11
 	.web(1'b0),
 	.addra(bufferWrtPtr), //Which pixel to write to, determined by painter.
 	.addrb(bufferRdPtr), //Which pixel to read from, determined by vga.
-	.dina(dataIn[2]),
+	.dina(ddataIn[2]),
 	.dinb(1'b0),
 	//.douta(0),
 	.doutb(R)
@@ -114,7 +139,7 @@ DCBlockRam #(.DATA(1),.ADDR(16),.SIZE(36864),.FILE("init.txt")) greenBuffer(  //
 	.web(1'b0),
 	.addra(bufferWrtPtr), //Which pixel to write to, determined by painter.
 	.addrb(bufferRdPtr), //Which pixel to read from, determined by vga.
-	.dina(dataIn[1]),
+	.dina(ddataIn[1]),
 	.dinb(1'b0),
 	//.douta(0),
 	.doutb(G)
@@ -127,7 +152,7 @@ DCBlockRam #(.DATA(1),.ADDR(16),.SIZE(36864),.FILE("init.txt")) blueBuffer(  //1
 	.web(1'b0),
 	.addra(bufferWrtPtr), //Which pixel to write to, determined by painter.
 	.addrb(bufferRdPtr), //Which pixel to read from, determined by vga.
-	.dina(dataIn[0]),
+	.dina(ddataIn[0]),
 	.dinb(1'b0),
 	//.douta(0),
 	.doutb(B)
@@ -140,7 +165,7 @@ DCBlockRam #(.DATA(3),.ADDR(11),.SIZE(1600),.FILE("init.txt")) specialBuffer(  /
 	.web(1'b0),
 	.addra(bufferWrtPtr[10:0]), //Which pixels to write to (3 instead of 1 at a time here), determined by painter.
 	.addrb(bufferRdPtr[10:0]), //Which pixel to read from (all 3 come from this buffer instead of 3 separate buffers), determined by vga.
-	.dina(dataIn),
+	.dina(ddataIn),
 	.dinb(3'b0),
 	//.douta(0),
 	.doutb(S)

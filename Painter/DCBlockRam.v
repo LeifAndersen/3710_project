@@ -54,7 +54,7 @@ module DCBlockRam#(parameter DATA = 18, parameter ADDR = 14, parameter SIZE = 12
          douta <= memory[addra];
 	end
       
-   always @(negedge clkb)
+   always @(posedge clkb)
    begin
          if (web)
             memory[addrb] <= dinb;
