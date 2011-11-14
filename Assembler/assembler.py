@@ -11,7 +11,7 @@ I_CAPABLE = ["ADD", "SUB", "AND", "OR", "XOR", "NOT", "LSH", "RSH", "ARSH", "MUL
 SPECIAL_14_BIT = ["RET", "PUSHI"]
 
 # Dictionary of instructions and their opcodes
-OP_CODES = {"ADD": 2, "SUB": 3, "AND": 6, "OR": 7, "XOR": 8, "NOT": 9, "LSH": 10, "RSH": 11, "ARSH": 12, "FMUL": 13, "FMUL": 14, "MOVR": 15, "CMP": 4, "CMPR": 5, "MOVMR": 2, "MOVRM": 3, "CALL": 4, "MOVMRI": 5, "MOVRMI": 6, "RET": 7, "JL": 16, "JLE": 17, "JNE": 18, "JE": 19, "J": 20, "JBE": 21, "JB": 22, "POP": 12, "PUSH": 13, "PUSHI": 14, "INCR": 60, "DECR": 61}
+OP_CODES = {"ADD": 2, "SUB": 3, "AND": 6, "OR": 7, "XOR": 8, "NOT": 9, "LSH": 10, "RSH": 11, "ARSH": 12, "MUL": 13, "FMUL": 14, "MOVR": 15, "CMP": 4, "CMPR": 5, "MOVMR": 2, "MOVRM": 3, "CALL": 4, "MOVMRI": 5, "MOVRMI": 6, "RET": 7, "JL": 16, "JLE": 17, "JNE": 18, "JE": 19, "J": 20, "JBE": 21, "JB": 22, "POP": 12, "PUSH": 13, "PUSHI": 14, "INCR": 60, "DECR": 61}
 
 # get the class of parse that should be performed
 def get_instruction_type(OP):
