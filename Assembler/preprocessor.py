@@ -36,7 +36,7 @@ def parse(infile_name, outfile_name):
 		for token in line_tokens:
 			if token in tokens:
 				line_out += tokens[token]
-			elif token[-1] == ',' and token in tokens:
+			elif token[-1] == ',' and token[0:-1] in tokens:
 				line_out += tokens[token[0:-1]] + ','
 			elif token[0] == '[' and token[-1] == ']' and token[1:-1] in tokens:
 				line_out += '[' + tokens[token[1:-1]] + ']'
