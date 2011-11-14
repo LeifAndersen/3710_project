@@ -3,57 +3,40 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="C:/Users/jhparker/3710/Painter/DrawUnit_tb_isim_beh.wdb" id="1" type="auto">
+      <db_ref path="C:/Users/jhparker/3710/Painter/top_tb_isim_beh.wdb" id="1" type="auto">
          <top_modules>
-            <top_module name="DrawUnit_tb" />
             <top_module name="glbl" />
+            <top_module name="top_tb" />
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="11" />
-   <wvobject fp_name="/DrawUnit_tb/full" type="logic" db_ref_id="1">
+   <WVObjectSize size="7" />
+   <wvobject fp_name="/top_tb/full" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">full</obj_property>
       <obj_property name="ObjectShortName">full</obj_property>
    </wvobject>
-   <wvobject fp_name="/DrawUnit_tb/color2" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">color2[2:0]</obj_property>
-      <obj_property name="ObjectShortName">color2[2:0]</obj_property>
+   <wvobject fp_name="/top_tb/color" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">color[2:0]</obj_property>
+      <obj_property name="ObjectShortName">color[2:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/DrawUnit_tb/hsync" type="logic" db_ref_id="1">
+   <wvobject fp_name="/top_tb/hsync" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">hsync</obj_property>
       <obj_property name="ObjectShortName">hsync</obj_property>
    </wvobject>
-   <wvobject fp_name="/DrawUnit_tb/vsync" type="logic" db_ref_id="1">
+   <wvobject fp_name="/top_tb/vsync" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">vsync</obj_property>
       <obj_property name="ObjectShortName">vsync</obj_property>
    </wvobject>
-   <wvobject fp_name="/DrawUnit_tb/clk" type="logic" db_ref_id="1">
+   <wvobject fp_name="/top_tb/clk" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
    </wvobject>
-   <wvobject fp_name="/DrawUnit_tb/vgaClk" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">vgaClk</obj_property>
-      <obj_property name="ObjectShortName">vgaClk</obj_property>
-   </wvobject>
-   <wvobject fp_name="/DrawUnit_tb/reset" type="logic" db_ref_id="1">
+   <wvobject fp_name="/top_tb/reset" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">reset</obj_property>
       <obj_property name="ObjectShortName">reset</obj_property>
    </wvobject>
-   <wvobject fp_name="/DrawUnit_tb/we" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">we</obj_property>
-      <obj_property name="ObjectShortName">we</obj_property>
-   </wvobject>
-   <wvobject fp_name="/DrawUnit_tb/data" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">data[15:0]</obj_property>
-      <obj_property name="ObjectShortName">data[15:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/DrawUnit_tb/i" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">i[31:0]</obj_property>
-      <obj_property name="ObjectShortName">i[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/DrawUnit_tb/uut/rdPtr" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">rdPtr[14:0]</obj_property>
-      <obj_property name="ObjectShortName">rdPtr[14:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   <wvobject fp_name="/top_tb/uut/vgaClk" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">vgaClk</obj_property>
+      <obj_property name="ObjectShortName">vgaClk</obj_property>
    </wvobject>
 </wave_config>

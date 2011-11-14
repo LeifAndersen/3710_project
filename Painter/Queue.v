@@ -112,7 +112,7 @@ end
 
 
 
-BlockRam #(.DATA(32),.ADDR(9),.SIZE(512),.FILE("init.txt")) PRAM(
+BlockRam #(.DATA(32),.ADDR(9),.SIZE(512),.FILE("initP.txt")) PRAM(
 	.clka(clk),
 	.wea(delayedWe),
 	.web(1'b0),
