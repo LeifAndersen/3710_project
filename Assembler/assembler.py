@@ -50,6 +50,10 @@ def invalid_arg(line_num, line):
 	print "Invalid argument on line " + str(line_num) + ": \"" + line.strip() + "\""
 	exit(1)
 
+def bad_data(line_num, line):
+	print "Bad data in data section on line " + str(line_num) + ": \"" + line.strip() + "\""
+	exit(1)
+
 # error reporting for mismatched parens
 def delim_mismatch(line_num, line):
 	print "Delimiter mismatch on line " + str(line_num) + ": \"" + line.strip() + "\""
@@ -145,7 +149,15 @@ def parse(infile_str, outfile_str):
 
 		if isdata == 1:
 			# push data directly
-			first_pass_queue.append(tokens[0])
+			if is_number(tokens[0]):
+				if check_for_hex(tokens[0]):
+					immediate = int(tokens[0], 16)
+				else:
+					immediate = int(tokens[0])
+				first_pass_queue.append(hex(truncate_bits(immediate, 18)))
+			else:
+				bad_data(line_num, line)
+
 		else:
 			# encode instructions
 			# uppercase the instructions
@@ -365,7 +377,7 @@ def parse(infile_str, outfile_str):
 				# encode call and save to instruction stream with label address
 				outfile.write(encode_14_Bit_Imm_instruction([tokens[0], str(labels[tokens[1]])])[2:] + "\n")
 			elif tokens[0] == "MOVMRI" or tokens[0] == "MOVRMI":
-				first_pass_queue.append(encode_14_Bit_Imm_instruction([tokens[0], str(labels[tokens[1]])])[2:] + "\n")
+				outfile.write(encode_14_Bit_Imm_instruction([tokens[0], str(labels[tokens[1]])])[2:] + "\n")
 			else:
 				# encode jump and save
 				outfile.write(encode_jumps([tokens[0], str(labels[tokens[1]])])[2:] + "\n")
