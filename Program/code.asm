@@ -4,30 +4,11 @@
 `define RIGHT_KEY 0
 `define A_KEY 0
 `define B_KEY 0
-`define PLAYER_X 0
-`define PLAYER_Y 0
-`define PLAYER_THETA 0
-`define AI_X 0
-`define AI_Y 0
-`define AI_THETA 0
-`define AI_START 100
 `define %HIGH %12
 `define %LOW %11
 
 # Bootup and initialization Code
 init:
-	# Setup player's position
-	mov %1, 0
-	mov [PLAYER_X], %1
-	mov [PLAYER_Y], %1
-	mov [PLAYER_THETA], %1
-
-	# Setup AI's position.
-	mov [AI_THETA], %1
-	mov %1, AI_START
-	mov [AI_X], %1
-	mov [AI_Y], %1
-
 	# Begin der loop
 	call main
 
@@ -81,3 +62,22 @@ cos:
 # Take numerator in $1, denominator in $2, return numerator/denominator in $1
 div:
 	ret
+
+.data
+PLAYER_X:
+0
+
+PLAYER_Y:
+0
+
+PLAYER_THETA:
+0
+
+AI_X:
+100
+
+AI_Y:
+100
+
+AI_THETA:
+0
