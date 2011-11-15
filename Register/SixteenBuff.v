@@ -26,10 +26,10 @@ module SixteenBuff(
 	 
 	always@(*) begin
 		if(enable == 1'b1) begin
-			busOut = busIn;
+			busOut <= busIn;
 		end
 		else begin
-			busOut = 16'bZZZZ_ZZZZ_ZZZZ_ZZZZ;
+			busOut <= 16'bZZZZ_ZZZZ_ZZZZ_ZZZZ;
 		end
 	end
 

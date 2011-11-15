@@ -24,7 +24,10 @@ module Top(
     output [11:8] SF_D,
     output LCD_E,
     output LCD_RS,
-    output LCD_RW
+    output LCD_RW,
+	 output[2:0] color,
+	 output hsync,
+	 output vsync
     );
 
 	wire reset;
@@ -113,15 +116,17 @@ module Top(
 	wire [15:0] lcd_data;
 	wire [15:0] lcdreg_to_lcd;
 	
+	wire full;
+	
 	wire memWriteEnA;
 	assign memWriteEnA = 0;
 	wire [15:0] memWriteDataA;
 	assign memWriteDataA = 16'b0;
 	// a is instructions, b is data
-	BlockRam #(.DATA(18), .ADDR(14), .SIZE(12288), .FILE("init.mem")) MainMemory(CLK_50MHZ, memWriteEnA, data_wr_en_to_main, inst_addr_to_main, data_addr_to_main, memWriteDataA, data_to_main, instruction_to_controller, data_to_controller);
+	BlockRam #(.DATA(18), .ADDR(14), .SIZE(8192), .FILE("init.txt")) MainMemory(CLK_50MHZ, memWriteEnA, data_wr_en_to_main, inst_addr_to_main, data_addr_to_main, memWriteDataA, data_to_main, instruction_to_controller, data_to_controller);
 	
 	// Memory controller
-	MemoryController MemCtrl(memWriteBus, memAddrBus, memWriteEn, pc, data_to_controller, instruction_to_controller, memDataOut, instruction, data_to_main, data_addr_to_main, data_wr_en_to_main, inst_addr_to_main, pram_out, pram_wr_en, lcd_data, lcd_en);
+	MemoryController MemCtrl(memWriteBus, memAddrBus, memWriteEn, pc, data_to_controller, instruction_to_controller, full, memDataOut, instruction, data_to_main, data_addr_to_main, data_wr_en_to_main, inst_addr_to_main, pram_out, pram_wr_en, lcd_data, lcd_en);
 	
 	// control
 	//     Has some forwarding logic around it
@@ -164,5 +169,34 @@ module Top(
 
 	// lcd controller
 	lcd_ctrl lcdctrl(CLK_50MHZ, reset, lcdreg_to_lcd, SF_D, LCD_E, LCD_RS, LCD_RW);
+	
+	// draw unit
+	wire CLK_25MHZ;	
+	DrawUnit drawunit(.clk(CLK_50MHZ), .vgaClk(CLK_25MHZ), .reset(reset), .we(pram_wr_en),	.dataIn(pram_out), .full(full), .color(color), .hsync(hsync), .vsync(vsync));
+	
+	wire clkfb;
+	//DCM
+	DCM_SP #(
+      .CLKDV_DIVIDE(2.0), // Divide by: 1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0,5.5,6.0,6.5
+                          //   7.0,7.5,8.0,9.0,10.0,11.0,12.0,13.0,14.0,15.0 or 16.0
+      //.CLKFX_DIVIDE(1),   // Can be any integer from 1 to 32
+      //.CLKFX_MULTIPLY(4), // Can be any integer from 2 to 32
+      .CLKIN_DIVIDE_BY_2("FALSE"), // TRUE/FALSE to enable CLKIN divide by two feature
+      //.CLKIN_PERIOD(0.0),  // Specify period of input clock
+      .CLKOUT_PHASE_SHIFT("NONE"), // Specify phase shift of NONE, FIXED or VARIABLE
+      .CLK_FEEDBACK("1X"),  // Specify clock feedback of NONE, 1X or 2X
+      .DESKEW_ADJUST("SYSTEM_SYNCHRONOUS"), // SOURCE_SYNCHRONOUS, SYSTEM_SYNCHRONOUS or
+                                            //   an integer from 0 to 15
+      .DLL_FREQUENCY_MODE("LOW"),  // HIGH or LOW frequency mode for DLL
+      .DUTY_CYCLE_CORRECTION("TRUE"), // Duty cycle correction, TRUE or FALSE
+      .PHASE_SHIFT(0),     // Amount of fixed phase shift from -255 to 255
+      .STARTUP_WAIT("TRUE")   // Delay configuration DONE until DCM LOCK, TRUE/FALSE
+   ) DCM_SP_inst (
+		.CLK0(clkfb),
+      .CLKDV(CLK_25MHZ),   // Divided DCM CLK out (CLKDV_DIVIDE)
+		.CLKFB(clkfb),
+      .CLKIN(CLK_50MHZ),   // Clock input (from IBUFG, BUFG or DCM)
+      .RST(reset)        // DCM asynchronous reset input
+   );
 
 endmodule

@@ -177,7 +177,7 @@ module ALU(
 
 		MUL:
 		begin
-			{D, C} = A * B;
+			{D, C} <= A * B;
 			if (C == 0)
 				Zero <= 1;
 			else
@@ -189,8 +189,8 @@ module ALU(
 		
 		FMUL:
 		begin
-			temp = A * B;
-			C = temp[31:16];
+			temp <= A * B;
+			C <= temp[29:14];
 			if (C == 0)
 				Zero <= 1;
 			else

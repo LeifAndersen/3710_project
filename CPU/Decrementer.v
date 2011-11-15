@@ -24,7 +24,7 @@ module Decrementer(
     );
 
 	always@(in) begin
-		out = in - 1;
+		out <= in - 1;
 	end
 
 endmodule

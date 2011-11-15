@@ -28,14 +28,14 @@ module Register16(
 	
 	always@(posedge clk) begin
 		if (reset == 1'b1) begin
-			Q = 0;
+			Q <= 0;
 		end
 		else begin
 			if (en == 1'b1) begin
-				Q = D;
+				Q <= D;
 			end
 			else begin
-				Q = Q;
+				Q <= Q;
 			end
 		end
 	end

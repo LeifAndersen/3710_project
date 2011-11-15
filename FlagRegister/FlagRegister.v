@@ -35,15 +35,15 @@ module FlagRegister(
 always@(posedge clk)
 begin
 	if (reset == 1'b1) begin
-		Zero = 0;
-		Low = 0;
-		Negative = 0;
+		Zero <= 0;
+		Low <= 0;
+		Negative <= 0;
 	end
 	else begin
 		if (enable == 1'b1) begin
-			Zero = ZeroIn;
-			Low = LowIn;
-			Negative = NegativeIn;
+			Zero <= ZeroIn;
+			Low <= LowIn;
+			Negative <= NegativeIn;
 		end
 	end
 end
