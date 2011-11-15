@@ -373,10 +373,8 @@ def parse(infile_str, outfile_str):
 		# go.
 		# call encode_14_Bit_Imm_instruction() on calls and encode_jumps() on jumps (lines with more than one token)
 		if len(tokens) > 1:
-			if tokens[0] == "CALL":
+			if tokens[0] == "CALL" or tokens[0] == "MOVMRI" or tokens[0] == "MOVRMI":
 				# encode call and save to instruction stream with label address
-				outfile.write(encode_14_Bit_Imm_instruction([tokens[0], str(labels[tokens[1]])])[2:] + "\n")
-			elif tokens[0] == "MOVMRI" or tokens[0] == "MOVRMI":
 				outfile.write(encode_14_Bit_Imm_instruction([tokens[0], str(labels[tokens[1]])])[2:] + "\n")
 			else:
 				# encode jump and save
