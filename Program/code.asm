@@ -39,7 +39,12 @@ main:
 	mov %HIGH, %1      # 
 	mul %HIGH, %6      # %LOW/HIGH has (UP-DOWN)*cos(theta)
 	add %5, %LOW
- 
+
+	# -------------------------------
+	# Move AI
+	mov %6, [AI_THETA]
+	mov %7, [AI_X]
+	mov %8, [AI_Y]
 
 	# Store Final Values
 	mov [PLAYER_THETA], %3
@@ -81,3 +86,9 @@ AI_Y:
 
 AI_THETA:
 0
+
+AI_FIRE_TIMER:
+1000
+
+AI_FIRE_RESET:
+1000
