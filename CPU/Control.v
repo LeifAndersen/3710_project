@@ -100,7 +100,7 @@ module Control(
 			BuffCtrl[0]     <= 0;
 			BuffCtrl[5:4]   <= 2'd0;
 			BuffCtrl[15:8]  <= 8'd0;
-			BuffCtrl[20:17] <= 4'd0;
+			BuffCtrl[21:17] <= 5'd0;
 			MemWrite        <= 0;
 			immediate       <= 16'd0;
 			Addr            <= 0;
@@ -761,7 +761,7 @@ module Control(
 			WriteEn1  <= 0;
 			WriteEn2  <= 0;
 			immediate <= 16'd0;
-			BuffCtrl  <= 21'd0;
+			BuffCtrl  <= 22'd0;
 			DestSel	  <= 4'd0;
 			DestSel2  <= 4'd0;
 			SrcSel	  <= 4'd0;
