@@ -207,6 +207,7 @@ module ALU(
 			Low <= 1'b0;
 			Negative <= 1'b0;
 			Zero <= 1'b0;
+			D <= 0;
 		end
 
 		endcase

@@ -39,18 +39,57 @@ main:
 	mov %HIGH, %1      # 
 	mul %HIGH, %6      # %LOW/HIGH has (UP-DOWN)*cos(theta)
 	add %5, %LOW
- 
+	
+	# TODO Move only when AI not in the way
+
+	# -------------------------------
+	# Move AI
+	mov %6, [AI_THETA]
+	mov %7, [AI_X]
+	mov %8, [AI_Y]
+	
+	# -------------------------------
+	# Move bullet
+
+	# Bullet collide against anything?
 
 	# Store Final Values
 	mov [PLAYER_THETA], %3
 	mov [PLAYER_X], %4
 	mov [PLAYER_Y], %5
+	mov [AI_THETA], %6
+	mov [AI_X], %7
+	mov [AI_Y], %8
+	
+	# Reset keyboard counters
+	
+	# -------------------------------
+	# For each triangle, do this, although unless it's an enimy tank, you can skip the AI step.
+
+	# Get Projection Matrix Based on Players Position
+	
+	# Multiply this by world matrix
+
+	# Mutiply AI tank matrix by outputted matrix
+
+	# At this point, the triangle's x and y coordinates should be directly drawable on the screen.  The z coordinate is only used to determin what parts of the triangle is out of range.
+
+	# Rasterise
+	# For each line of pixels, do this:
+	# For each triangle, if it's on that line, do this:
+	# Find the intersection of pixel line, and the tringle, the left one is the ideal left, and the right one is the ideal right.  Special cases for one intersection (point), and when they're the same.
+
+	# If the pixel is lower than 0 or greater than 160, set it as that.  If both of them are off the same side of the screen, just remove it altogether.
+
+	# If z is out of range, find where the line intersects with the max/min z values, set that as your left/right points
+
+	# Send it off to the hardware to be drawn.
 
 	# -------------------------------
-	# Process State
-	
-	j main
 
+	j main # Loop again.	
+
+	
 # Take a number in the $1 reg, return the sin of that number into the $1 reg
 sin:
 	ret
@@ -81,3 +120,9 @@ AI_Y:
 
 AI_THETA:
 0
+
+AI_FIRE_TIMER:
+1000
+
+AI_FIRE_RESET:
+1000
