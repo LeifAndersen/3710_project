@@ -30,13 +30,10 @@ def main():
 
 	print "Preprocessing " + filenameparts[0] + filenameparts[1] + "",
 	preprocessor.parse(preprocessfile, assemblyfile)
-	print "done."
-	print "Assembling " + filenameparts[0] + ".pp" + "",
+	print "\nAssembling " + filenameparts[0] + ".pp" + "",
 	assembler.parse(assemblyfile, objectfile)
-	print "done."
-	print "Padding " + filenameparts[0] + ".o for memory of size " + str(size),
+	print "\nPadding " + filenameparts[0] + ".o for memory of size " + str(size),
 	padformemory.pad(objectfile, memoryfile, size)
-	print "done."
 
 if __name__ == '__main__':
 	main()

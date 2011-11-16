@@ -4,29 +4,53 @@ import sys
 from os.path import splitext
 from os.path import dirname
 
+def print_percentage(percentage):
+	if percentage < 10:
+		sys.stdout.write("\b\b\b")
+	elif percentage >= 10 and  percentage < 100 :
+		sys.stdout.write("\b\b\b\b")
+	else:
+		sys.stdout.write("\b\b\b\b\b")
+	sys.stdout.write("%d%%]" % (percentage) )
+
 def parse(infile_name, outfile_name):
 	infile = open(infile_name, 'r')
 	outfile = open(outfile_name, 'w')
 
 	tokens = {}
-	
-	print '.', 
+
+	sys.stdout.write("\n(1/2)    Finding: [  0%]")
+	sys.stdout.flush()
+
+	line_count = len(infile.readlines())
+
 	# Get the tokens
 	i = 0
+	infile.seek(0)
 	for line in infile:
+		i+=1
+		print_percentage(100 * i/float(line_count))
+		sys.stdout.flush()
+
 		line_tokens = line.split()
 		if len(line_tokens) == 0:
 			continue
 		if line_tokens[0][0] == '`':
 			if len(line_tokens) != 3:
-				print "Incoredt preprocessor command on line " + str(i) + "."
+				print "Incorrect preprocessor command on line " + str(i) + ": " + line.strip()
 			tokens[line_tokens[1]] = line_tokens[2]
-		i+=1
 
-	print '.', 
+	sys.stdout.write("\n(2/2)  Replacing: [  0%]")
+	sys.stdout.flush()
+
 	# Kill the pre-processor commands
-	infile.seek(0)	
+	i = 0
+	infile.seek(0)
 	for line in infile:
+		i+=1
+		print_percentage(100 * i/float(line_count))
+		sys.stdout.flush()
+
 		line_tokens = line.split()
 		if len(line_tokens) == 0 or line_tokens[0][0] == '`':
 			outfile.write('\n')
@@ -50,7 +74,6 @@ def parse(infile_name, outfile_name):
 
 	infile.close()
 	outfile.close()
-	print '.', 
 
 def main():
 	filestring = sys.argv[1]
