@@ -18,7 +18,7 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module BlockRam#(parameter DATA = 18, parameter ADDR = 14, parameter SIZE = 12288, parameter FILE = "init.txt")(
+module BlockRam#(parameter DATA = 18, parameter ADDR = 14, parameter SIZE = 1024, parameter FILE = "init.txt")(
 	input clka,
 	input wea, //write enable A
 	input web, //write enable B
@@ -33,7 +33,7 @@ module BlockRam#(parameter DATA = 18, parameter ADDR = 14, parameter SIZE = 1228
    //parameter RAM_WIDTH = 18;
    //parameter RAM_ADDR_BITS = 15;
 
-	//(* RAM_STYLE="{AUTO | BLOCK |  BLOCK_POWER1 | BLOCK_POWER2}" *)
+	//(* RAM_STYLE="BLOCK" *)
    reg [DATA-1:0] memory [SIZE-1:0];
    //reg [RAM_WIDTH-1:0] output_dataA, output_dataB;
 

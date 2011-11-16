@@ -34,7 +34,8 @@ module ALU(
 	`include "opcodesLOL.v"
 
 	wire[15:0] notB = -B;//~B + 1;
-	reg[31:0] temp;
+	wire[31:0] temp;
+	assign temp = A*B;
 
 	always@(*) begin
 		case(Opcode)
@@ -177,7 +178,7 @@ module ALU(
 
 		MUL:
 		begin
-			{D, C} <= A * B;
+			{D, C} <= temp;
 			if (C == 0)
 				Zero <= 1;
 			else
@@ -189,7 +190,6 @@ module ALU(
 		
 		FMUL:
 		begin
-			temp <= A * B;
 			C <= temp[29:14];
 			if (C == 0)
 				Zero <= 1;
