@@ -19,7 +19,7 @@ def parse(infile_name, outfile_name):
 
 	tokens = {}
 
-	sys.stdout.write("\n(1/2)    Finding: [  0%]")
+	sys.stdout.write("\n\t(1/2)    Finding: [  0%]")
 	sys.stdout.flush()
 
 	line_count = len(infile.readlines())
@@ -40,7 +40,7 @@ def parse(infile_name, outfile_name):
 				print "Incorrect preprocessor command on line " + str(i) + ": " + line.strip()
 			tokens[line_tokens[1]] = line_tokens[2]
 
-	sys.stdout.write("\n(2/2)  Replacing: [  0%]")
+	sys.stdout.write("\n\t(2/2)  Replacing: [  0%]")
 	sys.stdout.flush()
 
 	# Kill the pre-processor commands

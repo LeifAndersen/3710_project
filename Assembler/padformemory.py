@@ -17,7 +17,7 @@ def pad(infile_str, outfile_str, size):
 	infile = open(infile_str, 'r')
 	outfile = open(outfile_str, 'w')
 
-	sys.stdout.write("\n(1/2)    Copying: [  0%]")
+	sys.stdout.write("\n\t(1/2)    Copying: [  0%]")
 	sys.stdout.flush()
 
 	line_count = len(infile.readlines())
@@ -32,7 +32,7 @@ def pad(infile_str, outfile_str, size):
 		print_percentage(100 * line_num/float(line_count))
 		sys.stdout.flush()
 
-	sys.stdout.write("\n(2/2)    Padding: [  0%]")
+	sys.stdout.write("\n\t(2/2)    Padding: [  0%]")
 	sys.stdout.flush()
 
 	line_count = size

@@ -137,7 +137,7 @@ def parse(infile_str, outfile_str):
 
 	# count lines in file
 	total_instructions = len(infile.readlines())
-	sys.stdout.write("\n(1/3)   Encoding: [  0%]")
+	sys.stdout.write("\n\t(1/3)   Encoding: [  0%]")
 	sys.stdout.flush()
 
 	# Parse
@@ -360,7 +360,7 @@ def parse(infile_str, outfile_str):
 				# bad instruction, explode
 				explode_bomb(line_num, line)
 
-	sys.stdout.write("\n(2/3) Addressing: [  0%]")
+	sys.stdout.write("\n\t(2/3) Addressing: [  0%]")
 	sys.stdout.flush()
 
 	total_instructions = len(first_pass_queue)
@@ -390,7 +390,7 @@ def parse(infile_str, outfile_str):
 			second_pass_queue.append(instruction);
 			address += MEM_INCR
 
-	sys.stdout.write("\n(3/3)   Labeling: [  0%]")
+	sys.stdout.write("\n\t(3/3)   Labeling: [  0%]")
 	sys.stdout.flush()
 
 	total_instructions = len(second_pass_queue)
