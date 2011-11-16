@@ -28,18 +28,18 @@ main:
 	mov %6, [UP_KEY]
 	mov %7, [DOWN_KEY]
 	sub %6, %7         # Up-Down now in %6
-	mov %1, %3         # 
+	mov %1, %3         #
 	call sin           # %1 has sin(theta)
 	mov %HIGH, %1      # %HIGH has sin(theta)
-	mul %HIGH, %6      # 
+	mul %HIGH, %6      #
 	add %4, %LOW       # Player X now updated by the move amount
 	                   #
 	mov %1, %3         #
 	call cos           # %1 has cos(theta)
-	mov %HIGH, %1      # 
+	mov %HIGH, %1      #
 	mul %HIGH, %6      # %LOW/HIGH has (UP-DOWN)*cos(theta)
 	add %5, %LOW
-	
+
 	# TODO Move only when AI not in the way
 
 	# -------------------------------
@@ -47,7 +47,7 @@ main:
 	mov %6, [AI_THETA]
 	mov %7, [AI_X]
 	mov %8, [AI_Y]
-	
+
 	# -------------------------------
 	# Move bullet
 
@@ -60,14 +60,14 @@ main:
 	mov [AI_THETA], %6
 	mov [AI_X], %7
 	mov [AI_Y], %8
-	
+
 	# Reset keyboard counters
-	
+
 	# -------------------------------
 	# For each triangle, do this, although unless it's an enimy tank, you can skip the AI step.
 
 	# Get Projection Matrix Based on Players Position
-	
+
 	# Multiply this by world matrix
 
 	# Mutiply AI tank matrix by outputted matrix
@@ -87,9 +87,9 @@ main:
 
 	# -------------------------------
 
-	j main # Loop again.	
+	j main # Loop again.
 
-	
+
 # Take a number in the $1 reg, return the sin of that number into the $1 reg
 sin:
 	ret
@@ -126,3 +126,9 @@ AI_FIRE_TIMER:
 
 AI_FIRE_RESET:
 1000
+
+sine_lut:
+0
+
+cosine_lut:
+0
