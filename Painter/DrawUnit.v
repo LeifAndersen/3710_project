@@ -44,7 +44,8 @@ wire[2:0] fbout; //Color from frameBuffer to vga controller.
 wire[8:0] line; //Line
 wire[9:0] offset;
 
-assign rdPtr = line[8:2] * 160 + offset[9:2]; //Divide each by 4 to change 640x480 to 160x120.
+//assign rdPtr = line[8:2] * 160 + offset[9:2]; //Divide each by 4 to change 640x480 to 160x120.
+assign rdPtr = (line[8:2] << 7) + (line[8:2] << 5) + offset[9:2]; //Divide each by 4 to change 640x480 to 160x120.
 
 always@(posedge clk)
 begin

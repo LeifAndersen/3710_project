@@ -4,8 +4,8 @@
      changes made to this file may result in unpredictable
      behavior or data corruption.  It is strongly advised that
      users do not edit the contents of this file. -->
-<DeviceUsageSummary rev="38">
-<DesignStatistics TimeStamp="Mon Nov 14 19:12:58 2011"><group name="NetStatistics">
+<DeviceUsageSummary rev="39">
+<DesignStatistics TimeStamp="Wed Nov 16 00:17:05 2011"><group name="NetStatistics">
 <item name="NumNets_Active" rev="37">
 <attrib name="value" value="1647"/></item>
 <item name="NumNets_Gnd" rev="37">
@@ -90,42 +90,42 @@
 <attrib name="value" value="345"/></item>
 </group>
 <group name="MiscellaneousStatistics">
-<item name="AGG_BONDED_IO" rev="38">
+<item name="AGG_BONDED_IO" rev="39">
 <attrib name="value" value="14"/></item>
-<item name="AGG_IO" rev="38">
+<item name="AGG_IO" rev="39">
 <attrib name="value" value="14"/></item>
-<item name="AGG_SLICE" rev="38">
-<attrib name="value" value="1035"/></item>
-<item name="NUM_4_INPUT_LUT" rev="38">
-<attrib name="value" value="1703"/></item>
-<item name="NUM_BONDED_IBUF" rev="38">
+<item name="AGG_SLICE" rev="39">
+<attrib name="value" value="947"/></item>
+<item name="NUM_4_INPUT_LUT" rev="39">
+<attrib name="value" value="1548"/></item>
+<item name="NUM_BONDED_IBUF" rev="39">
 <attrib name="value" value="2"/></item>
-<item name="NUM_BONDED_IOB" rev="38">
+<item name="NUM_BONDED_IOB" rev="39">
 <attrib name="value" value="12"/></item>
-<item name="NUM_BUFGMUX" rev="38">
+<item name="NUM_BUFGMUX" rev="39">
 <attrib name="value" value="2"/></item>
-<item name="NUM_CYMUX" rev="38">
-<attrib name="value" value="278"/></item>
-<item name="NUM_DCM" rev="38">
-<attrib name="value" value="1"/></item>
-<item name="NUM_LUT_RT" rev="38">
-<attrib name="value" value="113"/></item>
-<item name="NUM_MULT18X18SIO" rev="38">
-<attrib name="value" value="3"/></item>
-<item name="NUM_MULTAND" rev="38">
-<attrib name="value" value="7"/></item>
-<item name="NUM_RAMB16" rev="38">
-<attrib name="value" value="18"/></item>
-<item name="NUM_SLICEL" rev="38">
-<attrib name="value" value="971"/></item>
-<item name="NUM_SLICEM" rev="38">
-<attrib name="value" value="64"/></item>
-<item name="NUM_SLICE_FF" rev="38">
-<attrib name="value" value="571"/></item>
-<item name="NUM_SLICE_LATCH" rev="38">
-<attrib name="value" value="49"/></item>
-<item name="NUM_XOR" rev="38">
+<item name="NUM_CYMUX" rev="39">
 <attrib name="value" value="264"/></item>
+<item name="NUM_DCM" rev="39">
+<attrib name="value" value="1"/></item>
+<item name="NUM_IOB_FF" rev="39">
+<attrib name="value" value="11"/></item>
+<item name="NUM_LUT_RT" rev="39">
+<attrib name="value" value="100"/></item>
+<item name="NUM_MULT18X18SIO" rev="39">
+<attrib name="value" value="1"/></item>
+<item name="NUM_MULTAND" rev="39">
+<attrib name="value" value="17"/></item>
+<item name="NUM_RAMB16" rev="39">
+<attrib name="value" value="18"/></item>
+<item name="NUM_SLICEL" rev="39">
+<attrib name="value" value="883"/></item>
+<item name="NUM_SLICEM" rev="39">
+<attrib name="value" value="64"/></item>
+<item name="NUM_SLICE_FF" rev="39">
+<attrib name="value" value="572"/></item>
+<item name="NUM_XOR" rev="39">
+<attrib name="value" value="249"/></item>
 </group>
 </DesignStatistics>
 <ReportConfigData TimeStamp="Mon Nov 07 01:09:12 2011"><group name="SLICEL_CYMUXF">
@@ -184,7 +184,7 @@
 <item name="CLKA" rev="37">
 <attrib name="CLKA_INV" value="0"/><attrib name="CLKA" value="18"/></item>
 <item name="CLKB" rev="37">
-<attrib name="CLKB" value="18"/><attrib name="CLKB_INV" value="0"/></item>
+<attrib name="CLKB_INV" value="0"/><attrib name="CLKB" value="18"/></item>
 <item name="ENA" rev="37">
 <attrib name="ENA_INV" value="0"/><attrib name="ENA" value="18"/></item>
 <item name="ENB" rev="37">
@@ -218,7 +218,7 @@
 </group>
 <group name="RAMB16_RAMB16B">
 <item name="CLKB" rev="37">
-<attrib name="CLKB" value="18"/><attrib name="CLKB_INV" value="0"/></item>
+<attrib name="CLKB_INV" value="0"/><attrib name="CLKB" value="18"/></item>
 <item name="ENB" rev="37">
 <attrib name="ENB_INV" value="0"/><attrib name="ENB" value="18"/></item>
 <item name="PORTB_ATTR" rev="37">
@@ -657,6 +657,14 @@
 <item name="1" rev="37">
 <attrib name="value" value="7"/></item>
 </group>
+<group name="SLICEL_XORF">
+<item name="0" rev="37">
+<attrib name="value" value="48"/></item>
+<item name="1" rev="37">
+<attrib name="value" value="48"/></item>
+<item name="O" rev="37">
+<attrib name="value" value="48"/></item>
+</group>
 <group name="SLICEL_FFX">
 <item name="CE" rev="37">
 <attrib name="value" value="179"/></item>
@@ -670,14 +678,6 @@
 <attrib name="value" value="7"/></item>
 <item name="SR" rev="37">
 <attrib name="value" value="172"/></item>
-</group>
-<group name="SLICEL_XORF">
-<item name="0" rev="37">
-<attrib name="value" value="48"/></item>
-<item name="1" rev="37">
-<attrib name="value" value="48"/></item>
-<item name="O" rev="37">
-<attrib name="value" value="48"/></item>
 </group>
 <group name="SLICEL_FFY">
 <item name="CE" rev="37">

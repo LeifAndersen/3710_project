@@ -98,7 +98,8 @@ begin
 			if (newline)
 				begin
 					we <= 1;
-					addr <= line * 160 + left; //Optimizable to line << 7 + line << 5 (Meaning line * 128 + line * 32) if necessary.
+					//addr <= line * 160 + left; //Optimizable to line << 7 + line << 5 (Meaning line * 128 + line * 32) if necessary.
+					addr <= (line << 7) + (line << 5) + left; //Optimizable to line << 7 + line << 5 (Meaning line * 128 + line * 32) if necessary.
 					if (right <= left)
 						begin
 							newline <= 1;
@@ -107,7 +108,8 @@ begin
 					else
 						newline <= 0;
 				end
-			else if (addr >= (line * 160 + right - 1))
+			//else if (addr >= (line * 160 + right - 1))
+			else if (addr >= ((line << 7) + (line << 5) + right - 1))
 				begin
 					addr <= addr + 1;
 					newline <= 1;

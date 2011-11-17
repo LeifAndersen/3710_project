@@ -26,33 +26,39 @@ module testdatapath;
 
 	// Inputs
 	reg BTN_NORTH;
-	reg CLK_50MHZ;
+	reg inCLK_50MHZ;
 
 	// Outputs
 	wire [11:8] SF_D;
 	wire LCD_E;
 	wire LCD_RS;
 	wire LCD_RW;
+	wire[2:0] color;
+	wire hsync;
+	wire vsync;
 
 	// Instantiate the Unit Under Test (UUT)
 	Top uut (
 		.BTN_NORTH(BTN_NORTH), 
-		.CLK_50MHZ(CLK_50MHZ), 
+		.inCLK_50MHZ(inCLK_50MHZ), 
 		.SF_D(SF_D), 
 		.LCD_E(LCD_E), 
 		.LCD_RS(LCD_RS), 
-		.LCD_RW(LCD_RW)
+		.LCD_RW(LCD_RW),
+		.color(color),
+		.hsync(hsync),
+		.vsync(vsync)
 	);
 	
 	always begin
 		#20;
-		CLK_50MHZ = ~CLK_50MHZ;
+		inCLK_50MHZ = ~inCLK_50MHZ;
 	end
 
 	initial begin
 		// Initialize Inputs
 		BTN_NORTH = 0;
-		CLK_50MHZ = 0;
+		inCLK_50MHZ = 0;
 
 		// Wait 100 ns for global reset to finish
 		#100;

@@ -58,6 +58,7 @@ module MemoryController(
 			Main_Data_Wr_En <= 0;
 			PRAM_Wr_En <= 0;
 			LCDReg_Wr_En <= CPU_Data_Wr_En;
+			PRAM_Out <= 0;
 		end
 		else if (CPU_Data_Addr == PRAM) begin
 			// PRAM Access
@@ -76,6 +77,7 @@ module MemoryController(
 			Main_Data_Wr_En <= CPU_Data_Wr_En;
 			PRAM_Wr_En <= 0;
 			LCDReg_Wr_En <= 0;
+			PRAM_Out <= 0;
 		end
 
 	end
