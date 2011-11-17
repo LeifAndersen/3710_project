@@ -26,15 +26,32 @@ def get_instruction_type(OP):
 
 def is_number(s):
     try:
-        int(s, 10)
+        int(s, 2)
         return True
     except:
         pass
+    try:
+        int(s, 10)
+        return True
+    except:
+    	pass
     try:
         int(s, 16)
         return True
     except:
         return False
+
+def to_number(s):
+    try:
+        return int(s, 2)
+    except:
+        pass
+    try:
+        return int(s, 10)
+    except:
+    	pass
+    return int(s, 16)
+
 
 # get the class of parse that should be performed
 def trim_reg(reg_str):
@@ -168,11 +185,7 @@ def parse(infile_str, outfile_str):
 		if isdata == 1:
 			# push data directly
 			if is_number(tokens[0]):
-				if check_for_hex(tokens[0]):
-					immediate = int(tokens[0], 16)
-				else:
-					immediate = int(tokens[0])
-				first_pass_queue.append(hex(truncate_bits(immediate, 18)))
+				first_pass_queue.append(hex(truncate_bits(to_number(tokens[0]), 18)))
 			else:
 				bad_data(line_num, line)
 
