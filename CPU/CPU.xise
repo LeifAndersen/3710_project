@@ -56,10 +56,6 @@
       <association xil_pn:name="BehavioralSimulation"/>
       <association xil_pn:name="Implementation"/>
     </file>
-    <file xil_pn:name="../BasicCPU/ClockDivider.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="BehavioralSimulation"/>
-      <association xil_pn:name="Implementation"/>
-    </file>
     <file xil_pn:name="ProgramCounter.v" xil_pn:type="FILE_VERILOG">
       <association xil_pn:name="BehavioralSimulation"/>
       <association xil_pn:name="Implementation"/>
@@ -126,6 +122,21 @@
       <association xil_pn:name="BehavioralSimulation"/>
       <association xil_pn:name="Implementation"/>
     </file>
+    <file xil_pn:name="ClockDivider.v" xil_pn:type="FILE_VERILOG">
+      <association xil_pn:name="BehavioralSimulation"/>
+      <association xil_pn:name="Implementation"/>
+    </file>
+    <file xil_pn:name="init0.txt" xil_pn:type="FILE_USERDOC"/>
+    <file xil_pn:name="init1.txt" xil_pn:type="FILE_USERDOC"/>
+    <file xil_pn:name="init2.txt" xil_pn:type="FILE_USERDOC"/>
+    <file xil_pn:name="init3.txt" xil_pn:type="FILE_USERDOC"/>
+    <file xil_pn:name="init4.txt" xil_pn:type="FILE_USERDOC"/>
+    <file xil_pn:name="init5.txt" xil_pn:type="FILE_USERDOC"/>
+    <file xil_pn:name="init6.txt" xil_pn:type="FILE_USERDOC"/>
+    <file xil_pn:name="init7.txt" xil_pn:type="FILE_USERDOC"/>
+    <file xil_pn:name="init8.txt" xil_pn:type="FILE_USERDOC"/>
+    <file xil_pn:name="init9.txt" xil_pn:type="FILE_USERDOC"/>
+    <file xil_pn:name="init10.txt" xil_pn:type="FILE_USERDOC"/>
   </files>
 
   <properties>
