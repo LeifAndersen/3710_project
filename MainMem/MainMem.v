@@ -446,17 +446,17 @@ case(addrb[13:10])
 endcase
 end
 
-BlockRam #(.DATA(18), .ADDR(10), .SIZE(1024), .FILE("init0.txt")) block0(clka, wea0, web0, addra[9:0], addrb[9:0], dina, dinb, douta0, doutb0);
-BlockRam #(.DATA(18), .ADDR(10), .SIZE(1024), .FILE("init1.txt")) block1(clka, wea1, web1, addra[9:0], addrb[9:0], dina, dinb, douta1, doutb1);
-BlockRam #(.DATA(18), .ADDR(10), .SIZE(1024), .FILE("init2.txt")) block2(clka, wea2, web2, addra[9:0], addrb[9:0], dina, dinb, douta2, doutb2);
-BlockRam #(.DATA(18), .ADDR(10), .SIZE(1024), .FILE("init3.txt")) block3(clka, wea3, web3, addra[9:0], addrb[9:0], dina, dinb, douta3, doutb3);
-BlockRam #(.DATA(18), .ADDR(10), .SIZE(1024), .FILE("init4.txt")) block4(clka, wea4, web4, addra[9:0], addrb[9:0], dina, dinb, douta4, doutb4);
-BlockRam #(.DATA(18), .ADDR(10), .SIZE(1024), .FILE("init5.txt")) block5(clka, wea5, web5, addra[9:0], addrb[9:0], dina, dinb, douta5, doutb5);
-BlockRam #(.DATA(18), .ADDR(10), .SIZE(1024), .FILE("init6.txt")) block6(clka, wea6, web6, addra[9:0], addrb[9:0], dina, dinb, douta6, doutb6);
-BlockRam #(.DATA(18), .ADDR(10), .SIZE(1024), .FILE("init7.txt")) block7(clka, wea7, web7, addra[9:0], addrb[9:0], dina, dinb, douta7, doutb7);
-BlockRam #(.DATA(18), .ADDR(10), .SIZE(1024), .FILE("init8.txt")) block8(clka, wea8, web8, addra[9:0], addrb[9:0], dina, dinb, douta8, doutb8);
-BlockRam #(.DATA(18), .ADDR(10), .SIZE(1024), .FILE("init9.txt")) block9(clka, wea9, web9, addra[9:0], addrb[9:0], dina, dinb, douta9, doutb9);
-BlockRam #(.DATA(18), .ADDR(10), .SIZE(1024), .FILE("init10.txt")) block10(clka, wea10, web10, addra[9:0], addrb[9:0], dina, dinb, douta10, doutb10);
+BlockRam #(.DATA(18), .ADDR(10), .SIZE(1024), .FILE("../init0.txt")) block0(clka, wea0, web0, addra[9:0], addrb[9:0], dina, dinb, douta0, doutb0);
+BlockRam #(.DATA(18), .ADDR(10), .SIZE(1024), .FILE("../init1.txt")) block1(clka, wea1, web1, addra[9:0], addrb[9:0], dina, dinb, douta1, doutb1);
+BlockRam #(.DATA(18), .ADDR(10), .SIZE(1024), .FILE("../init2.txt")) block2(clka, wea2, web2, addra[9:0], addrb[9:0], dina, dinb, douta2, doutb2);
+BlockRam #(.DATA(18), .ADDR(10), .SIZE(1024), .FILE("../init3.txt")) block3(clka, wea3, web3, addra[9:0], addrb[9:0], dina, dinb, douta3, doutb3);
+BlockRam #(.DATA(18), .ADDR(10), .SIZE(1024), .FILE("../init4.txt")) block4(clka, wea4, web4, addra[9:0], addrb[9:0], dina, dinb, douta4, doutb4);
+BlockRam #(.DATA(18), .ADDR(10), .SIZE(1024), .FILE("../init5.txt")) block5(clka, wea5, web5, addra[9:0], addrb[9:0], dina, dinb, douta5, doutb5);
+BlockRam #(.DATA(18), .ADDR(10), .SIZE(1024), .FILE("../init6.txt")) block6(clka, wea6, web6, addra[9:0], addrb[9:0], dina, dinb, douta6, doutb6);
+BlockRam #(.DATA(18), .ADDR(10), .SIZE(1024), .FILE("../init7.txt")) block7(clka, wea7, web7, addra[9:0], addrb[9:0], dina, dinb, douta7, doutb7);
+BlockRam #(.DATA(18), .ADDR(10), .SIZE(1024), .FILE("../init8.txt")) block8(clka, wea8, web8, addra[9:0], addrb[9:0], dina, dinb, douta8, doutb8);
+BlockRam #(.DATA(18), .ADDR(10), .SIZE(1024), .FILE("../init9.txt")) block9(clka, wea9, web9, addra[9:0], addrb[9:0], dina, dinb, douta9, doutb9);
+BlockRam #(.DATA(18), .ADDR(10), .SIZE(1024), .FILE("../init10.txt")) block10(clka, wea10, web10, addra[9:0], addrb[9:0], dina, dinb, douta10, doutb10);
 
 
 endmodule

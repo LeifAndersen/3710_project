@@ -45,6 +45,11 @@ begin
 			Low <= LowIn;
 			Negative <= NegativeIn;
 		end
+		else begin
+			Zero <= Zero;
+			Low <= Low;
+			Negative <= Negative;
+		end
 	end
 end
 endmodule

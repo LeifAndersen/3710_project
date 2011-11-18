@@ -36,18 +36,19 @@ module MemoryController(
 	output reg			PRAM_Wr_En,
 	output reg	[15:0]  LCDReg_Data,
 	output reg			LCDReg_Wr_En,
-	output reg	[15:0]	FORWARD_Out,
-	output reg	[15:0]	BACKWARD_Out,
-	output reg	[15:0]	TURNRIGHT_Out,
-	output reg	[15:0]	TURNLEFT_Out,
-	output reg	[15:0]	SHOOT_Out,
-	output reg	[15:0]	RESET_Out,
-	output				Keyboard_reset
+	input 		[15:0]	FORWARD_In,
+	input 		[15:0]	BACKWARD_In,
+	input 		[15:0]	TURNRIGHT_In,
+	input	 	[15:0]	TURNLEFT_In,
+	input 		[15:0]	SHOOT_In,
+	input		[15:0]	RESET_In,
+	output reg			Keyboard_reset
     );
+	
 	// bounds of the two blockrams behind the controller
 	parameter PRAM	   = 14'b00_0000_0000_0000;
 	parameter LCD_I_O  = 14'b11_1111_1111_1111;	// LCD Screen
-	parameter FOREWARD = 14'b11_1111_1111_1110;	// W key
+	parameter FORWARD = 14'b11_1111_1111_1110;	// W key
 	parameter BACKWARD = 14'b11_1111_1111_1101;	// S key
 	parameter TURNRIGHT= 14'b11_1111_1111_1100;	// D key
 	parameter TURNLEFT = 14'b11_1111_1111_1011;	// A key
@@ -72,12 +73,7 @@ module MemoryController(
 			PRAM_Wr_En <= 0;
 			LCDReg_Wr_En <= CPU_Data_Wr_En;
 			PRAM_Out <= 0;
-			FORWARD_Out <= 0;
-			BACKWARD_Out <= 0;
-			TURNRIGHT_Out <= 0;
-			TURNLEFT_Out <= 0;
-			SHOOT_Out <= 0;
-			RESET_Out <= 0;
+			Keyboard_reset <= 0;
 		end
 		else if (CPU_Data_Addr == PRAM) begin
 			// PRAM Access
@@ -89,29 +85,22 @@ module MemoryController(
 				PRAM_Out <= {15'b0, full};
 			else
 				PRAM_Out <= CPU_Data_In;
-			FORWARD_Out <= 0;
-			BACKWARD_Out <= 0;
-			TURNRIGHT_Out <= 0;
-			TURNLEFT_Out <= 0;
-			SHOOT_Out <= 0;
-			RESET_Out <= 0;
+			Keyboard_reset <= 0;
 		end
-		else if (CPU_Data_Addr == FOREWARD) begin
+		else if (CPU_Data_Addr == FORWARD) begin
 			// forward key
 			Main_Data_Wr_En <= 0;
 			PRAM_Wr_En <= CPU_Data_Wr_En;
 			LCDReg_Wr_En <= 0;
 			PRAM_Out <= 0;
-			if (!CPU_Data_Wr_En)
+			if (!CPU_Data_Wr_En) begin
 				CPU_Data_Out <= FORWARD_In;
-			else
 				Keyboard_reset <= 0;
-			FORWARD_Out <= 0;
-			BACKWARD_Out <= 0;
-			TURNRIGHT_Out <= 0;
-			TURNLEFT_Out <= 0;
-			SHOOT_Out <= 0;
-			RESET_Out <= 0;
+			end
+			else begin
+				CPU_Data_Out <= 0;
+				Keyboard_reset <= !(!(CPU_Data_In));
+			end
 		end
 		else if (CPU_Data_Addr == BACKWARD) begin
 			// backaward key
@@ -119,16 +108,14 @@ module MemoryController(
 			PRAM_Wr_En <= CPU_Data_Wr_En;
 			LCDReg_Wr_En <= 0;
 			PRAM_Out <= 0;
-			if (!CPU_Data_Wr_En)
+			if (!CPU_Data_Wr_En) begin
 				CPU_Data_Out <= BACKWARD_In;
-			else
 				Keyboard_reset <= 0;
-			FORWARD_Out <= 0;
-			BACKWARD_Out <= 0;
-			TURNRIGHT_Out <= 0;
-			TURNLEFT_Out <= 0;
-			SHOOT_Out <= 0;
-			RESET_Out <= 0;
+			end
+			else begin
+				CPU_Data_Out <= 0;
+				Keyboard_reset <= !(!(CPU_Data_In));
+			end
 		end
 		else if (CPU_Data_Addr == TURNRIGHT) begin
 			// turnright key
@@ -136,16 +123,14 @@ module MemoryController(
 			PRAM_Wr_En <= CPU_Data_Wr_En;
 			LCDReg_Wr_En <= 0;
 			PRAM_Out <= 0;
-			if (!CPU_Data_Wr_En)
+			if (!CPU_Data_Wr_En) begin
 				CPU_Data_Out <= TURNRIGHT_In;
-			else
 				Keyboard_reset <= 0;
-			FORWARD_Out <= 0;
-			BACKWARD_Out <= 0;
-			TURNRIGHT_Out <= 0;
-			TURNLEFT_Out <= 0;
-			SHOOT_Out <= 0;
-			RESET_Out <= 0;
+			end
+			else begin
+				CPU_Data_Out <= 0;
+				Keyboard_reset <= !(!(CPU_Data_In));
+			end
 		end
 		else if (CPU_Data_Addr == TURNLEFT) begin
 			// turnleft key
@@ -153,16 +138,14 @@ module MemoryController(
 			PRAM_Wr_En <= CPU_Data_Wr_En;
 			LCDReg_Wr_En <= 0;
 			PRAM_Out <= 0;
-			if (!CPU_Data_Wr_En)
+			if (!CPU_Data_Wr_En) begin
 				CPU_Data_Out <= TURNLEFT_In;
-			else
 				Keyboard_reset <= 0;
-			FORWARD_Out <= 0;
-			BACKWARD_Out <= 0;
-			TURNRIGHT_Out <= 0;
-			TURNLEFT_Out <= 0;
-			SHOOT_Out <= 0;
-			RESET_Out <= 0;
+			end
+			else begin
+				CPU_Data_Out <= 0;
+				Keyboard_reset <= !(!(CPU_Data_In));
+			end
 		end
 		else if (CPU_Data_Addr == SHOOT) begin
 			// Shoot keyboard key
@@ -170,16 +153,14 @@ module MemoryController(
 			PRAM_Wr_En <= CPU_Data_Wr_En;
 			LCDReg_Wr_En <= 0;
 			PRAM_Out <= 0;
-			if (!CPU_Data_Wr_En)
+			if (!CPU_Data_Wr_En) begin
 				CPU_Data_Out <= SHOOT_In;
-			else
 				Keyboard_reset <= 0;
-			FORWARD_Out <= 0;
-			BACKWARD_Out <= 0;
-			TURNRIGHT_Out <= 0;
-			TURNLEFT_Out <= 0;
-			SHOOT_Out <= 0;
-			RESET_Out <= 0;
+			end
+			else begin
+				CPU_Data_Out <= 0;
+				Keyboard_reset <= !(!(CPU_Data_In));
+			end
 		end
 		else if (CPU_Data_Addr == RESET) begin
 			// Reset keybaord key
@@ -188,16 +169,14 @@ module MemoryController(
 			PRAM_Wr_En <= CPU_Data_Wr_En;
 			LCDReg_Wr_En <= 0;
 			PRAM_Out <= 0;
-			if (!CPU_Data_Wr_En)
+			if (!CPU_Data_Wr_En) begin
 				CPU_Data_Out <= RESET_In;
-			else
 				Keyboard_reset <= 0;
-			FORWARD_Out <= 0;
-			BACKWARD_Out <= 0;
-			TURNRIGHT_Out <= 0;
-			TURNLEFT_Out <= 0;
-			SHOOT_Out <= 0;
-			RESET_Out <= 0;
+			end
+			else begin
+				CPU_Data_Out <= 0;
+				Keyboard_reset <= !(!(CPU_Data_In));
+			end
 		end
 		else begin
 			// Main Memory Access
@@ -206,12 +185,7 @@ module MemoryController(
 			PRAM_Wr_En <= 0;
 			LCDReg_Wr_En <= 0;
 			PRAM_Out <= 0;
-			FORWARD_Out <= 0;
-			BACKWARD_Out <= 0;
-			TURNRIGHT_Out <= 0;
-			TURNLEFT_Out <= 0;
-			SHOOT_Out <= 0;
-			RESET_Out <= 0;
+			Keyboard_reset <= 0;
 		end
 
 	end

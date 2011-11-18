@@ -19,15 +19,17 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 module Top(
-	input BTN_NORTH,
-    input inCLK_50MHZ,
-    output [11:8] SF_D,
-    output LCD_E,
-    output LCD_RS,
-    output LCD_RW,
-	 output[2:0] color,
-	 output hsync,
-	 output vsync
+	input 			BTN_NORTH,
+    input 			inCLK_50MHZ,
+	input 			PS2_CLK,
+    input 			PS2_DATA,
+    output	[11:8]	SF_D,
+    output 			LCD_E,
+    output			LCD_RS,
+    output			LCD_RW,
+	output	[2:0]	color,
+	output 			hsync,
+	output 			vsync
     );
 
 	wire inReset;
@@ -137,9 +139,16 @@ module Top(
 	//BlockRam #(.DATA(18), .ADDR(14), .SIZE(8192), .FILE("init.txt")) MainMemory(CLK_50MHZ, memWriteEnA, data_wr_en_to_main, inst_addr_to_main, data_addr_to_main, memWriteDataA, data_to_main, instruction_to_controller, data_to_controller);
 	MainMem MainMemory(CLK_50MHZ, memWriteEnA, data_wr_en_to_main, inst_addr_to_main, data_addr_to_main, memWriteDataA, data_to_main, instruction_to_controller, data_to_controller);
 
-	
+	wire [15:0]	forward;
+	wire [15:0]	backward;
+	wire [15:0]	turnright;
+	wire [15:0]	turnleft;
+	wire [15:0]	shoot;
+	wire [15:0]	escape;
+	wire [15:0]	keyboard_reset;
 	// Memory controller
-	MemoryController MemCtrl(memWriteBus, memAddrBus, memWriteEn, pc, data_to_controller, instruction_to_controller, full, memDataOut, instruction, data_to_main, data_addr_to_main, data_wr_en_to_main, inst_addr_to_main, pram_out, pram_wr_en, lcd_data, lcd_en);
+	MemoryController MemCtrl(memWriteBus, memAddrBus, memWriteEn, pc, data_to_controller, instruction_to_controller, full, memDataOut, instruction, data_to_main, data_addr_to_main, data_wr_en_to_main, inst_addr_to_main, pram_out, pram_wr_en, lcd_data, lcd_en, forward, backward, turnright, turnleft, shoot, escape, keyboard_reset);
+	Keyboard KeyboardControl(PS2_CLK, PS2_DATA, keyboard_reset, forward, backward, turnleft, turnright, shoot, escape);
 	
 	// control
 	//     Has some forwarding logic around it
