@@ -422,7 +422,7 @@ module Control(
 				MemRead      <= 1;
 			end
 
-			else if(instruction[17:14] == JL) begin
+			else if(instruction[17:13] == JL) begin
 				//JL: low or negative
 				MemRead      <= 0;
 				BuffCtrl[8]  <= 0;
@@ -448,7 +448,7 @@ module Control(
 				end
 			end
 
-			else if(instruction[17:14] == JLE) begin
+			else if(instruction[17:13] == JLE) begin
 				//JLE: low, negative, or zero
 				MemRead      <= 0;
 				BuffCtrl[8]  <= 0;
@@ -473,7 +473,7 @@ module Control(
 				end
 			end
 
-			else if(instruction[17:14] == JNE) begin
+			else if(instruction[17:13] == JNE) begin
 				//JNE: not zero
 				MemRead      <= 0;
 				BuffCtrl[8]  <= 0;
@@ -498,7 +498,7 @@ module Control(
 				end
 			end
 
-			else if(instruction[17:14] == JE) begin
+			else if(instruction[17:13] == JE) begin
 				//JE:
 				MemRead      <= 0;
 				BuffCtrl[8]  <= 0;
@@ -522,7 +522,7 @@ module Control(
 					MemWrite     <= 0;
 				end
 			end
-			else if(instruction[17:14] == J) begin
+			else if(instruction[17:13] == J) begin
 				//JE:
 				MemRead      <= 0;
 				BuffCtrl[8]  <= 0;
@@ -535,7 +535,7 @@ module Control(
 				WriteEn1     <= 0;
 				MemWrite     <= 0;
 			end
-			else if(instruction[17:14] == JBE) begin
+			else if(instruction[17:13] == JBE) begin
 				//JE:
 				MemRead      <= 0;
 				BuffCtrl[8]  <= 0;
@@ -559,7 +559,7 @@ module Control(
 					MemWrite     <= 0;
 				end
 			end
-			else if(instruction[17:14] == JB) begin
+			else if(instruction[17:13] == JB) begin
 				//JE:
 				MemRead      <= 0;
 				BuffCtrl[8]  <= 0;

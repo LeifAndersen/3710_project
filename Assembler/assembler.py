@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 import sys
+import time
 from os.path import splitext
 from collections import deque
+
 
 MEM_START = 0
 MEM_INCR = 1
@@ -24,15 +26,32 @@ def get_instruction_type(OP):
 
 def is_number(s):
     try:
-        int(s, 10)
+        int(s, 2)
         return True
     except:
         pass
+    try:
+        int(s, 10)
+        return True
+    except:
+    	pass
     try:
         int(s, 16)
         return True
     except:
         return False
+
+def to_number(s):
+    try:
+        return int(s, 2)
+    except:
+        pass
+    try:
+        return int(s, 10)
+    except:
+    	pass
+    return int(s, 16)
+
 
 # get the class of parse that should be performed
 def trim_reg(reg_str):
@@ -118,18 +137,34 @@ def encode_cmps(tokens, line_num, line):
 	else:
 		explode_bomb(line_num, line)
 
+def print_percentage(percentage):
+	if percentage < 10:
+		sys.stdout.write("\b\b\b")
+	elif percentage >= 10 and  percentage < 100 :
+		sys.stdout.write("\b\b\b\b")
+	else:
+		sys.stdout.write("\b\b\b\b\b")
+	sys.stdout.write("%d%%]" % (percentage) )
+
 def parse(infile_str, outfile_str):
 	isdata = 0
 	labels = {}
 	infile = open(infile_str, 'r')
 	first_pass_queue = deque()
 
-	print ".",
+	# count lines in file
+	total_instructions = len(infile.readlines())
+	sys.stdout.write("\n\t(1/3)   Encoding: [  0%]")
+	sys.stdout.flush()
+
 	# Parse
 	infile.seek(0)
 	line_num = 0
 	for line in infile:
 		line_num += 1
+
+		print_percentage(100 * line_num/float(total_instructions))
+		sys.stdout.flush()
 
 		tokens = line.split()
 		if len(tokens) == 0 or tokens[0][0] == '#':
@@ -150,11 +185,7 @@ def parse(infile_str, outfile_str):
 		if isdata == 1:
 			# push data directly
 			if is_number(tokens[0]):
-				if check_for_hex(tokens[0]):
-					immediate = int(tokens[0], 16)
-				else:
-					immediate = int(tokens[0])
-				first_pass_queue.append(hex(truncate_bits(immediate, 18)))
+				first_pass_queue.append(hex(truncate_bits(to_number(tokens[0]), 18)))
 			else:
 				bad_data(line_num, line)
 
@@ -342,11 +373,19 @@ def parse(infile_str, outfile_str):
 				# bad instruction, explode
 				explode_bomb(line_num, line)
 
-	print ".",
+	sys.stdout.write("\n\t(2/3) Addressing: [  0%]")
+	sys.stdout.flush()
+
+	total_instructions = len(first_pass_queue)
+	line_num = 0
+
 	# Get labels (must be done after first pass to allow for psuedo instructions to expand)
 	address = MEM_START
 	second_pass_queue = deque()
 	for instruction in first_pass_queue:
+		line_num += 1
+		print_percentage(100 * line_num/float(total_instructions))
+		sys.stdout.flush()
 		# when finding labels, we need to remove them from the code so we don't
 		# have gaps in our addressing
 		tokens = instruction.split()
@@ -364,10 +403,19 @@ def parse(infile_str, outfile_str):
 			second_pass_queue.append(instruction);
 			address += MEM_INCR
 
-	print ".",
+	sys.stdout.write("\n\t(3/3)   Labeling: [  0%]")
+	sys.stdout.flush()
+
+	total_instructions = len(second_pass_queue)
+	line_num = 0
+
 	# Output
 	outfile = open(outfile_str, 'w')
 	for instruction in second_pass_queue:
+		line_num += 1
+		print_percentage(100 * line_num/float(total_instructions))
+		sys.stdout.flush()
+
 		tokens = instruction.split()
 		# write each instruction to the instruction stream replacing labels as you
 		# go.
@@ -382,6 +430,7 @@ def parse(infile_str, outfile_str):
 		else:
 			# remove 0x
 			outfile.write(instruction[2:] + "\n")
+
 
 	infile.close()
 	outfile.close()

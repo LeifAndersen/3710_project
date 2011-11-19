@@ -21,15 +21,15 @@
 
 
 module FlagRegister(
-		input reset,
-		input clk,
-		input LowIn,
-		input NegativeIn,
-		input ZeroIn,
-		input enable,
-		output reg Low,
-		output reg Negative,
-		output reg Zero
+	input reset,
+	input clk,
+	input LowIn,
+	input NegativeIn,
+	input ZeroIn,
+	input enable,
+	output reg Low,
+	output reg Negative,
+	output reg Zero
 	);
 
 always@(posedge clk)
@@ -44,6 +44,11 @@ begin
 			Zero <= ZeroIn;
 			Low <= LowIn;
 			Negative <= NegativeIn;
+		end
+		else begin
+			Zero <= Zero;
+			Low <= Low;
+			Negative <= Negative;
 		end
 	end
 end

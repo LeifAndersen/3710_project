@@ -19,19 +19,28 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 module Top(
-	input BTN_NORTH,
-    input CLK_50MHZ,
-    output [11:8] SF_D,
-    output LCD_E,
-    output LCD_RS,
-    output LCD_RW,
-	 output[2:0] color,
-	 output hsync,
-	 output vsync
+	input 			BTN_NORTH,
+    input 			inCLK_50MHZ,
+	input 			PS2_CLK,
+    input 			PS2_DATA,
+	output	[2:0]	color,
+	output 			hsync,
+	output 			vsync
     );
 
+	wire inReset;
 	wire reset;
-	assign reset = ~BTN_NORTH;
+	assign inReset = ~BTN_NORTH;
+	wire CLK_25MHZ;
+	wire CLK_50MHZ;
+	
+	ClockDivider dcm(
+		.inReset(inReset),
+		.inClock(inCLK_50MHZ),
+		.reset(reset),
+		.CLK_50MHZ(CLK_50MHZ),
+		.CLK_25MHZ(CLK_25MHZ)
+	);
 
 	// Buffers and wires
 	wire [15:0] aBus;
@@ -93,14 +102,14 @@ module Top(
 	Decrementer DECR(bBus, decrReg);
 	
 	// PC
-	ProgramCounter PC(reset, CLK_50MHZ, pcWriteBus, pc);
+	ProgramCounter PC(reset, CLK_25MHZ, pcWriteBus, pc);
 	Incrementer PCINCR(pc, pcPlus1);
 	
 	// alu
     ALU ALUinstance(aBus, bBus, aluOp, aluOut, aluD, flags[2], flags[1], flags[0]);
 
 	// flag reg
-    FlagRegister FlagReg(reset, CLK_50MHZ, flags[2], flags[1], flags[0], flagWrite, flagsToControl[2], flagsToControl[1], flagsToControl[0]);
+    FlagRegister FlagReg(reset, CLK_25MHZ, flags[2], flags[1], flags[0], flagWrite, flagsToControl[2], flagsToControl[1], flagsToControl[0]);
 	
 	// memory
 	// some inputs are always 0.
@@ -112,9 +121,9 @@ module Top(
 	wire [17:0] inst_addr_to_main;
 	wire [15:0] pram_out;
 	wire 		pram_wr_en;
-	wire 		lcd_en;
-	wire [15:0] lcd_data;
-	wire [15:0] lcdreg_to_lcd;
+	//wire 		lcd_en;
+	//wire [15:0] lcd_data;
+	//wire [15:0] lcdreg_to_lcd;
 	
 	wire full;
 	
@@ -123,10 +132,19 @@ module Top(
 	wire [15:0] memWriteDataA;
 	assign memWriteDataA = 16'b0;
 	// a is instructions, b is data
-	BlockRam #(.DATA(18), .ADDR(14), .SIZE(8192), .FILE("init.txt")) MainMemory(CLK_50MHZ, memWriteEnA, data_wr_en_to_main, inst_addr_to_main, data_addr_to_main, memWriteDataA, data_to_main, instruction_to_controller, data_to_controller);
-	
+	//BlockRam #(.DATA(18), .ADDR(14), .SIZE(8192), .FILE("init.txt")) MainMemory(CLK_50MHZ, memWriteEnA, data_wr_en_to_main, inst_addr_to_main, data_addr_to_main, memWriteDataA, data_to_main, instruction_to_controller, data_to_controller);
+	MainMem MainMemory(CLK_25MHZ, memWriteEnA, data_wr_en_to_main, inst_addr_to_main, data_addr_to_main, memWriteDataA, data_to_main, instruction_to_controller, data_to_controller);
+
+	wire [15:0]	forward;
+	wire [15:0]	backward;
+	wire [15:0]	turnright;
+	wire [15:0]	turnleft;
+	wire [15:0]	shoot;
+	wire [15:0]	escape;
+	wire [15:0]	keyboard_reset;
 	// Memory controller
-	MemoryController MemCtrl(memWriteBus, memAddrBus, memWriteEn, pc, data_to_controller, instruction_to_controller, full, memDataOut, instruction, data_to_main, data_addr_to_main, data_wr_en_to_main, inst_addr_to_main, pram_out, pram_wr_en, lcd_data, lcd_en);
+	MemoryController MemCtrl(memWriteBus, memAddrBus, memWriteEn, pc, data_to_controller, instruction_to_controller, full, memDataOut, instruction, data_to_main, data_addr_to_main, data_wr_en_to_main, inst_addr_to_main, pram_out, pram_wr_en, /*lcd_data, lcd_en,*/ forward, backward, turnright, turnleft, shoot, escape, keyboard_reset);
+	Keyboard KeyboardControl(PS2_CLK, PS2_DATA, keyboard_reset, forward, backward, turnleft, turnright, shoot, escape);
 	
 	// control
 	//     Has some forwarding logic around it
@@ -139,7 +157,7 @@ module Top(
 	wire       memRead;
 	wire       memReadP;
 	//     Pipeline Register
-	PipelineRegister PReg(CLK_50MHZ, reset, memRead, memReadP, regWriteEn, regWriteEnP, regWriteEn2, regWriteEn2P, buffCtrl[14:12], buffCtrlP[14:12], destSel, destSelP);
+	PipelineRegister PReg(CLK_25MHZ, reset, memRead, memReadP, regWriteEn, regWriteEnP, regWriteEn2, regWriteEn2P, buffCtrl[14:12], buffCtrlP[14:12], destSel, destSelP);
 	//     Control
 	Control MasterControl(instruction, flagsToControl, aluOp, regWriteEn, regWriteEn2, immediate, buffCtrl, destSel, destSel2, srcSel, flagWrite, memWriteEn, memRead, specialAddr);
 	//     Forwarding logic
@@ -162,41 +180,16 @@ module Top(
 	end
 
 	// regfile
-    Register RegisterFile(CLK_50MHZ, destSelF, srcSel, destSelF, destSel2, regWriteEnF, regWriteEn2F, reset, writeBus, writeBus2, regTo1, bBus);
+    Register RegisterFile(CLK_25MHZ, destSelF, srcSel, destSelF, destSel2, regWriteEnF, regWriteEn2F, reset, writeBus, writeBus2, regTo1, bBus);
 
+	// LEFT IN FOR DEBUGGING.  I am not a bad programmer.
 	// lcd register
-	Register16 lcdReg(reset, CLK_50MHZ, lcd_en, lcd_data, lcdreg_to_lcd);
-
+	//Register16 lcdReg(reset, CLK_50MHZ, lcd_en, lcd_data, lcdreg_to_lcd);
 	// lcd controller
-	lcd_ctrl lcdctrl(CLK_50MHZ, reset, lcdreg_to_lcd, SF_D, LCD_E, LCD_RS, LCD_RW);
+	//lcd_ctrl lcdctrl(CLK_50MHZ, reset, lcdreg_to_lcd, SF_D, LCD_E, LCD_RS, LCD_RW);
 	
 	// draw unit
-	wire CLK_25MHZ;	
-	DrawUnit drawunit(.clk(CLK_50MHZ), .vgaClk(CLK_25MHZ), .reset(reset), .we(pram_wr_en),	.dataIn(pram_out), .full(full), .color(color), .hsync(hsync), .vsync(vsync));
+	DrawUnit drawunit(.clk(CLK_25MHZ), .vgaClk(CLK_25MHZ), .reset(reset), .we(pram_wr_en),	.dataIn(pram_out), .full(full), .color(color), .hsync(hsync), .vsync(vsync));
 	
-	wire clkfb;
-	//DCM
-	DCM_SP #(
-      .CLKDV_DIVIDE(2.0), // Divide by: 1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0,5.5,6.0,6.5
-                          //   7.0,7.5,8.0,9.0,10.0,11.0,12.0,13.0,14.0,15.0 or 16.0
-      //.CLKFX_DIVIDE(1),   // Can be any integer from 1 to 32
-      //.CLKFX_MULTIPLY(4), // Can be any integer from 2 to 32
-      .CLKIN_DIVIDE_BY_2("FALSE"), // TRUE/FALSE to enable CLKIN divide by two feature
-      //.CLKIN_PERIOD(0.0),  // Specify period of input clock
-      .CLKOUT_PHASE_SHIFT("NONE"), // Specify phase shift of NONE, FIXED or VARIABLE
-      .CLK_FEEDBACK("1X"),  // Specify clock feedback of NONE, 1X or 2X
-      .DESKEW_ADJUST("SYSTEM_SYNCHRONOUS"), // SOURCE_SYNCHRONOUS, SYSTEM_SYNCHRONOUS or
-                                            //   an integer from 0 to 15
-      .DLL_FREQUENCY_MODE("LOW"),  // HIGH or LOW frequency mode for DLL
-      .DUTY_CYCLE_CORRECTION("TRUE"), // Duty cycle correction, TRUE or FALSE
-      .PHASE_SHIFT(0),     // Amount of fixed phase shift from -255 to 255
-      .STARTUP_WAIT("TRUE")   // Delay configuration DONE until DCM LOCK, TRUE/FALSE
-   ) DCM_SP_inst (
-		.CLK0(clkfb),
-      .CLKDV(CLK_25MHZ),   // Divided DCM CLK out (CLKDV_DIVIDE)
-		.CLKFB(clkfb),
-      .CLKIN(CLK_50MHZ),   // Clock input (from IBUFG, BUFG or DCM)
-      .RST(reset)        // DCM asynchronous reset input
-   );
 
 endmodule
