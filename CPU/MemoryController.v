@@ -44,11 +44,11 @@ module MemoryController(
 	input		[15:0]	RESET_In,
 	output reg			Keyboard_reset
     );
-	
+
 	// bounds of the two blockrams behind the controller
-	parameter PRAM	   = 14'b00_0000_0000_0000;
-	parameter LCD_I_O  = 14'b11_1111_1111_1111;	// LCD Screen
-	parameter FORWARD = 14'b11_1111_1111_1110;	// W key
+	parameter PRAM	   = 14'b11_1111_1111_1111;	// vga replaces lcd
+	//parameter LCD_I_O  = 14'b11_1111_1111_1111;	// LCD Screen
+	parameter FORWARD  = 14'b11_1111_1111_1110;	// W key
 	parameter BACKWARD = 14'b11_1111_1111_1101;	// S key
 	parameter TURNRIGHT= 14'b11_1111_1111_1100;	// D key
 	parameter TURNLEFT = 14'b11_1111_1111_1011;	// A key
