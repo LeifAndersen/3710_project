@@ -36,8 +36,9 @@ def parse(infile_name, outfile_name):
 		if len(line_tokens) == 0:
 			continue
 		if line_tokens[0][0] == '`':
-			if len(line_tokens) < 3:
+			if len(line_tokens) < 3 or line_tokens[2] == '#' or line_tokens[1] == '#':
 				print "Incorrect preprocessor command on line " + str(i) + ": " + line.strip()
+				exit(1)
 			tokens[line_tokens[1]] = line_tokens[2]
 
 	sys.stdout.write("\n\t(2/2)  Replacing: [  0%]")
