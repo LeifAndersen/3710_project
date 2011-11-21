@@ -33,13 +33,17 @@ module Top(
 	assign inReset = ~BTN_NORTH;
 	wire CLK_25MHZ;
 	wire CLK_50MHZ;
+	wire CLK_100MHZ;
+	wire CLK_300MHZ;
 	
 	ClockDivider dcm(
 		.inReset(inReset),
 		.inClock(inCLK_50MHZ),
 		.reset(reset),
 		.CLK_50MHZ(CLK_50MHZ),
-		.CLK_25MHZ(CLK_25MHZ)
+		.CLK_25MHZ(CLK_25MHZ),
+		.CLK_100MHZ(CLK_100MHZ),
+		.CLK_300MHZ(CLK_300MHZ)
 	);
 
 	// Buffers and wires
@@ -180,7 +184,7 @@ module Top(
 	end
 
 	// regfile
-    Register RegisterFile(CLK_25MHZ, destSelF, srcSel, destSelF, destSel2, regWriteEnF, regWriteEn2F, reset, writeBus, writeBus2, regTo1, bBus);
+   Register RegisterFile(CLK_25MHZ, destSelF, srcSel, destSelF, destSel2, regWriteEnF, regWriteEn2F, reset, writeBus, writeBus2, regTo1, bBus);
 
 	// LEFT IN FOR DEBUGGING.  I am not a bad programmer.
 	// lcd register
@@ -189,7 +193,7 @@ module Top(
 	//lcd_ctrl lcdctrl(CLK_50MHZ, reset, lcdreg_to_lcd, SF_D, LCD_E, LCD_RS, LCD_RW);
 	
 	// draw unit
-	DrawUnit drawunit(.clk(CLK_25MHZ), .vgaClk(CLK_25MHZ), .reset(reset), .we(pram_wr_en),	.dataIn(pram_out), .full(full), .color(color), .hsync(hsync), .vsync(vsync));
+	DrawUnit drawunit(.clk(CLK_25MHZ), .vgaClk(CLK_25MHZ), .clk2x(CLK_100MHZ), .clk6x(CLK_300MHZ), .reset(reset), .we(pram_wr_en),	.dataIn(pram_out), .full(full), .color(color), .hsync(hsync), .vsync(vsync));
 	
 
 endmodule

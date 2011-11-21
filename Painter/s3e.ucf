@@ -1,4 +1,4 @@
-NET "reset" LOC = "V4" | IOSTANDARD = LVTTL | PULLDOWN ;
+NET "resetp" LOC = "V4" | IOSTANDARD = LVTTL | PULLDOWN ;
 NET "clk" LOC = "C9" | IOSTANDARD = LVCMOS33 | PERIOD = 20.0ns HIGH 40%;
 # ==== VGA Port (VGA) ====
 NET "color[0]" LOC = "G15" | IOSTANDARD = LVTTL | DRIVE = 8 | SLEW = FAST ;

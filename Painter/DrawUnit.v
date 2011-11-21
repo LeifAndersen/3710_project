@@ -21,11 +21,13 @@
 module DrawUnit(
 	input clk,
 	input vgaClk,
+	input clk2x,
+	input clk6x,
 	input reset,
 	input we,
 	input[15:0] dataIn,
 	output full,
-	output[2:0] color, //{R, G, B}
+	output reg[2:0] color, //{R, G, B}
 	output hsync,
 	output vsync
     );
@@ -43,6 +45,7 @@ reg swapBuffers; //1 when swapBufferCommand is 1 and vga finishes frame.
 wire[2:0] fbout; //Color from frameBuffer to vga controller.
 wire[8:0] line; //Line
 wire[9:0] offset;
+wire[2:0] colortemp;
 
 //assign rdPtr = line[8:2] * 160 + offset[9:2]; //Divide each by 4 to change 640x480 to 160x120.
 assign rdPtr = (line[8:2] << 7) + (line[8:2] << 5) + offset[9:2]; //Divide each by 4 to change 640x480 to 160x120.
@@ -66,6 +69,63 @@ begin
 			swapBuffers <= 0;
 		end
 end
+
+//COLOR TRANSLATION:
+always@(*)
+begin
+	case(colortemp)
+	0:
+	begin
+		color[0] <= 0;
+		color[1] <= 0;
+		color[2] <= 0;
+	end
+	1:
+	begin
+		color[0] <= 0;
+		color[1] <= clk6x & clk2x;
+		color[2] <= 0;
+	end
+	2:
+	begin
+		color[0] <= 0;
+		color[1] <= clk6x;
+		color[2] <= 0;
+	end
+	3:
+	begin
+		color[0] <= 0;
+		color[1] <= clk2x | clk6x;
+		color[2] <= 0;
+	end
+	4:
+	begin
+		color[0] <= 0;
+		color[1] <= 1;
+		color[2] <= 0;
+	end
+	5:
+	begin
+		color[0] <= 0;
+		color[1] <= clk6x;// & clk2x; this makes it a little darker brown, but also a little noisier.
+		color[2] <= clk6x;// & clk2x;
+	end
+	6:
+	begin
+		color[0] <= 1;
+		color[1] <= 0;
+		color[2] <= 0;
+	end
+	7:
+	begin
+		color[0] <= 0;
+		color[1] <= 0;
+		color[2] <= 1;
+	end
+	endcase
+	
+end
+
 
 //always@(negedge vsync)
 //begin
@@ -122,7 +182,7 @@ VGA_Controller vga_controller(
 	.b(fbout[0]),
 	.line(line), //Frame buffer address.
 	.offset(offset), //Frame buffer address.
-	.color(color), //{R, G, B}
+	.color(colortemp), //{R, G, B}
 	.hsync(hsync),
 	.vsync(vsync)
     );
