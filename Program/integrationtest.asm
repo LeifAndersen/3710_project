@@ -28,6 +28,9 @@ Main:
 	mov %8, 0		# distance from the top of the screen
 	call Generate
 	# change buffers
+	mov %10, 0xFFFF
+	mov [VGA], %10
+	mov [VGA], %10
 	j Main
 
 Generate: # args come in $7 and $8
