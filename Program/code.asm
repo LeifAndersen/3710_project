@@ -13,6 +13,8 @@
 
 # Bootup and initialization Code
 init:
+	mov %SP, STACK
+
 	# Begin der loop
 	call main
 
@@ -31,6 +33,20 @@ main:
 	push $8
 	push $9
 	push $10
+
+mainNewPlayer:
+	mov %0, 0
+	mov [PLAYER_SCORE], %0
+	mov [PLAYER_X], %0
+	mov [PLAYER_Y], %0
+	mov [PLAYER_THETA], %0
+	mov [PLAYER_BULLET_TIME], %0
+	mov [AI_X], %0
+	mov [AI_Y], %0
+	mov [AI_THETA], %0
+	mov [AI_BULLET_TIME], %0
+	mov %0, 5
+	mov [PLAYER_LIVES], %0
 
 mainLoop:
 	# Check Inputs
@@ -147,6 +163,24 @@ PLAYER_THETA:
 PLAYER_RADIUS:
 10
 
+PLAYER_LIVES:
+5
+
+PLAYER_SCORE:
+0
+
+PLAYER_BULLET_X:
+0
+
+PLAYER_BULLET_Y:
+0
+
+PLAYER_BULLET_THETA:
+0
+
+PLAYER_BULLET_TIME:
+0
+
 AI_X:
 100
 
@@ -164,6 +198,18 @@ AI_FIRE_TIMER:
 
 AI_FIRE_RESET:
 1000
+
+AI_BULLET_X:
+0
+
+AI_BULLET_Y:
+0
+
+AI_BULLET_THETA:
+0
+
+AI_BULLET_TIME:
+0
 
 sine_lut:
 000000000000000
