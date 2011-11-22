@@ -30,7 +30,7 @@ module Top(
 
 	wire inReset;
 	wire reset;
-	assign inReset = ~BTN_NORTH;
+	assign inReset = BTN_NORTH;
 	wire CLK_25MHZ;
 	wire CLK_50MHZ;
 	wire CLK_100MHZ;

@@ -27,12 +27,10 @@ module testdatapath;
 	// Inputs
 	reg BTN_NORTH;
 	reg inCLK_50MHZ;
+	reg PS2_CLK;
+	reg PS2_DATA;
 
 	// Outputs
-	wire [11:8] SF_D;
-	wire LCD_E;
-	wire LCD_RS;
-	wire LCD_RW;
 	wire[2:0] color;
 	wire hsync;
 	wire vsync;
@@ -41,10 +39,8 @@ module testdatapath;
 	Top uut (
 		.BTN_NORTH(BTN_NORTH), 
 		.inCLK_50MHZ(inCLK_50MHZ), 
-		.SF_D(SF_D), 
-		.LCD_E(LCD_E), 
-		.LCD_RS(LCD_RS), 
-		.LCD_RW(LCD_RW),
+		.PS2_CLK(PS2_CLK), 
+		.PS2_DATA(PS2_DATA),
 		.color(color),
 		.hsync(hsync),
 		.vsync(vsync)
@@ -57,8 +53,10 @@ module testdatapath;
 
 	initial begin
 		// Initialize Inputs
-		BTN_NORTH = 0;
+		BTN_NORTH = 1;
 		inCLK_50MHZ = 0;
+		PS2_CLK = 0;
+		PS2_DATA = 0;
 
 		// Wait 100 ns for global reset to finish
 		#100;
@@ -66,12 +64,12 @@ module testdatapath;
 		// Add stimulus here
 		
 		// Hey, reset
-		BTN_NORTH = 1;
 		BTN_NORTH = 0;
+		BTN_NORTH = 1;
 		#650;
 		
 		// now start
-		BTN_NORTH = 1;
+		BTN_NORTH = 0;
 		#650;
 
 	end
