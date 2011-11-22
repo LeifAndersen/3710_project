@@ -40,7 +40,7 @@ Generate: # args come in $7 and $8
 	mov %0, 0	# horizontal loop variable
 	mov %1, 2	# vertical loop variable
 	mov %2, 0	# color counter
-	mov %3, 0	# color
+	mov %3, 4	# color
 innergen:
 outergen:
 	# check what color to do
