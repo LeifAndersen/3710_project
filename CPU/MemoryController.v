@@ -65,7 +65,7 @@ module MemoryController(
 		//PRAM_Out = CPU_Data_In;
 		//LCDReg_Data <= CPU_Data_In;
 
-		if(CPU_Data_Addr == LCD_I_O) begin
+		/*if(CPU_Data_Addr == LCD_I_O) begin
 			// Go to register for that.
 			// Memory-Mapped I/O will require additonal ports per device added.  These ports are not on the CPU side.
 			CPU_Data_Out <= 0;
@@ -75,7 +75,7 @@ module MemoryController(
 			PRAM_Out <= 0;
 			Keyboard_reset <= 0;
 		end
-		else if (CPU_Data_Addr == PRAM) begin
+		else */if (CPU_Data_Addr == PRAM) begin
 			// PRAM Access
 			CPU_Data_Out <= 0;
 			Main_Data_Wr_En <= 0;
