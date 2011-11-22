@@ -18,6 +18,21 @@ init:
 
 # Main Loop
 main:
+
+	# Store the registers on the stack
+	push $0
+	push $1
+	push $2
+	push $3
+	push $4
+	push $5
+	push $6
+	push $7
+	push $8
+	push $9
+	push $10
+
+mainLoop:
 	# Check Inputs
 	# Left/Right, update theta
 	mov %3, [PLAYER_THETA]
@@ -91,8 +106,21 @@ main:
 
 	# -------------------------------
 
-	j main # Loop again.
+	j mainLoop # Loop again.
 
+mainEnd:
+	pop $10
+	pop $9
+	pop $8
+	pop $7
+	pop $6
+	pop $5
+	pop $4
+	pop $3
+	pop $2
+	pop $1
+	pop $0
+	ret
 
 # Take a number in the $1 reg, return the sin of that number into the $1 reg
 sin:
@@ -116,6 +144,9 @@ PLAYER_Y:
 PLAYER_THETA:
 0
 
+PLAYER_RADIUS:
+10
+
 AI_X:
 100
 
@@ -124,6 +155,9 @@ AI_Y:
 
 AI_THETA:
 0
+
+AI_RADIUS:
+10
 
 AI_FIRE_TIMER:
 1000
