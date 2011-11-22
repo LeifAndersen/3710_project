@@ -39,6 +39,8 @@ parameter Tdisp = 10'd640; //Total horizontal resolution.
 parameter Tpw = 10'd96; //The time hsync stays low.
 parameter Tfp = 10'd16; //Front porch
 parameter Tbp = 10'd48; //Back porch
+parameter Tbp_Tpw = 10'd144;
+parameter Tbp_Tpw_Tdisp = 10'd784;
 
 //VSYNC
 parameter VTs = 20'd416800; //Total line time
@@ -46,6 +48,8 @@ parameter VTdisp = 20'd384000; //Total horizontal resolution.
 parameter VTpw = 20'd1600; //The time hsync stays low.
 parameter VTfp = 20'd8000; //Back porch
 parameter VTbp = 20'd23200; //Front porch
+parameter VTbp_VTpw = 20'd24800;
+parameter VTbp_VTpw_VTdisp = 20'd408800;
 
 reg[9:0] pixCount; 	// 800 (big enuf to hold Ts)
 reg[19:0] totalPix; 	// 416,800 (big enough for VTs)
@@ -78,12 +82,12 @@ begin
 				vsync <= 1;
 				totalPix <= totalPix + 1;
 			end
-			VTbp+VTpw: //Time to start drawing horizontal lines.
+			VTbp_VTpw: //Time to start drawing horizontal lines.
 			begin
 				Henable <= 1;
 				totalPix <= totalPix + 1;
 			end
-			VTbp+VTpw+VTdisp: //Time to stop drawing, just hit the front porch.
+			VTbp_VTpw_VTdisp: //Time to stop drawing, just hit the front porch.
 			begin
 				Henable <= 0;
 				hsync <= 0;
@@ -109,7 +113,7 @@ begin
 					hsync <= 1;
 					pixCount <= pixCount + 1;
 				end
-				Tbp+Tpw: //Time to start outputting colors, this is pixel 1.
+				Tbp_Tpw: //Time to start outputting colors, this is pixel 1.
 				begin
 					if(Henable)
 					begin
@@ -121,7 +125,7 @@ begin
 						color <= 0;
 					pixCount <= pixCount + 1;
 				end
-				Tbp+Tpw+Tdisp: //Time to stop drawing, just hit the front porch.
+				Tbp_Tpw_Tdisp: //Time to stop drawing, just hit the front porch.
 				begin
 					color <= 0;
 					pixCount <= pixCount + 1;
@@ -137,13 +141,13 @@ begin
 				default:
 				begin
 					//When to request color from memory:
-					if (pixCount >= Tbp+Tpw-3 && pixCount < Tbp+Tpw+Tdisp-3 && Henable)
+					if (pixCount >= Tbp_Tpw-3 && pixCount < Tbp_Tpw_Tdisp-3 && Henable)
 						begin
 							//fbAddr <= fbAddr + 1;
 							offset <= offset + 1;
 						end					
 					//When to output color:
-					if (pixCount >= Tbp+Tpw && pixCount < Tbp+Tpw+Tdisp && Henable)
+					if (pixCount >= Tbp_Tpw && pixCount < Tbp_Tpw_Tdisp && Henable)
 						begin
 							color <= {r, g, b};
 						end
