@@ -37,8 +37,9 @@ reg[10:0] shiftReg;
 reg[5:0] buttons;
 
 reg rel;
+reg ps2negedge;
 
-always@(negedge clk)
+always@(posedge clk)
 begin
 	if(reset) begin
 		shiftReg <= 11'b11111111111;
@@ -48,7 +49,16 @@ begin
 		down <= 16'd0;
 		right <= 16'd0;
 		left <= 16'd0;
-	end else begin
+		ps2negedge <= 0;
+	end
+	
+	else if (ps2negedge != ps2_clk) //this chunk essentially does an always@(negedge ps2_clk).
+	begin
+		ps2negedge <= ~ps2negedge;
+	if (ps2negedge == 1) //Means its going to change from 1 to zero right now, so negedge.
+	begin
+	
+	begin
 		shiftReg[10:1] <= shiftReg[9:0];
 		shiftReg[0] <= data;
 		if(shiftReg[10] == 1'd0) begin
@@ -98,6 +108,8 @@ begin
 			if(b != 16'b1111111111111111)
 				b <= b + 1;
 		end
+	end
+	end
 	end
 end
 
