@@ -10,8 +10,8 @@
          <ClosedNode>/DrawUnit/queue - Queue</ClosedNode>
          <ClosedNode>/MainMem</ClosedNode>
          <ClosedNode>/S3Etest</ClosedNode>
-         <ClosedNode>/Top</ClosedNode>
          <ClosedNode>/Top/MainMemory - MainMem</ClosedNode>
+         <ClosedNode>/Top/drawunit - DrawUnit</ClosedNode>
          <ClosedNode>/Top/drawunit - DrawUnit/framebuffer - FrameBuffer</ClosedNode>
          <ClosedNode>/Top/drawunit - DrawUnit/queue - Queue</ClosedNode>
          <ClosedNode>/Top/lcdctrl - lcd_ctrl</ClosedNode>
@@ -20,7 +20,7 @@
       <SelectedItems>
          <SelectedItem>Top (U:/3710/3710/CPU/Top.v)</SelectedItem>
       </SelectedItems>
-      <ScrollbarPosition orientation="vertical" >0</ScrollbarPosition>
+      <ScrollbarPosition orientation="vertical" >30</ScrollbarPosition>
       <ScrollbarPosition orientation="horizontal" >0</ScrollbarPosition>
       <ViewHeaderState orientation="horizontal" >000000ff000000000000000100000001000000000000000000000000000000000202000000010000000100000064000000e5000000020000000000000000000000000000000064ffffffff000000810000000000000002000000e50000000100000000000000000000000100000000</ViewHeaderState>
       <UserChangedColumnWidths orientation="horizontal" >true</UserChangedColumnWidths>
