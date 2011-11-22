@@ -20,15 +20,16 @@
 //////////////////////////////////////////////////////////////////////////////////
 module Keyboard(
     input clk,
+	input ps2_clk,
     input data,
-	 input reset,
+	input reset,
     output reg[15:0] up,
-	 output reg[15:0] down,
-	 output reg[15:0] left,
-	 output reg[15:0] right,
-	 output reg[15:0] a,
-	 output reg[15:0] b
-	 );
+	output reg[15:0] down,
+	output reg[15:0] left,
+	output reg[15:0] right,
+	output reg[15:0] a,
+	output reg[15:0] b
+	);
 	 
 `include "KeyboardCodes.v"
 
