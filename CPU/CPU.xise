@@ -115,9 +115,7 @@
     <file xil_pn:name="initR.txt" xil_pn:type="FILE_USERDOC"/>
     <file xil_pn:name="initS.txt" xil_pn:type="FILE_USERDOC"/>
     <file xil_pn:name="init.txt" xil_pn:type="FILE_USERDOC"/>
-    <file xil_pn:name="init.mem" xil_pn:type="FILE_MEM">
-      <association xil_pn:name="Implementation"/>
-    </file>
+    <file xil_pn:name="init.mem" xil_pn:type="FILE_MEM"/>
     <file xil_pn:name="../MainMem/MainMem.v" xil_pn:type="FILE_VERILOG">
       <association xil_pn:name="BehavioralSimulation"/>
       <association xil_pn:name="Implementation"/>

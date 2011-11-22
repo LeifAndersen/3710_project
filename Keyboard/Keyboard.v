@@ -20,15 +20,16 @@
 //////////////////////////////////////////////////////////////////////////////////
 module Keyboard(
     input clk,
+	input ps2_clk,
     input data,
-	 input reset,
+	input reset,
     output reg[15:0] up,
-	 output reg[15:0] down,
-	 output reg[15:0] left,
-	 output reg[15:0] right,
-	 output reg[15:0] a,
-	 output reg[15:0] b
-	 );
+	output reg[15:0] down,
+	output reg[15:0] left,
+	output reg[15:0] right,
+	output reg[15:0] a,
+	output reg[15:0] b
+	);
 	 
 `include "KeyboardCodes.v"
 
@@ -36,8 +37,9 @@ reg[10:0] shiftReg;
 reg[5:0] buttons;
 
 reg rel;
+reg ps2negedge;
 
-always@(negedge clk)
+always@(posedge clk)
 begin
 	if(reset) begin
 		shiftReg <= 11'b11111111111;
@@ -47,7 +49,16 @@ begin
 		down <= 16'd0;
 		right <= 16'd0;
 		left <= 16'd0;
-	end else begin
+		ps2negedge <= 0;
+	end
+	
+	else if (ps2negedge != ps2_clk) //this chunk essentially does an always@(negedge ps2_clk).
+	begin
+		ps2negedge <= ~ps2negedge;
+	if (ps2negedge == 1) //Means its going to change from 1 to zero right now, so negedge.
+	begin
+	
+	begin
 		shiftReg[10:1] <= shiftReg[9:0];
 		shiftReg[0] <= data;
 		if(shiftReg[10] == 1'd0) begin
@@ -97,6 +108,8 @@ begin
 			if(b != 16'b1111111111111111)
 				b <= b + 1;
 		end
+	end
+	end
 	end
 end
 
