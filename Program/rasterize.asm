@@ -2,12 +2,47 @@
 # RASTERIZE
 #
 # Takes in pointer to a triangle: Color + 3 screen coordinates (0 to 159 horizontal, 0 to 119 vertical, start at top, work down).
-# 
+#  
+#
 # Writes lines out to PRAM.
 
-'define STACK 11264
-'define PRAM 16383
+'define VGA 1638
+'define SP %13
+'define FP %14
+'define LOW %11
+'define HIGH %12
+'define eax %1
+'define ebx %2
+'define ecx %3
+'define edx %4
 
+mov SP, 0x2b #initialize stack
+lsh SP, 8
+or SP, 0xff
+mov FP, SP
+
+add SP, 20
+mov eax, FP
+mov [eax], 0x2 #Triangle goes color, xy1, xy2, xy3  This is (3,3),(64,17),(34,64)
+#p1
+inc eax
+mov [eax] 0x3
+inc eax
+mov [eax] 0x3
+#p2
+inc eax
+mov [eax] 0x40
+inc eax
+mov [eax] 0x11
+#p3
+inc eax
+mov [eax] 0x22
+inc eax
+mov [eax] 0x40
+
+
+#Prefunction set-up: Make a test-triangle for funsies.
+mov %1 
 
 # Step one: Determine lowest point and percolate up the two edges connecting to it.
 # Possible cases:
