@@ -1,7 +1,7 @@
 #
 # RASTERIZE
 #
-# Takes in a triangle: Color + 3 screen coordinates (0 to 159 horizontal, 0 to 119 vertical, start at top, work down).
+# Takes in pointer to a triangle: Color + 3 screen coordinates (0 to 159 horizontal, 0 to 119 vertical, start at top, work down).
 # 
 # Writes lines out to PRAM.
 
@@ -14,6 +14,8 @@
 #   One lowest point (normal)
 #   Two lowest point (horizontal bottom)
 #   Three lowers points (horizontal line of pixels)
+
+
 
 #For lookup table, must map ydif to 1/ydif. ydif has 160 possible values.
 #x for given yvalue, x = xref + (ydif-yvalue)*(1/ydif)*xdif.
