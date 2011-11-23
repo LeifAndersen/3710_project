@@ -15,6 +15,30 @@
 #   Two lowest point (horizontal bottom)
 #   Three lowers points (horizontal line of pixels)
 
+#For lookup table, must map ydif to 1/ydif. ydif has 160 possible values.
+#x for given yvalue, x = xref + (ydif-yvalue)*(1/ydif)*xdif.
+
+#Sort points by y value, smallest first, biggest last.
+#Now sort biggest 2 points by x-value, lowest first, then highest.
+#Now xrefleft = xrefright = x1
+#xdifleft = x2 - xref.
+#xdifright = x3-xref.
+#ydifleft = y2-y1 
+#ydifright = y3-y1
+#This works until yvalue == y2 || yvalue == y3.
+
+#If yvalue == y2
+#xrefleft = x2
+#xdifleft = x3-x2
+#ydifleft = y3-y2 
+
+#If yvalue == y3
+#xrefleft = x2
+#xdifleft = x3-x2
+#ydifleft = y3-y2 
+
+#Increment yvalue til it hits the highest one, then done.
+
 # Step two: Percolate upward and use y value and x distance between two endpoints and the startpoint as index into lookup table.  Then multiply by return.
 # Use x of root point as reference.
 # Two cases to calculate left index:
