@@ -48,4 +48,5 @@ xilinxsim.ini
 *webtalk*
 *xdb*
 *_pad*
+init[0-9]+.txt
 qtcreator-build
