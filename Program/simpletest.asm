@@ -13,8 +13,9 @@
 # stack starts at 11264 (this is the top of memory, be careful)
 
 Main:
-	mov %SP, 0x2C
+	mov %SP, 0x2B
 	lsh %SP, 8
+	or %SP, 0xFF
 	mov %FP, %SP
 	mov %0, 0
 	call function
