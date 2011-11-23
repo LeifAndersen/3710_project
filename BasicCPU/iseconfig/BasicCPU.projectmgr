@@ -77,13 +77,13 @@
          <ClosedNode>/simulate_test/uut - TopLevel/lcdctrl - lcd_ctrl</ClosedNode>
       </ClosedNodes>
       <SelectedItems>
-         <SelectedItem>simulate_test (U:/3710/3710/BasicCPU/simulate_test.v)</SelectedItem>
+         <SelectedItem>uut - TopLevel (U:/3710/3710/BasicCPU/TopLevel.v)</SelectedItem>
       </SelectedItems>
       <ScrollbarPosition orientation="vertical" >1</ScrollbarPosition>
       <ScrollbarPosition orientation="horizontal" >0</ScrollbarPosition>
       <ViewHeaderState orientation="horizontal" >000000ff0000000000000001000000010000000000000000000000000000000002020000000100000001000000640000018f000000020000000000000000000000000000000064ffffffff0000008100000000000000020000018f0000000100000000000000000000000100000000</ViewHeaderState>
       <UserChangedColumnWidths orientation="horizontal" >false</UserChangedColumnWidths>
-      <CurrentItem>simulate_test (U:/3710/3710/BasicCPU/simulate_test.v)</CurrentItem>
+      <CurrentItem>uut - TopLevel (U:/3710/3710/BasicCPU/TopLevel.v)</CurrentItem>
    </ItemView>
    <ItemView engineview="BehavioralSim" sourcetype="" guiview="Process" >
       <ClosedNodes>
