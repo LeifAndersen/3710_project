@@ -12,6 +12,8 @@
 `define STACK 11264 # stack starts at 11264 (this is the top of memory, be careful)
 
 Main:
+	mov %SP, STACK
+	mov %FP, %SP
 	mov %0, 0
 	call function
 	# change buffers

@@ -80,7 +80,7 @@ def delim_mismatch(line_num, line):
 
 # truncates number to the bottom 'bits' bits.
 def truncate_bits(num, bits):
-	return num % pow(2, bits)
+	return num % 2**bits
 
 def check_for_hex(string):
 	if len(string) > 1 and string[1] == "x":
@@ -103,11 +103,11 @@ def encode_Imm_to_R_instruction(tokens):
 
 # takes tokens of Special I-Type instruction and encodes to a string of the hex
 def encode_14_Bit_Imm_instruction(tokens):
-	immediate = 0
-	if check_for_hex(tokens[1]):
-		immediate = int(tokens[1], 16)
+	if is_number(tokens[1]):
+		immediate = to_number(tokens[1])
 	else:
-		immediate = int(tokens[1])
+		print "bad immediate somewhere.  Not sure where, though...."
+		exit(1)
 	return  str(hex((OP_CODES[tokens[0]] << 14) + truncate_bits(immediate, 14)))
 
 # takes tokens of Special I-Type instruction and encodes to a string of the hex
