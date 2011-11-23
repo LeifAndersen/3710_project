@@ -66,7 +66,7 @@ module Top(
 	wire [15:0] incrReg;
 	wire [15:0] decrReg;
 	wire [17:0] instruction;
-	wire [21:0] buffCtrl;
+	wire [22:0] buffCtrl;
 	wire [14:12] buffCtrlP;
 	wire  [3:0] aluOp;
 	wire  [3:0] destSel;
@@ -100,6 +100,7 @@ module Top(
     SixteenBuff buf19(    decrReg,  buffCtrl[19], incrDecrBus);
     SixteenBuff buf20(    incrReg,  buffCtrl[20], incrDecrBus);
     SixteenBuff buf21(       aluD,  buffCtrl[21], writeBus2);
+    SixteenBuff buf22(incrDecrBus,  buffCtrl[22], memAddrBus);
 	
 	// increment and decrement
 	Incrementer INCR(bBus, incrReg);

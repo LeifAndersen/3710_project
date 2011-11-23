@@ -27,8 +27,14 @@ forever:
 function:
 	mov %0, 0xDE
 	lsh %0, 8
-	mov %0, 0xAD
+	or %0, 0xAD
+	mov [100], %0
+	or %0, 0
+	mov %1, [100]
+	mov %2, 100
+	mov %1, [%2]
 	ret
+	incr %SP
 
 .data
 
