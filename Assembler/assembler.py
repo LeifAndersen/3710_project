@@ -26,31 +26,31 @@ def get_instruction_type(OP):
 
 def is_number(s):
     try:
-        int(s, 2)
+        int(s, 10)
         return True
     except:
         pass
     try:
-        int(s, 10)
+        int(s, 16)
         return True
     except:
     	pass
     try:
-        int(s, 16)
+        int(s, 2)
         return True
     except:
         return False
 
 def to_number(s):
     try:
-        return int(s, 2)
+        return int(s, 10)
     except:
         pass
     try:
-        return int(s, 10)
+        return int(s, 16)
     except:
     	pass
-    return int(s, 16)
+    return int(s, 2)
 
 
 # get the class of parse that should be performed
