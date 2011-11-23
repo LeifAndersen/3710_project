@@ -204,7 +204,7 @@ module Top(
 
 	// LEFT IN FOR DEBUGGING.  I am not a bad programmer.
 	// lcd register
-	Register16 lcdReg(reset, CLK_50MHZ, lcd_en, lcd_data, lcdreg_to_lcd);
+	Register16 lcdReg(reset, CLK_25MHZ, lcd_en, lcd_data, lcdreg_to_lcd);
 	// lcd controller
 	lcd_ctrl lcdctrl(CLK_50MHZ, reset, lcdreg_to_lcd, SF_D, LCD_E, LCD_RS, LCD_RW);
 	
