@@ -62,20 +62,24 @@ def trim_reg(reg_str):
 
 # error reporting for bad instructions
 def explode_bomb(line_num, line):
-	print "Invalid instruction on line " + str(line_num) + ": \"" + line.strip() + "\""
+	print "\nError: Invalid instruction on line " + str(line_num) + ": \"" + line.strip() + "\""
 	exit(1)
 
 def invalid_arg(line_num, line):
-	print "Invalid argument on line " + str(line_num) + ": \"" + line.strip() + "\""
+	print "\nError: Invalid argument on line " + str(line_num) + ": \"" + line.strip() + "\""
 	exit(1)
 
 def bad_data(line_num, line):
-	print "Bad data in data section on line " + str(line_num) + ": \"" + line.strip() + "\""
+	print "\nError: Bad data in data section on line " + str(line_num) + ": \"" + line.strip() + "\""
 	exit(1)
 
 # error reporting for mismatched parens
 def delim_mismatch(line_num, line):
-	print "Delimiter mismatch on line " + str(line_num) + ": \"" + line.strip() + "\""
+	print "\nError: Delimiter mismatch on line " + str(line_num) + ": \"" + line.strip() + "\""
+	exit(1)
+
+def duplicate_label(tokens):
+	print "\nError: Duplicate label \"" + tokens[0] + "\" on line " + tokens[1]
 	exit(1)
 
 # truncates number to the bottom 'bits' bits.
@@ -174,7 +178,7 @@ def parse(infile_str, outfile_str):
 		# push labels and continue
 		if tokens[0][-1] == ":":
 			# Label, push to instruction queue
-			first_pass_queue.append(tokens[0])
+			first_pass_queue.append(tokens[0] + " " + str(line_num))
 			continue
 
 		if tokens[0] == ".data":
@@ -401,7 +405,10 @@ def parse(infile_str, outfile_str):
 		# into second pass deque
 		if tokens[0][-1] == ':':
 			label = tokens[0][:-1]
-			labels[label] = address
+			if label in labels:
+				duplicate_label(tokens)
+			else:
+				labels[label] = address
 		else:
 			# push instruction to second pass deque
 			second_pass_queue.append(instruction);
