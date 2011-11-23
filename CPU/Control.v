@@ -351,11 +351,8 @@ module Control(
 		// 14-Bit immediate instructions
 		else if (instType == S14I) begin
 			FlagWrite       <= 0;
-			WriteEn2        <= 0;
 			ALUOp           <= 4'd0;
 			DestSel         <= 15;
-			DestSel2        <= 0;
-			SrcSel          <= 0;
 			BuffCtrl[1]	    <= 1;
 			BuffCtrl[9]     <= 1;
 			BuffCtrl[0]	    <= 0;
@@ -369,12 +366,17 @@ module Control(
 			if(instruction[17:14] == CALL) begin
 				//CALL:
 				BuffCtrl[12] <= 1;
-				BuffCtrl[16] <= 1;
+				BuffCtrl[15] <= 1;
+				BuffCtrl[18] <= 1;
+				BuffCtrl[19] <= 1;
 				BuffCtrl[8]  <= 1;
-				BuffCtrl[15] <= 0;
+				BuffCtrl[16] <= 0;
 				BuffCtrl[14] <= 0;
-				BuffCtrl[11] <= 0;
+				BuffCtrl[11] <= 1;
 				BuffCtrl[10] <= 0;
+				WriteEn2     <= 1;
+				DestSel2     <= 4'd13;
+				SrcSel       <= 4'd13;
 				WriteEn1     <= 0;
 				MemWrite     <= 1;
 				MemRead      <= 0;
@@ -389,6 +391,9 @@ module Control(
 				BuffCtrl[10] <= 0;
 				BuffCtrl[11] <= 0;
 				BuffCtrl[8]  <= 0;
+				WriteEn2     <= 0;
+				DestSel2     <= 0;
+				SrcSel       <= 0;
 				WriteEn1     <= 1;
 				MemWrite     <= 0;
 				MemRead      <= 1;
@@ -406,6 +411,9 @@ module Control(
 				WriteEn1     <= 0;
 				MemWrite     <= 1;
 				MemRead      <= 0;
+				WriteEn2     <= 0;
+				DestSel2     <= 0;
+				SrcSel       <= 0;
 			end
 
 			else if(instruction[17:14] == RET) begin
@@ -420,12 +428,18 @@ module Control(
 				WriteEn1     <= 0;
 				MemWrite     <= 0;
 				MemRead      <= 1;
+				WriteEn2     <= 0;
+				DestSel2     <= 0;
+				SrcSel       <= 0;
 			end
 
 			else if(instruction[17:13] == JL) begin
 				//JL: low or negative
 				MemRead      <= 0;
 				BuffCtrl[8]  <= 0;
+				WriteEn2     <= 0;
+				DestSel2     <= 0;
+				SrcSel       <= 0;
 				if (Negative == 1'b1) begin
 					BuffCtrl[15] <= 1;
 					BuffCtrl[12] <= 0;
@@ -452,6 +466,9 @@ module Control(
 				//JLE: low, negative, or zero
 				MemRead      <= 0;
 				BuffCtrl[8]  <= 0;
+				WriteEn2     <= 0;
+				DestSel2     <= 0;
+				SrcSel       <= 0;
 				if (Negative == 1'b1 || Zero == 1'b1) begin
 					BuffCtrl[15] <= 1;
 					BuffCtrl[12] <= 0;
@@ -477,6 +494,9 @@ module Control(
 				//JNE: not zero
 				MemRead      <= 0;
 				BuffCtrl[8]  <= 0;
+				WriteEn2     <= 0;
+				DestSel2     <= 0;
+				SrcSel       <= 0;
 				if (!(Zero == 1'b1)) begin
 					BuffCtrl[15] <= 1;
 					BuffCtrl[12] <= 0;
@@ -502,6 +522,9 @@ module Control(
 				//JE:
 				MemRead      <= 0;
 				BuffCtrl[8]  <= 0;
+				WriteEn2     <= 0;
+				DestSel2     <= 0;
+				SrcSel       <= 0;
 				if (Zero == 1'b1) begin
 					BuffCtrl[15] <= 1;
 					BuffCtrl[12] <= 0;
@@ -523,7 +546,7 @@ module Control(
 				end
 			end
 			else if(instruction[17:13] == J) begin
-				//JE:
+				//J:
 				MemRead      <= 0;
 				BuffCtrl[8]  <= 0;
 				BuffCtrl[15] <= 1;
@@ -534,11 +557,17 @@ module Control(
 				BuffCtrl[11] <= 0;
 				WriteEn1     <= 0;
 				MemWrite     <= 0;
+				WriteEn2     <= 0;
+				DestSel2     <= 0;
+				SrcSel       <= 0;
 			end
 			else if(instruction[17:13] == JBE) begin
-				//JE:
+				//JBE:
 				MemRead      <= 0;
 				BuffCtrl[8]  <= 0;
+				WriteEn2     <= 0;
+				DestSel2     <= 0;
+				SrcSel       <= 0;
 				if (Low == 1'b1 || Zero == 1'b1) begin
 					BuffCtrl[15] <= 1;
 					BuffCtrl[12] <= 0;
@@ -560,9 +589,12 @@ module Control(
 				end
 			end
 			else if(instruction[17:13] == JB) begin
-				//JE:
+				//JB:
 				MemRead      <= 0;
 				BuffCtrl[8]  <= 0;
+				WriteEn2     <= 0;
+				DestSel2     <= 0;
+				SrcSel       <= 0;
 				if (Low == 1'b1) begin
 					BuffCtrl[15] <= 1;
 					BuffCtrl[12] <= 0;
@@ -594,6 +626,9 @@ module Control(
 				WriteEn1     <= 0;
 				MemWrite     <= 0;
 				MemRead      <= 0;
+				WriteEn2     <= 0;
+				DestSel2     <= 0;
+				SrcSel       <= 0;
 			end
 		end
 
@@ -761,7 +796,9 @@ module Control(
 			WriteEn1  <= 0;
 			WriteEn2  <= 0;
 			immediate <= 16'd0;
-			BuffCtrl  <= 22'd0;
+			BuffCtrl[21:17]  <= 5'd0;
+			BuffCtrl[16]    <= 1;
+			BuffCtrl[15:0]  <= 16'd0;
 			DestSel	  <= 4'd0;
 			DestSel2  <= 4'd0;
 			SrcSel	  <= 4'd0;

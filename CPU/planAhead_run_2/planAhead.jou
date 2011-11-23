@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# PlanAhead v12.2
+# Build 65285 by hdbuild on Wed Jun 23 14:55:19 PDT 2010
+# Start of session at: Mon Nov 21 17:49:49 2011
+# Process ID: 1140
+# Log file: C:/Users/jhparker/3710/CPU/planAhead_run_2/planAhead.log
+# Journal file: C:/Users/jhparker/3710/CPU/planAhead_run_2/planAhead.jou
+#-----------------------------------------------------------
+source C:/Xilinx/12.2/ISE_DS/PlanAhead/scripts/sdc.tcl
+start_gui -source C:/Users/jhparker/3710/CPU/pa.fromNetlist.tcl
+# create_project -name CPU -dir "C:/Users/jhparker/3710/CPU/planAhead_run_2" -part xc3s500efg320-4
+exit
