@@ -85,8 +85,8 @@ begin
 		end
 		else
 		begin
-			data <= PRAMdata[25:23];
-			line <= PRAMdata[22:16];
+			line <= PRAMdata[25:19];
+			data <= PRAMdata[18:16];
 			left <= PRAMdata[15:8];
 			right <= PRAMdata[7:0];
 			state <= paint;
