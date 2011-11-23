@@ -295,6 +295,8 @@ def parse(infile_str, outfile_str):
 				if tokens[0] == "RET":
 					first_pass_queue.append(str(hex(OP_CODES[tokens[0]] << 14)))
 					first_pass_queue.append(str(hex(0)))
+					# all instructions that load PC from memory (just RET, I think) execute two more instructions after themselves
+					first_pass_queue.append(str(hex((OP_CODES["INCR"] << 12) + (trim_reg("%13") << 8) + 0)))
 				else:
 					first_pass_queue.append(encode_14_Bit_Imm_instruction(tokens))
 
@@ -302,12 +304,14 @@ def parse(infile_str, outfile_str):
 				# encode by hand
 				first_pass_queue.append(str(hex((OP_CODES[tokens[0]] << 12) + (trim_reg(tokens[1]) << 8) + 0)))
 
-			elif instruction_type == "POP" or instruction_type == "PUSH":
+			elif instruction_type == "PUSH":
 				# encode by hand
 				first_pass_queue.append(str(hex((OP_CODES[tokens[0]] << 14) + (trim_reg(tokens[1]) << 10) + 0)))
-				# NOP
-				if instruction_type == "POP":
-					first_pass_queue.append(str(hex(0)))
+
+			elif instruction_type == "POP":
+				first_pass_queue.append(str(hex((OP_CODES[tokens[0]] << 14) + (trim_reg(tokens[1]) << 10) + 0)))
+				first_pass_queue.append(str(hex(0)))
+				first_pass_queue.append(str(hex((OP_CODES["INCR"] << 12) + (trim_reg("%13") << 8) + 0)))
 
 			elif instruction_type == "MOV":
 				if tokens[1][0] == '[' and tokens[2][0] == '[':
