@@ -10,7 +10,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="8" />
+   <WVObjectSize size="9" />
    <wvobject fp_name="group121" type="group">
       <obj_property name="label">Globals</obj_property>
       <obj_property name="DisplayName">label</obj_property>
@@ -454,6 +454,195 @@
          <obj_property name="ElementShortName">doutb[17:0]</obj_property>
          <obj_property name="ObjectShortName">doutb[17:0]</obj_property>
          <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group102" type="group">
+      <obj_property name="label">Memory Internals</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/clka" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">clka</obj_property>
+         <obj_property name="ObjectShortName">clka</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/wea" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">wea</obj_property>
+         <obj_property name="ObjectShortName">wea</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/web" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">web</obj_property>
+         <obj_property name="ObjectShortName">web</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/addra" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">addra[13:0]</obj_property>
+         <obj_property name="ObjectShortName">addra[13:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/addrb" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">addrb[13:0]</obj_property>
+         <obj_property name="ObjectShortName">addrb[13:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/dina" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">dina[17:0]</obj_property>
+         <obj_property name="ObjectShortName">dina[17:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/dinb" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">dinb[17:0]</obj_property>
+         <obj_property name="ObjectShortName">dinb[17:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/doutb0" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">doutb0[17:0]</obj_property>
+         <obj_property name="ObjectShortName">doutb0[17:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/doutb1" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">doutb1[17:0]</obj_property>
+         <obj_property name="ObjectShortName">doutb1[17:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/doutb2" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">doutb2[17:0]</obj_property>
+         <obj_property name="ObjectShortName">doutb2[17:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/doutb3" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">doutb3[17:0]</obj_property>
+         <obj_property name="ObjectShortName">doutb3[17:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/doutb4" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">doutb4[17:0]</obj_property>
+         <obj_property name="ObjectShortName">doutb4[17:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/doutb5" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">doutb5[17:0]</obj_property>
+         <obj_property name="ObjectShortName">doutb5[17:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/doutb6" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">doutb6[17:0]</obj_property>
+         <obj_property name="ObjectShortName">doutb6[17:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/doutb7" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">doutb7[17:0]</obj_property>
+         <obj_property name="ObjectShortName">doutb7[17:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/doutb8" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">doutb8[17:0]</obj_property>
+         <obj_property name="ObjectShortName">doutb8[17:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/doutb9" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">doutb9[17:0]</obj_property>
+         <obj_property name="ObjectShortName">doutb9[17:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/doutb10" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">doutb10[17:0]</obj_property>
+         <obj_property name="ObjectShortName">doutb10[17:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/douta" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">douta[17:0]</obj_property>
+         <obj_property name="ObjectShortName">douta[17:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/doutb" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">doutb[17:0]</obj_property>
+         <obj_property name="ObjectShortName">doutb[17:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/wea0" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">wea0</obj_property>
+         <obj_property name="ObjectShortName">wea0</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/web0" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">web0</obj_property>
+         <obj_property name="ObjectShortName">web0</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/wea1" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">wea1</obj_property>
+         <obj_property name="ObjectShortName">wea1</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/web1" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">web1</obj_property>
+         <obj_property name="ObjectShortName">web1</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/wea2" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">wea2</obj_property>
+         <obj_property name="ObjectShortName">wea2</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/web2" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">web2</obj_property>
+         <obj_property name="ObjectShortName">web2</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/wea3" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">wea3</obj_property>
+         <obj_property name="ObjectShortName">wea3</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/web3" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">web3</obj_property>
+         <obj_property name="ObjectShortName">web3</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/wea4" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">wea4</obj_property>
+         <obj_property name="ObjectShortName">wea4</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/web4" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">web4</obj_property>
+         <obj_property name="ObjectShortName">web4</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/wea5" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">wea5</obj_property>
+         <obj_property name="ObjectShortName">wea5</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/web5" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">web5</obj_property>
+         <obj_property name="ObjectShortName">web5</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/wea6" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">wea6</obj_property>
+         <obj_property name="ObjectShortName">wea6</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/web6" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">web6</obj_property>
+         <obj_property name="ObjectShortName">web6</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/wea7" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">wea7</obj_property>
+         <obj_property name="ObjectShortName">wea7</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/web7" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">web7</obj_property>
+         <obj_property name="ObjectShortName">web7</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/wea8" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">wea8</obj_property>
+         <obj_property name="ObjectShortName">wea8</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/web8" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">web8</obj_property>
+         <obj_property name="ObjectShortName">web8</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/wea9" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">wea9</obj_property>
+         <obj_property name="ObjectShortName">wea9</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/web9" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">web9</obj_property>
+         <obj_property name="ObjectShortName">web9</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/wea10" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">wea10</obj_property>
+         <obj_property name="ObjectShortName">wea10</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/web10" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">web10</obj_property>
+         <obj_property name="ObjectShortName">web10</obj_property>
       </wvobject>
    </wvobject>
 </wave_config>

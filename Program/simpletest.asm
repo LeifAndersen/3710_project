@@ -31,7 +31,7 @@ function:
 	mov [100], %0
 	or %0, 0
 	mov %1, [100]
-	mov %2, 100
+	mov %2, 10
 	mov %1, [%2]
 	ret
 	incr %SP
