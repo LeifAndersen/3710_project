@@ -1,3 +1,4 @@
+# only memory mapped I/O can be used as macros to constants. DO NOT MAKE CONSTANTS BIGGER THAN * BITS
 `define UP_KEY 16382
 `define DOWN_KEY 16381
 `define RIGHT_KEY 16380
@@ -9,10 +10,11 @@
 `define %SP %13
 `define %FP %14
 `define VGA 16383
-`define STACK 11264 # stack starts at 11264 (this is the top of memory, be careful)
+# stack starts at 11264 (this is the top of memory, be careful)
 
 Main:
-	mov %SP, STACK
+	mov %SP, 0x2C
+	lsh %SP, 8
 	mov %FP, %SP
 	mov %0, 0
 	call function
