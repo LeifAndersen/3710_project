@@ -31,24 +31,23 @@ Main:
 	mov %10, 0xFFFF
 	mov [VGA], %10
 	mov [VGA], %10
-	j Main
+forever:
+	j forever
 
 Generate: # args come in $7 and $8
 	# recursively fill the screen with increasingly segmented blocks of color
 	push %FP
 	mov %FP, %SP
 	mov %0, 0	# horizontal loop variable
-	mov %1, 2	# vertical loop variable
 	mov %2, 0	# color counter
-	mov %3, 0	# color
-innergen:
+	mov %3, 4	# color
 outergen:
 	# check what color to do
 	cmp %2, %7
 	jne dontflipcolor
 	xor %3, 4
+	mov %2, 0
 dontflipcolor:
-	# print color for 2 pixels
 	# make the first word
 	mov %5, %8	# set y pos
 	lsh %5, 3
@@ -58,21 +57,18 @@ dontflipcolor:
 	mov %4, %0
 	mov %5, %4
 	add %4, 1
-	lsh %4, 1	# multiply end by 2 to go from 80x60 to 160x120
 	lsh %5, 8	# make room for end value
 	or %5, %4
 	mov [VGA], %5 	# write the second word
 	# check the loop bound
 	incr %0
-	cmp %0, 80
-	jne innergen	# loop again
-	decr %1
-	cmp %1, 0
-	jne outergen # repeat outer loop (by starting the inner loop)
+	incr %2
+	cmp %0, 160
+	jne outergen # repeat loop
 	# call self with new arguments
 	rsh %7, 1
 	incr %8
-	cmp %8, 60
+	cmp %8, 120
 	je donegen
 	call Generate
 donegen:
