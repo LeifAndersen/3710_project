@@ -138,6 +138,12 @@
       <association xil_pn:name="BehavioralSimulation"/>
       <association xil_pn:name="Implementation"/>
     </file>
+    <file xil_pn:name="fpga.bmm" xil_pn:type="FILE_BMM">
+      <association xil_pn:name="Implementation"/>
+    </file>
+    <file xil_pn:name="ram.mem" xil_pn:type="FILE_MEM">
+      <association xil_pn:name="Implementation"/>
+    </file>
   </files>
 
   <properties>
@@ -286,7 +292,7 @@
     <property xil_pn:name="Optimization Goal" xil_pn:value="Area" xil_pn:valueState="non-default"/>
     <property xil_pn:name="Optimization Strategy (Cover Mode)" xil_pn:value="Area" xil_pn:valueState="default"/>
     <property xil_pn:name="Optimize Instantiated Primitives" xil_pn:value="false" xil_pn:valueState="default"/>
-    <property xil_pn:name="Other Bitgen Command Line Options" xil_pn:value="" xil_pn:valueState="default"/>
+    <property xil_pn:name="Other Bitgen Command Line Options" xil_pn:value="-bd ram.mem" xil_pn:valueState="non-default"/>
     <property xil_pn:name="Other Compiler Options" xil_pn:value="" xil_pn:valueState="default"/>
     <property xil_pn:name="Other Compiler Options Map" xil_pn:value="" xil_pn:valueState="default"/>
     <property xil_pn:name="Other Compiler Options Par" xil_pn:value="" xil_pn:valueState="default"/>
@@ -294,7 +300,7 @@
     <property xil_pn:name="Other Compxlib Command Line Options" xil_pn:value="" xil_pn:valueState="default"/>
     <property xil_pn:name="Other Map Command Line Options" xil_pn:value="" xil_pn:valueState="default"/>
     <property xil_pn:name="Other NETGEN Command Line Options" xil_pn:value="" xil_pn:valueState="default"/>
-    <property xil_pn:name="Other Ngdbuild Command Line Options" xil_pn:value="" xil_pn:valueState="default"/>
+    <property xil_pn:name="Other Ngdbuild Command Line Options" xil_pn:value="-bm fpga.bmm" xil_pn:valueState="non-default"/>
     <property xil_pn:name="Other Place &amp; Route Command Line Options" xil_pn:value="" xil_pn:valueState="default"/>
     <property xil_pn:name="Other Simulator Commands Behavioral" xil_pn:value="" xil_pn:valueState="default"/>
     <property xil_pn:name="Other Simulator Commands Post-Map" xil_pn:value="" xil_pn:valueState="default"/>
@@ -465,6 +471,8 @@
   <bindings>
     <binding xil_pn:location="/Top" xil_pn:name="../BasicCPU/s3e.ucf"/>
     <binding xil_pn:location="/Top" xil_pn:name="s3e.ucf"/>
+    <binding xil_pn:location="/Top" xil_pn:name="fpga.bmm"/>
+    <binding xil_pn:location="/Top" xil_pn:name="ram.mem"/>
   </bindings>
 
   <libraries/>
