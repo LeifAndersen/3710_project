@@ -373,8 +373,23 @@ def parse(infile_str, outfile_str):
 					elif tokens [1][0] == "%" and tokens[2][0] != "%":
 						# push this
 						if is_number(tokens[2]):
-							tokens[0] = "MOVR"
-							first_pass_queue.append(encode_Imm_to_R_instruction(tokens))
+							if to_number(tokens[2]) > 256:
+								# move top in
+								tokens[0] = "MOVR"
+								constant = to_number(tokens[2])
+								tokens[2] = str(truncate_bits((constant >> 8), 8))
+								first_pass_queue.append(encode_Imm_to_R_instruction(tokens))
+								# left shift 8
+								tokens[0] = "LSH"
+								tokens[2] = "8"
+								first_pass_queue.append(encode_Imm_to_R_instruction(tokens))
+								# or with bottom
+								tokens[0] = "OR"
+								tokens[2] = str(truncate_bits(constant, 8))
+								first_pass_queue.append(encode_Imm_to_R_instruction(tokens))
+							else:
+								tokens[0] = "MOVR"
+								first_pass_queue.append(encode_Imm_to_R_instruction(tokens))
 						else:
 							first_pass_queue.append("LMOV " + tokens[1] + " " + tokens[2])
 					else:
@@ -448,7 +463,6 @@ def parse(infile_str, outfile_str):
 				aritheval = tokens[1].replace(label, str(labels[label]))
 				outfile.write(encode_14_Bit_Imm_instruction([tokens[0], str(eval(aritheval))])[2:] + "\n")
 			else:
-				print tokens
 				if labels[tokens[2]] > 256:
 					# mov, lsh, or to get large immediate
 					tokens[0] = "MOVR"
