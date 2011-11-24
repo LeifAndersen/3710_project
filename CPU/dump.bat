@@ -1,0 +1,1 @@
+data2mem -bm fpga.bmm -bt top.bit -d -i > %1

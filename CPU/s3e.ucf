@@ -299,3 +299,15 @@ NET "vsync" LOC = "F14" | IOSTANDARD = LVTTL | DRIVE = 8 | SLEW = FAST ;
 #NET "XC_TRIG" LOC = "R17" | IOSTANDARD = LVCMOS33 ;
 #NET "XC_GCK0" LOC = "H16" | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = SLOW ;
 #NET "GCLK10" LOC = "C9" | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = SLOW ;
+
+INST "MainMemory\/block0\/Mram_memory" LOC = RAMB16_X1Y3;
+INST "MainMemory\/block1\/Mram_memory" LOC = RAMB16_X1Y6;
+INST "MainMemory\/block2\/Mram_memory" LOC = RAMB16_X1Y5;
+INST "MainMemory\/block3\/Mram_memory" LOC = RAMB16_X0Y5;
+INST "MainMemory\/block4\/Mram_memory" LOC = RAMB16_X1Y4;
+INST "MainMemory\/block5\/Mram_memory" LOC = RAMB16_X1Y7;
+INST "MainMemory\/block6\/Mram_memory" LOC = RAMB16_X1Y2;
+INST "MainMemory\/block7\/Mram_memory" LOC = RAMB16_X1Y1;
+INST "MainMemory\/block8\/Mram_memory" LOC = RAMB16_X1Y0;
+INST "MainMemory\/block9\/Mram_memory" LOC = RAMB16_X1Y8;
+INST "MainMemory\/block10\/Mram_memory" LOC = RAMB16_X1Y9;
