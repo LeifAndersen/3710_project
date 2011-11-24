@@ -9,7 +9,7 @@
 `define %SP %13
 `define %FP %14
 `define VGA 16383
-`define STACK 11264 # stack starts at 11264 (this is the top of memory, be careful)
+# stack starts at 11264 (this is the top of memory, be careful)
 
 # VGA write format
 #
@@ -21,7 +21,9 @@
 
 # generate some pattern
 Main:
-	mov %SP, STACK
+	mov %SP, 0x2B
+	lsh %SP, 8
+	or %SP, 0xFF
 	mov %FP, %SP
 	# set initial arguments to generate (it is recursive)
 	mov %7, 64		# initial size of screen block
@@ -63,12 +65,12 @@ dontflipcolor:
 	# check the loop bound
 	incr %0
 	incr %2
-	cmp %0, 160
+	cmp %0, 159
 	jne outergen # repeat loop
 	# call self with new arguments
 	rsh %7, 1
 	incr %8
-	cmp %8, 120
+	cmp %8, 119
 	je donegen
 	call Generate
 donegen:
