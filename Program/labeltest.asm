@@ -3,6 +3,8 @@ foo:
 mov [bar+1], %5
 bar:
 mov %5, baz
+mov %5, 0x2bff
+mov %5, 0xdd
 .data
 0b000000000000000
 0b000000001100100
