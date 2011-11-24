@@ -65,7 +65,7 @@ module MemoryController(
 		//PRAM_Out = CPU_Data_In;
 		LCDReg_Data <= CPU_Data_In;
 
-		if (CPU_Data_Addr == LCD) begin
+		if (CPU_Data_Addr[13:0] == LCD) begin
 			// Go to register for that.
 			// Memory-Mapped I/O will require additonal ports per device added.  These ports are not on the CPU side.
 			CPU_Data_Out <= 0;
@@ -75,7 +75,7 @@ module MemoryController(
 			PRAM_Out <= 0;
 			Keyboard_reset <= 0;
 		end
-		else if (CPU_Data_Addr == PRAM) begin
+		else if (CPU_Data_Addr[13:0] == PRAM) begin
 			// PRAM Access
 			Main_Data_Wr_En <= 0;
 			PRAM_Wr_En <= CPU_Data_Wr_En;
@@ -90,7 +90,7 @@ module MemoryController(
 			end
 			Keyboard_reset <= 0;
 		end
-		else if (CPU_Data_Addr == FORWARD) begin
+		else if (CPU_Data_Addr[13:0] == FORWARD) begin
 			// forward key
 			Main_Data_Wr_En <= 0;
 			PRAM_Wr_En <= CPU_Data_Wr_En;
@@ -105,7 +105,7 @@ module MemoryController(
 				Keyboard_reset <= !(!(CPU_Data_In));
 			end
 		end
-		else if (CPU_Data_Addr == BACKWARD) begin
+		else if (CPU_Data_Addr[13:0] == BACKWARD) begin
 			// backaward key
 			Main_Data_Wr_En <= 0;
 			PRAM_Wr_En <= CPU_Data_Wr_En;
@@ -120,7 +120,7 @@ module MemoryController(
 				Keyboard_reset <= !(!(CPU_Data_In));
 			end
 		end
-		else if (CPU_Data_Addr == TURNRIGHT) begin
+		else if (CPU_Data_Addr[13:0] == TURNRIGHT) begin
 			// turnright key
 			Main_Data_Wr_En <= 0;
 			PRAM_Wr_En <= CPU_Data_Wr_En;
@@ -135,7 +135,7 @@ module MemoryController(
 				Keyboard_reset <= !(!(CPU_Data_In));
 			end
 		end
-		else if (CPU_Data_Addr == TURNLEFT) begin
+		else if (CPU_Data_Addr[13:0] == TURNLEFT) begin
 			// turnleft key
 			Main_Data_Wr_En <= 0;
 			PRAM_Wr_En <= CPU_Data_Wr_En;
@@ -150,7 +150,7 @@ module MemoryController(
 				Keyboard_reset <= !(!(CPU_Data_In));
 			end
 		end
-		else if (CPU_Data_Addr == SHOOT) begin
+		else if (CPU_Data_Addr[13:0] == SHOOT) begin
 			// Shoot keyboard key
 			Main_Data_Wr_En <= 0;
 			PRAM_Wr_En <= CPU_Data_Wr_En;
@@ -165,7 +165,7 @@ module MemoryController(
 				Keyboard_reset <= !(!(CPU_Data_In));
 			end
 		end
-		else if (CPU_Data_Addr == RESET) begin
+		else if (CPU_Data_Addr[13:0] == RESET) begin
 			// Reset keybaord key
 			CPU_Data_Out <= 0;
 			Main_Data_Wr_En <= 0;
@@ -181,10 +181,19 @@ module MemoryController(
 				Keyboard_reset <= !(!(CPU_Data_In));
 			end
 		end
-		else begin
+		else if (CPU_Data_Addr[13:0] < 14'd11264) begin
 			// Main Memory Access
 			CPU_Data_Out <= Main_Data_In;
 			Main_Data_Wr_En <= CPU_Data_Wr_En;
+			PRAM_Wr_En <= 0;
+			LCDReg_Wr_En <= 0;
+			PRAM_Out <= 0;
+			Keyboard_reset <= 0;
+		end
+		else begin
+			// illegal address, do nothing
+			CPU_Data_Out <= 0;
+			Main_Data_Wr_En <= 0;
 			PRAM_Wr_En <= 0;
 			LCDReg_Wr_En <= 0;
 			PRAM_Out <= 0;

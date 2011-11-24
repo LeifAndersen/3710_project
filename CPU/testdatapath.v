@@ -34,7 +34,7 @@ module testdatapath;
 	wire[2:0] color;
 	wire hsync;
 	wire vsync;
-    wire SF_D;
+    wire [11:8] SF_D;
     wire LCD_E;
     wire LCD_RS;
     wire LCD_RW;
