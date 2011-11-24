@@ -467,9 +467,16 @@ def parse(infile_str, outfile_str):
 					# mov, lsh, or to get large immediate
 					tokens[0] = "MOVR"
 					labelval = labels[tokens[2]]
-					tokens[2] = str(truncate_bits(labelval, 8))
-					outfile.write(encode_Imm_to_R_instruction(tokens)[2:] + "\n")
+					# move top in
 					tokens[2] = str(truncate_bits((labelval >> 8), 8))
+					outfile.write(encode_Imm_to_R_instruction(tokens)[2:] + "\n")
+					# left shift 8
+					tokens[0] = "LSH"
+					tokens[2] = "8"
+					outfile.write(encode_Imm_to_R_instruction(tokens)[2:] + "\n")
+					# or with bottom
+					tokens[0] = "OR"
+					tokens[2] = str(truncate_bits(labelval, 8))
 					outfile.write(encode_Imm_to_R_instruction(tokens)[2:] + "\n")
 				else:
 					tokens[0] = "MOVR"
