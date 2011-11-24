@@ -47,10 +47,10 @@ def to_number(s):
     except:
         pass
     try:
-        return int(s, 16)
+        return int(s, 2)
     except:
     	pass
-    return int(s, 2)
+    return int(s, 16)
 
 
 # get the class of parse that should be performed
@@ -63,6 +63,10 @@ def trim_reg(reg_str):
 # error reporting for bad instructions
 def explode_bomb(line_num, line):
 	print "\nError: Invalid instruction on line " + str(line_num) + ": \"" + line.strip() + "\""
+	exit(1)
+
+def missing_comma(line_num, line):
+	print "\nError: Missing comma on line " + str(line_num) + ": \"" + line.strip() + "\""
 	exit(1)
 
 def invalid_arg(line_num, line):
@@ -98,11 +102,7 @@ def encode_R_to_R_instruction(tokens, upper_op_code):
 
 # takes tokens of I-Type instruction and encodes to a string of the hex
 def encode_Imm_to_R_instruction(tokens):
-	immediate = 0
-	if check_for_hex(tokens[2]):
-		immediate = int(tokens[2], 16)
-	else:
-		immediate = int(tokens[2])
+	immediate = to_number(tokens[2])
 	return  str(hex((OP_CODES[tokens[0]] << 12) + (trim_reg(tokens[1]) << 8) + truncate_bits(immediate, 8)))
 
 # takes tokens of Special I-Type instruction and encodes to a string of the hex
@@ -278,7 +278,7 @@ def parse(infile_str, outfile_str):
 				if tokens[1][-1] == ",":
 					tokens[1] = tokens[1][:-1]
 				else:
-					explode_bomb(line_num, line)
+					missing_comma(line_num, line)
 
 			# encode instructions specifically for each op type
 			if instruction_type == "I-Capable":
@@ -372,8 +372,11 @@ def parse(infile_str, outfile_str):
 						first_pass_queue.append(encode_R_to_R_instruction(tokens, 0))
 					elif tokens [1][0] == "%" and tokens[2][0] != "%":
 						# push this
-						tokens[0] = "MOVR"
-						first_pass_queue.append(encode_Imm_to_R_instruction(tokens))
+						if is_number(tokens[2]):
+							tokens[0] = "MOVR"
+							first_pass_queue.append(encode_Imm_to_R_instruction(tokens))
+						else:
+							first_pass_queue.append("LMOV " + tokens[1] + " " + tokens[2])
 					else:
 						explode_bomb(line_num, line)
 
@@ -432,12 +435,32 @@ def parse(infile_str, outfile_str):
 		# go.
 		# call encode_14_Bit_Imm_instruction() on calls and encode_jumps() on jumps (lines with more than one token)
 		if len(tokens) > 1:
-			if tokens[0] == "CALL" or tokens[0] == "MOVMRI" or tokens[0] == "MOVRMI":
+			if tokens[0] == "CALL":
 				# encode call and save to instruction stream with label address
 				outfile.write(encode_14_Bit_Imm_instruction([tokens[0], str(labels[tokens[1]])])[2:] + "\n")
-			else:
+			elif tokens[0][0] == "J":
 				# encode jump and save
 				outfile.write(encode_jumps([tokens[0], str(labels[tokens[1]])])[2:] + "\n")
+			elif tokens[0] == "MOVMRI" or tokens[0] == "MOVRMI":
+				# encode mov label value to register
+				# label must come before +
+				label = (tokens[1].split("+"))[0]
+				aritheval = tokens[1].replace(label, str(labels[label]))
+				outfile.write(encode_14_Bit_Imm_instruction([tokens[0], str(eval(aritheval))])[2:] + "\n")
+			else:
+				print tokens
+				if labels[tokens[2]] > 256:
+					# mov, lsh, or to get large immediate
+					tokens[0] = "MOVR"
+					labelval = labels[tokens[2]]
+					tokens[2] = str(truncate_bits(labelval, 8))
+					outfile.write(encode_Imm_to_R_instruction(tokens)[2:] + "\n")
+					tokens[2] = str(truncate_bits((labelval >> 8), 8))
+					outfile.write(encode_Imm_to_R_instruction(tokens)[2:] + "\n")
+				else:
+					tokens[0] = "MOVR"
+					tokens[2] = str(labels[tokens[2]])
+					outfile.write(encode_Imm_to_R_instruction(tokens)[2:] + "\n")
 		else:
 			# remove 0x
 			outfile.write(instruction[2:] + "\n")
