@@ -60,7 +60,7 @@ Main:
 	or  %1, %2
 
 	# put the number on the LCD
-	mov [LCD], %1
+	mov [VGA], %1
 forever:
 	j forever
 

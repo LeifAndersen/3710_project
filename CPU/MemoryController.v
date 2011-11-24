@@ -46,14 +46,14 @@ module MemoryController(
     );
 
 	// bounds of the two blockrams behind the controller
-	parameter PRAM	   = 14'b11_1111_1111_1111;	// vga replaces lcd
-	parameter LCD_I_O  = 14'b11_1111_1111_1000;	// LCD Screen
+	parameter PRAM	   = 14'b11_1111_1111_1111;	// vga
 	parameter FORWARD  = 14'b11_1111_1111_1110;	// W key
 	parameter BACKWARD = 14'b11_1111_1111_1101;	// S key
 	parameter TURNRIGHT= 14'b11_1111_1111_1100;	// D key
 	parameter TURNLEFT = 14'b11_1111_1111_1011;	// A key
 	parameter SHOOT    = 14'b11_1111_1111_1010;	// Spacebar
 	parameter RESET    = 14'b11_1111_1111_1001;	// Esc
+	parameter LCD      = 14'b11_1111_1111_1000;	// LCD Screen
 
 	always@(*) begin
 		// Instruction memory is always in one block
@@ -65,7 +65,8 @@ module MemoryController(
 		//PRAM_Out = CPU_Data_In;
 		LCDReg_Data <= CPU_Data_In;
 
-		if(CPU_Data_Addr == LCD_I_O) begin
+		if (CPU_Data_Addr == LCD) begin
+			$display("got here");
 			// Go to register for that.
 			// Memory-Mapped I/O will require additonal ports per device added.  These ports are not on the CPU side.
 			CPU_Data_Out <= 0;
@@ -77,14 +78,17 @@ module MemoryController(
 		end
 		else if (CPU_Data_Addr == PRAM) begin
 			// PRAM Access
-			CPU_Data_Out <= 0;
 			Main_Data_Wr_En <= 0;
 			PRAM_Wr_En <= CPU_Data_Wr_En;
 			LCDReg_Wr_En <= 0;
-			if (!CPU_Data_Wr_En)
-				PRAM_Out <= {15'b0, full};
-			else
+			if (!CPU_Data_Wr_En) begin
+				CPU_Data_Out <= {15'b0, full};
+				PRAM_Out <= 0;
+			end
+			else begin
 				PRAM_Out <= CPU_Data_In;
+				CPU_Data_Out <= 0;
+			end
 			Keyboard_reset <= 0;
 		end
 		else if (CPU_Data_Addr == FORWARD) begin
