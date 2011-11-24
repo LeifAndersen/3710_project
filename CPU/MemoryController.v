@@ -66,7 +66,6 @@ module MemoryController(
 		LCDReg_Data <= CPU_Data_In;
 
 		if (CPU_Data_Addr == LCD) begin
-			$display("got here");
 			// Go to register for that.
 			// Memory-Mapped I/O will require additonal ports per device added.  These ports are not on the CPU side.
 			CPU_Data_Out <= 0;
