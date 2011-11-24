@@ -66,11 +66,11 @@ module testdatapath;
 		// Hey, reset
 		BTN_NORTH = 0;
 		BTN_NORTH = 1;
-		#650;
+		#50;
 		
 		// now start
 		BTN_NORTH = 0;
-		#650;
+		#50;
 
 	end
       

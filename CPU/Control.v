@@ -32,7 +32,8 @@ module Control(
 	output reg 			FlagWrite,
 	output reg 			MemWrite,
 	output reg 			MemRead,
-	output reg	[15:0]	Addr
+	output reg	[15:0]	Addr,
+	output reg			ret
     );
 
 	`include "..\ALU\opcodesLOL.v"
@@ -105,6 +106,7 @@ module Control(
 			immediate       <= 16'd0;
 			Addr            <= 0;
 			MemRead         <= 0;
+			ret             <= 0;
 
 			if (instruction[7:4] == ADD ||
 				instruction[7:4] == SUB ||
@@ -209,6 +211,7 @@ module Control(
 			immediate       <= 16'd0;
 			FlagWrite       <= 0;
 			Addr            <= 16'd0;
+			ret             <= 0;
 
 			if (instruction[7:4] == MOVMR) begin
 				//MOVMR:
@@ -267,6 +270,7 @@ module Control(
 			immediate       <= {8'd0,instruction[7:0]};
 			Addr            <= 0;
 			MemRead         <= 0;
+			ret             <= 0;
 
 			if (instruction[15:12] == ADD ||
 				instruction[15:12] == SUB ||
@@ -383,6 +387,7 @@ module Control(
 				WriteEn1     <= 0;
 				MemWrite     <= 1;
 				MemRead      <= 0;
+				ret          <= 0;
 			end
 
 			else if(instruction[17:14] == MOVMRI) begin
@@ -405,6 +410,7 @@ module Control(
 				WriteEn1     <= 1;
 				MemWrite     <= 0;
 				MemRead      <= 1;
+				ret          <= 0;
 			end
 
 			else if(instruction[17:14] == MOVRMI) begin
@@ -427,12 +433,13 @@ module Control(
 				WriteEn2     <= 0;
 				DestSel2     <= 0;
 				SrcSel       <= 0;
+				ret          <= 0;
 			end
 
 			else if(instruction[17:14] == RET) begin
 				//RET:
-				BuffCtrl[22] <= 0;
-				BuffCtrl[20] <= 0;
+				BuffCtrl[22] <= 1;
+				BuffCtrl[20] <= 1;
 				BuffCtrl[18] <= 0;
 				BuffCtrl[14] <= 1;
 				BuffCtrl[19] <= 0;
@@ -449,6 +456,7 @@ module Control(
 				WriteEn2     <= 0;
 				DestSel2     <= 4'd13;
 				SrcSel       <= 4'd13;
+				ret          <= 1;
 			end
 
 			else if(instruction[17:13] == JL) begin
@@ -463,6 +471,7 @@ module Control(
 				WriteEn2     <= 0;
 				DestSel2     <= 0;
 				SrcSel       <= 0;
+				ret          <= 0;
 				if (Negative == 1'b1) begin
 					BuffCtrl[15] <= 1;
 					BuffCtrl[12] <= 0;
@@ -497,6 +506,7 @@ module Control(
 				WriteEn2     <= 0;
 				DestSel2     <= 0;
 				SrcSel       <= 0;
+				ret          <= 0;
 				if (Negative == 1'b1 || Zero == 1'b1) begin
 					BuffCtrl[15] <= 1;
 					BuffCtrl[12] <= 0;
@@ -530,6 +540,7 @@ module Control(
 				WriteEn2     <= 0;
 				DestSel2     <= 0;
 				SrcSel       <= 0;
+				ret          <= 0;
 				if (!(Zero == 1'b1)) begin
 					BuffCtrl[15] <= 1;
 					BuffCtrl[12] <= 0;
@@ -563,6 +574,7 @@ module Control(
 				WriteEn2     <= 0;
 				DestSel2     <= 0;
 				SrcSel       <= 0;
+				ret          <= 0;
 				if (Zero == 1'b1) begin
 					BuffCtrl[15] <= 1;
 					BuffCtrl[12] <= 0;
@@ -603,6 +615,7 @@ module Control(
 				WriteEn2     <= 0;
 				DestSel2     <= 0;
 				SrcSel       <= 0;
+				ret          <= 0;
 			end
 			else if(instruction[17:13] == JBE) begin
 				//JBE:
@@ -616,6 +629,7 @@ module Control(
 				WriteEn2     <= 0;
 				DestSel2     <= 0;
 				SrcSel       <= 0;
+				ret          <= 0;
 				if (Low == 1'b1 || Zero == 1'b1) begin
 					BuffCtrl[15] <= 1;
 					BuffCtrl[12] <= 0;
@@ -648,6 +662,7 @@ module Control(
 				WriteEn2     <= 0;
 				DestSel2     <= 0;
 				SrcSel       <= 0;
+				ret          <= 0;
 				if (Low == 1'b1) begin
 					BuffCtrl[15] <= 1;
 					BuffCtrl[12] <= 0;
@@ -687,6 +702,7 @@ module Control(
 				WriteEn2     <= 0;
 				DestSel2     <= 0;
 				SrcSel       <= 0;
+				ret          <= 0;
 			end
 		end
 
@@ -704,6 +720,7 @@ module Control(
 			immediate       <= 16'd0;
 			Addr            <= 16'd0;
 			ALUOp           <= 4'd0;
+			ret             <= 0;
 
 			if(instruction[17:14] == POP) begin
 				//POP:
@@ -812,6 +829,7 @@ module Control(
 			SrcSel          <= instruction[11:8];
 			DestSel         <= instruction[11:8];
 			DestSel2        <= instruction[11:8];
+			ret             <= 0;
 
 			if(instruction[17:12] == INCR) begin
 				//INCR:
@@ -874,6 +892,7 @@ module Control(
 			MemWrite  <= 0;
 			MemRead   <= 0;
 			Addr	  <= 16'd0;
+			ret       <= 0;
 		end
 	end
 endmodule

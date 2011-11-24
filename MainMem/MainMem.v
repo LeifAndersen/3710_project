@@ -29,6 +29,7 @@ module MainMem(
 	output reg [17:0] douta,
 	output reg [17:0] doutb
     );
+	
 
 reg wea0;
 reg web0;

@@ -21,6 +21,10 @@
 module Top(
 	input 			BTN_NORTH,
     input 			inCLK_50MHZ,
+    output [11:8] 	SF_D,
+    output 			LCD_E,
+    output 			LCD_RS,
+    output 			LCD_RW,
 	input 			PS2_CLK,
     input 			PS2_DATA,
 	output	[2:0]	color,
@@ -78,6 +82,9 @@ module Top(
 	wire 		regWriteEn;
 	wire 		regWriteEn2;
 	wire 		memWriteEn;
+	wire        ret;
+	wire        retP;
+	wire        cont;
     SixteenBuff buf0(   immediate,   buffCtrl[0], aBus);
     SixteenBuff buf1(      regTo1,   buffCtrl[1], aBus);
     SixteenBuff buf2(      aluOut,   buffCtrl[2], writeBus);
@@ -94,13 +101,16 @@ module Top(
     SixteenBuff buf13( memDataOut, buffCtrlP[13], writeBus2);
     SixteenBuff buf14( memDataOut, buffCtrlP[14], pcWriteBus);
     SixteenBuff buf15(specialAddr,  buffCtrl[15], pcWriteBus);
-    SixteenBuff buf16(    pcPlus1,  buffCtrl[16], pcWriteBus);
+    SixteenBuff buf16(    pcPlus1,          cont, pcWriteBus);
     SixteenBuff buf17(incrDecrBus,  buffCtrl[17], writeBus);
     SixteenBuff buf18(incrDecrBus,  buffCtrl[18], writeBus2);
     SixteenBuff buf19(    decrReg,  buffCtrl[19], incrDecrBus);
     SixteenBuff buf20(    incrReg,  buffCtrl[20], incrDecrBus);
     SixteenBuff buf21(       aluD,  buffCtrl[21], writeBus2);
     SixteenBuff buf22(incrDecrBus,  buffCtrl[22], memAddrBus);
+	
+	// prevent two drivers on same net
+	assign cont = buffCtrl[16] & (~retP);
 	
 	// increment and decrement
 	Incrementer INCR(bBus, incrReg);
@@ -126,9 +136,9 @@ module Top(
 	wire [17:0] inst_addr_to_main;
 	wire [15:0] pram_out;
 	wire 		pram_wr_en;
-	//wire 		lcd_en;
-	//wire [15:0] lcd_data;
-	//wire [15:0] lcdreg_to_lcd;
+	wire 		lcd_en;
+	wire [15:0] lcd_data;
+	wire [15:0] lcdreg_to_lcd;
 	
 	wire full;
 	
@@ -147,8 +157,9 @@ module Top(
 	wire [15:0]	shoot;
 	wire [15:0]	escape;
 	wire [15:0]	keyboard_reset;
+	reg [13:0] memAddrBusF;
 	// Memory controller
-	MemoryController MemCtrl(memWriteBus, memAddrBus, memWriteEn, pc, data_to_controller, instruction_to_controller, full, memDataOut, instruction, data_to_main, data_addr_to_main, data_wr_en_to_main, inst_addr_to_main, pram_out, pram_wr_en, /*lcd_data, lcd_en,*/ forward, backward, turnright, turnleft, shoot, escape, keyboard_reset);
+	MemoryController MemCtrl(memWriteBus, memAddrBusF, memWriteEn, pc, data_to_controller, instruction_to_controller, full, memDataOut, instruction, data_to_main, data_addr_to_main, data_wr_en_to_main, inst_addr_to_main, pram_out, pram_wr_en, lcd_data, lcd_en, forward, backward, turnright, turnleft, shoot, escape, keyboard_reset);
 	Keyboard KeyboardControl(CLK_25MHZ, PS2_CLK, PS2_DATA, keyboard_reset, forward, backward, turnleft, turnright, shoot, escape);
 	
 	// control
@@ -161,26 +172,30 @@ module Top(
 	wire       regWriteEn2P;
 	wire       memRead;
 	wire       memReadP;
+	wire[13:0] memAddrBusP;
 	//     Pipeline Register
-	PipelineRegister PReg(CLK_25MHZ, reset, memRead, memReadP, regWriteEn, regWriteEnP, regWriteEn2, regWriteEn2P, buffCtrl[14:12], buffCtrlP[14:12], destSel, destSelP);
+	PipelineRegister PReg(CLK_25MHZ, reset, memRead, memReadP, regWriteEn, regWriteEnP, regWriteEn2, regWriteEn2P, buffCtrl[14:12], buffCtrlP[14:12], destSel, destSelP, memAddrBus, memAddrBusP, ret, retP);
 	//     Control
-	Control MasterControl(instruction, flagsToControl, aluOp, regWriteEn, regWriteEn2, immediate, buffCtrl, destSel, destSel2, srcSel, flagWrite, memWriteEn, memRead, specialAddr);
+	Control MasterControl(instruction, flagsToControl, aluOp, regWriteEn, regWriteEn2, immediate, buffCtrl, destSel, destSel2, srcSel, flagWrite, memWriteEn, memRead, specialAddr, ret);
 	//     Forwarding logic
-	always@(destSel, destSelP, regWriteEn, regWriteEn2, regWriteEnP, regWriteEn2P, memReadP, memRead) begin
+	always@(destSel, destSelP, regWriteEn, regWriteEn2, regWriteEnP, regWriteEn2P, memReadP, memRead, memAddrBus, memAddrBusP) begin
 		if(memReadP == 1'b1) begin
-			destSelF     = destSelP;
-			regWriteEnF  = regWriteEnP;
-			regWriteEn2F = regWriteEn2P;
+			destSelF     <= destSelP;
+			regWriteEnF  <= regWriteEnP;
+			regWriteEn2F <= regWriteEn2P;
+			memAddrBusF  <= memAddrBusP;
 		end
 		else if(memRead == 1'b1) begin
-			destSelF     = destSel;
-			regWriteEnF  = 0;
-			regWriteEn2F = 0;
+			destSelF     <= destSel;
+			regWriteEnF  <= 0;
+			regWriteEn2F <= 0;
+			memAddrBusF  <= memAddrBus;
 		end
 		else begin
-			destSelF     = destSel;
-			regWriteEnF  = regWriteEn;
-			regWriteEn2F = regWriteEn2;
+			destSelF     <= destSel;
+			regWriteEnF  <= regWriteEn;
+			regWriteEn2F <= regWriteEn2;
+			memAddrBusF  <= memAddrBus;
 		end
 	end
 
@@ -189,9 +204,9 @@ module Top(
 
 	// LEFT IN FOR DEBUGGING.  I am not a bad programmer.
 	// lcd register
-	//Register16 lcdReg(reset, CLK_50MHZ, lcd_en, lcd_data, lcdreg_to_lcd);
+	Register16 lcdReg(reset, CLK_25MHZ, lcd_en, lcd_data, lcdreg_to_lcd);
 	// lcd controller
-	//lcd_ctrl lcdctrl(CLK_50MHZ, reset, lcdreg_to_lcd, SF_D, LCD_E, LCD_RS, LCD_RW);
+	lcd_ctrl lcdctrl(CLK_50MHZ, reset, lcdreg_to_lcd, SF_D, LCD_E, LCD_RS, LCD_RW);
 	
 	// draw unit
 	DrawUnit drawunit(.clk(CLK_25MHZ), .vgaClk(CLK_25MHZ), .clk2x(CLK_100MHZ), .clk6x(CLK_300MHZ), .reset(reset), .we(pram_wr_en),	.dataIn(pram_out), .full(full), .color(color), .hsync(hsync), .vsync(vsync));

@@ -30,7 +30,11 @@ module PipelineRegister(
     input      [14:12] Buff_Ctrl_In,
     output reg [14:12] Buff_Ctrl_Out,
     input        [3:0] Reg_Wr_Sel_In,
-    output reg   [3:0] Reg_Wr_Sel_Out
+    output reg   [3:0] Reg_Wr_Sel_Out,
+	input 	   [15:0]  Mem_Addr_In,
+	output reg [15:0]  Mem_Addr_Out,
+	input              ret_In,
+	output reg         ret_Out
     );
 
 	always@(posedge clk) begin
@@ -40,6 +44,8 @@ module PipelineRegister(
 			Reg_Wr_En_2_Out  <= 0;
 			Buff_Ctrl_Out    <= 3'd0;
 			Reg_Wr_Sel_Out   <= 4'd0;
+			Mem_Addr_Out     <= 16'd0;
+			ret_Out          <= 16'd0;
 		end
 		else begin
 			Mem_Read_Out     <= Mem_Read_In;
@@ -47,6 +53,8 @@ module PipelineRegister(
 			Reg_Wr_En_2_Out  <= Reg_Wr_En_2_In;
 			Buff_Ctrl_Out    <= Buff_Ctrl_In;
 			Reg_Wr_Sel_Out   <= Reg_Wr_Sel_In;
+			Mem_Addr_Out     <= Mem_Addr_In;
+			ret_Out          <= ret_In;
 		end
 	end
 
