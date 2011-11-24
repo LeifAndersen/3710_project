@@ -1,0 +1,43 @@
+ADDRESS_MAP mem PPC405 0 // PPC405 is just a dummy
+
+  ADDRESS_SPACE address_space COMBINED [0x00000000:0x000062ff]
+
+    ADDRESS_RANGE RAMB18
+      BUS_BLOCK
+        MainMemory/block0/Mram_memory [17:0] PLACED = X1Y3;
+      END_BUS_BLOCK;
+      BUS_BLOCK
+        MainMemory/block1/Mram_memory [17:0] PLACED = X1Y6;
+      END_BUS_BLOCK;
+      BUS_BLOCK
+        MainMemory/block2/Mram_memory [17:0] PLACED = X1Y5;
+      END_BUS_BLOCK;
+      BUS_BLOCK
+        MainMemory/block3/Mram_memory [17:0] PLACED = X0Y5;
+      END_BUS_BLOCK;
+      BUS_BLOCK
+        MainMemory/block4/Mram_memory [17:0] PLACED = X1Y4;
+      END_BUS_BLOCK;
+      BUS_BLOCK
+        MainMemory/block5/Mram_memory [17:0] PLACED = X1Y7;
+      END_BUS_BLOCK;
+      BUS_BLOCK
+        MainMemory/block6/Mram_memory [17:0] PLACED = X1Y2;
+      END_BUS_BLOCK;
+      BUS_BLOCK
+        MainMemory/block7/Mram_memory [17:0] PLACED = X1Y1;
+      END_BUS_BLOCK;
+      BUS_BLOCK
+        MainMemory/block8/Mram_memory [17:0] PLACED = X1Y0;
+      END_BUS_BLOCK;
+      BUS_BLOCK
+        MainMemory/block9/Mram_memory [17:0] PLACED = X1Y8;
+      END_BUS_BLOCK;
+      BUS_BLOCK
+        MainMemory/block10/Mram_memory [17:0] PLACED = X1Y9;
+      END_BUS_BLOCK;
+    END_ADDRESS_RANGE;
+
+  END_ADDRESS_SPACE;
+
+END_ADDRESS_MAP;
