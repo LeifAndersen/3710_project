@@ -20,6 +20,7 @@ Main:
 	mov [block+3072], %0
 	mov [block+4096], %0
 	mov [block+5120], %0
+	mov [block+6144], %0
 	mov [block+7168], %0
 	mov [block+8192], %0
 	mov [block+9216], %0
@@ -43,6 +44,9 @@ Main:
 	mov %2, [block+5120]
 	lsh %1, 1
 	or  %1, %2
+	mov %2, [block+6144]
+	lsh %1, 1
+	or  %1, %2
 	mov %2, [block+7168]
 	lsh %1, 1
 	or  %1, %2
@@ -60,7 +64,7 @@ Main:
 	or  %1, %2
 
 	# put the number on the LCD
-	mov [VGA], %1
+	mov [LCD], %1
 forever:
 	j forever
 

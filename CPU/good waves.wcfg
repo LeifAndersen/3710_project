@@ -47,6 +47,22 @@
          <obj_property name="ElementShortName">ret</obj_property>
          <obj_property name="ObjectShortName">ret</obj_property>
       </wvobject>
+      <wvobject fp_name="/testdatapath/uut/SF_D" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">SF_D[11:8]</obj_property>
+         <obj_property name="ObjectShortName">SF_D[11:8]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/LCD_E" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">LCD_E</obj_property>
+         <obj_property name="ObjectShortName">LCD_E</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/LCD_RS" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">LCD_RS</obj_property>
+         <obj_property name="ObjectShortName">LCD_RS</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/LCD_RW" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">LCD_RW</obj_property>
+         <obj_property name="ObjectShortName">LCD_RW</obj_property>
+      </wvobject>
    </wvobject>
    <wvobject fp_name="group122" type="group">
       <obj_property name="label">Registers</obj_property>
@@ -422,6 +438,10 @@
       <wvobject fp_name="/testdatapath/uut/memReadP" type="logic" db_ref_id="1">
          <obj_property name="ElementShortName">memReadP</obj_property>
          <obj_property name="ObjectShortName">memReadP</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MemCtrl/LCDReg_Wr_En" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">LCDReg_Wr_En</obj_property>
+         <obj_property name="ObjectShortName">LCDReg_Wr_En</obj_property>
       </wvobject>
       <wvobject fp_name="/testdatapath/uut/memWriteBus" type="array" db_ref_id="1">
          <obj_property name="ElementShortName">memWriteBus[15:0]</obj_property>
