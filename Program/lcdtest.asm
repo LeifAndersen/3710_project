@@ -5,3 +5,5 @@ mov %5, 5
 mov [100], %5
 mov %10, 0x34
 mov [LCD], %10
+forever:
+j forever
