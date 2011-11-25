@@ -22,8 +22,8 @@ lsh SWAP, 8
 add SWAP, 0xFF
 
 #Swap first, test writing to low values.
-#mov [VGA], SWAP
-#mov [VGA], SWAP
+mov [VGA], SWAP
+mov [VGA], SWAP
 
 #Loop til entire back buffer filled.
 loop:

@@ -81,6 +81,8 @@ begin
 		frontHigh:
 		begin
 			bufferWrtPtr <= wrtPtr;
+			bufferWe <= we;
+			bufferWeS <= 0;
 		end
 	endcase
 	end //end reset else.
