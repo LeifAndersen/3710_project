@@ -10,31 +10,22 @@
 `define %SP %13
 `define %FP %14
 `define VGA 16383
+`define LCD 16376
+
 # stack starts at 11264 (this is the top of memory, be careful)
 
 Main:
-	mov %SP, 0x2B
-	lsh %SP, 8
-	or %SP, 0xFF
+	mov %SP, 0x2BFF
 	mov %FP, %SP
 	mov %0, 0
 	call function
-	# change buffers
-	add %0, 0
+	mov [LCD], %SP
 forever:
 	j forever
 
 function:
-	mov %0, 0xDE
-	lsh %0, 8
-	or %0, 0xAD
-	mov [100], %0
-	or %0, 0
-	mov %1, [100]
-	mov %2, 10
-	mov %2, [%2]
+	mov %0, 0xDEAD
 	ret
-	incr %SP
 
 .data
 

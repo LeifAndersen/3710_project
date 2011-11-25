@@ -25,7 +25,6 @@ Main:
 	mov [block+8192], %0
 	mov [block+9216], %0
 	mov [block+10240], %0
-	mov [block+11264], %0
 
 	# mov stuff into one register
 	mov %1, [block]
@@ -57,9 +56,6 @@ Main:
 	lsh %1, 1
 	or  %1, %2
 	mov %2, [block+10240]
-	lsh %1, 1
-	or  %1, %2
-	mov %2, [block+11264]
 	lsh %1, 1
 	or  %1, %2
 

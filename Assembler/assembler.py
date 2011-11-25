@@ -86,6 +86,10 @@ def duplicate_label(tokens):
 	print "\nError: Duplicate label \"" + tokens[0] + "\" on line " + tokens[1]
 	exit(1)
 
+def no_such_label(tokens):
+	print "\nError: Reference to non-existent label \"" + tokens[1] + "\" on line " + tokens[2]
+	exit(1)
+
 # truncates number to the bottom 'bits' bits.
 def truncate_bits(num, bits):
 	return num % 2**bits
@@ -202,7 +206,7 @@ def parse(infile_str, outfile_str):
 				# normal jumps and call
 				if len(tokens) == 2 or (len(tokens) > 2 and tokens[2][0] == "#"):
 					# push jumps and calls directly, don't encode on first pass (only first two tokens)
-					first_pass_queue.append(tokens[0] + " " + tokens[1])
+					first_pass_queue.append(tokens[0] + " " + tokens[1] + " " + str(line_num))
 					# nop after jump
 					first_pass_queue.append(str(hex(0)))
 					continue
@@ -342,7 +346,7 @@ def parse(infile_str, outfile_str):
 									first_pass_queue.append(str(hex(0)))
 									first_pass_queue.append(str(hex((trim_reg(tokens[1]) << 8) + (OP_CODES["MOVR"] << 4) + 15)))
 								else:
-									first_pass_queue.append("MOVMRI" + " " + tokens[2][1:-1])
+									first_pass_queue.append("MOVMRI" + " " + tokens[2][1:-1] + " " + str(line_num))
 									first_pass_queue.append(str(hex(0)))
 									first_pass_queue.append(str(hex((trim_reg(tokens[1]) << 8) + (OP_CODES["MOVR"] << 4) + 15)))
 				elif tokens[1][0] == '[':
@@ -364,7 +368,7 @@ def parse(infile_str, outfile_str):
 									first_pass_queue.append(encode_14_Bit_Imm_instruction(["MOVRMI", tokens[1][1:-1]]))
 								else:
 									first_pass_queue.append(str(hex((15 << 8) + (OP_CODES["MOVR"] << 4) + trim_reg(tokens[2]))))
-									first_pass_queue.append("MOVRMI" + " " + tokens[1][1:-1])
+									first_pass_queue.append("MOVRMI" + " " + tokens[1][1:-1] + " " + str(line_num))
 				else: # Other MOV: MOV %R, %R and MOV %R, Imm
 					if tokens[1][0] == "%" and tokens[2][0] == "%":
 						# push this
@@ -450,38 +454,41 @@ def parse(infile_str, outfile_str):
 		# go.
 		# call encode_14_Bit_Imm_instruction() on calls and encode_jumps() on jumps (lines with more than one token)
 		if len(tokens) > 1:
-			if tokens[0] == "CALL":
-				# encode call and save to instruction stream with label address
-				outfile.write(encode_14_Bit_Imm_instruction([tokens[0], str(labels[tokens[1]])])[2:] + "\n")
-			elif tokens[0][0] == "J":
-				# encode jump and save
-				outfile.write(encode_jumps([tokens[0], str(labels[tokens[1]])])[2:] + "\n")
-			elif tokens[0] == "MOVMRI" or tokens[0] == "MOVRMI":
-				# encode mov label value to register
-				# label must come before +
-				label = (tokens[1].split("+"))[0]
-				aritheval = tokens[1].replace(label, str(labels[label]))
-				outfile.write(encode_14_Bit_Imm_instruction([tokens[0], str(eval(aritheval))])[2:] + "\n")
-			else:
-				if labels[tokens[2]] > 256:
-					# mov, lsh, or to get large immediate
-					tokens[0] = "MOVR"
-					labelval = labels[tokens[2]]
-					# move top in
-					tokens[2] = str(truncate_bits((labelval >> 8), 8))
-					outfile.write(encode_Imm_to_R_instruction(tokens)[2:] + "\n")
-					# left shift 8
-					tokens[0] = "LSH"
-					tokens[2] = "8"
-					outfile.write(encode_Imm_to_R_instruction(tokens)[2:] + "\n")
-					# or with bottom
-					tokens[0] = "OR"
-					tokens[2] = str(truncate_bits(labelval, 8))
-					outfile.write(encode_Imm_to_R_instruction(tokens)[2:] + "\n")
+			try:
+				if tokens[0] == "CALL":
+					# encode call and save to instruction stream with label address
+					outfile.write(encode_14_Bit_Imm_instruction([tokens[0], str(labels[tokens[1]])])[2:] + "\n")
+				elif tokens[0][0] == "J":
+					# encode jump and save
+					outfile.write(encode_jumps([tokens[0], str(labels[tokens[1]])])[2:] + "\n")
+				elif tokens[0] == "MOVMRI" or tokens[0] == "MOVRMI":
+					# encode mov label value to register
+					# label must come before +
+					label = (tokens[1].split("+"))[0]
+					aritheval = tokens[1].replace(label, str(labels[label]))
+					outfile.write(encode_14_Bit_Imm_instruction([tokens[0], str(eval(aritheval))])[2:] + "\n")
 				else:
-					tokens[0] = "MOVR"
-					tokens[2] = str(labels[tokens[2]])
-					outfile.write(encode_Imm_to_R_instruction(tokens)[2:] + "\n")
+					if labels[tokens[2]] > 256:
+						# mov, lsh, or to get large immediate
+						tokens[0] = "MOVR"
+						labelval = labels[tokens[2]]
+						# move top in
+						tokens[2] = str(truncate_bits((labelval >> 8), 8))
+						outfile.write(encode_Imm_to_R_instruction(tokens)[2:] + "\n")
+						# left shift 8
+						tokens[0] = "LSH"
+						tokens[2] = "8"
+						outfile.write(encode_Imm_to_R_instruction(tokens)[2:] + "\n")
+						# or with bottom
+						tokens[0] = "OR"
+						tokens[2] = str(truncate_bits(labelval, 8))
+						outfile.write(encode_Imm_to_R_instruction(tokens)[2:] + "\n")
+					else:
+						tokens[0] = "MOVR"
+						tokens[2] = str(labels[tokens[2]])
+						outfile.write(encode_Imm_to_R_instruction(tokens)[2:] + "\n")
+			except KeyError:
+				no_such_label(tokens)
 		else:
 			# remove 0x
 			outfile.write(instruction[2:] + "\n")
