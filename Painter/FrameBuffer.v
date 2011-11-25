@@ -37,9 +37,11 @@ reg state;
 
 reg[14:0] bufferWrtPtr;
 reg[14:0] bufferRdPtr;
+wire[12:0] sbufferRdPtr = rdPtr - 13440;
 reg bufferWe; //regular buffer wrt enable.
 reg bufferWeS; //special buffer wrt enable.
 reg[2:0] ddataIn; //Delayed data in by 1 clock to match with the 1 clock delay on we and wrtPtr.
+
 
 wire R;
 wire G;
@@ -88,16 +90,12 @@ begin
 	end //end reset else.
 end
 
+reg delay;
+reg delayState;
 //All read logic in here.
-always@(posedge vgaClk)
+always@(*)
 begin
-	if (reset)
-	begin
-		color <= 0;
-	end
-	else begin
-
-	case(state)	
+	case(state)
 		frontLow:
 		begin
 			bufferRdPtr <= rdPtr;
@@ -108,8 +106,11 @@ begin
 		begin
 			if (rdPtr >= 13440) //Special buffer, part of high buffer, begins at 36800, and right now rdPtr already is at 19200. 32640 - 19200 = 13440 is end of regular buffer.
 			begin
-				bufferRdPtr <= rdPtr - 13440;
-				color <= S;
+				bufferRdPtr <= rdPtr + 19200;
+				if (delayState && rdPtr == 13440)
+					color <= {R,G,B};
+				else
+					color <= S; //This switch should be delayed a cycle.
 			end
 			else
 			begin
@@ -117,10 +118,43 @@ begin
 				color <= {R, G, B};
 			end
 		end
+		
+		default:
+		begin
+			bufferRdPtr <= 0;
+			color <= 0;
+		end
 	endcase
-	end //end reset else.
 end
-	 
+
+always@(posedge vgaClk)
+begin
+	if (reset)
+	begin
+		delayState <= 1;
+	end
+else begin
+	if (rdPtr == 13440)
+		delayState <= 0;
+//	begin
+//		case(delayState)
+//		1:
+//		begin
+//			delayState <= 0;
+//		end
+//		0:
+//		begin
+//			delayState <= 1;
+//		end
+//		endcase
+//	end
+	else
+	begin
+		delayState <= 1;
+	end
+end
+end
+
 DCBlockRam #(.DATA(1),.ADDR(15),.SIZE(32768),.FILE("initR.txt")) redBuffer(  //115 horizontal lines of pixels, out of the full 120.
 	.clka(clk),
 	.clkb(vgaClk), //VGA reads at 25Mhz.
@@ -166,7 +200,7 @@ DCBlockRam #(.DATA(3),.ADDR(13),.SIZE(5760),.FILE("initS.txt")) specialBuffer(  
 	.wea(bufferWeS),
 	.web(1'b0),
 	.addra(bufferWrtPtr[12:0]), //Which pixels to write to (3 instead of 1 at a time here), determined by painter.
-	.addrb(bufferRdPtr[12:0]), //Which pixel to read from (all 3 come from this buffer instead of 3 separate buffers), determined by vga.
+	.addrb(sbufferRdPtr[12:0]), //Which pixel to read from (all 3 come from this buffer instead of 3 separate buffers), determined by vga.
 	.dina(ddataIn),
 	.dinb(3'b0),
 	//.douta(0),
