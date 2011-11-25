@@ -17,10 +17,15 @@ and %5, %5
 and %5, %5
 and %5, %5
 
-mov %1, 2
+mov %5, 0xFFFF
+
+mov [VGA], %5
+mov [VGA], %5
+
+mov %1, 1
 mov %2, 120
 lsh %2, 3
-add %2, 2
+add %2, 1
 mov %3, 0x9F
 mov %4, 0xFF
 lsh %4, 8
