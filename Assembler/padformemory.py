@@ -51,7 +51,6 @@ def pad(infile_str, size, prefix):
 			n += 1
 			outfile = outfiles[n]
 		outfile.write("0\n")
-		ramfile.write("00000\n")
 		line_num += 1
 		filepos += 1
 		print_percentage(100 * line_num/float(line_count))
