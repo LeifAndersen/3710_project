@@ -206,7 +206,7 @@ module Top(
 	// lcd register
 	Register16 lcdReg(reset, CLK_25MHZ, lcd_en, lcd_data, lcdreg_to_lcd);
 	// lcd controller
-	lcd_ctrl lcdctrl(CLK_50MHZ, reset, lcdreg_to_lcd, SF_D, LCD_E, LCD_RS, LCD_RW);
+	lcd_ctrl lcdctrl(CLK_25MHZ, reset, lcdreg_to_lcd, SF_D, LCD_E, LCD_RS, LCD_RW);
 	
 	// draw unit
 	DrawUnit drawunit(.clk(CLK_25MHZ), .vgaClk(CLK_25MHZ), .clk2x(CLK_100MHZ), .clk6x(CLK_300MHZ), .reset(reset), .we(pram_wr_en),	.dataIn(pram_out), .full(full), .color(color), .hsync(hsync), .vsync(vsync));

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="C:/Users/jhparker/3710/CPU/testdatapath_isim_beh.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="testdatapath" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="22" />
+   <wvobject fp_name="/testdatapath/color" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">color[2:0]</obj_property>
+      <obj_property name="ObjectShortName">color[2:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/hsync" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">hsync</obj_property>
+      <obj_property name="ObjectShortName">hsync</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/vsync" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">vsync</obj_property>
+      <obj_property name="ObjectShortName">vsync</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/SF_D" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">SF_D[11:8]</obj_property>
+      <obj_property name="ObjectShortName">SF_D[11:8]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/LCD_E" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">LCD_E</obj_property>
+      <obj_property name="ObjectShortName">LCD_E</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/LCD_RS" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">LCD_RS</obj_property>
+      <obj_property name="ObjectShortName">LCD_RS</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/LCD_RW" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">LCD_RW</obj_property>
+      <obj_property name="ObjectShortName">LCD_RW</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/BTN_NORTH" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">BTN_NORTH</obj_property>
+      <obj_property name="ObjectShortName">BTN_NORTH</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/inCLK_50MHZ" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">inCLK_50MHZ</obj_property>
+      <obj_property name="ObjectShortName">inCLK_50MHZ</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/PS2_CLK" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">PS2_CLK</obj_property>
+      <obj_property name="ObjectShortName">PS2_CLK</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/PS2_DATA" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">PS2_DATA</obj_property>
+      <obj_property name="ObjectShortName">PS2_DATA</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/drawunit/vga_controller/pixCount" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">pixCount[9:0]</obj_property>
+      <obj_property name="ObjectShortName">pixCount[9:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/drawunit/vga_controller/line" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">line[8:0]</obj_property>
+      <obj_property name="ObjectShortName">line[8:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/drawunit/vga_controller/offset" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">offset[9:0]</obj_property>
+      <obj_property name="ObjectShortName">offset[9:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/drawunit/framebuffer/bufferRdPtr" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">bufferRdPtr[14:0]</obj_property>
+      <obj_property name="ObjectShortName">bufferRdPtr[14:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/drawunit/framebuffer/S" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">S[2:0]</obj_property>
+      <obj_property name="ObjectShortName">S[2:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/drawunit/framebuffer/color" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">color[2:0]</obj_property>
+      <obj_property name="ObjectShortName">color[2:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/drawunit/framebuffer/R" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">R</obj_property>
+      <obj_property name="ObjectShortName">R</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/drawunit/framebuffer/G" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">G</obj_property>
+      <obj_property name="ObjectShortName">G</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/drawunit/framebuffer/B" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">B</obj_property>
+      <obj_property name="ObjectShortName">B</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/drawunit/framebuffer/sbufferRdPtr" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">sbufferRdPtr[12:0]</obj_property>
+      <obj_property name="ObjectShortName">sbufferRdPtr[12:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/drawunit/framebuffer/rdPtr" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">rdPtr[14:0]</obj_property>
+      <obj_property name="ObjectShortName">rdPtr[14:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+</wave_config>

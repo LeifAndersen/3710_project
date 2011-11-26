@@ -13,10 +13,11 @@ def print_percentage(percentage):
 		sys.stdout.write("\b\b\b\b\b")
 	sys.stdout.write("%d%%]" % (percentage) )
 
-def pad(infile_str, size):
+def pad(infile_str, size, prefix):
 	infile = open(infile_str, 'r')
 
 	outfiles = []
+	ramfile = open(prefix + "/../CPU/ram.mem", 'w')
 	for i in range(0, int(size) / 1024):
 		outfiles.append(open("init" + str(i) + ".txt", 'w'))
 
@@ -37,6 +38,7 @@ def pad(infile_str, size):
 			outfile = outfiles[n]
 		if len(line) > 0:
 			outfile.write(line)
+			ramfile.write(line.zfill(6))
 			size -= 1
 		line_num += 1
 		filepos += 1
@@ -57,6 +59,7 @@ def pad(infile_str, size):
 	sys.stdout.write("\n")
 
 	infile.close()
+	ramfile.close()
 	for i in range(0, int(size) / 1024):
 		outfiles[i].close()
 

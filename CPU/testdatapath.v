@@ -34,6 +34,10 @@ module testdatapath;
 	wire[2:0] color;
 	wire hsync;
 	wire vsync;
+    wire [11:8] SF_D;
+    wire LCD_E;
+    wire LCD_RS;
+    wire LCD_RW;
 
 	// Instantiate the Unit Under Test (UUT)
 	Top uut (
@@ -43,7 +47,11 @@ module testdatapath;
 		.PS2_DATA(PS2_DATA),
 		.color(color),
 		.hsync(hsync),
-		.vsync(vsync)
+		.vsync(vsync),
+		.SF_D(SF_D),
+		.LCD_E(LCD_E),
+		.LCD_RS(LCD_RS),
+		.LCD_RW(LCD_RW)
 	);
 	
 	always begin

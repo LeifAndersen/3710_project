@@ -20,11 +20,11 @@ Main:
 	mov [block+3072], %0
 	mov [block+4096], %0
 	mov [block+5120], %0
+	mov [block+6144], %0
 	mov [block+7168], %0
 	mov [block+8192], %0
 	mov [block+9216], %0
 	mov [block+10240], %0
-	mov [block+11264], %0
 
 	# mov stuff into one register
 	mov %1, [block]
@@ -43,6 +43,9 @@ Main:
 	mov %2, [block+5120]
 	lsh %1, 1
 	or  %1, %2
+	mov %2, [block+6144]
+	lsh %1, 1
+	or  %1, %2
 	mov %2, [block+7168]
 	lsh %1, 1
 	or  %1, %2
@@ -53,9 +56,6 @@ Main:
 	lsh %1, 1
 	or  %1, %2
 	mov %2, [block+10240]
-	lsh %1, 1
-	or  %1, %2
-	mov %2, [block+11264]
 	lsh %1, 1
 	or  %1, %2
 

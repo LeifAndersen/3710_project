@@ -12,18 +12,20 @@ and %5, %5
 and %5, %5
 
 #Set up to draw color 2 to backbuffer.
-mov LC, 2
+infinite:
+
+mov LC, 6
 mov LL, 120
 lsh LL, 3
-add LL, 2
+add LL, 6
 mov LR, 0x9F
 mov SWAP, 0xFF
 lsh SWAP, 8
 add SWAP, 0xFF
 
 #Swap first, test writing to low values.
-#mov [VGA], SWAP
-#mov [VGA], SWAP
+mov [VGA], SWAP
+mov [VGA], SWAP
 
 #Loop til entire back buffer filled.
 loop:
@@ -36,7 +38,18 @@ jne loop
 mov [VGA], SWAP
 mov [VGA], SWAP
 
-infinite:
+mov LC, 7
+mov LL, 120
+lsh LL, 3
+add LL, 7
+
+loop2:
+mov [VGA], LC
+mov [VGA], LR
+add LC, 8
+cmp LC, LL
+jne loop2
+
 j infinite
 
 

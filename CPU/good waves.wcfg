@@ -3,14 +3,14 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="U:/3710/3710/CPU/testdatapath_isim_beh.wdb" id="1" type="auto">
+      <db_ref path="C:/Users/Daniel/3710/CPU/testdatapath_isim_beh.wdb" id="1" type="auto">
          <top_modules>
             <top_module name="glbl" />
             <top_module name="testdatapath" />
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="11" />
+   <WVObjectSize size="12" />
    <wvobject fp_name="group121" type="group">
       <obj_property name="label">Globals</obj_property>
       <obj_property name="DisplayName">label</obj_property>
@@ -46,6 +46,22 @@
       <wvobject fp_name="/testdatapath/uut/ret" type="logic" db_ref_id="1">
          <obj_property name="ElementShortName">ret</obj_property>
          <obj_property name="ObjectShortName">ret</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/SF_D" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">SF_D[11:8]</obj_property>
+         <obj_property name="ObjectShortName">SF_D[11:8]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/LCD_E" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">LCD_E</obj_property>
+         <obj_property name="ObjectShortName">LCD_E</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/LCD_RS" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">LCD_RS</obj_property>
+         <obj_property name="ObjectShortName">LCD_RS</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/LCD_RW" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">LCD_RW</obj_property>
+         <obj_property name="ObjectShortName">LCD_RW</obj_property>
       </wvobject>
    </wvobject>
    <wvobject fp_name="group122" type="group">
@@ -415,9 +431,17 @@
          <obj_property name="ElementShortName">memWriteEn</obj_property>
          <obj_property name="ObjectShortName">memWriteEn</obj_property>
       </wvobject>
+      <wvobject fp_name="/testdatapath/uut/pram_wr_en" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">pram_wr_en</obj_property>
+         <obj_property name="ObjectShortName">pram_wr_en</obj_property>
+      </wvobject>
       <wvobject fp_name="/testdatapath/uut/memReadP" type="logic" db_ref_id="1">
          <obj_property name="ElementShortName">memReadP</obj_property>
          <obj_property name="ObjectShortName">memReadP</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MemCtrl/LCDReg_Wr_En" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">LCDReg_Wr_En</obj_property>
+         <obj_property name="ObjectShortName">LCDReg_Wr_En</obj_property>
       </wvobject>
       <wvobject fp_name="/testdatapath/uut/memWriteBus" type="array" db_ref_id="1">
          <obj_property name="ElementShortName">memWriteBus[15:0]</obj_property>
@@ -479,6 +503,10 @@
       <wvobject fp_name="/testdatapath/uut/MainMemory/web" type="logic" db_ref_id="1">
          <obj_property name="ElementShortName">web</obj_property>
          <obj_property name="ObjectShortName">web</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MemCtrl/Main_Data_Wr_En" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">Main_Data_Wr_En</obj_property>
+         <obj_property name="ObjectShortName">Main_Data_Wr_En</obj_property>
       </wvobject>
       <wvobject fp_name="/testdatapath/uut/MainMemory/addra" type="array" db_ref_id="1">
          <obj_property name="ElementShortName">addra[13:0]</obj_property>
@@ -676,6 +704,56 @@
       <wvobject fp_name="/testdatapath/uut/memAddrBusF" type="array" db_ref_id="1">
          <obj_property name="ElementShortName">memAddrBusF[13:0]</obj_property>
          <obj_property name="ObjectShortName">memAddrBusF[13:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group152" type="group">
+      <obj_property name="label">LCD</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="divider153" type="divider">
+         <obj_property name="label">LCD</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="BkColor">128 128 255</obj_property>
+         <obj_property name="TextColor">230 230 230</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/lcd_en" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">lcd_en</obj_property>
+         <obj_property name="ObjectShortName">lcd_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MemCtrl/LCDReg_Wr_En" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">LCDReg_Wr_En</obj_property>
+         <obj_property name="ObjectShortName">LCDReg_Wr_En</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/lcd_data" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">lcd_data[15:0]</obj_property>
+         <obj_property name="ObjectShortName">lcd_data[15:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/lcdreg_to_lcd" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">lcdreg_to_lcd[15:0]</obj_property>
+         <obj_property name="ObjectShortName">lcdreg_to_lcd[15:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/lcdReg/reset" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">reset</obj_property>
+         <obj_property name="ObjectShortName">reset</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/lcdReg/clk" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">clk</obj_property>
+         <obj_property name="ObjectShortName">clk</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/lcdReg/en" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">en</obj_property>
+         <obj_property name="ObjectShortName">en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/lcdReg/D" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">D[15:0]</obj_property>
+         <obj_property name="ObjectShortName">D[15:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/lcdReg/Q" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">Q[15:0]</obj_property>
+         <obj_property name="ObjectShortName">Q[15:0]</obj_property>
          <obj_property name="Radix">HEXRADIX</obj_property>
       </wvobject>
    </wvobject>

@@ -141,7 +141,7 @@ begin
 				default:
 				begin
 					//When to request color from memory:
-					if (pixCount >= Tbp_Tpw-3 && pixCount < Tbp_Tpw_Tdisp-3 && Henable)
+					if (pixCount >= Tbp_Tpw-1 && pixCount < Tbp_Tpw_Tdisp-1 && Henable)
 						begin
 							//fbAddr <= fbAddr + 1;
 							offset <= offset + 1;

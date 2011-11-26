@@ -32,7 +32,7 @@ def main():
 	print "\nAssembling " + filenameparts[0] + ".pp" + "",
 	assembler.parse(assemblyfile, objectfile)
 	print "\nPadding " + filenameparts[0] + ".o for memory of size " + str(size),
-	padformemory.pad(objectfile, size)
+	padformemory.pad(objectfile, size, dirname(sys.argv[0]))
 
 if __name__ == '__main__':
 	main()
