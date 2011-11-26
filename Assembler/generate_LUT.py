@@ -10,7 +10,7 @@ def two_to_the(x):
 
 def main():
 	sys.stdout.write("sine_lut:\n")
-	for x in range(0, size + 1):
+	for x in range(0, size):
 		y = math.sin((math.pi * x )/ float(2 * size))
 		sys.stdout.write("00")
 		for j in map(two_to_the, range(1, 15)):
@@ -20,6 +20,8 @@ def main():
 			else:
 				sys.stdout.write("0")
 		sys.stdout.write("\n")
+		sys.stdout.write("0100000000000000\n")
+
 	sys.stdout.write("\ndiv_lut:\n")
 	sys.stdout.write("0000000000000000\n")
 	sys.stdout.write("0100000000000000\n")
