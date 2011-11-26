@@ -39,73 +39,78 @@ main:
 
 mainNewPlayer:
 	mov %0, 0
-	mov [PLAYER_SCORE], %0
-	mov [PLAYER_X], %0
-	mov [PLAYER_Y], %0
-	mov [PLAYER_THETA], %0
 	mov [PLAYER_BULLET_TIME], %0
-	mov [AI_X], %0
-	mov [AI_Y], %0
-	mov [AI_THETA], %0
 	mov [AI_BULLET_TIME], %0
+	mov [PLAYER_SCORE], %0
+	mov %0, [PLAYER_START_X]
+	mov [PLAYER_X], %0
+	mov %0, [PLAYER_START_Y]
+	mov [PLAYER_Y], %0
+	mov %0, [PLAYER_START_THETA]
+	mov [PLAYER_THETA], %0
+	mov %0, [AI_START_X]
+	mov [AI_X], %0
+	mov %0, [AI_START_Y]
+	mov [AI_Y], %0
+	mov %0, [AI_START_THETA]
+	mov [AI_THETA], %0
 	mov %0, 5
 	mov [PLAYER_LIVES], %0
 
 mainLoop:
 	# Check Inputs
 	# Left/Right, update theta
-	mov %3, [PLAYER_THETA]
-	mov %4, [LEFT_KEY]
-	mov %5, [RIGHT_KEY]
-	sub %4, %5
-	add %3, %4
-
+	mov %2, [LEFT_KEY]
+	mov %3, [RIGHT_KEY]
+	mov %4, [PLAYER_THETA]
+	sub %2, %3
+	add %4, %2              # %4 has the theta change
+	
 	# Up/Down, update x/y
-	mov %4, [PLAYER_X]
-	mov %5, [PLAYER_Y]
-	mov %6, [UP_KEY]
-	mov %7, [DOWN_KEY]
-	sub %6, %7         # Up-Down now in %6
-	mov %1, %3         #
-	call sin           # %1 has sin(theta)
-	mov %HIGH, %1      # %HIGH has sin(theta)
-	mul %HIGH, %6      #
-	add %4, %LOW       # Player X now updated by the move amount
-	                   #
-	mov %1, %3         #
-	call cos           # %1 has cos(theta)
-	mov %HIGH, %1      #
-	mul %HIGH, %6      # %LOW/HIGH has (UP-DOWN)*cos(theta)
-	add %5, %LOW
-
+	mov %2, [PLAYER_X]
+	mov %3, [PLAYER_Y]
+	mov %5, [UP_KEY]
+	mov %6, [DOWN_KEY]
+	sub %5, %6             # Up-Down now in %6
+	mov %0, %4             #
+	call sin               # %1 has sin(theta)
+	mov %HIGH, %0          # %HIGH has sin(theta)
+	mul %HIGH, %5          #
+	add %2, %LOW           # Player X now updated by the move amount
+	                       #
+	mov %0, %4             #
+	call cos               # %1 has cos(theta)
+	mov %HIGH, %0          #
+	mul %HIGH, %5          # %LOW/HIGH has (UP-DOWN)*cos(theta)
+	add %4, %LOW
+	mov [PLAYER_THETA], %4 # Save the theta
+	
 	# TODO Move only when AI not in the way
-
+	
 	# -------------------------------
 	# Move AI
-	mov %6, [AI_THETA]
-	mov %7, [AI_X]
-	mov %8, [AI_Y]
-
+	mov %5, [AI_THETA]
+	mov %6, [AI_X]
+	mov %7, [AI_Y]
+	
 	# -------------------------------
 	# Move bullet
-
+	
 	# Bullet collide against anything?
-
+	
 	# Store Final Values
-	mov [PLAYER_THETA], %3
-	mov [PLAYER_X], %4
-	mov [PLAYER_Y], %5
-	mov [AI_THETA], %6
-	mov [AI_X], %7
-	mov [AI_Y], %8
-
+	mov [PLAYER_X], %3
+	mov [PLAYER_Y], %4
+	mov [AI_X], %6
+	mov [AI_Y], %7
+	
 	# Reset keyboard counters
-
+	
 	# -------------------------------
 	# For each triangle, do this, although unless it's an enimy tank, you can skip the AI step.
-
+	
 	# Get Projection Matrix Based on Players Position
-
+	
 	# Multiply this by world matrix
 
 	# Mutiply AI tank matrix by outputted matrix
@@ -141,15 +146,15 @@ mainEnd:
 	pop $0
 	ret
 
-# Take a number in the $1 reg, return the sin of that number into the $1 reg
+# Take a number in the $0 reg, return the sin of that number into the $0 reg
 sin:
 	ret
 
-# Take a number in the $1 reg, return the cos of that number into the $1 reg
+# Take a number in the $0 reg, return the cos of that number into the $0 reg
 cos:
 	ret
 
-# Take numerator in $1, denominator in $2, return numerator/denominator in $1
+# Take numerator in $0, denominator in $1, return numerator/denominator in $0
 div:
 	ret
 
@@ -167,6 +172,9 @@ PLAYER_START_Y:
 10
 
 PLAYER_THETA:
+0
+
+PLAYER_START_THETA:
 0
 
 PLAYER_RADIUS:
@@ -224,6 +232,9 @@ AI_START_X:
 10
 
 AI_START_Y:
+10
+
+AI_START_THETA:
 10
 
 sine_lut:
