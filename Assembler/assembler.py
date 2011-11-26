@@ -489,6 +489,8 @@ def parse(infile_str, outfile_str):
 						outfile.write(encode_Imm_to_R_instruction(tokens)[2:] + "\n")
 			except KeyError:
 				no_such_label(tokens)
+			except:
+				exit(1)
 		else:
 			# remove 0x
 			outfile.write(instruction[2:] + "\n")
