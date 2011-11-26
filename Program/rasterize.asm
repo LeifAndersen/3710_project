@@ -15,10 +15,11 @@
 `define ebx %2
 `define ecx %3
 `define edx %4
-`define eex %5
-`define temp1 %6
-`define temp2 %7
-`define yval %8
+`define xrefleft %5
+`define xrefright %6
+`define temp1 %7
+`define temp2 %8
+`define yval %9
 
 mov SP, 0x2b #initialize stack
 lsh SP, 8
@@ -94,23 +95,38 @@ ret
 #ydifleft = y2-y1
 #ydifright = y3-y1
 #This works until yvalue == y2 || yvalue == y3.
-#x for given yvalue, x = xref + (ydif-yvalue)*(1/ydif)*xdif.
+#x for given yvalue, x = xref + (yvalue)*(1/ydif)*xdif.
 
 #Percolate loop:
-mov yval, [points+2] #Move smallest y-value into line.
-mov eax, [points+1] #Move xref into eax
+mov yval, [points+2] #Initialize loop counter -- Move smallest y-value into line.
+
+#First check if yval == y2 || yval == y3
+mov eax, [points+4]
+cmp eax, yval #cmp with y2
+jne y3cmp
+
+y3cmp:
+mov eax, [points+6]
+cmp eax, yval #cmp with y2
+jne nochange
+
+nochange:
+
+mov temp1, [points+1] #Move xref into eax
 mov ebx, [points+3] #Move x2 into eax
-sub ebx, eax #ebx = xdifleft.
+sub ebx, temp1 #ebx = xdifleft.
 mov ecx, [points+2] #y1
 mov edx, [points+4] #y2
 sub edx, ecx #ydifleft.
-mov ecx, edx
-sub ecx, yval #ecx = ydifleft-yvalue
-add edx, slopes
+
+mov %10, slopes
+add edx, %10
 mov edx, [edx] #edx = 1/ydifleft
-fmul ecx, edx #ecx = (ydif-yvalue)*(1/ydif)
-mul ecx, ebx #since result is within -160 to 160, LOW has entire result.
-add eax, LOW #eax = x for given yvalue, x = xref + (ydif-yvalue)*(1/ydif)*xdif = left index to give to painter.
+fmul edx, yval #edx = (yvalue)*(1/ydif)
+mul edx, ebx #since result is within -160 to 160, LOW has entire result. (yvalue)*(1/ydif) * xdif
+add temp1, LOW #temp1 = x for given yvalue, x = xref + (yvalue)*(1/ydif)*xdif = left index to give to painter.
+
+
 
 
 #If yvalue == y2
@@ -119,9 +135,9 @@ add eax, LOW #eax = x for given yvalue, x = xref + (ydif-yvalue)*(1/ydif)*xdif =
 #ydifleft = y3-y2 
 
 #If yvalue == y3
-#xrefleft = x2
-#xdifleft = x3-x2
-#ydifleft = y3-y2 
+#xrefright = x3
+#xdifright = x3-x2
+#ydifright = y3-y2 
 
 #Increment yvalue til it hits the highest one, then done.
 
@@ -146,3 +162,8 @@ points:
 4
 64
 17
+
+slopes:
+0
+0
+0
