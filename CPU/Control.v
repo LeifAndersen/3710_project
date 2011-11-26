@@ -356,7 +356,7 @@ module Control(
 		else if (instType == S14I) begin
 			FlagWrite       <= 0;
 			ALUOp           <= 4'd0;
-			DestSel         <= 15;
+			DestSel         <= 4'd15;
 			BuffCtrl[1]	    <= 1;
 			BuffCtrl[0]	    <= 0;
 			BuffCtrl[7:2]   <= 6'd0;
