@@ -6,63 +6,112 @@
 #
 # Writes lines out to PRAM.
 
-'define VGA 1638
-'define SP %13
-'define FP %14
-'define LOW %11
-'define HIGH %12
-'define eax %1
-'define ebx %2
-'define ecx %3
-'define edx %4
+`define VGA 1638
+`define SP %13
+`define FP %14
+`define LOW %11
+`define HIGH %12
+`define eax %1
+`define ebx %2
+`define ecx %3
+`define edx %4
+`define eex %5
+`define temp1 %6
+`define temp2 %7
+`define yval %8
 
 mov SP, 0x2b #initialize stack
 lsh SP, 8
 or SP, 0xff
 mov FP, SP
 
-add SP, 20
-mov eax, FP
-mov [eax], 0x2 #Triangle goes color, xy1, xy2, xy3  This is (3,3),(64,17),(34,64)
-#p1
-inc eax
-mov [eax] 0x3
-inc eax
-mov [eax] 0x3
-#p2
-inc eax
-mov [eax] 0x40
-inc eax
-mov [eax] 0x11
-#p3
-inc eax
-mov [eax] 0x22
-inc eax
-mov [eax] 0x40
 
+#Pass in a pointer to a triangle in memory.
+mov eax, points
 
-#Prefunction set-up: Make a test-triangle for funsies.
-mov %1 
+call rasterize
 
+infinite:
+j infinite
+
+rasterize:
 # Step one: Determine lowest point and percolate up the two edges connecting to it.
 # Possible cases:
 #   One lowest point (normal)
 #   Two lowest point (horizontal bottom)
-#   Three lowers points (horizontal line of pixels)
+#   Three lowest points (horizontal line of pixels)
 
+#For lookup table, must map ydif to 1/ydif. ydif has 120 possible values.
 
-
-#For lookup table, must map ydif to 1/ydif. ydif has 160 possible values.
-#x for given yvalue, x = xref + (ydif-yvalue)*(1/ydif)*xdif.
 
 #Sort points by y value, smallest first, biggest last.
-#Now sort biggest 2 points by x-value, lowest first, then highest.
+
+mov FP, SP
+mov temp1, [points+2]
+mov temp2, [points+4]
+
+cmp temp1, temp2
+jg temp2, temp1, dontswap
+mov [points+2], temp2 # Swap y-coords
+mov [points+4], temp1
+mov temp1, [points+1] # Load x-coords
+mov temp2, [points+3]
+mov [points+1], temp2 # Swap x-coords
+mov [points+3], temp1
+dontswap: #now ebx holds the smaller y-coord of first two points
+
+mov temp1, [points+2]
+mov temp2, [points+6]
+cmp temp1, temp2
+jg temp2, temp1, dontswap2
+mov [points+2], temp2
+mov [points+6], temp1
+mov temp1, [points+1] # Load x-coords
+mov temp2, [points+5]
+mov [points+1], temp2 # Swap x-coords
+mov [points+5], temp1
+dontswap2: #now ebx holds the smallest y-coord
+
+#Now sort last 2 points by x-value, lowest first, then highest.
+
+mov temp1, [points+3]
+mov temp2, [points+5]
+cmp temp1, temp2 #compare x values of other two points
+jg temp1, temp2, dontswap3
+mov [points+3], temp2
+mov [points+5], temp1
+mov temp1, [points+4] # Load x-coords
+mov temp2, [points+6]
+mov [points+4], temp2 # Swap x-coords
+mov [points+6], temp1
+dontswap3: #Now points are sorted so first is lowest y-value, second is highest x-value of remaining two.
+
+ret
+
 #Now xrefleft = xrefright = x1
 #xdifleft = x2 - xref.
 #xdifright = x3-xref.
-#ydifleft = y2-y1 
+#ydifleft = y2-y1
 #ydifright = y3-y1
 #This works until yvalue == y2 || yvalue == y3.
+#x for given yvalue, x = xref + (ydif-yvalue)*(1/ydif)*xdif.
+
+#Percolate loop:
+mov yval, [points+2] #Move smallest y-value into line.
+mov eax, [points+1] #Move xref into eax
+mov ebx, [points+3] #Move x2 into eax
+sub ebx, eax #ebx = xdifleft.
+mov ecx, [points+2] #y1
+mov edx, [points+4] #y2
+sub edx, ecx #ydifleft.
+mov ecx, edx
+sub ecx, yval #ecx = ydifleft-yvalue
+add edx, slopes
+mov edx, [edx] #edx = 1/ydifleft
+fmul ecx, edx #ecx = (ydif-yvalue)*(1/ydif)
+mul ecx, ebx #since result is within -160 to 160, LOW has entire result.
+add eax, LOW #eax = x for given yvalue, x = xref + (ydif-yvalue)*(1/ydif)*xdif = left index to give to painter.
+
 
 #If yvalue == y2
 #xrefleft = x2
@@ -86,3 +135,14 @@ mov %1
 # with these values and color, write to the queue.
 # Each time y is incremented, check if y == the y value of one of the points.  If so, that point will form a new line with the third vertice. This
 # creates a funky triangle situation where now the top point is reference instead of bottom.
+
+.data
+
+points:
+2
+34
+65
+3
+4
+64
+17
