@@ -15,8 +15,9 @@
 `define ebx %2
 `define ecx %3
 `define edx %4
-`define xrefleft %5
-`define xrefright %6
+`define eex %0
+`define efx %5
+`define ymax %6
 `define temp1 %7
 `define temp2 %8
 `define yval %9
@@ -97,38 +98,65 @@ ret
 #This works until yvalue == y2 || yvalue == y3.
 #x for given yvalue, x = xref + (yvalue)*(1/ydif)*xdif.
 
-#Percolate loop:
+#Setup for percolate loop:
+#left side
 mov yval, [points+2] #Initialize loop counter -- Move smallest y-value into line.
-
-#First check if yval == y2 || yval == y3
-mov eax, [points+4]
-cmp eax, yval #cmp with y2
-jne y3cmp
-
-y3cmp:
-mov eax, [points+6]
-cmp eax, yval #cmp with y2
-jne nochange
-
-nochange:
-
-mov temp1, [points+1] #Move xref into eax
-mov ebx, [points+3] #Move x2 into eax
+mov temp1, [points+1] #Move xref into temp1
+mov ebx, [points+3] #Move x2 into ebx
 sub ebx, temp1 #ebx = xdifleft.
 mov ecx, [points+2] #y1
 mov edx, [points+4] #y2
 sub edx, ecx #ydifleft.
-
 mov %10, slopes
 add edx, %10
 mov edx, [edx] #edx = 1/ydifleft
-fmul edx, yval #edx = (yvalue)*(1/ydif)
-mul edx, ebx #since result is within -160 to 160, LOW has entire result. (yvalue)*(1/ydif) * xdif
-add temp1, LOW #temp1 = x for given yvalue, x = xref + (yvalue)*(1/ydif)*xdif = left index to give to painter.
 
+#right side
+mov temp2, [points+1] #Move xref into temp2
+mov eax, [points+5] #Move x3 into eax
+sub eax, temp2 #eax = x3-x1 = xdifright.
+mov eex, [points+2] #y1
+mov ecx, [points+4] #y3
+sub ecx, eex # ecx = y3-y1 = ydifright.
+add ecx, %10
+mov ecx, [ecx] #ecx = 1/ydifrigh
 
+<<<<<<< HEAD
+#percolate loop:
 
-
+LineLoop:
+#First check if yval == y2 || yval == y3
+mov eex, [points+4]
+cmp eex, yval #cmp with y2
+jne y3cmp
+	#y2 == yval.
+	mov temp1, [points+3] #temp1 = xrefleft = x2
+	mov ebx, [points+5] #Move x3 into ebx
+	sub ebx, temp1 #ebx = xdifleft = x3 - xref = x3 - x2.	
+	mov edx, [points+6] #edx = y3
+	mov eex, [points+4] #eex = y2
+	sub edx, eex #edx = y3 - y2 = ydifleft
+	mov %10, slopes
+	add edx, %10
+	mov edx, [edx] #edx = 1/ydifleft
+	mov ymax, [points+6]
+y3cmp:
+mov eex, [points+6]
+cmp eex, yval #cmp with y2
+jne nochange
+	#y3 == yval.
+	mov temp2, [points+5] #temp2 = xref = x3
+	mov eax, [points+3] #Move x2 into eax
+	sub eax, temp2 #eax = x2-x3 = xdifright.
+	mov eex, [points+6] #y3
+	mov ecx, [points+4] #y2
+	sub ecx, eex # ecx = y2-y3 = ydifright.
+	mov %10, slopes
+	add ecx, %10
+	mov ecx, [ecx] #ecx = 1/ydifright
+	mov ymax, [points+4] #probably do the check here to see if ymax == [points+4] already, then this triangle has flat buns.
+nochange:
+=======
 #If yvalue == y2
 #xrefleft = x2
 #xdifleft = x3-x2
@@ -140,17 +168,39 @@ add temp1, LOW #temp1 = x for given yvalue, x = xref + (yvalue)*(1/ydif)*xdif = 
 #ydifright = y3-y2
 
 #Increment yvalue til it hits the highest one, then done.
+>>>>>>> d2f689ff986a115f7476e6689d8e3d4b3f5f9d2e
 
-# Step two: Percolate upward and use y value and x distance between two endpoints and the startpoint as index into lookup table.  Then multiply by return.
-# Use x of root point as reference.
-# Two cases to calculate left index:
-# Case 1: reference > other (in which case subtract lookup result from x)
-# Case 2: reference < other (in which case add lookup result from x)
-# Same situation for right index, except its going to be the rightmost line instead of the leftmost.
-# x values of points opposite reference can be use to calculate whose leftmost/rightmost.
-# with these values and color, write to the queue.
-# Each time y is incremented, check if y == the y value of one of the points.  If so, that point will form a new line with the third vertice. This
-# creates a funky triangle situation where now the top point is reference instead of bottom.
+#First vga line-write.
+mov eex, yval
+lsh eex, 3
+mov %10, [points]
+or eex, %10
+mov [VGA], eex
+
+#left
+mov eex, edx #use eex as temp register.
+mul ebx, yval # LOW = xdif * yval (max is 159 * 119 which is within 2^16, even when signed.)
+fmul eex, LOW # edx = (yvalue)*(1/ydif) * xdif
+add eex, temp1 #temp1 = x for given yvalue, x = xref + (yvalue)*(1/ydif)*xdif = left index to give to painter.
+
+#right
+mov %10, ecx #use %10 as temp register.
+mul eax, yval # LOW = xdif * yval (max is 159 * 119 which is within 2^16, even when signed.)
+fmul %10, LOW # edx = (yvalue)*(1/ydif) * xdif
+add %10, temp2 #temp1 = x for given yvalue, x = xref + (yvalue)*(1/ydif)*xdif = left index to give to painter.
+
+#second vga line-write.
+lsh eex, 8
+or eex, %10
+mov [VGA], eex
+
+incr yval
+cmp yval, ymax
+jne LineLoop
+#endloop
+
+infinite2:
+j infinite2
 
 .data
 
