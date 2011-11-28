@@ -6,7 +6,7 @@
 #
 # Writes lines out to PRAM.
 
-`define VGA 1638
+`define VGA 16383
 `define SP %13
 `define FP %14
 `define LOW %11
@@ -32,6 +32,10 @@ mov FP, SP
 mov eax, points
 
 call rasterize
+
+mov eax, 0xffff
+mov [VGA], eax
+mov [VGA], eax
 
 infinite:
 j infinite
@@ -79,16 +83,14 @@ dontswap2: #now ebx holds the smallest y-coord
 mov temp1, [points+3]
 mov temp2, [points+5]
 cmp temp1, temp2 #compare x values of other two points
-jg temp1, temp2, dontswap3
+jl temp1, temp2, dontswap3
 mov [points+3], temp2
 mov [points+5], temp1
 mov temp1, [points+4] # Load x-coords
 mov temp2, [points+6]
 mov [points+4], temp2 # Swap x-coords
 mov [points+6], temp1
-dontswap3: #Now points are sorted so first is lowest y-value, second is highest x-value of remaining two.
-
-ret
+dontswap3: #Now points are sorted so first is lowest y-value, second is lowest x-value of remaining two.
 
 #Now xrefleft = xrefright = x1
 #xdifleft = x2 - xref.
@@ -121,7 +123,8 @@ sub ecx, eex # ecx = y3-y1 = ydifright.
 add ecx, %10
 mov ecx, [ecx] #ecx = 1/ydifrigh
 
-<<<<<<< HEAD
+mov ymax, 0xffff #This should probably be moved elsewhere.
+
 #percolate loop:
 
 LineLoop:
@@ -156,7 +159,7 @@ jne nochange
 	mov ecx, [ecx] #ecx = 1/ydifright
 	mov ymax, [points+4] #probably do the check here to see if ymax == [points+4] already, then this triangle has flat buns.
 nochange:
-=======
+
 #If yvalue == y2
 #xrefleft = x2
 #xdifleft = x3-x2
@@ -168,7 +171,6 @@ nochange:
 #ydifright = y3-y2
 
 #Increment yvalue til it hits the highest one, then done.
->>>>>>> d2f689ff986a115f7476e6689d8e3d4b3f5f9d2e
 
 #First vga line-write.
 mov eex, yval
@@ -199,8 +201,7 @@ cmp yval, ymax
 jne LineLoop
 #endloop
 
-infinite2:
-j infinite2
+ret
 
 .data
 
@@ -214,11 +215,6 @@ points:
 17
 
 slopes:
-0
-0
-0
-
-sine_lut:
 0b0000000000000000
 0b0000000011001001
 0b0000000110010010
