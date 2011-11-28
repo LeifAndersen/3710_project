@@ -10,7 +10,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="30" />
+   <WVObjectSize size="32" />
    <wvobject fp_name="/testdatapath/uut/CLK_25MHZ" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">CLK_25MHZ</obj_property>
       <obj_property name="ObjectShortName">CLK_25MHZ</obj_property>
@@ -136,6 +136,16 @@
    <wvobject fp_name="/testdatapath/uut/MasterControl/BuffCtrl" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">BuffCtrl[22:0]</obj_property>
       <obj_property name="ObjectShortName">BuffCtrl[22:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/RegisterFile/read_select_1" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">read_select_1[3:0]</obj_property>
+      <obj_property name="ObjectShortName">read_select_1[3:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/RegisterFile/read_select_2" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">read_select_2[3:0]</obj_property>
+      <obj_property name="ObjectShortName">read_select_2[3:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/testdatapath/uut/RegisterFile/write_1" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">write_1</obj_property>

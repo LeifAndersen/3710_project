@@ -75,7 +75,6 @@ module Top(
 	wire  [3:0] aluOp;
 	wire  [3:0] destSel;
 	wire  [3:0] destSel2;
-	wire  [3:0] srcSel;
 	wire  [2:0] flags;
 	wire  [2:0] flagsToControl;
 	wire 		flagWrite;
@@ -166,6 +165,8 @@ module Top(
 	//     Has some forwarding logic around it
 	wire [3:0] destSelP;
 	reg  [3:0] destSelF;
+	wire [3:0] readSelect1;
+	wire [3:0] readSelect2;
 	reg        regWriteEnF;
 	reg        regWriteEn2F;
 	wire       regWriteEnP;
@@ -176,7 +177,7 @@ module Top(
 	//     Pipeline Register
 	PipelineRegister PReg(CLK_25MHZ, reset, memRead, memReadP, regWriteEn, regWriteEnP, regWriteEn2, regWriteEn2P, buffCtrl[14:12], buffCtrlP[14:12], destSel, destSelP, memAddrBus, memAddrBusP, ret, retP);
 	//     Control
-	Control MasterControl(instruction, flagsToControl, aluOp, regWriteEn, regWriteEn2, immediate, buffCtrl, destSel, destSel2, srcSel, flagWrite, memWriteEn, memRead, specialAddr, ret);
+	Control MasterControl(instruction, flagsToControl, aluOp, regWriteEn, regWriteEn2, immediate, buffCtrl, destSel, destSel2, readSelect1, readSelect2, flagWrite, memWriteEn, memRead, specialAddr, ret);
 	//     Forwarding logic
 	always@(destSel, destSelP, regWriteEn, regWriteEn2, regWriteEnP, regWriteEn2P, memReadP, memRead, memAddrBus, memAddrBusP) begin
 		if(memReadP == 1'b1) begin
@@ -200,7 +201,7 @@ module Top(
 	end
 
 	// regfile
-   Register RegisterFile(CLK_25MHZ, destSelF, srcSel, destSelF, destSel2, regWriteEnF, regWriteEn2F, reset, writeBus, writeBus2, regTo1, bBus);
+   Register RegisterFile(CLK_25MHZ, readSelect1, readSelect2, destSelF, destSel2, regWriteEnF, regWriteEn2F, reset, writeBus, writeBus2, regTo1, bBus);
 
 	// LEFT IN FOR DEBUGGING.  I am not a bad programmer.
 	// lcd register
