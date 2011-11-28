@@ -40,6 +40,45 @@ mov [VGA], eax
 infinite:
 j infinite
 
+#call pause
+
+#call rasterize
+
+#mov eax, 4
+#lsh eax, 3
+#or eax, 7
+#mov [VGA], eax
+#mov eax, 3
+#lsh eax, 8
+#mov [VGA], eax
+
+#mov eax, 17
+#lsh eax, 3
+#or eax, 7
+#mov [VGA], eax
+#mov eax, 64
+#lsh eax, 8
+#mov [VGA], eax
+
+#mov eax, 65
+#lsh eax, 3
+#or eax, 7
+#mov [VGA], eax
+#mov eax, 34
+#lsh eax, 8
+#mov [VGA], eax
+
+#infinite2:
+
+#mov eax, 0xffff
+#call pause
+
+#mov eax, 0xffff
+#mov [VGA], eax
+#mov [VGA], eax
+
+#j infinite2
+
 rasterize:
 # Step one: Determine lowest point and percolate up the two edges connecting to it.
 # Possible cases:
@@ -186,14 +225,14 @@ nochange:
 #First vga line-write.
 mov eex, [points+2]
 cmp yvalleft, yvalright
-jg leftBigger
+jl leftSmaller
+add eex, yvalleft
+j doneSmaller
 
+leftSmaller:
 add eex, yvalright
-j doneBigger
 
-leftBigger:
-
-doneBigger:
+doneSmaller:
 lsh eex, 3
 mov %10, [points]
 or eex, %10
@@ -224,7 +263,38 @@ cmp yvalleft, ymax
 jne LineLoop
 
 endloop:
+
 ret
+###
+### END RASTERIZE
+###
+
+#and eax, eax
+#and eax, eax
+#and eax, eax
+
+#
+# PAUSE - Handy helper function for drawing stuff and not flashing between buffers too fast.  Send a pause value in on eax ;)
+#
+#pause:
+#mov ebx, 0xffff
+#mov edx, 0
+
+#pauseLoop2:
+#mov ecx, 0
+#pauseLoop1:
+#add ecx, 1
+#cmp ecx, ebx
+#jne pauseLoop1
+#mov edx, 1
+#cmp edx, eax
+#jne pauseLoop2
+
+#ret
+
+###
+### END PAUSE
+###
 
 .data
 
