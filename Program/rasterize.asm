@@ -6,7 +6,7 @@
 #
 # Writes lines out to PRAM.
 
-`define VGA 1638
+`define VGA 16383
 `define SP %13
 `define FP %14
 `define LOW %11
@@ -16,11 +16,11 @@
 `define ecx %3
 `define edx %4
 `define eex %0
-`define efx %5
+`define yvalright %5
 `define ymax %6
 `define temp1 %7
 `define temp2 %8
-`define yval %9
+`define yvalleft %9
 
 mov SP, 0x2b #initialize stack
 lsh SP, 8
@@ -33,8 +33,51 @@ mov eax, points
 
 call rasterize
 
+mov eax, 0xffff
+mov [VGA], eax
+mov [VGA], eax
+
 infinite:
 j infinite
+
+#call pause
+
+#call rasterize
+
+#mov eax, 4
+#lsh eax, 3
+#or eax, 7
+#mov [VGA], eax
+#mov eax, 3
+#lsh eax, 8
+#mov [VGA], eax
+
+#mov eax, 17
+#lsh eax, 3
+#or eax, 7
+#mov [VGA], eax
+#mov eax, 64
+#lsh eax, 8
+#mov [VGA], eax
+
+#mov eax, 65
+#lsh eax, 3
+#or eax, 7
+#mov [VGA], eax
+#mov eax, 34
+#lsh eax, 8
+#mov [VGA], eax
+
+#infinite2:
+
+#mov eax, 0xffff
+#call pause
+
+#mov eax, 0xffff
+#mov [VGA], eax
+#mov [VGA], eax
+
+#j infinite2
 
 rasterize:
 # Step one: Determine lowest point and percolate up the two edges connecting to it.
@@ -79,28 +122,27 @@ dontswap2: #now ebx holds the smallest y-coord
 mov temp1, [points+3]
 mov temp2, [points+5]
 cmp temp1, temp2 #compare x values of other two points
-jg temp1, temp2, dontswap3
+jl temp1, temp2, dontswap3
 mov [points+3], temp2
 mov [points+5], temp1
 mov temp1, [points+4] # Load x-coords
 mov temp2, [points+6]
 mov [points+4], temp2 # Swap x-coords
 mov [points+6], temp1
-dontswap3: #Now points are sorted so first is lowest y-value, second is highest x-value of remaining two.
-
-ret
+dontswap3: #Now points are sorted so first is lowest y-value, second is lowest x-value of remaining two.
 
 #Now xrefleft = xrefright = x1
 #xdifleft = x2 - xref.
 #xdifright = x3-xref.
 #ydifleft = y2-y1
 #ydifright = y3-y1
-#This works until yvalue == y2 || yvalue == y3.
-#x for given yvalue, x = xref + (yvalue)*(1/ydif)*xdif.
+#This works until yvalleftue == y2 || yvalleftue == y3.
+#x for given yvalleftue, x = xref + (yvalleftue)*(1/ydif)*xdif.
 
 #Setup for percolate loop:
 #left side
-mov yval, [points+2] #Initialize loop counter -- Move smallest y-value into line.
+mov yvalleft, 0 #[points+2] #Initialize loop counter -- Move smallest y-value into line.
+mov yvalright, 0
 mov temp1, [points+1] #Move xref into temp1
 mov ebx, [points+3] #Move x2 into ebx
 sub ebx, temp1 #ebx = xdifleft.
@@ -116,20 +158,23 @@ mov temp2, [points+1] #Move xref into temp2
 mov eax, [points+5] #Move x3 into eax
 sub eax, temp2 #eax = x3-x1 = xdifright.
 mov eex, [points+2] #y1
-mov ecx, [points+4] #y3
+mov ecx, [points+6] #y3
 sub ecx, eex # ecx = y3-y1 = ydifright.
 add ecx, %10
 mov ecx, [ecx] #ecx = 1/ydifrigh
 
-<<<<<<< HEAD
+mov ymax, 0xffff #This should probably be moved elsewhere.
+
 #percolate loop:
 
 LineLoop:
-#First check if yval == y2 || yval == y3
+#First check if yvalleft == y2 || yvalleft == y3
 mov eex, [points+4]
-cmp eex, yval #cmp with y2
+mov %10, [points+2]
+add %10, yvalleft
+cmp eex, %10 #cmp with y2
 jne y3cmp
-	#y2 == yval.
+	#y2 == yvalleft.
 	mov temp1, [points+3] #temp1 = xrefleft = x2
 	mov ebx, [points+5] #Move x3 into ebx
 	sub ebx, temp1 #ebx = xdifleft = x3 - xref = x3 - x2.	
@@ -140,11 +185,16 @@ jne y3cmp
 	add edx, %10
 	mov edx, [edx] #edx = 1/ydifleft
 	mov ymax, [points+6]
+	mov %10, [points+2]
+	sub ymax, %10
+	mov yvalleft, 0
 y3cmp:
 mov eex, [points+6]
-cmp eex, yval #cmp with y2
+mov %10, [points+2]
+add %10, yvalleft
+cmp eex, %10 #cmp with y3
 jne nochange
-	#y3 == yval.
+	#y3 == yvalleft.
 	mov temp2, [points+5] #temp2 = xref = x3
 	mov eax, [points+3] #Move x2 into eax
 	sub eax, temp2 #eax = x2-x3 = xdifright.
@@ -155,8 +205,11 @@ jne nochange
 	add ecx, %10
 	mov ecx, [ecx] #ecx = 1/ydifright
 	mov ymax, [points+4] #probably do the check here to see if ymax == [points+4] already, then this triangle has flat buns.
+	mov %10, [points+2]
+	sub ymax, %10
+	mov yvalright, 0
 nochange:
-=======
+
 #If yvalue == y2
 #xrefleft = x2
 #xdifleft = x3-x2
@@ -168,10 +221,18 @@ nochange:
 #ydifright = y3-y2
 
 #Increment yvalue til it hits the highest one, then done.
->>>>>>> d2f689ff986a115f7476e6689d8e3d4b3f5f9d2e
 
 #First vga line-write.
-mov eex, yval
+mov eex, [points+2]
+cmp yvalleft, yvalright
+jl leftSmaller
+add eex, yvalleft
+j doneSmaller
+
+leftSmaller:
+add eex, yvalright
+
+doneSmaller:
 lsh eex, 3
 mov %10, [points]
 or eex, %10
@@ -179,28 +240,61 @@ mov [VGA], eex
 
 #left
 mov eex, edx #use eex as temp register.
-mul ebx, yval # LOW = xdif * yval (max is 159 * 119 which is within 2^16, even when signed.)
-fmul eex, LOW # edx = (yvalue)*(1/ydif) * xdif
-add eex, temp1 #temp1 = x for given yvalue, x = xref + (yvalue)*(1/ydif)*xdif = left index to give to painter.
+mul ebx, yvalleft # LOW = xdif * yvalleft (max is 159 * 119 which is within 2^16, even when signed.)
+fmul eex, LOW # edx = (yvalleftue)*(1/ydif) * xdif
+add eex, temp1 #temp1 = x for given yvalleftue, x = xref + (yvalleftue)*(1/ydif)*xdif = left index to give to painter.
 
 #right
 mov %10, ecx #use %10 as temp register.
-mul eax, yval # LOW = xdif * yval (max is 159 * 119 which is within 2^16, even when signed.)
-fmul %10, LOW # edx = (yvalue)*(1/ydif) * xdif
-add %10, temp2 #temp1 = x for given yvalue, x = xref + (yvalue)*(1/ydif)*xdif = left index to give to painter.
+mul eax, yvalright # LOW = xdif * yvalleft (max is 159 * 119 which is within 2^16, even when signed.)
+fmul %10, LOW # edx = (yvalleftue)*(1/ydif) * xdif
+add %10, temp2 #temp1 = x for given yvalleftue, x = xref + (yvalleftue)*(1/ydif)*xdif = left index to give to painter.
 
 #second vga line-write.
 lsh eex, 8
 or eex, %10
 mov [VGA], eex
 
-incr yval
-cmp yval, ymax
+incr yvalleft
+incr yvalright
+cmp yvalright, ymax
+je endloop
+cmp yvalleft, ymax
 jne LineLoop
-#endloop
 
-infinite2:
-j infinite2
+endloop:
+
+ret
+###
+### END RASTERIZE
+###
+
+#and eax, eax
+#and eax, eax
+#and eax, eax
+
+#
+# PAUSE - Handy helper function for drawing stuff and not flashing between buffers too fast.  Send a pause value in on eax ;)
+#
+#pause:
+#mov ebx, 0xffff
+#mov edx, 0
+
+#pauseLoop2:
+#mov ecx, 0
+#pauseLoop1:
+#add ecx, 1
+#cmp ecx, ebx
+#jne pauseLoop1
+#mov edx, 1
+#cmp edx, eax
+#jne pauseLoop2
+
+#ret
+
+###
+### END PAUSE
+###
 
 .data
 
@@ -214,142 +308,6 @@ points:
 17
 
 slopes:
-0
-0
-0
-
-sine_lut:
-0b0000000000000000
-0b0000000011001001
-0b0000000110010010
-0b0000001001011011
-0b0000001100100011
-0b0000001111101100
-0b0000010010110101
-0b0000010101111101
-0b0000011001000101
-0b0000011100001101
-0b0000011111010101
-0b0000100010011100
-0b0000100101100100
-0b0000101000101010
-0b0000101011110001
-0b0000101110110110
-0b0000110001111100
-0b0000110101000001
-0b0000111000000101
-0b0000111011001001
-0b0000111110001100
-0b0001000001001111
-0b0001000100010001
-0b0001000111010011
-0b0001001010010100
-0b0001001101010100
-0b0001010000010011
-0b0001010011010001
-0b0001010110001111
-0b0001011001001100
-0b0001011100001000
-0b0001011111000011
-0b0001100001111101
-0b0001100100110111
-0b0001100111101111
-0b0001101010100110
-0b0001101101011101
-0b0001110000010010
-0b0001110011000110
-0b0001110101111001
-0b0001111000101011
-0b0001111011011100
-0b0001111110001011
-0b0010000000111001
-0b0010000011100111
-0b0010000110010010
-0b0010001000111101
-0b0010001011100110
-0b0010001110001110
-0b0010010000110100
-0b0010010011011010
-0b0010010101111101
-0b0010011000011111
-0b0010011011000000
-0b0010011101011111
-0b0010011111111101
-0b0010100010011001
-0b0010100100110100
-0b0010100111001101
-0b0010101001100101
-0b0010101011111010
-0b0010101110001110
-0b0010110000100001
-0b0010110010110010
-0b0010110101000001
-0b0010110111001110
-0b0010111001011010
-0b0010111011100011
-0b0010111101101011
-0b0010111111110001
-0b0011000001110110
-0b0011000011111000
-0b0011000101111001
-0b0011000111110111
-0b0011001001110100
-0b0011001011101110
-0b0011001101100111
-0b0011001111011110
-0b0011010001010011
-0b0011010011000110
-0b0011010100110110
-0b0011010110100101
-0b0011011000010010
-0b0011011001111100
-0b0011011011100101
-0b0011011101001011
-0b0011011110101111
-0b0011100000010001
-0b0011100001110001
-0b0011100011001111
-0b0011100100101010
-0b0011100110000011
-0b0011100111011010
-0b0011101000101111
-0b0011101010000010
-0b0011101011010010
-0b0011101100100000
-0b0011101101101100
-0b0011101110110110
-0b0011101111111101
-0b0011110001000010
-0b0011110010000100
-0b0011110011000101
-0b0011110100000010
-0b0011110100111110
-0b0011110101110111
-0b0011110110101110
-0b0011110111100010
-0b0011111000010100
-0b0011111001000100
-0b0011111001110001
-0b0011111010011100
-0b0011111011000101
-0b0011111011101011
-0b0011111100001110
-0b0011111100101111
-0b0011111101001110
-0b0011111101101010
-0b0011111110000100
-0b0011111110011100
-0b0011111110110001
-0b0011111111000011
-0b0011111111010011
-0b0011111111100001
-0b0011111111101100
-0b0011111111110100
-0b0011111111111011
-0b0011111111111110
-0b0100000000000000
-
-div_lut:
 0b0000000000000000
 0b0100000000000000
 0b0010000000000000
