@@ -16,11 +16,11 @@
 `define ecx %3
 `define edx %4
 `define eex %0
-`define efx %5
+`define yvalright %5
 `define ymax %6
 `define temp1 %7
 `define temp2 %8
-`define yval %9
+`define yvalleft %9
 
 mov SP, 0x2b #initialize stack
 lsh SP, 8
@@ -97,12 +97,13 @@ dontswap3: #Now points are sorted so first is lowest y-value, second is lowest x
 #xdifright = x3-xref.
 #ydifleft = y2-y1
 #ydifright = y3-y1
-#This works until yvalue == y2 || yvalue == y3.
-#x for given yvalue, x = xref + (yvalue)*(1/ydif)*xdif.
+#This works until yvalleftue == y2 || yvalleftue == y3.
+#x for given yvalleftue, x = xref + (yvalleftue)*(1/ydif)*xdif.
 
 #Setup for percolate loop:
 #left side
-mov yval, 0 #[points+2] #Initialize loop counter -- Move smallest y-value into line.
+mov yvalleft, 0 #[points+2] #Initialize loop counter -- Move smallest y-value into line.
+mov yvalright, 0
 mov temp1, [points+1] #Move xref into temp1
 mov ebx, [points+3] #Move x2 into ebx
 sub ebx, temp1 #ebx = xdifleft.
@@ -128,11 +129,13 @@ mov ymax, 0xffff #This should probably be moved elsewhere.
 #percolate loop:
 
 LineLoop:
-#First check if yval == y2 || yval == y3
+#First check if yvalleft == y2 || yvalleft == y3
 mov eex, [points+4]
-cmp eex, yval #cmp with y2
+mov %10, [points+2]
+add %10, yvalleft
+cmp eex, %10 #cmp with y2
 jne y3cmp
-	#y2 == yval.
+	#y2 == yvalleft.
 	mov temp1, [points+3] #temp1 = xrefleft = x2
 	mov ebx, [points+5] #Move x3 into ebx
 	sub ebx, temp1 #ebx = xdifleft = x3 - xref = x3 - x2.	
@@ -143,13 +146,16 @@ jne y3cmp
 	add edx, %10
 	mov edx, [edx] #edx = 1/ydifleft
 	mov ymax, [points+6]
-	mov efx, [points+2]
-	sub ymax, efx
+	mov %10, [points+2]
+	sub ymax, %10
+	mov yvalleft, 0
 y3cmp:
 mov eex, [points+6]
-cmp eex, yval #cmp with y2
+mov %10, [points+2]
+add %10, yvalleft
+cmp eex, %10 #cmp with y3
 jne nochange
-	#y3 == yval.
+	#y3 == yvalleft.
 	mov temp2, [points+5] #temp2 = xref = x3
 	mov eax, [points+3] #Move x2 into eax
 	sub eax, temp2 #eax = x2-x3 = xdifright.
@@ -160,8 +166,9 @@ jne nochange
 	add ecx, %10
 	mov ecx, [ecx] #ecx = 1/ydifright
 	mov ymax, [points+4] #probably do the check here to see if ymax == [points+4] already, then this triangle has flat buns.
-	mov efx, [points+2]
-	sub ymax, efx
+	mov %10, [points+2]
+	sub ymax, %10
+	mov yvalright, 0
 nochange:
 
 #If yvalue == y2
@@ -178,7 +185,15 @@ nochange:
 
 #First vga line-write.
 mov eex, [points+2]
-add eex, yval
+cmp yvalleft, yvalright
+jg leftBigger
+
+add eex, yvalright
+j doneBigger
+
+leftBigger:
+
+doneBigger:
 lsh eex, 3
 mov %10, [points]
 or eex, %10
@@ -186,26 +201,29 @@ mov [VGA], eex
 
 #left
 mov eex, edx #use eex as temp register.
-mul ebx, yval # LOW = xdif * yval (max is 159 * 119 which is within 2^16, even when signed.)
-fmul eex, LOW # edx = (yvalue)*(1/ydif) * xdif
-add eex, temp1 #temp1 = x for given yvalue, x = xref + (yvalue)*(1/ydif)*xdif = left index to give to painter.
+mul ebx, yvalleft # LOW = xdif * yvalleft (max is 159 * 119 which is within 2^16, even when signed.)
+fmul eex, LOW # edx = (yvalleftue)*(1/ydif) * xdif
+add eex, temp1 #temp1 = x for given yvalleftue, x = xref + (yvalleftue)*(1/ydif)*xdif = left index to give to painter.
 
 #right
 mov %10, ecx #use %10 as temp register.
-mul eax, yval # LOW = xdif * yval (max is 159 * 119 which is within 2^16, even when signed.)
-fmul %10, LOW # edx = (yvalue)*(1/ydif) * xdif
-add %10, temp2 #temp1 = x for given yvalue, x = xref + (yvalue)*(1/ydif)*xdif = left index to give to painter.
+mul eax, yvalright # LOW = xdif * yvalleft (max is 159 * 119 which is within 2^16, even when signed.)
+fmul %10, LOW # edx = (yvalleftue)*(1/ydif) * xdif
+add %10, temp2 #temp1 = x for given yvalleftue, x = xref + (yvalleftue)*(1/ydif)*xdif = left index to give to painter.
 
 #second vga line-write.
 lsh eex, 8
 or eex, %10
 mov [VGA], eex
 
-incr yval
-cmp yval, ymax
+incr yvalleft
+incr yvalright
+cmp yvalright, ymax
+je endloop
+cmp yvalleft, ymax
 jne LineLoop
-#endloop
 
+endloop:
 ret
 
 .data
