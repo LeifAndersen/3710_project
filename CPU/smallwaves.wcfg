@@ -10,7 +10,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="20" />
+   <WVObjectSize size="30" />
    <wvobject fp_name="/testdatapath/uut/CLK_25MHZ" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">CLK_25MHZ</obj_property>
       <obj_property name="ObjectShortName">CLK_25MHZ</obj_property>
@@ -108,5 +108,51 @@
       <obj_property name="ElementShortName">reg15[15:0]</obj_property>
       <obj_property name="ObjectShortName">reg15[15:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/ALUinstance/Opcode" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">Opcode[3:0]</obj_property>
+      <obj_property name="ObjectShortName">Opcode[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/ALUinstance/A" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">A[15:0]</obj_property>
+      <obj_property name="ObjectShortName">A[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/ALUinstance/B" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">B[15:0]</obj_property>
+      <obj_property name="ObjectShortName">B[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/ALUinstance/C" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">C[15:0]</obj_property>
+      <obj_property name="ObjectShortName">C[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/ALUinstance/D" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">D[15:0]</obj_property>
+      <obj_property name="ObjectShortName">D[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/MasterControl/BuffCtrl" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">BuffCtrl[22:0]</obj_property>
+      <obj_property name="ObjectShortName">BuffCtrl[22:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/RegisterFile/write_1" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">write_1</obj_property>
+      <obj_property name="ObjectShortName">write_1</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/RegisterFile/write_select_1" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">write_select_1[3:0]</obj_property>
+      <obj_property name="ObjectShortName">write_select_1[3:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/RegisterFile/write_2" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">write_2</obj_property>
+      <obj_property name="ObjectShortName">write_2</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/RegisterFile/write_select_2" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">write_select_2[3:0]</obj_property>
+      <obj_property name="ObjectShortName">write_select_2[3:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
 </wave_config>

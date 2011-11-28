@@ -93,7 +93,6 @@ module Control(
 		// I-Capable with no immediate
 		if (instType == N0000) begin
 			ALUOp           <= instruction[7:4];
-			DestSel         <= instruction[11:8];
 			DestSel2        <= instruction[11:8];
 			SrcSel          <= instruction[3:0];
 			BuffCtrl[1]     <= 1;
@@ -122,6 +121,7 @@ module Control(
 				BuffCtrl[6]  <= 0;
 				BuffCtrl[7]  <= 0;
 				FlagWrite    <= 1;
+				DestSel      <= instruction[11:8];
 				if (instruction[11:8] == 12 || instruction[11:8] == 13) begin
 					WriteEn1    <= 0;
 					WriteEn2    <= 1;
@@ -141,16 +141,18 @@ module Control(
 				BuffCtrl[2]  <= 0;
 				BuffCtrl[3]  <= 0;
 				FlagWrite    <= 1;
-				WriteEn1    <= 0;
-				WriteEn2    <= 0;
-				BuffCtrl[6] <= 0;
-				BuffCtrl[7] <= 0;
+				WriteEn1     <= 0;
+				WriteEn2     <= 0;
+				BuffCtrl[6]  <= 0;
+				BuffCtrl[7]  <= 0;
+				DestSel        <= instruction[11:8];
 			end
 
 			else if (instruction[7:4] == MUL) begin
-				BuffCtrl[3] <= 0;
-				BuffCtrl[6] <= 0;
-				BuffCtrl[7] <= 0;
+				BuffCtrl[3]  <= 0;
+				BuffCtrl[6]  <= 0;
+				BuffCtrl[7]  <= 0;
+				DestSel      <= 11;
 				if (instruction[11:8] == 12) begin
 					FlagWrite	<= 1;
 					WriteEn1    <= 1;
@@ -168,9 +170,10 @@ module Control(
 
 			else if (instruction[7:4] == MOVR) begin
 				//MOVR
-				BuffCtrl[2] <= 0;
-				BuffCtrl[3] <= 0;
-				FlagWrite   <= 0;
+				BuffCtrl[2]  <= 0;
+				BuffCtrl[3]  <= 0;
+				FlagWrite    <= 0;
+				DestSel        <= instruction[11:8];
 				if (instruction[11:8] == 12 || instruction[11:8] == 13) begin
 					WriteEn1    <= 0;
 					WriteEn2    <= 1;
@@ -191,6 +194,7 @@ module Control(
 				WriteEn2    <= 0;
 				BuffCtrl[6] <= 0;
 				BuffCtrl[7] <= 0;
+				DestSel     <= 0;
 			end
 		end
 
@@ -258,7 +262,6 @@ module Control(
 		// I-Capable with immediate
 		else if (instType == N0000I) begin
 			ALUOp           <= instruction[15:12];
-			DestSel         <= instruction[11:8];
 			DestSel2        <= instruction[11:8];
 			SrcSel          <= instruction[11:8];
 			BuffCtrl[0]     <= 1;
@@ -278,12 +281,15 @@ module Control(
 				instruction[15:12] == OR ||
 				instruction[15:12] == XOR ||
 				instruction[15:12] == NOT ||
+				instruction[15:12] == FMUL ||
 				instruction[15:12] == LSH ||
 				instruction[15:12] == RSH ||
 				instruction[15:12] == ARSH) begin
 				//ADD-ARSH
 				BuffCtrl[5:4]   <= 2'b0;
 				FlagWrite       <= 1;
+				BuffCtrl[21]    <= 0;
+				DestSel        <= instruction[11:8];
 				if (instruction[11:8] == 12 || instruction[11:8] == 13) begin
 					WriteEn1    <= 0;
 					WriteEn2    <= 1;
@@ -306,25 +312,38 @@ module Control(
 				WriteEn2      <= 0;
 				BuffCtrl[3]   <= 0;
 				BuffCtrl[2]   <= 0;
+				BuffCtrl[21]  <= 0;
+				DestSel        <= instruction[11:8];
 			end
 
-			else if (instruction[15:12] == MUL || instruction[15:12] == FMUL) begin
-				//MUL-FMUL
-				// TODO
-				BuffCtrl[5]  <= 0;
-				BuffCtrl[4]  <= 0;
-				FlagWrite    <= 0;
-				WriteEn1     <= 0;
-				WriteEn2     <= 0;
-				BuffCtrl[2]	 <= 0;
-				BuffCtrl[3]	 <= 0;
+			else if (instruction[15:12] == MUL) begin
+				//MUL
+				BuffCtrl[3]  <= 0;
+				BuffCtrl[4]	 <= 0;
+				BuffCtrl[5]	 <= 0;
+				DestSel      <= 11;
+				if (instruction[11:8] == 12) begin
+					FlagWrite	<= 1;
+					WriteEn1    <= 1;
+					WriteEn2    <= 1;
+					BuffCtrl[21]<= 1;
+					BuffCtrl[2] <= 1;
+				end else begin
+					FlagWrite	<= 0;
+					WriteEn1    <= 0;
+					WriteEn2    <= 0;
+					BuffCtrl[21]<= 0;
+					BuffCtrl[2] <= 0;
+				end
 			end
 
 			else if (instruction[15:12] == MOVR) begin
 				//MOVR
-				BuffCtrl[2] <= 0;
-				BuffCtrl[3] <= 0;
-				FlagWrite   <= 0;
+				BuffCtrl[2]  <= 0;
+				BuffCtrl[3]  <= 0;
+				BuffCtrl[21] <= 0;
+				FlagWrite    <= 0;
+				DestSel        <= instruction[11:8];
 				if (instruction[11:8] == 12 || instruction[11:8] == 13) begin
 					WriteEn1     <= 0;
 					WriteEn2     <= 1;
@@ -345,6 +364,8 @@ module Control(
 				WriteEn2     <= 0;
 				BuffCtrl[4]	 <= 0;
 				BuffCtrl[5]	 <= 0;
+				BuffCtrl[21] <= 0;
+				DestSel        <= 0;
 			end
 		end
 
