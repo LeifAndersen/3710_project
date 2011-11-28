@@ -10,7 +10,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="30" />
+   <WVObjectSize size="24" />
    <wvobject fp_name="/testdatapath/color" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">color[2:0]</obj_property>
       <obj_property name="ObjectShortName">color[2:0]</obj_property>
@@ -146,36 +146,6 @@
    <wvobject fp_name="/testdatapath/uut/MemCtrl/PRAM_Wr_En" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">PRAM_Wr_En</obj_property>
       <obj_property name="ObjectShortName">PRAM_Wr_En</obj_property>
-   </wvobject>
-   <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[207]" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">[207,17:0]</obj_property>
-      <obj_property name="ObjectShortName">memory[207,17:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[206]" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">[206,17:0]</obj_property>
-      <obj_property name="ObjectShortName">memory[206,17:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[205]" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">[205,17:0]</obj_property>
-      <obj_property name="ObjectShortName">memory[205,17:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[204]" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">[204,17:0]</obj_property>
-      <obj_property name="ObjectShortName">memory[204,17:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[203]" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">[203,17:0]</obj_property>
-      <obj_property name="ObjectShortName">memory[203,17:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[202]" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">[202,17:0]</obj_property>
-      <obj_property name="ObjectShortName">memory[202,17:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/testdatapath/uut/drawunit/queue/wrtData" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">wrtData[15:0]</obj_property>

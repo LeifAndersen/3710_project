@@ -102,7 +102,7 @@ dontswap3: #Now points are sorted so first is lowest y-value, second is lowest x
 
 #Setup for percolate loop:
 #left side
-mov yval, [points+2] #Initialize loop counter -- Move smallest y-value into line.
+mov yval, 0 #[points+2] #Initialize loop counter -- Move smallest y-value into line.
 mov temp1, [points+1] #Move xref into temp1
 mov ebx, [points+3] #Move x2 into ebx
 sub ebx, temp1 #ebx = xdifleft.
@@ -118,7 +118,7 @@ mov temp2, [points+1] #Move xref into temp2
 mov eax, [points+5] #Move x3 into eax
 sub eax, temp2 #eax = x3-x1 = xdifright.
 mov eex, [points+2] #y1
-mov ecx, [points+4] #y3
+mov ecx, [points+6] #y3
 sub ecx, eex # ecx = y3-y1 = ydifright.
 add ecx, %10
 mov ecx, [ecx] #ecx = 1/ydifrigh
@@ -143,6 +143,8 @@ jne y3cmp
 	add edx, %10
 	mov edx, [edx] #edx = 1/ydifleft
 	mov ymax, [points+6]
+	mov efx, [points+2]
+	sub ymax, efx
 y3cmp:
 mov eex, [points+6]
 cmp eex, yval #cmp with y2
@@ -158,6 +160,8 @@ jne nochange
 	add ecx, %10
 	mov ecx, [ecx] #ecx = 1/ydifright
 	mov ymax, [points+4] #probably do the check here to see if ymax == [points+4] already, then this triangle has flat buns.
+	mov efx, [points+2]
+	sub ymax, efx
 nochange:
 
 #If yvalue == y2
@@ -173,7 +177,8 @@ nochange:
 #Increment yvalue til it hits the highest one, then done.
 
 #First vga line-write.
-mov eex, yval
+mov eex, [points+2]
+add eex, yval
 lsh eex, 3
 mov %10, [points]
 or eex, %10
@@ -345,7 +350,7 @@ slopes:
 0b0011111111111110
 0b0100000000000000
 
-div_lut:
+sin:
 0b0000000000000000
 0b0100000000000000
 0b0010000000000000
