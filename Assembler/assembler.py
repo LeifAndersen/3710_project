@@ -65,6 +65,12 @@ def explode_bomb(line_num, line):
 	print "\nError: Invalid instruction on line " + str(line_num) + ": \"" + line.strip() + "\""
 	exit(1)
 
+def no_such_jump(line_num, line):
+	jump = (line.split())[0].upper()
+	print "\nError: Incomplete use of psuedo-jump on line " + str(line_num) + ": \"" + line.strip() + "\""
+	print "In order to use \"" + jump + "\", you must use the format: \"" + jump + " %R, %R, label\""
+	exit(1)
+
 def missing_comma(line_num, line):
 	print "\nError: Missing comma on line " + str(line_num) + ": \"" + line.strip() + "\""
 	exit(1)
@@ -205,6 +211,8 @@ def parse(infile_str, outfile_str):
 			if tokens[0][0] == "J" or tokens[0] == "CALL":
 				# normal jumps and call
 				if len(tokens) == 2 or (len(tokens) > 2 and tokens[2][0] == "#"):
+					if tokens[0] == "JG" or tokens[0] == "JGE" or tokens[0] == "JA" or tokens[0] == "JAE":
+						no_such_jump(line_num, line)
 					# push jumps and calls directly, don't encode on first pass (only first two tokens)
 					first_pass_queue.append(tokens[0] + " " + tokens[1] + " " + str(line_num))
 					# nop after jump
