@@ -24,5 +24,5 @@ init:
 main:
 	mov %0, [UP_KEY]
 	mov [LCD], %0
-	mov [UP_KEY], 1
+	mov [UP_KEY], %0
 	j main
