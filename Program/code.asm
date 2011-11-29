@@ -158,6 +158,137 @@ cos:
 div:
 	ret
 
+# rotate a point (%0) (pointer) by two angles (%1 and %2), and stores it in %3 (pointer)
+rotate_point:
+	push %10
+	push %9
+	push %8
+	push %7
+	push %6
+	push %5
+
+	# move arguments into registers that aren't overwritten
+	mov %7, %0	# src point
+	mov %8, %1	# xtheta
+	mov %9, %2	# ytheta
+	mov %10, %3	# dest point
+
+	# generate rotation matrix x
+	mov %0, %8	# generate and save cos
+	call cos
+	mov %6, %0
+	mov %0, %8	# generate and save sin
+	call sin
+	mov %5, %0
+	mov %0, 1	# fill matrix
+	mov [rotation_matrix_x], %0		# 1
+	mov %0, 0
+	mov [rotation_matrix_x+1], %0	# 0
+	mov [rotation_matrix_x+2], %0	# 0
+	mov [rotation_matrix_x+3], %0	# 0
+	mov [rotation_matrix_x+6], %0	# 0
+	mov [rotation_matrix_x+4], %6	# cos (xtheta)
+	not %0, %5	# negate %5 by inverting the bits and adding one
+	add %0, 1
+	mov [rotation_matrix_x+5], %0	# -sin (xtheta)
+	mov [rotation_matrix_x+7], %5	# sin (xtheta)
+	mov [rotation_matrix_x+8], %6	# cos (xtheta)
+
+	# generate rotation matrix y
+	mov %0, %9	# generate and save cos
+	call cos
+	mov %6, %0
+	mov %0, %9	# generate and save sin
+	call sin
+	mov %5, %0
+	mov %0, 0
+	mov [rotation_matrix_y+1], %0	# 0
+	mov [rotation_matrix_y+3], %0	# 0
+	mov [rotation_matrix_y+5], %0	# 0
+	mov [rotation_matrix_y+7], %0	# 0
+	mov [rotation_matrix_y], %6		# cos (ytheta)
+	mov [rotation_matrix_y+2], %5	# sin (ytheta)
+	mov %0, 1
+	mov [rotation_matrix_y+4], %6	# 1
+	not %0, %5	# negate %5 by inverting the bits and adding one
+	add %0, 1
+	mov [rotation_matrix_y+6], %0	# -sin (xtheta)
+	mov [rotation_matrix_y+8], %6	# cos (xtheta)
+
+	# make room on the stack for temp point
+	sub %SP, 3
+
+	# set up arguments for matrix multiply
+	mov %0, rotation_matrix_x
+	mov %1, %7
+	mov %2, %SP
+	# multiply first one
+	call matrix_multiply
+
+	# set up arguments for matrix multiply again
+	mov %0, rotation_matrix_y	# matrix
+	mov %1, %2					# temp point
+	mov %2, %10					# dest point
+	# multiply first one
+	call matrix_multiply
+
+	pop %5
+	pop %6
+	pop %7
+	pop %8
+	pop %9
+	pop %10
+	ret
+
+# Multiply a matrix in %0 (pointer) by a vector in %1 (pointer) and store the result in the vector in %2 (pointer)
+# ASSUMES NO ALIASING!!!!!!!!!!!
+# matricies are row-major
+matrix_multiply:
+	push %3
+	push %4
+	push %5
+	push %6
+	push %7
+
+	mov %7, 0	# matrix position counter
+
+	matmulloop1:
+	mov %5, 0	# accumulator
+	mov %6, 0	# counter
+
+	matmulloop2:
+	# get two elements
+	mov %3, [%0]
+	mov %4, [%1]
+	# multiply them
+	mul %3, %4
+	# store in accumulator
+	add %5, %LOW
+	# increment the pointers and counters
+	incr %0
+	incr %1
+	incr %6
+	incr %7
+	# test loop condition
+	cmp %6, 3
+	jl matmulloop2
+	# reset vector pointer
+	sub %1, 3
+	# save new row in return vector
+	mov [%2], %5
+	incr %2
+	# test if we are done
+	cmp %7, 9
+	jl matmulloop1
+
+	# done
+	pop %7
+	pop %6
+	pop %5
+	pop %4
+	pop %3
+	ret
+
 .data
 PLAYER_X:
 0
@@ -236,6 +367,28 @@ AI_START_Y:
 
 AI_START_THETA:
 10
+
+rotation_matrix_x:
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+rotation_matrix_y:
+0
+0
+0
+0
+0
+0
+0
+0
+0
 
 sine_lut:
 0b0000000000000000
