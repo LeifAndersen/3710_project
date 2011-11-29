@@ -3,14 +3,14 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="C:/Users/jhparker/3710/CPU/testdatapath_isim_beh.wdb" id="1" type="auto">
+      <db_ref path="U:/3710/3710/CPU/testdatapath_isim_beh.wdb" id="1" type="auto">
          <top_modules>
             <top_module name="glbl" />
             <top_module name="testdatapath" />
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="24" />
+   <WVObjectSize size="25" />
    <wvobject fp_name="/testdatapath/color" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">color[2:0]</obj_property>
       <obj_property name="ObjectShortName">color[2:0]</obj_property>
@@ -22,6 +22,10 @@
    <wvobject fp_name="/testdatapath/vsync" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">vsync</obj_property>
       <obj_property name="ObjectShortName">vsync</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/CLK_25MHZ" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">CLK_25MHZ</obj_property>
+      <obj_property name="ObjectShortName">CLK_25MHZ</obj_property>
    </wvobject>
    <wvobject fp_name="/testdatapath/uut/PC/pc" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">pc[15:0]</obj_property>
@@ -150,6 +154,7 @@
    <wvobject fp_name="/testdatapath/uut/drawunit/queue/wrtData" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">wrtData[15:0]</obj_property>
       <obj_property name="ObjectShortName">wrtData[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/testdatapath/uut/drawunit/queue/we" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">we</obj_property>

@@ -148,10 +148,146 @@ mainEnd:
 
 # Take a number in the $0 reg, return the sin of that number into the $0 reg
 sin:
+	push %10
+	push %9
+	push %8
+	push %7
+	
+	# move arg into %10
+	mov %10, %0
+	
+	# quadrant modify the angles
+	
+	mov %9, %10		# switch on quadrant
+	rsh %9, 14
+	cmp %9, 1
+	je second
+	cmp %9, 2
+	je third
+	cmp %9, 3
+	je fourth
+	j sinend
+	
+	second:
+	mov %9, sin_lut
+	mov %8, %10
+	rsh %8, 7
+	and %8, 0x7F	# mask angle
+	mov %7, 0x7F	# load max
+	sub %7, %8		# max - angle
+	add %9, %7
+	mov %0, [%9]	# addr
+	decr %9
+	and %9, 0x7F
+	mov %7, [%9]	# addr-1
+	# multiply
+	and %10, 0x7F	# fraction
+	lsh %10, 7
+	fmul %7, %10
+	mov %9, 0x40
+	lsh %9, 8
+	sub %9, %10		# 1 - fraction
+	fmul %0, %9
+	add %0, %7
+	j sinend
+	
+	third:
+	mov %9, sin_lut
+	mov %8, %10
+	rsh %8, 7
+	and %8, 0x7F	# mask angle
+	sub %8, 0x7F	# angle - max
+	add %9, %8
+	mov %0, [%9]	# addr
+	incr %9
+	and %8, 0x7F
+	mov %7, [%9]	# addr+1
+	# multiply
+	and %10, 0x7F	# fraction
+	lsh %10, 7
+	fmul %7, %10
+	mov %9, 0x40
+	lsh %9, 8
+	sub %9, %10		# 1 - fraction
+	fmul %0, %9
+	add %0, %7
+	not %0, %0
+	add %0, 1
+	j sinend
+	
+	fourth:
+	mov %9, sin_lut
+	mov %8, %10
+	rsh %8, 7
+	and %8, 0x7F	# mask angle
+	mov %7, 0x7F	# load max
+	sub %7, %8		# max - angle
+	add %9, %7
+	mov %0, [%9]	# addr
+	decr %9
+	and %8, 0x7F
+	mov %7, [%9]	# addr-1
+	# multiply
+	and %10, 0x7F	# fraction
+	lsh %10, 7
+	fmul %7, %10
+	mov %9, 0x40
+	lsh %9, 8
+	sub %9, %10		# 1 - fraction
+	fmul %0, %9
+	add %0, %7
+	not %0, %0
+	add %0, 1
+	j sinend
+	
+	sinend:
+	mov %9, sin_lut
+	mov %8, %10
+	rsh %8, 7
+	and %8, 0x7F
+	add %9, %8
+	mov %0, [%9]	# addr
+	incr %9
+	and %8, 0x7F
+	mov %7, [%9]	# addr+1
+	# multiply
+	and %10, 0x7F	# fraction
+	lsh %10, 7
+	fmul %7, %10
+	mov %9, 0x40
+	lsh %9, 8
+	sub %9, %10		# 1 - fraction
+	fmul %0, %9
+	add %0, %7
+
+	# return
+	pop %7
+	pop %8
+	pop %9
+	pop %10
+	
 	ret
 
 # Take a number in the $0 reg, return the cos of that number into the $0 reg
 cos:
+	push %10
+	push %9
+	
+	mov %10, %0
+	mov %9, 0xC0	#load 1100000000000000
+	lsh %9, 8
+	rsh %10, 14		#increment quadrant
+	incr %10
+	lsh %10, 14
+	not %9, %9		#replace quadrant
+	and %0, %9
+	or %0, %10
+	
+	# call sin
+	call sin
+	
+	pop %9
+	pop %10
 	ret
 
 # Take numerator in $0, denominator in $1, return numerator/denominator in $0

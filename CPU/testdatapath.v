@@ -55,7 +55,7 @@ module testdatapath;
 	);
 	
 	always begin
-		#20;
+		#10;
 		inCLK_50MHZ = ~inCLK_50MHZ;
 	end
 
