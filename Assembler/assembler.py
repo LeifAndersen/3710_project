@@ -409,6 +409,7 @@ def parse(infile_str, outfile_str):
 								tokens[0] = "MOVR"
 								first_pass_queue.append(encode_Imm_to_R_instruction(tokens))
 						else:
+							# label move
 							first_pass_queue.append("LMOV " + tokens[1] + " " + tokens[2])
 					else:
 						explode_bomb(line_num, line)
@@ -446,9 +447,13 @@ def parse(infile_str, outfile_str):
 			else:
 				labels[label] = address
 		else:
-			# push instruction to second pass deque
-			second_pass_queue.append(instruction);
-			address += MEM_INCR
+			if tokens[0] == "LMOV":
+				second_pass_queue.append(instruction);
+				address += 3 * MEM_INCR
+			else:
+				# push instruction to second pass deque
+				second_pass_queue.append(instruction);
+				address += MEM_INCR
 
 	sys.stdout.write("\n\t(3/3)   Labeling: [  0%]")
 	sys.stdout.flush()
@@ -482,25 +487,22 @@ def parse(infile_str, outfile_str):
 					aritheval = tokens[1].replace(label, str(labels[label]))
 					outfile.write(encode_14_Bit_Imm_instruction([tokens[0], str(eval(aritheval))])[2:] + "\n")
 				else:
-					if labels[tokens[2]] > 256:
-						# mov, lsh, or to get large immediate
-						tokens[0] = "MOVR"
-						labelval = labels[tokens[2]]
-						# move top in
-						tokens[2] = str(truncate_bits((labelval >> 8), 8))
-						outfile.write(encode_Imm_to_R_instruction(tokens)[2:] + "\n")
-						# left shift 8
-						tokens[0] = "LSH"
-						tokens[2] = "8"
-						outfile.write(encode_Imm_to_R_instruction(tokens)[2:] + "\n")
-						# or with bottom
-						tokens[0] = "OR"
-						tokens[2] = str(truncate_bits(labelval, 8))
-						outfile.write(encode_Imm_to_R_instruction(tokens)[2:] + "\n")
-					else:
-						tokens[0] = "MOVR"
-						tokens[2] = str(labels[tokens[2]])
-						outfile.write(encode_Imm_to_R_instruction(tokens)[2:] + "\n")
+					#LMOV
+					# always assume bigger label
+					# mov, lsh, or to get large immediate
+					tokens[0] = "MOVR"
+					labelval = labels[tokens[2]]
+					# move top in
+					tokens[2] = str(truncate_bits((labelval >> 8), 8))
+					outfile.write(encode_Imm_to_R_instruction(tokens)[2:] + "\n")
+					# left shift 8
+					tokens[0] = "LSH"
+					tokens[2] = "8"
+					outfile.write(encode_Imm_to_R_instruction(tokens)[2:] + "\n")
+					# or with bottom
+					tokens[0] = "OR"
+					tokens[2] = str(truncate_bits(labelval, 8))
+					outfile.write(encode_Imm_to_R_instruction(tokens)[2:] + "\n")
 			except KeyError:
 				no_such_label(tokens)
 			except:
