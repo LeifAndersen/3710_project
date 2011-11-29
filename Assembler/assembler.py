@@ -96,6 +96,10 @@ def no_such_label(tokens):
 	print "\nError: Reference to non-existent label \"" + tokens[1] + "\" on line " + tokens[2]
 	exit(1)
 
+def no_such_label2(tokens):
+	print "\nError: Reference to non-existent label \"" + tokens[2] + "\" on line " + tokens[3]
+	exit(1)
+
 # truncates number to the bottom 'bits' bits.
 def truncate_bits(num, bits):
 	return num % 2**bits
@@ -410,7 +414,7 @@ def parse(infile_str, outfile_str):
 								first_pass_queue.append(encode_Imm_to_R_instruction(tokens))
 						else:
 							# label move
-							first_pass_queue.append("LMOV " + tokens[1] + " " + tokens[2])
+							first_pass_queue.append("LMOV " + tokens[1] + " " + tokens[2] + " " + str(line_num))
 					else:
 						explode_bomb(line_num, line)
 
@@ -504,7 +508,10 @@ def parse(infile_str, outfile_str):
 					tokens[2] = str(truncate_bits(labelval, 8))
 					outfile.write(encode_Imm_to_R_instruction(tokens)[2:] + "\n")
 			except KeyError:
-				no_such_label(tokens)
+				if tokens[0] == "MOVR":
+					no_such_label2(tokens)
+				else:
+					no_such_label(tokens)
 			except:
 				exit(1)
 		else:

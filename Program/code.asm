@@ -152,12 +152,12 @@ sin:
 	push %9
 	push %8
 	push %7
-	
+
 	# move arg into %10
 	mov %10, %0
-	
+
 	# quadrant modify the angles
-	
+
 	mov %9, %10		# switch on quadrant
 	rsh %9, 14
 	cmp %9, 1
@@ -167,9 +167,9 @@ sin:
 	cmp %9, 3
 	je fourth
 	j sinend
-	
+
 	second:
-	mov %9, sin_lut
+	mov %9, sine_lut
 	mov %8, %10
 	rsh %8, 7
 	and %8, 0x7F	# mask angle
@@ -190,9 +190,9 @@ sin:
 	fmul %0, %9
 	add %0, %7
 	j sinend
-	
+
 	third:
-	mov %9, sin_lut
+	mov %9, sine_lut
 	mov %8, %10
 	rsh %8, 7
 	and %8, 0x7F	# mask angle
@@ -214,9 +214,9 @@ sin:
 	not %0, %0
 	add %0, 1
 	j sinend
-	
+
 	fourth:
-	mov %9, sin_lut
+	mov %9, sine_lut
 	mov %8, %10
 	rsh %8, 7
 	and %8, 0x7F	# mask angle
@@ -239,9 +239,9 @@ sin:
 	not %0, %0
 	add %0, 1
 	j sinend
-	
+
 	sinend:
-	mov %9, sin_lut
+	mov %9, sine_lut
 	mov %8, %10
 	rsh %8, 7
 	and %8, 0x7F
@@ -265,14 +265,14 @@ sin:
 	pop %8
 	pop %9
 	pop %10
-	
+
 	ret
 
 # Take a number in the $0 reg, return the cos of that number into the $0 reg
 cos:
 	push %10
 	push %9
-	
+
 	mov %10, %0
 	mov %9, 0xC0	#load 1100000000000000
 	lsh %9, 8
@@ -282,10 +282,10 @@ cos:
 	not %9, %9		#replace quadrant
 	and %0, %9
 	or %0, %10
-	
+
 	# call sin
 	call sin
-	
+
 	pop %9
 	pop %10
 	ret
