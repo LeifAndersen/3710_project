@@ -22,7 +22,7 @@ init:
 
 # Main Loop
 main:
-	mov %1, 1000000000
+	mov %1, 10000000
 mainLoop:
 	sub %1, 1
 	jg %1, 0, mainLoop
