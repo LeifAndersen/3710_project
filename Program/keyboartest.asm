@@ -8,7 +8,7 @@
 `define %HIGH %12
 `define %SP %13
 `define %FP %14
-`define LCD 0
+`define LCD 16376
 `define VGA 16383
 `define STACK_TOP 0x2bff # stack starts at 11264 (this is the top of memory, be careful)
 
