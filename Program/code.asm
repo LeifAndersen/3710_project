@@ -9,13 +9,13 @@
 `define %SP %13
 `define %FP %14
 `define VGA 16383
-# stack starts at 11264 (this is the top of memory, be careful)
+`define BULLET_RADIUS 1
+`define TANK_RADIUS 10
+`define STACK_TOP 0x2bff # stack starts at 11264 (this is the top of memory, be careful)
 
 # Bootup and initialization Code
 init:
-	mov %SP, 0x2B
-	lsh %SP, 8
-	or %SP, 0xFF
+	mov %SP, STACK_TOP
 	mov %FP, %SP
 
 	# Begin der loop
