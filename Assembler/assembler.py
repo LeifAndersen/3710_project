@@ -288,6 +288,18 @@ def parse(infile_str, outfile_str):
 						# NOP
 						first_pass_queue.append(encode_cmps(["CMP", tokens[1], tokens[2]], line_num, line))
 						first_pass_queue.append("JLE " + tokens[3])
+					elif tokens[0] == "JE":
+						# CMPR
+						# jmp
+						# NOP
+						first_pass_queue.append(encode_cmps(["CMP", tokens[1], tokens[2]], line_num, line))
+						first_pass_queue.append("JLE " + tokens[3])
+					elif tokens[0] == "JNE":
+						# CMPR
+						# jmp
+						# NOP
+						first_pass_queue.append(encode_cmps(["CMP", tokens[1], tokens[2]], line_num, line))
+						first_pass_queue.append("JLE " + tokens[3])
 					else:
 						explode_bomb(line_num, line)
 					first_pass_queue.append(str(hex(0)))

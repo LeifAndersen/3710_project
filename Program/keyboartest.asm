@@ -24,8 +24,7 @@ init:
 main:
 	mainLoop:
 	mov %0, [UP_KEY]
-	cmp %0, 0
-	je mainLoop
+	je %0, 0, mainLoop
 	mov [LCD], %0
 	mov [UP_KEY], %0
 	forever:
