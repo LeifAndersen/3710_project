@@ -42,7 +42,7 @@ mov [VGA], eax
 #j infinite
 
 mov eax, 0xf
-#call pause
+call pause
 
 call rasterize
 
@@ -71,13 +71,13 @@ lsh eax, 8
 mov [VGA], eax
 
 mov eax, 0xf
-#call pause
+call pause
 
 mov eax, 0xffff
 mov [VGA], eax
 mov [VGA], eax
 
-call movepoint #This will add motion to the triangle to test various different weird triangles.
+#call movepoint #This will add motion to the triangle to test various different weird triangles.
 
 j infinite2
 
@@ -170,10 +170,10 @@ mov ymax, 0xffff #This should probably be moved elsewhere.
 #percolate loop:
 
 LineLoop:
-#First check if yvalleft == y2 || yvalleft == y3
+#First check if yvalleft == y2 || yvalright == y3
 mov eex, [points+4]
 mov %10, [points+2]
-add %10, yvalleft
+add %10, yvalright
 cmp eex, %10 #cmp with y2
 jne y3cmp
 	#y2 == yvalleft.
@@ -185,8 +185,14 @@ jne y3cmp
 	sub edx, eex #edx = y3 - y2 = ydifleft
 	mov %10, slopes
 	add edx, %10
-	mov edx, [edx] #edx = 1/ydifleft
+	mov edx, [edx] #edx = 1/ydifleft	
 	mov ymax, [points+6]
+	
+	#Check for flat buns
+	mov %10, [points+4]
+	cmp %10, ymax
+	je flatbuns
+	
 	mov %10, [points+2]
 	sub ymax, %10
 	mov yvalleft, 0
@@ -266,6 +272,20 @@ jne LineLoop
 
 endloop:
 
+ret
+
+flatbuns:
+mov eex, [points+6]
+lsh eex, 3
+mov %10, [points]
+or eex, %10
+mov [VGA], eex
+
+mov eex, [points+3]
+lsh eex, 8
+mov %10, [points+5]
+or eex, %10
+mov [VGA], eex
 ret
 ###
 ### END RASTERIZE
@@ -369,12 +389,15 @@ ret
 
 points:
 1
-84
-115
-53
-54
-114
-67
+
+84 #4
+115 #1
+
+53 #1
+67 #10
+
+114 #7
+54 #10
 
 triangle:
 1
