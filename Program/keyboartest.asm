@@ -22,11 +22,11 @@ init:
 
 # Main Loop
 main:
-	mov %1, 10000000
-mainLoop:
-	sub %1, 1
-	jg %1, 0, mainLoop
+	mainLoop:
 	mov %0, [UP_KEY]
+	cmp %0, 0
+	je mainLoop
 	mov [LCD], %0
 	mov [UP_KEY], %0
-	j main
+	forever:
+	j forever
