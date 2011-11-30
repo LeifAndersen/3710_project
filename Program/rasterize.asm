@@ -27,6 +27,7 @@
 `define LEFT_KEY 16379
 `define A_KEY 16378
 `define B_KEY 16377
+`define efx %5
 
 mov SP, 0x2b #initialize stack
 lsh SP, 8
@@ -333,6 +334,7 @@ mov edx, [UP_KEY]
 mov eex, [DOWN_KEY]
 mov efx, [LEFT_KEY]
 mov temp1, [RIGHT_KEY]
+mov temp2, [LEFT_KEY]
 
 mov eax, [triangle+1] #x1
 mov ebx, [triangle+2] #y1
