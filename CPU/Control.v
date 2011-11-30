@@ -383,7 +383,6 @@ module Control(
 			BuffCtrl[17]    <= 0;
 			BuffCtrl[21]    <= 0;
 			immediate       <= 16'd0;
-			Addr            <= {3'd0,instruction[12:0]};
 
 			if(instruction[17:14] == CALL) begin
 				//CALL:
@@ -406,6 +405,7 @@ module Control(
 				MemWrite     <= 1;
 				MemRead      <= 0;
 				ret          <= 0;
+				Addr         <= {2'd0,instruction[13:0]};
 			end
 
 			else if(instruction[17:14] == MOVMRI) begin
@@ -429,6 +429,7 @@ module Control(
 				MemWrite     <= 0;
 				MemRead      <= 1;
 				ret          <= 0;
+				Addr         <= {2'd0,instruction[13:0]};
 			end
 
 			else if(instruction[17:14] == MOVRMI) begin
@@ -452,6 +453,7 @@ module Control(
 				DestSel2     <= 0;
 				ReadSelect2  <= 0;
 				ret          <= 0;
+				Addr         <= {2'd0,instruction[13:0]};
 			end
 
 			else if(instruction[17:14] == RET) begin
@@ -475,6 +477,7 @@ module Control(
 				DestSel2     <= 4'd13;
 				ReadSelect2  <= 4'd13;
 				ret          <= 1;
+				Addr         <= {2'd0,instruction[13:0]};
 			end
 
 			else if(instruction[17:13] == JL) begin
@@ -490,6 +493,7 @@ module Control(
 				DestSel2     <= 0;
 				ReadSelect2  <= 0;
 				ret          <= 0;
+				Addr         <= {3'd0,instruction[12:0]};
 				if (Negative == 1'b1) begin
 					BuffCtrl[15] <= 1;
 					BuffCtrl[12] <= 0;
@@ -525,6 +529,7 @@ module Control(
 				DestSel2     <= 0;
 				ReadSelect2  <= 0;
 				ret          <= 0;
+				Addr         <= {3'd0,instruction[12:0]};
 				if (Negative == 1'b1 || Zero == 1'b1) begin
 					BuffCtrl[15] <= 1;
 					BuffCtrl[12] <= 0;
@@ -559,6 +564,7 @@ module Control(
 				DestSel2     <= 0;
 				ReadSelect2  <= 0;
 				ret          <= 0;
+				Addr         <= {3'd0,instruction[12:0]};
 				if (!(Zero == 1'b1)) begin
 					BuffCtrl[15] <= 1;
 					BuffCtrl[12] <= 0;
@@ -593,6 +599,7 @@ module Control(
 				DestSel2     <= 0;
 				ReadSelect2  <= 0;
 				ret          <= 0;
+				Addr         <= {3'd0,instruction[12:0]};
 				if (Zero == 1'b1) begin
 					BuffCtrl[15] <= 1;
 					BuffCtrl[12] <= 0;
@@ -634,6 +641,7 @@ module Control(
 				DestSel2     <= 0;
 				ReadSelect2  <= 0;
 				ret          <= 0;
+				Addr         <= {3'd0,instruction[12:0]};
 			end
 			else if(instruction[17:13] == JBE) begin
 				//JBE:
@@ -648,6 +656,7 @@ module Control(
 				DestSel2     <= 0;
 				ReadSelect2  <= 0;
 				ret          <= 0;
+				Addr         <= {3'd0,instruction[12:0]};
 				if (Low == 1'b1 || Zero == 1'b1) begin
 					BuffCtrl[15] <= 1;
 					BuffCtrl[12] <= 0;
@@ -681,6 +690,7 @@ module Control(
 				DestSel2     <= 0;
 				ReadSelect2  <= 0;
 				ret          <= 0;
+				Addr         <= {3'd0,instruction[12:0]};
 				if (Low == 1'b1) begin
 					BuffCtrl[15] <= 1;
 					BuffCtrl[12] <= 0;
@@ -721,6 +731,7 @@ module Control(
 				DestSel2     <= 0;
 				ReadSelect2  <= 0;
 				ret          <= 0;
+				Addr         <= 0;
 			end
 		end
 

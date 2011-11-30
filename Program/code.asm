@@ -27,7 +27,7 @@ init:
 
 # Main Loop
 main:
-	
+
 	# Store the registers on the stack
 	push $0
 	push $1
@@ -69,7 +69,7 @@ mainLoop:
 	mov %4, [PLAYER_THETA]
 	sub %2, %3
 	add %4, %2              # %4 has the theta change
-	
+
 	# Up/Down, update x/y
 	mov %2, [PLAYER_X]
 	mov %3, [PLAYER_Y]
@@ -88,7 +88,7 @@ mainLoop:
 	mul %HIGH, %5          # %LOW/HIGH has (UP-DOWN)*cos(theta)
 	add %4, %LOW
 	mov [PLAYER_THETA], %4 # Save the theta
-	
+
 	# Move the AI
 	mov %4, [AI_X]
 	mov %5, [AI_Y]
@@ -97,13 +97,13 @@ mainLoop:
 	call cos
 	mov %HIGH, %0
 	mul %HIGH, AI_SPEED    # %LOW now has speed*sin(theta), to update Y
-	add %4, %LOW           # %4 now has new Y (if possible) 
+	add %4, %LOW           # %4 now has new Y (if possible)
 	mov %0, %6
 	call sin
 	mov %HIGH, %0
 	mul %HIGH, AI_SPEED
 	add %5, %LOW           # %5 now has possible AI_Y
-	
+
 	# Move Player bullet
 	mov %6, [PLAYER_BULLET_TIME]
 	je %6, 0, mainPlayerBulletFire # If unused, let player fire
@@ -200,7 +200,7 @@ mainEndPlayerBullet:
 mainAIBulletFire:
 
 mainEndAIBullet:
-	
+
 	# Bullet Player collision
 
 	# Store Final Values
@@ -215,18 +215,21 @@ mainEndAIBullet:
 	# -------------------------------
 	# For each triangle, do this, although unless it's an enemy tank, you can skip the AI step.
 
-	# Get Projection Matrix Based on Players Position
-
-	# Multiply this by world matrix
-
-	# Mutiply AI tank matrix by outputted matrix
-
-	# At this point, the triangle's x and y coordinates should be directly drawable on the screen.  The z coordinate is only used to determin what parts of the triangle is out of range.
-
 	#Put model in world coordinates:
 	#	Create copy of model on stack from data.
-	mov %0, [tank_model]
+	mov %0, [tank_model]	# AI tank
+	mov %3, tank_model
 	sub $SP, %0				# make room.
+	mul %0, 10
+	add %3, %0				# src pointer: ending address of tank (copy backward)
+	mov %1, %SP				# dst pointer: space on stack
+	copytankloop:
+	mov %2, [%0]			# mov src into tmp
+	mov [%1], %2			# mov tmp into dst
+	decr %1					# src--
+	decr %0					# count--
+	jne %0, 0, copytankloop
+
 	#	Scale model (multiply all points by scale vector).
 	#	Rotate model around x axis by model angle.
 	#	Rotate model around y axis by model angle.
@@ -237,13 +240,6 @@ mainEndAIBullet:
 	#	Rotate model around x axis by camera angle.
 
 	# Rasterise
-	# For each line of pixels, do this:
-	# For each triangle, if it's on that line, do this:
-	# Find the intersection of pixel line, and the tringle, the left one is the ideal left, and the right one is the ideal right.  Special cases for one intersection (point), and when they're the same.
-
-	# If the pixel is lower than 0 or greater than 160, set it as that.  If both of them are off the same side of the screen, just remove it altogether.
-
-	# If z is out of range, find where the line intersects with the max/min z values, set that as your left/right points
 
 	# Send it off to the hardware to be drawn.
 
