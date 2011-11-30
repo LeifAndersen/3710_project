@@ -107,7 +107,7 @@ mainLoop:
 	# Reset keyboard counters
 
 	# -------------------------------
-	# For each triangle, do this, although unless it's an enimy tank, you can skip the AI step.
+	# For each triangle, do this, although unless it's an enemy tank, you can skip the AI step.
 
 	# Get Projection Matrix Based on Players Position
 
@@ -116,6 +116,19 @@ mainLoop:
 	# Mutiply AI tank matrix by outputted matrix
 
 	# At this point, the triangle's x and y coordinates should be directly drawable on the screen.  The z coordinate is only used to determin what parts of the triangle is out of range.
+
+	#Put model in world coordinates:
+	#	Create copy of model on stack from data.
+	mov %0, [tank_model]
+	sub $SP, %0				# make room.
+	#	Scale model (multiply all points by scale vector).
+	#	Rotate model around x axis by model angle.
+	#	Rotate model around y axis by model angle.
+	#	Translate model (add entity location to all points in model).
+
+	#Put model in camera coordinates:
+	#	Rotate model around y axis by camera angle.
+	#	Rotate model around x axis by camera angle.
 
 	# Rasterise
 	# For each line of pixels, do this:
@@ -294,20 +307,15 @@ cos:
 div:
 	ret
 
-# rotate a point (%0) (pointer) by two angles (%1 and %2), and stores it in %3 (pointer)
-rotate_point:
-	push %10
+# rotate a point (%0) (pointer) and stores it in %1 (pointer)
+setup_rotate:
 	push %9
 	push %8
-	push %7
 	push %6
-	push %5
 
 	# move arguments into registers that aren't overwritten
-	mov %7, %0	# src point
-	mov %8, %1	# xtheta
-	mov %9, %2	# ytheta
-	mov %10, %3	# dest point
+	mov %8, %0	# xtheta
+	mov %9, %1	# ytheta
 
 	# generate rotation matrix x
 	mov %0, %8	# generate and save cos
@@ -315,7 +323,7 @@ rotate_point:
 	mov %6, %0
 	mov %0, %8	# generate and save sin
 	call sin
-	mov %5, %0
+	mov %1, %0
 	mov %0, 1	# fill matrix
 	mov [rotation_matrix_x], %0		# 1
 	mov %0, 0
@@ -324,10 +332,10 @@ rotate_point:
 	mov [rotation_matrix_x+3], %0	# 0
 	mov [rotation_matrix_x+6], %0	# 0
 	mov [rotation_matrix_x+4], %6	# cos (xtheta)
-	not %0, %5	# negate %5 by inverting the bits and adding one
+	not %0, %1	# negate %1 by inverting the bits and adding one
 	add %0, 1
 	mov [rotation_matrix_x+5], %0	# -sin (xtheta)
-	mov [rotation_matrix_x+7], %5	# sin (xtheta)
+	mov [rotation_matrix_x+7], %1	# sin (xtheta)
 	mov [rotation_matrix_x+8], %6	# cos (xtheta)
 
 	# generate rotation matrix y
@@ -336,20 +344,34 @@ rotate_point:
 	mov %6, %0
 	mov %0, %9	# generate and save sin
 	call sin
-	mov %5, %0
+	mov %1, %0
 	mov %0, 0
 	mov [rotation_matrix_y+1], %0	# 0
 	mov [rotation_matrix_y+3], %0	# 0
 	mov [rotation_matrix_y+5], %0	# 0
 	mov [rotation_matrix_y+7], %0	# 0
 	mov [rotation_matrix_y], %6		# cos (ytheta)
-	mov [rotation_matrix_y+2], %5	# sin (ytheta)
+	mov [rotation_matrix_y+2], %1	# sin (ytheta)
 	mov %0, 1
 	mov [rotation_matrix_y+4], %6	# 1
-	not %0, %5	# negate %5 by inverting the bits and adding one
+	not %0, %1	# negate %1 by inverting the bits and adding one
 	add %0, 1
 	mov [rotation_matrix_y+6], %0	# -sin (xtheta)
 	mov [rotation_matrix_y+8], %6	# cos (xtheta)
+
+	pop %6
+	pop %8
+	pop %9
+	ret
+
+# setup rotation matricies with two angles (%0 and %1)
+rotate_point:
+	push %10
+	push %7
+	push %2
+
+	mov %7, %0	# src point
+	mov %10, %1	# dest point
 
 	# make room on the stack for temp point
 	sub %SP, 3
@@ -368,11 +390,8 @@ rotate_point:
 	# multiply first one
 	call matrix_multiply
 
-	pop %5
-	pop %6
+	pop %2
 	pop %7
-	pop %8
-	pop %9
 	pop %10
 	ret
 
