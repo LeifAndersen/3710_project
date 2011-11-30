@@ -29,6 +29,7 @@ mov FP, SP
 
 
 #Pass in a pointer to a triangle in memory.
+infinite2:
 mov eax, points
 
 call rasterize
@@ -37,47 +38,48 @@ mov eax, 0xffff
 mov [VGA], eax
 mov [VGA], eax
 
-infinite:
-j infinite
+#infinite:
+#j infinite
 
+mov eax, 0xf
 #call pause
 
-#call rasterize
+call rasterize
 
-#mov eax, 4
-#lsh eax, 3
-#or eax, 7
-#mov [VGA], eax
-#mov eax, 3
-#lsh eax, 8
-#mov [VGA], eax
+mov eax, [points+2]
+lsh eax, 3
+or eax, 7
+mov [VGA], eax
+mov eax, [points+1]
+lsh eax, 8
+mov [VGA], eax
 
-#mov eax, 17
-#lsh eax, 3
-#or eax, 7
-#mov [VGA], eax
-#mov eax, 64
-#lsh eax, 8
-#mov [VGA], eax
+mov eax, [points+4]
+lsh eax, 3
+or eax, 7
+mov [VGA], eax
+mov eax, [points+3]
+lsh eax, 8
+mov [VGA], eax
 
-#mov eax, 65
-#lsh eax, 3
-#or eax, 7
-#mov [VGA], eax
-#mov eax, 34
-#lsh eax, 8
-#mov [VGA], eax
+mov eax, [points+6]
+lsh eax, 3
+or eax, 7
+mov [VGA], eax
+mov eax, [points+5]
+lsh eax, 8
+mov [VGA], eax
 
-#infinite2:
-
-#mov eax, 0xffff
+mov eax, 0xf
 #call pause
 
-#mov eax, 0xffff
-#mov [VGA], eax
-#mov [VGA], eax
+mov eax, 0xffff
+mov [VGA], eax
+mov [VGA], eax
 
-#j infinite2
+call movepoint #This will add motion to the triangle to test various different weird triangles.
+
+j infinite2
 
 rasterize:
 # Step one: Determine lowest point and percolate up the two edges connecting to it.
@@ -276,36 +278,112 @@ ret
 #
 # PAUSE - Handy helper function for drawing stuff and not flashing between buffers too fast.  Send a pause value in on eax ;)
 #
-#pause:
-#mov ebx, 0xffff
-#mov edx, 0
+pause:
+mov ebx, 0xffff
+mov edx, 0
 
-#pauseLoop2:
-#mov ecx, 0
-#pauseLoop1:
-#add ecx, 1
-#cmp ecx, ebx
-#jne pauseLoop1
-#mov edx, 1
-#cmp edx, eax
-#jne pauseLoop2
+pauseLoop2:
+mov ecx, 0
+pauseLoop1:
+incr ecx
+cmp ecx, ebx
+jne pauseLoop1
+incr edx
+cmp edx, eax
+jne pauseLoop2
 
-#ret
+ret
 
 ###
 ### END PAUSE
 ###
 
+#
+# MOVEPOINT
+#
+movepoint:
+
+mov eax, [triangle+1] #x1
+mov ebx, [triangle+2] #y1
+
+cmp eax, 0
+je movey
+decr eax
+mov [triangle+1], eax
+j changecolor
+
+movey:
+cmp ebx, 0
+je donemovepoint
+decr ebx
+mov [triangle+2], ebx
+
+changecolor:
+mov ecx, [triangle]
+cmp ecx, 7
+je resetseven
+incr ecx
+mov [triangle], ecx
+j donemovepoint
+
+resetseven:
+mov ecx, 2
+mov [triangle], ecx
+
+donemovepoint:
+
+call newtriangle
+
+ret
+###
+### END MOVEPOINT
+###
+
+#
+# NEWTRIANGLE
+# Pass in 7 values on %0-%6
+#
+newtriangle:
+
+mov eax, [triangle]
+mov [points], eax
+mov eax, [triangle+1]
+mov [points+1], eax
+mov eax, [triangle+2]
+mov [points+2], eax
+mov eax, [triangle+3]
+mov [points+3], eax
+mov eax, [triangle+4]
+mov [points+4], eax
+mov eax, [triangle+5]
+mov [points+5], eax
+mov eax, [triangle+6]
+mov [points+6], eax
+
+ret
+###
+### END NEWTRIANGLE
+###
+
 .data
 
 points:
-2
-34
-65
-3
-4
-64
-17
+1
+84
+115
+53
+54
+114
+67
+
+triangle:
+1
+84
+115
+53
+54
+114
+67
 
 slopes:
 0b0000000000000000

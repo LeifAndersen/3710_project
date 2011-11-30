@@ -3,7 +3,7 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="U:/3710/3710/CPU/testdatapath_isim_beh.wdb" id="1" type="auto">
+      <db_ref path="C:/Users/jhparker/3710/CPU/testdatapath_isim_beh1.wdb" id="1" type="auto">
          <top_modules>
             <top_module name="glbl" />
             <top_module name="testdatapath" />
@@ -154,7 +154,7 @@
    <wvobject fp_name="/testdatapath/uut/drawunit/queue/wrtData" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">wrtData[15:0]</obj_property>
       <obj_property name="ObjectShortName">wrtData[15:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/testdatapath/uut/drawunit/queue/we" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">we</obj_property>
