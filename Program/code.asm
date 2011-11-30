@@ -112,13 +112,13 @@ mainLoop:
 
 	mov %6, [PLAYER_BULLET_X]
 	mov %7, [PLAYER_BULLET_Y]
-	mov %0, [PLAYYER_BULLET_THETA]
+	mov %0, [PLAYER_BULLET_THETA]
 	call cos
 	mul %0, BULLET_SPEED
 	add %6, %LOW           # 6 now conains bullet x
 	mov %0, [PLAYER_BULLET_THETA]
 	call sin
-	mul $0, BULLET_SPEED
+	mul %0, BULLET_SPEED
 	add %7, %LOW           # 7 now contains bullet y
 
 	# Check bullet AI Collision
@@ -149,7 +149,7 @@ mainLoop:
 
 mainPlayerBulletFire:
 	mov %8, [A_KEY]
-	je %8, 0 mainEndPlayerBullet # Didn't fire
+	je %8, 0, mainEndPlayerBullet # Didn't fire
 	mov [PLAYER_BULLET_X], %2
 	mov [PLAYER_BULLET_Y], %3
 	mov %1, [PLAYER_THETA]
@@ -171,7 +171,7 @@ mainEndPlayerBullet:
 	add %8, %LOW           # 8 now conains bullet x
 	mov %0, [AI_BULLET_THETA]
 	call sin
-	mul $0, BULLET_SPEED
+	mul %0, BULLET_SPEED
 	add %9, %LOW           # 9 now contains bullet y
 
 	# Check bullet AI Collision
@@ -210,7 +210,8 @@ mainEndAIBullet:
 	mov [AI_Y], %7
 
 	# Reset keyboard counters
-	mov [UP_KEY], 1
+	mov %0, 1
+	mov [UP_KEY], %0
 
 	# -------------------------------
 	# For each triangle, do this, although unless it's an enimy tank, you can skip the AI step.
