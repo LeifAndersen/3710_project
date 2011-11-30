@@ -42,7 +42,7 @@ mov [VGA], eax
 #j infinite
 
 mov eax, 0xf
-call pause
+#call pause
 
 call rasterize
 
@@ -71,7 +71,7 @@ lsh eax, 8
 mov [VGA], eax
 
 mov eax, 0xf
-call pause
+#call pause
 
 mov eax, 0xffff
 mov [VGA], eax
