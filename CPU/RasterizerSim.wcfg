@@ -3,14 +3,14 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="C:/Users/jhparker/3710/CPU/testdatapath_isim_beh1.wdb" id="1" type="auto">
+      <db_ref path="U:/3710/3710/CPU/testdatapath_isim_beh.wdb" id="1" type="auto">
          <top_modules>
             <top_module name="glbl" />
             <top_module name="testdatapath" />
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="25" />
+   <WVObjectSize size="28" />
    <wvobject fp_name="/testdatapath/color" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">color[2:0]</obj_property>
       <obj_property name="ObjectShortName">color[2:0]</obj_property>
@@ -32,12 +32,26 @@
       <obj_property name="ObjectShortName">pc[15:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
+   <wvobject fp_name="/testdatapath/uut/instruction" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">instruction[17:0]</obj_property>
+      <obj_property name="ObjectShortName">instruction[17:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/specialAddr" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">specialAddr[15:0]</obj_property>
+      <obj_property name="ObjectShortName">specialAddr[15:0]</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/flagsToControl" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">flagsToControl[2:0]</obj_property>
+      <obj_property name="ObjectShortName">flagsToControl[2:0]</obj_property>
+   </wvobject>
    <wvobject fp_name="/testdatapath/uut/RegisterFile/reg9" type="array" db_ref_id="1">
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="ElementShortName">reg9[15:0]</obj_property>
       <obj_property name="ObjectShortName">reg9[15:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      <obj_property name="label">yval</obj_property>
+      <obj_property name="label">yvalleft</obj_property>
    </wvobject>
    <wvobject fp_name="/testdatapath/uut/RegisterFile/reg0" type="array" db_ref_id="1">
       <obj_property name="DisplayName">label</obj_property>
@@ -79,7 +93,7 @@
       <obj_property name="ElementShortName">reg5[15:0]</obj_property>
       <obj_property name="ObjectShortName">reg5[15:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      <obj_property name="label">efx</obj_property>
+      <obj_property name="label">yvalright</obj_property>
    </wvobject>
    <wvobject fp_name="/testdatapath/uut/RegisterFile/reg6" type="array" db_ref_id="1">
       <obj_property name="DisplayName">label</obj_property>
