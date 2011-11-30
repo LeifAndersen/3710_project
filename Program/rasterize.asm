@@ -21,6 +21,12 @@
 `define temp1 %7
 `define temp2 %8
 `define yvalleft %9
+`define UP_KEY 16382
+`define DOWN_KEY 16381
+`define RIGHT_KEY 16380
+`define LEFT_KEY 16379
+`define A_KEY 16378
+`define B_KEY 16377
 
 mov SP, 0x2b #initialize stack
 lsh SP, 8
@@ -42,7 +48,7 @@ mov [VGA], eax
 #j infinite
 
 mov eax, 0xf
-#call pause
+call pause
 
 call rasterize
 
@@ -71,7 +77,7 @@ lsh eax, 8
 mov [VGA], eax
 
 mov eax, 0xf
-#call pause
+call pause
 
 mov eax, 0xffff
 mov [VGA], eax
@@ -322,6 +328,11 @@ ret
 # MOVEPOINT
 #
 movepoint:
+
+mov edx, [UP_KEY]
+mov eex, [DOWN_KEY]
+mov efx, [LEFT_KEY]
+mov temp1, [RIGHT_KEY]
 
 mov eax, [triangle+1] #x1
 mov ebx, [triangle+2] #y1
