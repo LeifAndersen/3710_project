@@ -8,9 +8,13 @@
 `define %HIGH %12
 `define %SP %13
 `define %FP %14
+`define LCD 16376
 `define VGA 16383
 `define BULLET_RADIUS 1
 `define TANK_RADIUS 10
+`define AI_SPEED 10
+`define PLAYER_START_LIVES 5
+`define BULLET_SPEED 20
 `define STACK_TOP 0x2bff # stack starts at 11264 (this is the top of memory, be careful)
 
 # Bootup and initialization Code
@@ -23,7 +27,7 @@ init:
 
 # Main Loop
 main:
-
+	
 	# Store the registers on the stack
 	push $0
 	push $1
@@ -54,7 +58,7 @@ mainNewPlayer:
 	mov [AI_Y], %0
 	mov %0, [AI_START_THETA]
 	mov [AI_THETA], %0
-	mov %0, 5
+	mov %0, PLAYER_START_LIVES
 	mov [PLAYER_LIVES], %0
 
 mainLoop:
@@ -65,7 +69,7 @@ mainLoop:
 	mov %4, [PLAYER_THETA]
 	sub %2, %3
 	add %4, %2              # %4 has the theta change
-
+	
 	# Up/Down, update x/y
 	mov %2, [PLAYER_X]
 	mov %3, [PLAYER_Y]
@@ -84,19 +88,120 @@ mainLoop:
 	mul %HIGH, %5          # %LOW/HIGH has (UP-DOWN)*cos(theta)
 	add %4, %LOW
 	mov [PLAYER_THETA], %4 # Save the theta
+	
+	# Move the AI
+	mov %4, [AI_X]
+	mov %5, [AI_Y]
+	mov %6, [AI_THETA]
+	mov %0, %6
+	call cos
+	mov %HIGH, %0
+	mul %HIGH, AI_SPEED    # %LOW now has speed*sin(theta), to update Y
+	add %4, %LOW           # %4 now has new Y (if possible) 
+	mov %0, %6
+	call sin
+	mov %HIGH, %0
+	mul %HIGH, AI_SPEED
+	add %5, %LOW           # %5 now has possible AI_Y
+	
+	# Move Player bullet
+	mov %6, [PLAYER_BULLET_TIME]
+	je %6, 0, mainPlayerBulletFire # If unused, let player fire
+	sub %6, 1
+	mov [PLAYER_BULLET_TIME], %6
 
-	# TODO Move only when AI not in the way
+	mov %6, [PLAYER_BULLET_X]
+	mov %7, [PLAYER_BULLET_Y]
+	mov %0, [PLAYYER_BULLET_THETA]
+	call cos
+	mul %0, BULLET_SPEED
+	add %6, %LOW           # 6 now conains bullet x
+	mov %0, [PLAYER_BULLET_THETA]
+	call sin
+	mul $0, BULLET_SPEED
+	add %7, %LOW           # 7 now contains bullet y
 
-	# -------------------------------
-	# Move AI
-	mov %5, [AI_THETA]
-	mov %6, [AI_X]
-	mov %7, [AI_Y]
+	# Check bullet AI Collision
+	mov %0, %4
+	sub %0, %6
+	mul %0, %0
+	mov %0, %LOW
+	mov %1, %5
+	sub %1, %7
+	mul %1, %1
+	add %0, %LOW # 0 now contains (x0-x1)^2+(y0-y1)^2
+	mov %1, BULLET_RADIUS
+	add %1, TANK_RADIUS
+	jg %0, %1, mainEndPlayerBullet # Not a hit
 
-	# -------------------------------
-	# Move bullet
+	# Bullet colided with AI
+	mov %0, [PLAYER_SCORE]
+	add %0, 1
+	mov [PLAYER_SCORE], %0
 
-	# Bullet collide against anything?
+	# Reset AI position
+	mov %0, [AI_START_X]
+	mov [AI_X], %0
+	mov %0, [AI_START_Y]
+	mov [AI_Y], %0
+
+	j mainEndPlayerBullet
+
+mainPlayerBulletFire:
+	mov %8, [A_KEY]
+	je %8, 0 mainEndPlayerBullet # Didn't fire
+	mov [PLAYER_BULLET_X], %2
+	mov [PLAYER_BULLET_Y], %3
+	mov %1, [PLAYER_THETA]
+	mov [PLAYER_BULLET_THETA], %1
+
+mainEndPlayerBullet:
+
+	# Move AI bullet
+	mov %8, [AI_BULLET_TIME]
+	je %8, 0, mainAIBulletFire # If unused, AI Fires turnes and fires bullet
+	sub %8, 1
+	mov [AI_BULLET_TIME], %8
+
+	mov %8, [AI_BULLET_X]
+	mov %9, [AI_BULLET_Y]
+	mov %0, [AI_BULLET_THETA]
+	call cos
+	mul %0, BULLET_SPEED
+	add %8, %LOW           # 8 now conains bullet x
+	mov %0, [AI_BULLET_THETA]
+	call sin
+	mul $0, BULLET_SPEED
+	add %9, %LOW           # 9 now contains bullet y
+
+	# Check bullet AI Collision
+	mov %0, %2
+	sub %0, %8
+	mul %0, %0
+	mov %0, %LOW
+	mov %1, %3
+	sub %1, %9
+	mul %1, %1
+	add %0, %LOW # 0 now contains (x0-x1)^2+(y0-y1)^2
+	mov %1, BULLET_RADIUS
+	add %1, TANK_RADIUS
+	jg %0, %1, mainEndPlayerBullet # Not a hit
+
+	# Bullet hit player
+	mov %0, [PLAYER_LIVES]
+	je %0, 0, mainNewPlayer # Player died, restart game
+	sub %0, 1
+	mov [PLAYER_LIVES], %0
+	mov %0, 0
+	mov [AI_BULLET_TIME], %0
+
+	j mainEndAIBullet
+
+mainAIBulletFire:
+
+mainEndAIBullet:
+	
+	# Bullet Player collision
 
 	# Store Final Values
 	mov [PLAYER_X], %3
@@ -105,6 +210,7 @@ mainLoop:
 	mov [AI_Y], %7
 
 	# Reset keyboard counters
+	mov [UP_KEY], 1
 
 	# -------------------------------
 	# For each triangle, do this, although unless it's an enimy tank, you can skip the AI step.
