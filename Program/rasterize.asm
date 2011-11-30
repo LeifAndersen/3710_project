@@ -29,6 +29,7 @@ mov FP, SP
 
 
 #Pass in a pointer to a triangle in memory.
+infinite2:
 mov eax, points
 
 call rasterize
@@ -37,47 +38,48 @@ mov eax, 0xffff
 mov [VGA], eax
 mov [VGA], eax
 
-infinite:
-j infinite
+#infinite:
+#j infinite
 
-#call pause
+mov eax, 0xf
+call pause
 
-#call rasterize
+call rasterize
 
-#mov eax, 4
-#lsh eax, 3
-#or eax, 7
-#mov [VGA], eax
-#mov eax, 3
-#lsh eax, 8
-#mov [VGA], eax
+mov eax, [points+2]
+lsh eax, 3
+or eax, 7
+mov [VGA], eax
+mov eax, [points+1]
+lsh eax, 8
+mov [VGA], eax
 
-#mov eax, 17
-#lsh eax, 3
-#or eax, 7
-#mov [VGA], eax
-#mov eax, 64
-#lsh eax, 8
-#mov [VGA], eax
+mov eax, [points+4]
+lsh eax, 3
+or eax, 7
+mov [VGA], eax
+mov eax, [points+3]
+lsh eax, 8
+mov [VGA], eax
 
-#mov eax, 65
-#lsh eax, 3
-#or eax, 7
-#mov [VGA], eax
-#mov eax, 34
-#lsh eax, 8
-#mov [VGA], eax
+mov eax, [points+6]
+lsh eax, 3
+or eax, 7
+mov [VGA], eax
+mov eax, [points+5]
+lsh eax, 8
+mov [VGA], eax
 
-#infinite2:
+mov eax, 0xf
+call pause
 
-#mov eax, 0xffff
-#call pause
+mov eax, 0xffff
+mov [VGA], eax
+mov [VGA], eax
 
-#mov eax, 0xffff
-#mov [VGA], eax
-#mov [VGA], eax
+#call movepoint #This will add motion to the triangle to test various different weird triangles.
 
-#j infinite2
+j infinite2
 
 rasterize:
 # Step one: Determine lowest point and percolate up the two edges connecting to it.
@@ -168,10 +170,10 @@ mov ymax, 0xffff #This should probably be moved elsewhere.
 #percolate loop:
 
 LineLoop:
-#First check if yvalleft == y2 || yvalleft == y3
+#First check if yvalleft == y2 || yvalright == y3
 mov eex, [points+4]
 mov %10, [points+2]
-add %10, yvalleft
+add %10, yvalright
 cmp eex, %10 #cmp with y2
 jne y3cmp
 	#y2 == yvalleft.
@@ -183,8 +185,14 @@ jne y3cmp
 	sub edx, eex #edx = y3 - y2 = ydifleft
 	mov %10, slopes
 	add edx, %10
-	mov edx, [edx] #edx = 1/ydifleft
+	mov edx, [edx] #edx = 1/ydifleft	
 	mov ymax, [points+6]
+	
+	#Check for flat buns
+	mov %10, [points+4]
+	cmp %10, ymax
+	je flatbuns
+	
 	mov %10, [points+2]
 	sub ymax, %10
 	mov yvalleft, 0
@@ -265,6 +273,20 @@ jne LineLoop
 endloop:
 
 ret
+
+flatbuns:
+mov eex, [points+6]
+lsh eex, 3
+mov %10, [points]
+or eex, %10
+mov [VGA], eex
+
+mov eex, [points+3]
+lsh eex, 8
+mov %10, [points+5]
+or eex, %10
+mov [VGA], eex
+ret
 ###
 ### END RASTERIZE
 ###
@@ -276,36 +298,115 @@ ret
 #
 # PAUSE - Handy helper function for drawing stuff and not flashing between buffers too fast.  Send a pause value in on eax ;)
 #
-#pause:
-#mov ebx, 0xffff
-#mov edx, 0
+pause:
+mov ebx, 0xffff
+mov edx, 0
 
-#pauseLoop2:
-#mov ecx, 0
-#pauseLoop1:
-#add ecx, 1
-#cmp ecx, ebx
-#jne pauseLoop1
-#mov edx, 1
-#cmp edx, eax
-#jne pauseLoop2
+pauseLoop2:
+mov ecx, 0
+pauseLoop1:
+incr ecx
+cmp ecx, ebx
+jne pauseLoop1
+incr edx
+cmp edx, eax
+jne pauseLoop2
 
-#ret
+ret
 
 ###
 ### END PAUSE
 ###
 
+#
+# MOVEPOINT
+#
+movepoint:
+
+mov eax, [triangle+1] #x1
+mov ebx, [triangle+2] #y1
+
+cmp eax, 0
+je movey
+decr eax
+mov [triangle+1], eax
+j changecolor
+
+movey:
+cmp ebx, 0
+je donemovepoint
+decr ebx
+mov [triangle+2], ebx
+
+changecolor:
+mov ecx, [triangle]
+cmp ecx, 7
+je resetseven
+incr ecx
+mov [triangle], ecx
+j donemovepoint
+
+resetseven:
+mov ecx, 2
+mov [triangle], ecx
+
+donemovepoint:
+
+call newtriangle
+
+ret
+###
+### END MOVEPOINT
+###
+
+#
+# NEWTRIANGLE
+# Pass in 7 values on %0-%6
+#
+newtriangle:
+
+mov eax, [triangle]
+mov [points], eax
+mov eax, [triangle+1]
+mov [points+1], eax
+mov eax, [triangle+2]
+mov [points+2], eax
+mov eax, [triangle+3]
+mov [points+3], eax
+mov eax, [triangle+4]
+mov [points+4], eax
+mov eax, [triangle+5]
+mov [points+5], eax
+mov eax, [triangle+6]
+mov [points+6], eax
+
+ret
+###
+### END NEWTRIANGLE
+###
+
 .data
 
 points:
-2
-34
-65
-3
-4
-64
-17
+1
+
+84 #4
+115 #1
+
+53 #1
+67 #10
+
+114 #7
+54 #10
+
+triangle:
+1
+84
+115
+53
+54
+114
+67
 
 slopes:
 0b0000000000000000
