@@ -163,7 +163,7 @@ module Control(
 				BuffCtrl[21] <= 1;
 				BuffCtrl[2]  <= 1;
 			end
-			
+
 			else if (instruction[7:4] == MOVR) begin
 				//MOVR
 				BuffCtrl[2]  <= 0;
@@ -383,7 +383,7 @@ module Control(
 			BuffCtrl[17]    <= 0;
 			BuffCtrl[21]    <= 0;
 			immediate       <= 16'd0;
-			Addr            <= {2'd0,instruction[13:0]};
+			Addr            <= {3'd0,instruction[12:0]};
 
 			if(instruction[17:14] == CALL) begin
 				//CALL:
@@ -768,7 +768,7 @@ module Control(
 					BuffCtrl[1]	 	<= 1;
 					BuffCtrl[19] 	<= 0;
 					BuffCtrl[18] 	<= 0;
-					BuffCtrl[8]	    <= 0;	
+					BuffCtrl[8]	    <= 0;
 					BuffCtrl[0]	 	<= 0;
 					BuffCtrl[12] 	<= 0;
 					BuffCtrl[20] 	<= 0;
