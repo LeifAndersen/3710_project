@@ -295,7 +295,7 @@ mainEndAIBullet:
 	call memcpy
 	# save local tank pointer
 	mov %9, %1				# don't touch %9....
-	skipailbullet:
+	skipaibullet:
 
 	# check Player bullet
 	mov %0, [PLAYER_BULLET_TIME]
@@ -896,6 +896,20 @@ rotation_matrix_y:
 0
 0
 0
+
+tank_model:
+1
+00
+00
+00
+00
+
+bullet_model:
+1
+00
+00
+00
+00
 
 sine_lut:
 0b0000000000000000
