@@ -10,7 +10,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="32" />
+   <WVObjectSize size="34" />
    <wvobject fp_name="/testdatapath/uut/CLK_25MHZ" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">CLK_25MHZ</obj_property>
       <obj_property name="ObjectShortName">CLK_25MHZ</obj_property>
@@ -164,5 +164,15 @@
       <obj_property name="ElementShortName">write_select_2[3:0]</obj_property>
       <obj_property name="ObjectShortName">write_select_2[3:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/memWriteBus" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">memWriteBus[15:0]</obj_property>
+      <obj_property name="ObjectShortName">memWriteBus[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/memAddrBus" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">memAddrBus[15:0]</obj_property>
+      <obj_property name="ObjectShortName">memAddrBus[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
 </wave_config>

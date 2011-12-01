@@ -753,7 +753,7 @@ module Control(
 
 			if(instruction[17:14] == POP) begin
 				//POP:
-				ReadSelect2      <= 13;
+				ReadSelect2 <= 13;
 				MemWrite    <= 0;
 				if (instruction[13:10] == 13 || instruction[13:10] == 12) begin
 					// NEVER POP INTO THE STACK POINTER!
