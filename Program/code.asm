@@ -28,7 +28,7 @@ init:
 
 # Main Loop
 main:
-	
+
 	# Store the registers on the stack
 	push $0
 	push $1
@@ -71,7 +71,7 @@ mainLoop:
 	mov %4, [PLAYER_THETA]
 	sub %2, %3
 	add %4, %2              # %4 has the theta change
-	
+
 	# Up/Down, update x/y
 	mov %2, [PLAYER_X]
 	mov %3, [PLAYER_Y]
@@ -90,7 +90,7 @@ mainLoop:
 	mul %HIGH, %5          # %LOW/HIGH has (UP-DOWN)*cos(theta)
 	add %4, %LOW
 	mov [PLAYER_THETA], %4 # Save the theta
-	
+
 	# Move the AI
 	
 	mov %0, [AI_TURNING]
@@ -103,12 +103,13 @@ mainLoop:
 	call cos
 	mov %HIGH, %0
 	mul %HIGH, AI_SPEED    # %LOW now has speed*sin(theta), to update Y
-	add %4, %LOW           # %4 now has new Y (if possible) 
+	add %4, %LOW           # %4 now has new Y (if possible)
 	mov %0, %6
 	call sin
 	mov %HIGH, %0
 	mul %HIGH, AI_SPEED
 	add %5, %LOW           # %5 now has possible AI_Y
+<<<<<<< HEAD
 	j mainAIDoneMoving
 
 mainAITurningRight:
@@ -132,6 +133,8 @@ mainAIDoneTurning:
 	mov [AI_TURNING], %0
 
 mainAIDoneMoving:
+=======
+>>>>>>> 445b2531cb74bddd24d0f4896bf2519df8b95993
 
 	# Move Player bullet
 	mov %6, [PLAYER_BULLET_TIME]
@@ -246,7 +249,7 @@ mainAIFire:
 	
 
 mainEndAIBullet:
-	
+
 	# Bullet Player collision
 
 	# Store Final Values
@@ -260,8 +263,35 @@ mainEndAIBullet:
 	mov [UP_KEY], %0
 
 	# -------------------------------
+	# For each triangle, do this, although unless it's an enemy tank, you can skip the AI step.
 
-	# Graphics pipeline here
+	#Put model in world coordinates:
+	#	Create copy of model on stack from data.
+	mov %0, [tank_model]	# AI tank
+	mov %3, tank_model
+	sub $SP, %0				# make room.
+	mul %0, 10
+	add %3, %0				# src pointer: ending address of tank (copy backward)
+	mov %1, %SP				# dst pointer: space on stack
+	copytankloop:
+	mov %2, [%0]			# mov src into tmp
+	mov [%1], %2			# mov tmp into dst
+	decr %1					# src--
+	decr %0					# count--
+	jne %0, 0, copytankloop
+
+	#	Scale model (multiply all points by scale vector).
+	#	Rotate model around x axis by model angle.
+	#	Rotate model around y axis by model angle.
+	#	Translate model (add entity location to all points in model).
+
+	#Put model in camera coordinates:
+	#	Rotate model around y axis by camera angle.
+	#	Rotate model around x axis by camera angle.
+
+	# Rasterise
+
+	# Send it off to the hardware to be drawn.
 
 	# -------------------------------
 
@@ -448,20 +478,15 @@ cos:
 div:
 	ret
 
-# rotate a point (%0) (pointer) by two angles (%1 and %2), and stores it in %3 (pointer)
-rotate_point:
-	push %10
+# rotate a point (%0) (pointer) and stores it in %1 (pointer)
+setup_rotate:
 	push %9
 	push %8
-	push %7
 	push %6
-	push %5
 
 	# move arguments into registers that aren't overwritten
-	mov %7, %0	# src point
-	mov %8, %1	# xtheta
-	mov %9, %2	# ytheta
-	mov %10, %3	# dest point
+	mov %8, %0	# xtheta
+	mov %9, %1	# ytheta
 
 	# generate rotation matrix x
 	mov %0, %8	# generate and save cos
@@ -469,7 +494,7 @@ rotate_point:
 	mov %6, %0
 	mov %0, %8	# generate and save sin
 	call sin
-	mov %5, %0
+	mov %1, %0
 	mov %0, 1	# fill matrix
 	mov [rotation_matrix_x], %0		# 1
 	mov %0, 0
@@ -478,10 +503,10 @@ rotate_point:
 	mov [rotation_matrix_x+3], %0	# 0
 	mov [rotation_matrix_x+6], %0	# 0
 	mov [rotation_matrix_x+4], %6	# cos (xtheta)
-	not %0, %5	# negate %5 by inverting the bits and adding one
+	not %0, %1	# negate %1 by inverting the bits and adding one
 	add %0, 1
 	mov [rotation_matrix_x+5], %0	# -sin (xtheta)
-	mov [rotation_matrix_x+7], %5	# sin (xtheta)
+	mov [rotation_matrix_x+7], %1	# sin (xtheta)
 	mov [rotation_matrix_x+8], %6	# cos (xtheta)
 
 	# generate rotation matrix y
@@ -490,20 +515,34 @@ rotate_point:
 	mov %6, %0
 	mov %0, %9	# generate and save sin
 	call sin
-	mov %5, %0
+	mov %1, %0
 	mov %0, 0
 	mov [rotation_matrix_y+1], %0	# 0
 	mov [rotation_matrix_y+3], %0	# 0
 	mov [rotation_matrix_y+5], %0	# 0
 	mov [rotation_matrix_y+7], %0	# 0
 	mov [rotation_matrix_y], %6		# cos (ytheta)
-	mov [rotation_matrix_y+2], %5	# sin (ytheta)
+	mov [rotation_matrix_y+2], %1	# sin (ytheta)
 	mov %0, 1
 	mov [rotation_matrix_y+4], %6	# 1
-	not %0, %5	# negate %5 by inverting the bits and adding one
+	not %0, %1	# negate %1 by inverting the bits and adding one
 	add %0, 1
 	mov [rotation_matrix_y+6], %0	# -sin (xtheta)
 	mov [rotation_matrix_y+8], %6	# cos (xtheta)
+
+	pop %6
+	pop %8
+	pop %9
+	ret
+
+# setup rotation matricies with two angles (%0 and %1)
+rotate_point:
+	push %10
+	push %7
+	push %2
+
+	mov %7, %0	# src point
+	mov %10, %1	# dest point
 
 	# make room on the stack for temp point
 	sub %SP, 3
@@ -522,11 +561,8 @@ rotate_point:
 	# multiply first one
 	call matrix_multiply
 
-	pop %5
-	pop %6
+	pop %2
 	pop %7
-	pop %8
-	pop %9
 	pop %10
 	ret
 

@@ -21,6 +21,13 @@
 `define temp1 %7
 `define temp2 %8
 `define yvalleft %9
+`define UP_KEY 16382
+`define DOWN_KEY 16381
+`define RIGHT_KEY 16380
+`define LEFT_KEY 16379
+`define A_KEY 16378
+`define B_KEY 16377
+`define efx %5
 
 mov SP, 0x2b #initialize stack
 lsh SP, 8
@@ -165,7 +172,7 @@ sub ecx, eex # ecx = y3-y1 = ydifright.
 add ecx, %10
 mov ecx, [ecx] #ecx = 1/ydifrigh
 
-mov ymax, 0xffff #This should probably be moved elsewhere.
+mov ymax, 0x00ff #This should probably be moved elsewhere.
 
 #percolate loop:
 
@@ -265,10 +272,12 @@ mov [VGA], eex
 
 incr yvalleft
 incr yvalright
-cmp yvalright, ymax
-je endloop
-cmp yvalleft, ymax
-jne LineLoop
+#cmp yvalright, ymax
+#je endloop
+#cmp yvalleft, ymax
+#jne LineLoop
+jg yvalright, ymax, endloop
+jle yvalleft, ymax, LineLoop
 
 endloop:
 
@@ -323,6 +332,19 @@ ret
 #
 movepoint:
 
+mov edx, [UP_KEY]
+mov eex, [DOWN_KEY]
+mov efx, [LEFT_KEY]
+mov temp1, [RIGHT_KEY]
+
+mov temp2, [A_KEY]
+
+je temp2, 0, nostatechange
+mov %10, [state]
+	
+nostatechange:
+
+#If A==0, move point 1, a==1 move point 2, a==3 move p3
 mov eax, [triangle+1] #x1
 mov ebx, [triangle+2] #y1
 
@@ -390,14 +412,14 @@ ret
 points:
 1
 
-84 #4
-115 #1
+0 #84 #4
+80 #115 #1
 
 53 #1
-67 #10
+54 #10
 
 114 #7
-54 #10
+67 #10
 
 triangle:
 1
@@ -407,6 +429,9 @@ triangle:
 54
 114
 67
+
+state:
+0
 
 slopes:
 0b0000000000000000
