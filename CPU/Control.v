@@ -781,9 +781,9 @@ module Control(
 					BuffCtrl[18] 	<= 0;
 					BuffCtrl[8]	    <= 0;
 					BuffCtrl[0]	 	<= 0;
-					BuffCtrl[12] 	<= 0;
-					BuffCtrl[20] 	<= 0;
-					BuffCtrl[22]    <= 0;
+					BuffCtrl[12] 	<= 1;
+					BuffCtrl[20] 	<= 1;
+					BuffCtrl[22]    <= 1;
 					MemRead         <= 1;
 				end
 			end
@@ -798,12 +798,12 @@ module Control(
 				ReadSelect1  <= instruction[13:10];
 				DestSel2     <= 13;               // SP to increment
 				BuffCtrl[1]	 <= 1;
-				BuffCtrl[20] <= 1;
+				BuffCtrl[20] <= 0;
 				BuffCtrl[18] <= 1;
 				BuffCtrl[8]	 <= 1;
 				BuffCtrl[0]	 <= 0;
 				BuffCtrl[12] <= 0;
-				BuffCtrl[19] <= 0;
+				BuffCtrl[19] <= 1;
 				BuffCtrl[22] <= 0;
 				MemRead      <= 0;
 			end
@@ -819,11 +819,11 @@ module Control(
 				DestSel2     <= 13;               // SP to increment
 				BuffCtrl[0]	 <= 1;
 				BuffCtrl[18] <= 1;
-				BuffCtrl[20] <= 1;
+				BuffCtrl[20] <= 0;
 				BuffCtrl[8]	 <= 1;
 				BuffCtrl[1]	 <= 0;
 				BuffCtrl[12] <= 0;
-				BuffCtrl[19] <= 0;
+				BuffCtrl[19] <= 1;
 				BuffCtrl[22] <= 0;
 				MemRead      <= 0;
 			end
