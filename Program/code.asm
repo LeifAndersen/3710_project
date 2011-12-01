@@ -672,27 +672,37 @@ mainEndAIBullet:
 
 	skipplayerbulletcamerarotate:
 
-	#Split model into individual triangles:
+# consolidate models
+	mov %0, [%10]			# get size of first
+	mov %1, %10				# get pointer to first
+
+
+#Split model into individual triangles:
 	#	Back face cull (take cross product of points 1, 2, and 3, if pointing away, don’t proceed, done with this triangle).
+	#	(p3 - p1) x (p3 - p2)
+
+
 	#	Sort triangles by distance of nearest point (furthest away comes first).
 
 
-	#Front-back clipping:
+#Front-back clipping:
 	#	If triangle has both positive and negative z values at this point, it must be clipped to only the positive z space.
+
+
 	#	Calculate intersection of triangle with screen location via binary subdivision.
+
+
 	#	If triangle clip results in quad, split quad into two triangles instead.
 
 
-	#Perspective transform:
+#Perspective transform:
 	#	Using similar triangles and binary subdivision, calculate screen coordinates one point at a time.
 
 
-	#Screen clipping:
+#Screen clipping:
 	#	If triangle partially off screen, partially on screen, use binary subdivision to find where triangle intersects edges of screen. If result is quad, split into multiple triangles.
 
-	# Rasterise
-
-	# Send it off to the hardware to be drawn.
+#Rasterise
 
 	# -------------------------------
 
@@ -733,6 +743,7 @@ memcpy:
 	pop %2
 	pop %1
 	pop %0
+	ret
 
 # Take x0 in 0, y0 in 1, x1 in 2 and y1 in 3, return the dot product in 0
 # Does not destory any registers other than the return value in 0.
@@ -787,6 +798,37 @@ vector_add:
 	mov %2, [%0]
 	mov %3, [%1]
 	add %2, %3
+	mov [%1], %2
+
+	pop %3
+	pop %2
+	pop %1
+	pop %0
+	ret
+
+# subtract the 3-lenth vector in %0 to the 3-lenth vector in %1 and stores it in %1
+# src vector preserved, dst vector changed (but passed pointer is preserved)
+vector_sub:
+	push %0
+	push %1
+	push %2
+	push %3
+
+	mov %2, [%0]
+	mov %3, [%1]
+	sub %2, %3
+	mov [%1], %2
+	incr %0
+	incr %1
+	mov %2, [%0]
+	mov %3, [%1]
+	sub %2, %3
+	mov [%1], %2
+	incr %0
+	incr %1
+	mov %2, [%0]
+	mov %3, [%1]
+	sub %2, %3
 	mov [%1], %2
 
 	pop %3
