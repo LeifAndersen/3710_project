@@ -92,7 +92,7 @@ mainLoop:
 	mov [PLAYER_THETA], %4 # Save the theta
 	
 	# Move the AI
-	
+
 	mov %0, [AI_TURNING]
 	je %0, 1, mainAITurningRight
 	je %0, -1, mainAITurningRight
@@ -126,7 +126,7 @@ mainAITurningLeft:
 	add %1, AI_ROTATION_SPEED
 	mov [AI_THETA], %1
 	j mainAIDoneMoving
-	
+
 mainAIDoneTurning:
 	mov %0, 0
 	mov [AI_TURNING], %0
@@ -243,7 +243,7 @@ mainAIBulletFire:
 	j mainEndAIBullet
 
 mainAIFire:
-	
+
 
 mainEndAIBullet:
 
@@ -264,22 +264,161 @@ mainEndAIBullet:
 
 	#Put model in world coordinates:
 	#	Create copy of model on stack from data.
-	mov %0, [tank_model]	# AI tank
-	mov %3, tank_model
-	sub $SP, %0				# make room.
-	mul %0, 10
-	add %3, %0				# src pointer: ending address of tank (copy backward)
+	mov %0, [tank_model]	# tank size
+	mov %3, tank_model		# tank location
+	mul %0, 10				# get full size
+	mov %0, %LOW
+	add %0, 1
+	sub %SP, %0				# make room on stack
 	mov %1, %SP				# dst pointer: space on stack
-	copytankloop:
-	mov %2, [%0]			# mov src into tmp
-	mov [%1], %2			# mov tmp into dst
-	decr %1					# src--
-	decr %0					# count--
-	jne %0, 0, copytankloop
+	mov %2, %0				# size in words
+	mov %0, %3				# src pointer
+	call memcpy
+	# save local tank pointer
+	mov %10, %1				# don't touch %10....
 
-	#	Scale model (multiply all points by scale vector).
-	#	Rotate model around x axis by model angle.
-	#	Rotate model around y axis by model angle.
+	# now if there are bullets in flight, copy them
+	# check AI bullet
+	mov %0, [AI_BULLET_TIME]
+	cmp %0, 0
+	mov %9, 0				# make zero so we know if there is a bullet there
+	je skipaibullet
+	mov %0, [bullet_model]	# bullet size
+	mov %3, bullet_model	# bullet location
+	mul %0, 10				# get full size
+	mov %0, %LOW
+	add %0, 1
+	sub %SP, %0				# make room on stack
+	mov %1, %SP				# dst pointer: space on stack
+	mov %2, %0				# size in words
+	mov %0, %3				# src pointer
+	call memcpy
+	# save local tank pointer
+	mov %9, %1				# don't touch %9....
+	skipaibullet:
+
+	# check Player bullet
+	mov %0, [PLAYER_BULLET_TIME]
+	cmp %0, 0
+	mov %8, 0				# make zero so we know if there is a bullet there
+	je skiplayerbullet
+	mov %0, [bullet_model]	# bullet size
+	mov %3, bullet_model	# bullet location
+	mul %0, 10				# get full size
+	mov %0, %LOW
+	add %0, 1
+	sub %SP, %0				# make room on stack
+	mov %1, %SP				# dst pointer: space on stack
+	mov %2, %0				# size in words
+	mov %0, %3				# src pointer
+	call memcpy
+	# save local tank pointer
+	mov %8, %1				# don't touch %8....
+	skiplayerbullet:
+	#	Scale models (multiply all points by scale vector).
+	# do nothing
+
+	#	Rotate models around x axis by model angle
+	#	rotate tank
+	mov %1, [AI_THETA]		# get the rotation for the tank
+	mov %0, 0				# other angle is 0
+	call setup_rotate
+	mov %4, [%10]			# get the size of the tank in triangles
+	sub %SP, 9				# make room for triangle to rotate
+	mov %1, %SP				# top of the temp triangle (first point)
+	mov %0, %10				# pointer to modifiable tank
+	incr %0					# skip size field in tank
+	rotatetankloop:			# loop that rotates tank points
+	incr %0					# skip color
+	call rotate_point
+	add %0, 3				# move to next point in triangle
+	add %1, 3
+	call rotate_point
+	add %0, 3				# move to next point in triangle
+	add %1, 3
+	call rotate_point
+	mov %2, 9
+	sub %0, 6
+	sub %1, 6
+	mov %3, %0
+	mov %0, %1
+	mov %1, %3
+	call memcpy				# copy rotated triangle back into tank
+	decr %4					# done rotating one triangle
+	# check if loop again
+	jne %4, 0, rotatetankloop
+	# done with tank, remove temp storage on stack
+	add %SP, 9
+
+	# rotate bullets
+	# check if there is an AI bullet to rotate
+	je %9, 0, skipaibulletrotate
+
+	mov %1, [AI_BULLET_THETA] # get the rotation for the bullet
+	mov %0, 0				# other angle is 0
+	call setup_rotate
+	mov %4, [%9]			# get the size of the bullet in triangles
+	sub %SP, 9				# make room for triangle to rotate
+	mov %1, %SP				# top of the temp triangle (first point)
+	mov %0, %10				# pointer to modifiable bullet
+	incr %0					# skip size field in bullet
+	rotateaibulletloop:		# loop that rotates tank points
+	incr %0					# skip color
+	call rotate_point
+	add %0, 3				# move to next point in triangle
+	add %1, 3
+	call rotate_point
+	add %0, 3				# move to next point in triangle
+	add %1, 3
+	call rotate_point
+	mov %2, 9
+	sub %0, 6
+	sub %1, 6
+	mov %3, %0
+	mov %0, %1
+	mov %1, %3
+	call memcpy				# copy rotated triangle back into bullet
+	decr %4					# done rotating one triangle
+	# check if loop again
+	jne %4, 0, rotateaibulletloop
+
+	skipaibulletrotate:
+
+	# check if there is a player bullet to rotate
+	je %8, 0, skipplayerbulletrotate
+
+	mov %1, [PLAYER_BULLET_THETA] # get the rotation for the bullet
+	mov %0, 0				# other angle is 0
+	call setup_rotate
+	mov %4, [%9]			# get the size of the bullet in triangles
+	sub %SP, 9				# make room for triangle to rotate
+	mov %1, %SP				# top of the temp triangle (first point)
+	mov %0, %10				# pointer to modifiable bullet
+	incr %0					# skip size field in bullet
+	rotateplayerbulletloop:	# loop that rotates tank points
+	incr %0					# skip color
+	call rotate_point
+	add %0, 3				# move to next point in triangle
+	add %1, 3
+	call rotate_point
+	add %0, 3				# move to next point in triangle
+	add %1, 3
+	call rotate_point
+	mov %2, 9
+	sub %0, 6
+	sub %1, 6
+	mov %3, %0
+	mov %0, %1
+	mov %1, %3
+	call memcpy				# copy rotated triangle back into bullet
+	decr %4					# done rotating one triangle
+	# check if loop again
+	jne %4, 0, rotateplayerbulletloop
+
+	skipplayerbulletrotate:
+
+	# 	Translate models to coordinates.
+	#	Rotate models around y axis by model angle.
 	#	Translate model (add entity location to all points in model).
 
 	#Put model in camera coordinates:
@@ -308,17 +447,39 @@ mainEnd:
 	pop $0
 	ret
 
+
+# copy memory from [%0], to [%1] of size in %2.
+# preserves args
+memcpy:
+	push %0
+	push %1
+	push %2
+	push %3
+
+	memcpyloop:
+	mov %3, [%0]			# mov src into tmp
+	mov [%1], %3			# mov tmp into dst
+	incr %1					# src++
+	incr %0					# dst++
+	decr %2					# count--
+	jne %2, 0, memcpyloop
+
+	pop %3
+	pop %2
+	pop %1
+	pop %0
+
 # Take x0 in 0, y0 in 1, x1 in 2 and y1 in 3, return the dot product in 0
 # Does not destory any registers other than the return value in 0.
 dot:
 	push %LOW
 	push %HIGH
-	
+
 	mul %0, %2
 	mov %0, %LOW
 	mul %1, %3
 	add %0, %HIGH
-	
+
 	pop %HIGH
 	pop %LOW
 	ret
@@ -475,11 +636,14 @@ cos:
 div:
 	ret
 
-# rotate a point (%0) (pointer) and stores it in %1 (pointer)
+# setup rotation matricies with two angles (%0 and %1)
+# preserves args
 setup_rotate:
 	push %9
 	push %8
 	push %6
+	push %1
+	push %0
 
 	# move arguments into registers that aren't overwritten
 	mov %8, %0	# xtheta
@@ -527,16 +691,21 @@ setup_rotate:
 	mov [rotation_matrix_y+6], %0	# -sin (xtheta)
 	mov [rotation_matrix_y+8], %6	# cos (xtheta)
 
+	pop %0
+	pop %1
 	pop %6
 	pop %8
 	pop %9
 	ret
 
-# setup rotation matricies with two angles (%0 and %1)
+# rotate a point %0 (pointer) and stores it in %1 (pointer)
+# preserves arguments
 rotate_point:
 	push %10
 	push %7
 	push %2
+	push %1
+	push %0
 
 	mov %7, %0	# src point
 	mov %10, %1	# dest point
@@ -558,6 +727,8 @@ rotate_point:
 	# multiply first one
 	call matrix_multiply
 
+	pop %0
+	pop %1
 	pop %2
 	pop %7
 	pop %10
@@ -566,12 +737,16 @@ rotate_point:
 # Multiply a matrix in %0 (pointer) by a vector in %1 (pointer) and store the result in the vector in %2 (pointer)
 # ASSUMES NO ALIASING!!!!!!!!!!!
 # matricies are row-major
+# preserves arguments
 matrix_multiply:
 	push %3
 	push %4
 	push %5
 	push %6
 	push %7
+	push %2
+	push %1
+	push %0
 
 	mov %7, 0	# matrix position counter
 
@@ -605,6 +780,9 @@ matrix_multiply:
 	jl matmulloop1
 
 	# done
+	pop %0
+	pop %1
+	pop %2
 	pop %7
 	pop %6
 	pop %5
@@ -718,6 +896,20 @@ rotation_matrix_y:
 0
 0
 0
+
+tank_model:
+1
+00
+00
+00
+00
+
+bullet_model:
+1
+00
+00
+00
+00
 
 sine_lut:
 0b0000000000000000

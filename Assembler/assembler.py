@@ -308,7 +308,7 @@ def parse(infile_str, outfile_str):
 			instruction_type = get_instruction_type(tokens[0])
 
 			# enforce and remove comma after second of three tokens
-			if len(tokens) >= 3:
+			if len(tokens) >= 3 and tokens[2][0] != "#":
 				if tokens[1][-1] == ",":
 					tokens[1] = tokens[1][:-1]
 				else:

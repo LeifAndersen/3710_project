@@ -27,7 +27,6 @@
 `define LEFT_KEY 16379
 `define A_KEY 16378
 `define B_KEY 16377
-`define efx %5
 
 mov SP, 0x2b #initialize stack
 lsh SP, 8
@@ -238,37 +237,42 @@ nochange:
 #Increment yvalue til it hits the highest one, then done.
 
 #First vga line-write.
-mov eex, [points+2]
-cmp yvalleft, yvalright
-jl leftSmaller
-add eex, yvalleft
-j doneSmaller
+#mov eex, [points+2]
+#cmp yvalleft, yvalright
+#jl leftSmaller
+#add eex, yvalleft
+#j doneSmaller
 
-leftSmaller:
-add eex, yvalright
+#leftSmaller:
+#add eex, yvalright
 
-doneSmaller:
-lsh eex, 3
-mov %10, [points]
-or eex, %10
-mov [VGA], eex
+#doneSmaller:
+#lsh eex, 3
+#mov %10, [points]
+#or eex, %10
+#mov [VGA], eex
 
-#left
+####left
 mov eex, edx #use eex as temp register.
 mul ebx, yvalleft # LOW = xdif * yvalleft (max is 159 * 119 which is within 2^16, even when signed.)
 fmul eex, LOW # edx = (yvalleftue)*(1/ydif) * xdif
 add eex, temp1 #temp1 = x for given yvalleftue, x = xref + (yvalleftue)*(1/ydif)*xdif = left index to give to painter.
 
-#right
+####right
 mov %10, ecx #use %10 as temp register.
 mul eax, yvalright # LOW = xdif * yvalleft (max is 159 * 119 which is within 2^16, even when signed.)
 fmul %10, LOW # edx = (yvalleftue)*(1/ydif) * xdif
 add %10, temp2 #temp1 = x for given yvalleftue, x = xref + (yvalleftue)*(1/ydif)*xdif = left index to give to painter.
 
+
+
 #second vga line-write.
 lsh eex, 8
 or eex, %10
-mov [VGA], eex
+#mov [VGA], eex
+
+#Push eex onto the stack, going to create an array of all the line-write values.
+push eex
 
 incr yvalleft
 incr yvalright
@@ -280,6 +284,36 @@ jg yvalright, ymax, endloop
 jle yvalleft, ymax, LineLoop
 
 endloop:
+
+###Currently all line-write values are on the stack in reverse order.  Must now calculate mid-points between to draw triangles.
+
+#Store end yvalue in ymax
+mov ymax, [points+2]
+
+#Store yvalue counter in eax.
+mov eax, [points+4]
+mov ebx, [points+6]
+jge eax, ebx, haveyvalue
+mov eax, ebx
+haveyvalue:
+
+FillLoop:
+mov ebx, eax #Copy eax as temp into ebx.
+lsh ebx, 3
+mov %10, [points]
+or ebx, %10
+mov [VGA], ebx
+
+#ebx holds current L/R value.  eax holds current y-value.  
+pop ebx
+mov [VGA], ebx
+
+decr eax
+jl eax, ymax, endFillLoop
+
+j FillLoop
+
+endFillLoop:
 
 ret
 
@@ -334,19 +368,86 @@ movepoint:
 
 mov edx, [UP_KEY]
 mov eex, [DOWN_KEY]
-mov efx, [LEFT_KEY]
+mov yvalright, [LEFT_KEY]
 mov temp1, [RIGHT_KEY]
 
 mov temp2, [A_KEY]
 
-je temp2, 0, nostatechange
 mov %10, [state]
-	
+je temp2, 0, nostatechange
+
+je %10, 2, stateReset
+incr %10
+mov [state], %10
+j nostatechange
+
+stateReset:
+mov %10, 0
+mov [state], %10
 nostatechange:
 
 #If A==0, move point 1, a==1 move point 2, a==3 move p3
+je %10, 1, stateone
+je %10, 2, statetwo
+#statezero
 mov eax, [triangle+1] #x1
 mov ebx, [triangle+2] #y1
+j endstates
+
+stateone:
+mov eax, [triangle+3]
+mov ebx, [triangle+4]
+j endstates
+
+statetwo:
+mov eax, [triangle+5]
+mov ebx, [triangle+6]
+
+endstates:
+
+#up
+je edx, 0, checkdown
+decr ebx
+
+#down
+checkdown:
+je eex, 0, checkleft
+incr ebx
+
+#left
+checkleft:
+je yvalright, 0, checkright
+decr eax
+
+#right
+checkright:
+je temp1, 0, checksdone
+incr eax
+
+checksdone:
+
+mov %10, 1
+mov [UP_KEY], %10 #reset keyboard
+
+mov %10, [state]
+je %10, 1, stateone2
+je %10, 2, statetwo2
+#statezero
+mov eax, [triangle+1] #x1
+mov ebx, [triangle+2] #y1
+j endstates2
+
+stateone2:
+mov eax, [triangle+3]
+mov ebx, [triangle+4]
+j endstates2
+
+statetwo2:
+mov eax, [triangle+5]
+mov ebx, [triangle+6]
+
+endstates2:
+#ret
 
 cmp eax, 0
 je movey
@@ -369,7 +470,7 @@ mov [triangle], ecx
 j donemovepoint
 
 resetseven:
-mov ecx, 2
+mov ecx, 1
 mov [triangle], ecx
 
 donemovepoint:
