@@ -261,6 +261,28 @@ mainEnd:
 	pop $0
 	ret
 
+# copy memory from [%0], to [%1] of size in %2.
+# preserves args
+memcpy:
+	push %0
+	push %1
+	push %2
+	push %3
+
+	memcpyloop:
+	mov %3, [%0]			# mov src into tmp
+	mov [%1], %3			# mov tmp into dst
+	incr %1					# src++
+	incr %0					# dst++
+	decr %2					# count--
+	jne %2, 0, memcpyloop
+
+	pop %3
+	pop %2
+	pop %1
+	pop %0
+	ret
+
 # Take a number in the $0 reg, return the sin of that number into the $0 reg
 sin:
 	push %10
