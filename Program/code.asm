@@ -8,6 +8,18 @@
 `define %HIGH %12
 `define %SP %13
 `define %FP %14
+`define LOW %11
+`define HIGH %12
+`define eax %1
+`define ebx %2
+`define ecx %3
+`define edx %4
+`define eex %0
+`define yvalright %5
+`define ymax %6
+`define temp1 %7
+`define temp2 %8
+`define yvalleft %9
 `define LCD 16376
 `define VGA 16383
 `define BULLET_RADIUS 1
@@ -22,8 +34,7 @@
 init:
 	mov %SP, STACK_TOP
 	mov %FP, %SP
-
-	# Begin der loop
+# Begin der loop
 	call main
 
 # Main Loop
@@ -478,7 +489,22 @@ dot:
 	mul %0, %2
 	mov %0, %LOW
 	mul %1, %3
-	add %0, %HIGH
+	add %0, %LOW
+
+	pop %HIGH
+	pop %LOW
+	ret
+
+# Take x0 in 0, y0 in 1, x1 in 2 and y1 in 3, return the cross product in 0
+# Does not destory any registers other than the return value in 0.
+cross:
+	push %LOW
+	push %HIGH
+
+	mul %0, %3
+	mov %0, %LOW
+	mul %1, %2
+	sub %0, %LOW
 
 	pop %HIGH
 	pop %LOW
@@ -486,6 +512,29 @@ dot:
 
 # Take the lines with delX in %0, and dely in %1, and return the angle theta of that line in %0
 FindTheta:
+	push %2
+	push %3
+	push %4
+	push %5
+	push %6
+
+	mov %5, 0
+	mov %4, %0
+	mov %2, 0
+	mov %3, 1
+	call cross
+
+	jg %0, 0, findThetaInTOP # In the top half of the graph
+	# In the bottom half of the graph
+	sub %5, 90
+
+	findThetaInTOP:
+
+	pop %6
+	pop %5
+	pop %4
+	pop %3
+	pop %2
 	ret
 
 # Take a number in the $0 reg, return the sin of that number into the $0 reg
