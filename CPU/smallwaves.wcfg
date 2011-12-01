@@ -3,14 +3,14 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="C:/Users/Daniel/3710/CPU/testdatapath_isim_beh.wdb" id="1" type="auto">
+      <db_ref path="C:/Users/Daniel/3710/CPU/testdatapath_isim_beh1.wdb" id="1" type="auto">
          <top_modules>
             <top_module name="glbl" />
             <top_module name="testdatapath" />
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="32" />
+   <WVObjectSize size="42" />
    <wvobject fp_name="/testdatapath/uut/CLK_25MHZ" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">CLK_25MHZ</obj_property>
       <obj_property name="ObjectShortName">CLK_25MHZ</obj_property>
@@ -137,6 +137,16 @@
       <obj_property name="ElementShortName">BuffCtrl[22:0]</obj_property>
       <obj_property name="ObjectShortName">BuffCtrl[22:0]</obj_property>
    </wvobject>
+   <wvobject fp_name="/testdatapath/uut/RegisterFile/inputReg_1" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">inputReg_1[15:0]</obj_property>
+      <obj_property name="ObjectShortName">inputReg_1[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/RegisterFile/inputReg_2" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">inputReg_2[15:0]</obj_property>
+      <obj_property name="ObjectShortName">inputReg_2[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
    <wvobject fp_name="/testdatapath/uut/RegisterFile/read_select_1" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">read_select_1[3:0]</obj_property>
       <obj_property name="ObjectShortName">read_select_1[3:0]</obj_property>
@@ -164,5 +174,42 @@
       <obj_property name="ElementShortName">write_select_2[3:0]</obj_property>
       <obj_property name="ObjectShortName">write_select_2[3:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/memWriteBus" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">memWriteBus[15:0]</obj_property>
+      <obj_property name="ObjectShortName">memWriteBus[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/memAddrBus" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">memAddrBus[15:0]</obj_property>
+      <obj_property name="ObjectShortName">memAddrBus[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/MemCtrl/CPU_Data_Wr_En" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">CPU_Data_Wr_En</obj_property>
+      <obj_property name="ObjectShortName">CPU_Data_Wr_En</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/memAddrBusF" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">memAddrBusF[13:0]</obj_property>
+      <obj_property name="ObjectShortName">memAddrBusF[13:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/memRead" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">memRead</obj_property>
+      <obj_property name="ObjectShortName">memRead</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/memReadP" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">memReadP</obj_property>
+      <obj_property name="ObjectShortName">memReadP</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/MemCtrl/CPU_Data_Out" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">CPU_Data_Out[15:0]</obj_property>
+      <obj_property name="ObjectShortName">CPU_Data_Out[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/MemCtrl/Main_Data_Addr" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">Main_Data_Addr[15:0]</obj_property>
+      <obj_property name="ObjectShortName">Main_Data_Addr[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
 </wave_config>

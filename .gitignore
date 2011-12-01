@@ -50,3 +50,5 @@ xilinxsim.ini
 *_pad*
 init*.txt
 qtcreator-build
+*Top_summary.html
+*/iseconfig/*
