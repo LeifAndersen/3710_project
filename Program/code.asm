@@ -939,6 +939,9 @@ rotate_point:
 	# multiply first one
 	call matrix_multiply
 
+	# clean up stack frame
+	add %SP, 3
+
 	pop %0
 	pop %1
 	pop %2
