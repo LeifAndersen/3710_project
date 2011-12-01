@@ -925,6 +925,7 @@ matrix_multiply:
 	push %5
 	push %6
 	push %7
+	push %8
 	push %2
 	push %1
 	push %0
@@ -937,10 +938,18 @@ matrix_multiply:
 
 	matmulloop2:
 	# get two elements
-	mov %3, [%0]
-	mov %4, [%1]
+	mov %3, [%1]
+	mov %4, [%0]
+	# check which kind of multiply to do
+	incr %0
+	mov %8, [%0]
+	je %8, 1, matmulfmul
 	# multiply them
 	mul %3, %4
+	j matmuldonemul
+	matmulfmul:
+	fmul %3, %4
+	matmuldonemul:
 	# store in accumulator
 	add %5, %LOW
 	# increment the pointers and counters
@@ -964,6 +973,7 @@ matrix_multiply:
 	pop %0
 	pop %1
 	pop %2
+	pop %8
 	pop %7
 	pop %6
 	pop %5
