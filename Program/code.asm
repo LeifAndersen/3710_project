@@ -8,9 +8,14 @@
 `define %HIGH %12
 `define %SP %13
 `define %FP %14
+`define LCD 16376
 `define VGA 16383
 `define BULLET_RADIUS 1
 `define TANK_RADIUS 10
+`define AI_SPEED 10
+`define AI_ROTATION_SPEED 10
+`define PLAYER_START_LIVES 5
+`define BULLET_SPEED 20
 `define STACK_TOP 0x2bff # stack starts at 11264 (this is the top of memory, be careful)
 
 # Bootup and initialization Code
@@ -42,6 +47,7 @@ mainNewPlayer:
 	mov [PLAYER_BULLET_TIME], %0
 	mov [AI_BULLET_TIME], %0
 	mov [PLAYER_SCORE], %0
+	mov [AI_TURNING], %0
 	mov %0, [PLAYER_START_X]
 	mov [PLAYER_X], %0
 	mov %0, [PLAYER_START_Y]
@@ -54,7 +60,7 @@ mainNewPlayer:
 	mov [AI_Y], %0
 	mov %0, [AI_START_THETA]
 	mov [AI_THETA], %0
-	mov %0, 5
+	mov %0, PLAYER_START_LIVES
 	mov [PLAYER_LIVES], %0
 
 mainLoop:
@@ -85,18 +91,163 @@ mainLoop:
 	add %4, %LOW
 	mov [PLAYER_THETA], %4 # Save the theta
 
-	# TODO Move only when AI not in the way
+	# Move the AI
+	
+	mov %0, [AI_TURNING]
+	je %0, 1, mainAITurningRight
+	je %0, -1, mainAITurningRight
+	mov %4, [AI_X]
+	mov %5, [AI_Y]
+	mov %6, [AI_THETA]
+	mov %0, %6
+	call cos
+	mov %HIGH, %0
+	mul %HIGH, AI_SPEED    # %LOW now has speed*sin(theta), to update Y
+	add %4, %LOW           # %4 now has new Y (if possible)
+	mov %0, %6
+	call sin
+	mov %HIGH, %0
+	mul %HIGH, AI_SPEED
+	add %5, %LOW           # %5 now has possible AI_Y
+	j mainAIDoneMoving
 
-	# -------------------------------
-	# Move AI
-	mov %5, [AI_THETA]
-	mov %6, [AI_X]
-	mov %7, [AI_Y]
+mainAITurningRight:
+	mov [AI_TARGET_THETA], %0
+	mov [AI_THETA], %1
+	je %0, %1, mainAIDoneTurning
+	sub %1, AI_ROTATION_SPEED
+	mov [AI_THETA], %1
+	j mainAIDoneMoving
 
-	# -------------------------------
-	# Move bullet
+mainAITurningLeft:
+	mov [AI_TARGET_THETA], %0
+	mov [AI_THETA], %1
+	je %0, %1, mainAIDoneTurning
+	add %1, AI_ROTATION_SPEED
+	mov [AI_THETA], %1
+	j mainAIDoneMoving
+	
+mainAIDoneTurning:
+	mov %0, 0
+	mov [AI_TURNING], %0
 
-	# Bullet collide against anything?
+mainAIDoneMoving:
+
+	# Move Player bullet
+	mov %6, [PLAYER_BULLET_TIME]
+	je %6, 0, mainPlayerBulletFire # If unused, let player fire
+	sub %6, 1
+	mov [PLAYER_BULLET_TIME], %6
+
+	mov %6, [PLAYER_BULLET_X]
+	mov %7, [PLAYER_BULLET_Y]
+	mov %0, [PLAYER_BULLET_THETA]
+	call cos
+	mul %0, BULLET_SPEED
+	add %6, %LOW           # 6 now conains bullet x
+	mov %0, [PLAYER_BULLET_THETA]
+	call sin
+	mul %0, BULLET_SPEED
+	add %7, %LOW           # 7 now contains bullet y
+
+	# Check bullet AI Collision
+	mov %0, %4
+	sub %0, %6
+	mul %0, %0
+	mov %0, %LOW
+	mov %1, %5
+	sub %1, %7
+	mul %1, %1
+	add %0, %LOW # 0 now contains (x0-x1)^2+(y0-y1)^2
+	mov %1, BULLET_RADIUS
+	add %1, TANK_RADIUS
+	jg %0, %1, mainEndPlayerBullet # Not a hit
+
+	# Bullet colided with AI
+	mov %0, [PLAYER_SCORE]
+	add %0, 1
+	mov [PLAYER_SCORE], %0
+
+	# Reset AI position
+	mov %0, [AI_START_X]
+	mov [AI_X], %0
+	mov %0, [AI_START_Y]
+	mov [AI_Y], %0
+	mov %0, 0
+	mov [AI_TURNING], %0
+
+	j mainEndPlayerBullet
+
+mainPlayerBulletFire:
+	mov %8, [A_KEY]
+	je %8, 0, mainEndPlayerBullet # Didn't fire
+	mov [PLAYER_BULLET_X], %2
+	mov [PLAYER_BULLET_Y], %3
+	mov %1, [PLAYER_THETA]
+	mov [PLAYER_BULLET_THETA], %1
+
+mainEndPlayerBullet:
+
+	# Move AI bullet
+	mov %8, [AI_BULLET_TIME]
+	je %8, 0, mainAIBulletFire # If unused, AI Fires turnes and fires bullet
+	sub %8, 1
+	mov [AI_BULLET_TIME], %8
+
+	mov %8, [AI_BULLET_X]
+	mov %9, [AI_BULLET_Y]
+	mov %0, [AI_BULLET_THETA]
+	call cos
+	mul %0, BULLET_SPEED
+	add %8, %LOW           # 8 now conains bullet x
+	mov %0, [AI_BULLET_THETA]
+	call sin
+	mul %0, BULLET_SPEED
+	add %9, %LOW           # 9 now contains bullet y
+
+	# Check bullet AI Collision
+	mov %0, %2
+	sub %0, %8
+	mul %0, %0
+	mov %0, %LOW
+	mov %1, %3
+	sub %1, %9
+	mul %1, %1
+	add %0, %LOW # 0 now contains (x0-x1)^2+(y0-y1)^2
+	mov %1, BULLET_RADIUS
+	add %1, TANK_RADIUS
+	jg %0, %1, mainEndPlayerBullet # Not a hit
+
+	# Bullet hit player
+	mov %0, [PLAYER_LIVES]
+	je %0, 0, mainNewPlayer # Player died, restart game
+	sub %0, 1
+	mov [PLAYER_LIVES], %0
+	mov %0, 0
+	mov [AI_BULLET_TIME], %0
+
+	j mainEndAIBullet
+
+mainAIBulletFire:
+
+	mov %0, %5
+	sub %0, %3
+	mov %1, %4
+	sub %1, %2
+	call FindTheta
+	mov [AI_TARGET_THETA], %0
+	mov %1, [AI_THETA]
+	je %1, %0, mainAIFire
+	mov %1, 1
+	mov [AI_TURNING], %1
+	j mainEndAIBullet
+
+mainAIFire:
+	
+
+mainEndAIBullet:
+
+	# Bullet Player collision
 
 	# Store Final Values
 	mov [PLAYER_X], %3
@@ -105,26 +256,37 @@ mainLoop:
 	mov [AI_Y], %7
 
 	# Reset keyboard counters
+	mov %0, 1
+	mov [UP_KEY], %0
 
 	# -------------------------------
-	# For each triangle, do this, although unless it's an enimy tank, you can skip the AI step.
+	# For each triangle, do this, although unless it's an enemy tank, you can skip the AI step.
 
-	# Get Projection Matrix Based on Players Position
+	#Put model in world coordinates:
+	#	Create copy of model on stack from data.
+	mov %0, [tank_model]	# AI tank
+	mov %3, tank_model
+	sub $SP, %0				# make room.
+	mul %0, 10
+	add %3, %0				# src pointer: ending address of tank (copy backward)
+	mov %1, %SP				# dst pointer: space on stack
+	copytankloop:
+	mov %2, [%0]			# mov src into tmp
+	mov [%1], %2			# mov tmp into dst
+	decr %1					# src--
+	decr %0					# count--
+	jne %0, 0, copytankloop
 
-	# Multiply this by world matrix
+	#	Scale model (multiply all points by scale vector).
+	#	Rotate model around x axis by model angle.
+	#	Rotate model around y axis by model angle.
+	#	Translate model (add entity location to all points in model).
 
-	# Mutiply AI tank matrix by outputted matrix
-
-	# At this point, the triangle's x and y coordinates should be directly drawable on the screen.  The z coordinate is only used to determin what parts of the triangle is out of range.
+	#Put model in camera coordinates:
+	#	Rotate model around y axis by camera angle.
+	#	Rotate model around x axis by camera angle.
 
 	# Rasterise
-	# For each line of pixels, do this:
-	# For each triangle, if it's on that line, do this:
-	# Find the intersection of pixel line, and the tringle, the left one is the ideal left, and the right one is the ideal right.  Special cases for one intersection (point), and when they're the same.
-
-	# If the pixel is lower than 0 or greater than 160, set it as that.  If both of them are off the same side of the screen, just remove it altogether.
-
-	# If z is out of range, find where the line intersects with the max/min z values, set that as your left/right points
 
 	# Send it off to the hardware to be drawn.
 
@@ -144,6 +306,25 @@ mainEnd:
 	pop $2
 	pop $1
 	pop $0
+	ret
+
+# Take x0 in 0, y0 in 1, x1 in 2 and y1 in 3, return the dot product in 0
+# Does not destory any registers other than the return value in 0.
+dot:
+	push %LOW
+	push %HIGH
+	
+	mul %0, %2
+	mov %0, %LOW
+	mul %1, %3
+	add %0, %HIGH
+	
+	pop %HIGH
+	pop %LOW
+	ret
+
+# Take the lines with delX in %0, and dely in %1, and return the angle theta of that line in %0
+FindTheta:
 	ret
 
 # Take a number in the $0 reg, return the sin of that number into the $0 reg
@@ -294,20 +475,15 @@ cos:
 div:
 	ret
 
-# rotate a point (%0) (pointer) by two angles (%1 and %2), and stores it in %3 (pointer)
-rotate_point:
-	push %10
+# rotate a point (%0) (pointer) and stores it in %1 (pointer)
+setup_rotate:
 	push %9
 	push %8
-	push %7
 	push %6
-	push %5
 
 	# move arguments into registers that aren't overwritten
-	mov %7, %0	# src point
-	mov %8, %1	# xtheta
-	mov %9, %2	# ytheta
-	mov %10, %3	# dest point
+	mov %8, %0	# xtheta
+	mov %9, %1	# ytheta
 
 	# generate rotation matrix x
 	mov %0, %8	# generate and save cos
@@ -315,7 +491,7 @@ rotate_point:
 	mov %6, %0
 	mov %0, %8	# generate and save sin
 	call sin
-	mov %5, %0
+	mov %1, %0
 	mov %0, 1	# fill matrix
 	mov [rotation_matrix_x], %0		# 1
 	mov %0, 0
@@ -324,10 +500,10 @@ rotate_point:
 	mov [rotation_matrix_x+3], %0	# 0
 	mov [rotation_matrix_x+6], %0	# 0
 	mov [rotation_matrix_x+4], %6	# cos (xtheta)
-	not %0, %5	# negate %5 by inverting the bits and adding one
+	not %0, %1	# negate %1 by inverting the bits and adding one
 	add %0, 1
 	mov [rotation_matrix_x+5], %0	# -sin (xtheta)
-	mov [rotation_matrix_x+7], %5	# sin (xtheta)
+	mov [rotation_matrix_x+7], %1	# sin (xtheta)
 	mov [rotation_matrix_x+8], %6	# cos (xtheta)
 
 	# generate rotation matrix y
@@ -336,20 +512,34 @@ rotate_point:
 	mov %6, %0
 	mov %0, %9	# generate and save sin
 	call sin
-	mov %5, %0
+	mov %1, %0
 	mov %0, 0
 	mov [rotation_matrix_y+1], %0	# 0
 	mov [rotation_matrix_y+3], %0	# 0
 	mov [rotation_matrix_y+5], %0	# 0
 	mov [rotation_matrix_y+7], %0	# 0
 	mov [rotation_matrix_y], %6		# cos (ytheta)
-	mov [rotation_matrix_y+2], %5	# sin (ytheta)
+	mov [rotation_matrix_y+2], %1	# sin (ytheta)
 	mov %0, 1
 	mov [rotation_matrix_y+4], %6	# 1
-	not %0, %5	# negate %5 by inverting the bits and adding one
+	not %0, %1	# negate %1 by inverting the bits and adding one
 	add %0, 1
 	mov [rotation_matrix_y+6], %0	# -sin (xtheta)
 	mov [rotation_matrix_y+8], %6	# cos (xtheta)
+
+	pop %6
+	pop %8
+	pop %9
+	ret
+
+# setup rotation matricies with two angles (%0 and %1)
+rotate_point:
+	push %10
+	push %7
+	push %2
+
+	mov %7, %0	# src point
+	mov %10, %1	# dest point
 
 	# make room on the stack for temp point
 	sub %SP, 3
@@ -368,11 +558,8 @@ rotate_point:
 	# multiply first one
 	call matrix_multiply
 
-	pop %5
-	pop %6
+	pop %2
 	pop %7
-	pop %8
-	pop %9
 	pop %10
 	ret
 
@@ -470,6 +657,12 @@ AI_X:
 
 AI_Y:
 100
+
+AI_TURNING:
+0
+
+AI_TARGET_THETA:
+0
 
 AI_THETA:
 0
