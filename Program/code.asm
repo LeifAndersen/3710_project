@@ -90,7 +90,7 @@ mainLoop:
 	mul %HIGH, %5          # %LOW/HIGH has (UP-DOWN)*cos(theta)
 	add %4, %LOW
 	mov [PLAYER_THETA], %4 # Save the theta
-
+	
 	# Move the AI
 	
 	mov %0, [AI_TURNING]
