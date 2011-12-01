@@ -277,12 +277,15 @@ mainEndAIBullet:
 
 	#Put model in world coordinates:
 	#	Create copy of model on stack from data.
+	mov %7, 0				# keep running total of stack frame size
+
 	mov %0, [tank_model]	# tank size
 	mov %3, tank_model		# tank location
 	mul %0, 10				# get full size
 	mov %0, %LOW
 	add %0, 1
 	sub %SP, %0				# make room on stack
+	add %7, %0
 	mov %1, %SP				# dst pointer: space on stack
 	mov %2, %0				# size in words
 	mov %0, %3				# src pointer
@@ -302,6 +305,7 @@ mainEndAIBullet:
 	mov %0, %LOW
 	add %0, 1
 	sub %SP, %0				# make room on stack
+	add %7, %0
 	mov %1, %SP				# dst pointer: space on stack
 	mov %2, %0				# size in words
 	mov %0, %3				# src pointer
@@ -321,6 +325,7 @@ mainEndAIBullet:
 	mov %0, %LOW
 	add %0, 1
 	sub %SP, %0				# make room on stack
+	add %7, %0
 	mov %1, %SP				# dst pointer: space on stack
 	mov %2, %0				# size in words
 	mov %0, %3				# src pointer
@@ -328,6 +333,7 @@ mainEndAIBullet:
 	# save local tank pointer
 	mov %8, %1				# don't touch %8....
 	skiplayerbullet:
+
 	#	Scale models (multiply all points by scale vector).
 	# do nothing
 
@@ -394,6 +400,8 @@ mainEndAIBullet:
 	decr %4					# done rotating one triangle
 	# check if loop again
 	jne %4, 0, rotateaibulletloop
+	# done with tank, remove temp storage on stack
+	add %SP, 9
 
 	skipaibulletrotate:
 
@@ -427,16 +435,112 @@ mainEndAIBullet:
 	decr %4					# done rotating one triangle
 	# check if loop again
 	jne %4, 0, rotateplayerbulletloop
+	# done with tank, remove temp storage on stack
+	add %SP, 9
 
 	skipplayerbulletrotate:
 
-	# 	Translate models to coordinates.
-	#	Rotate models around y axis by model angle.
 	#	Translate model (add entity location to all points in model).
+	# translate tank
+	sub %SP, 3				# make temp point
+	mov %0, %SP
+	mov %1, [AI_X]			# copy in AI tank translation (position)
+	mov [%0], %1
+	incr %0
+	mov %1, [AI_Y]
+	mov [%0], %1
+	incr %0
+	mov %1, 0
+	mov [%0], %1
+	sub %0, 2				# restore pointer
+	mov %4, [%10]			# get the size of the tank in triangles
+	mov %1, %10				# pointer to modifiable tank
+	incr %1					# skip size field in tank
+	translatetankloop:		# loop that translates tank points
+	incr %1					# skip color
+	call vector_add
+	add %1, 3				# move to next point
+	call vector_add
+	add %1, 3				# move to next point
+	call vector_add
+	add %1, 3				# move to next triangle
+	decr %4					# done rotating one triangle
+	# check if loop again
+	jne %4, 0, translatetankloop
+	# done with tank, remove temp storage on stack
+	add %SP, 3
+
+	# translate bullets
+	# check if there is an AI bullet to translate
+	je %9, 0, skipaibullettranslate
+
+	sub %SP, 3				# make temp point
+	mov %0, %SP
+	mov %1, [AI_BULLET_X]	# copy in AI bullet translation (position)
+	mov [%0], %1
+	incr %0
+	mov %1, [AI_BULLET_Y]
+	mov [%0], %1
+	incr %0
+	mov %1, 0
+	mov [%0], %1
+	sub %0, 2				# restore pointer
+	mov %4, [%9]			# get the size of the bullet in triangles
+	mov %1, %9				# pointer to modifiable bullet
+	incr %1					# skip size field in bullet
+	translateaibulletloop:	# loop that translates bullet points
+	incr %1					# skip color
+	call vector_add
+	add %1, 3				# move to next point
+	call vector_add
+	add %1, 3				# move to next point
+	call vector_add
+	add %1, 3				# move to next triangle
+	decr %4					# done rotating one triangle
+	# check if loop again
+	jne %4, 0, translateaibulletloop
+	# done with bullet, remove temp storage on stack
+	add %SP, 3
+
+	skipaibullettranslate:
+
+	# check if there is a player bullet to rotate
+	je %8, 0, skipplayerbullettranslate
+
+	sub %SP, 3				# make temp point
+	mov %0, %SP
+	mov %1, [PLAYER_BULLET_X]	# copy in AI bullet translation (position)
+	mov [%0], %1
+	incr %0
+	mov %1, [PLAYER_BULLET_Y]
+	mov [%0], %1
+	incr %0
+	mov %1, 0
+	mov [%0], %1
+	sub %0, 2				# restore pointer
+	mov %4, [%8]			# get the size of the bullet in triangles
+	mov %1, %8				# pointer to modifiable bullet
+	incr %1					# skip size field in bullet
+	translateplayerbulletloop:	# loop that translates bullet points
+	incr %1					# skip color
+	call vector_add
+	add %1, 3				# move to next point
+	call vector_add
+	add %1, 3				# move to next point
+	call vector_add
+	add %1, 3				# move to next triangle
+	decr %4					# done rotating one triangle
+	# check if loop again
+	jne %4, 0, translateplayerbulletloop
+	# done with bullet, remove temp storage on stack
+	add %SP, 3
+
+	skipplayerbullettranslate:
 
 	#Put model in camera coordinates:
 	#	Rotate model around y axis by camera angle.
 	#	Rotate model around x axis by camera angle.
+
 
 	# Rasterise
 
