@@ -409,11 +409,14 @@ cos:
 div:
 	ret
 
-# rotate a point (%0) (pointer) and stores it in %1 (pointer)
+# setup rotation matricies with two angles (%0 and %1)
+# preserves args
 setup_rotate:
 	push %9
 	push %8
 	push %6
+	push %1
+	push %0
 
 	# move arguments into registers that aren't overwritten
 	mov %8, %0	# xtheta
@@ -461,16 +464,21 @@ setup_rotate:
 	mov [rotation_matrix_y+6], %0	# -sin (xtheta)
 	mov [rotation_matrix_y+8], %6	# cos (xtheta)
 
+	pop %0
+	pop %1
 	pop %6
 	pop %8
 	pop %9
 	ret
 
-# setup rotation matricies with two angles (%0 and %1)
+# rotate a point %0 (pointer) and stores it in %1 (pointer)
+# preserves arguments
 rotate_point:
 	push %10
 	push %7
 	push %2
+	push %1
+	push %0
 
 	mov %7, %0	# src point
 	mov %10, %1	# dest point
@@ -492,6 +500,8 @@ rotate_point:
 	# multiply first one
 	call matrix_multiply
 
+	pop %0
+	pop %1
 	pop %2
 	pop %7
 	pop %10
@@ -500,12 +510,16 @@ rotate_point:
 # Multiply a matrix in %0 (pointer) by a vector in %1 (pointer) and store the result in the vector in %2 (pointer)
 # ASSUMES NO ALIASING!!!!!!!!!!!
 # matricies are row-major
+# preserves arguments
 matrix_multiply:
 	push %3
 	push %4
 	push %5
 	push %6
 	push %7
+	push %2
+	push %1
+	push %0
 
 	mov %7, 0	# matrix position counter
 
@@ -539,6 +553,9 @@ matrix_multiply:
 	jl matmulloop1
 
 	# done
+	pop %0
+	pop %1
+	pop %2
 	pop %7
 	pop %6
 	pop %5
