@@ -28,6 +28,8 @@
 `define AI_ROTATION_SPEED 10
 `define PLAYER_START_LIVES 5
 `define BULLET_SPEED 20
+`define FIND_THETA_ACCURACY 5
+`define DEGREE_90 0      # 90 Degrees in our encoding
 `define STACK_TOP 0x2bff # stack starts at 11264 (this is the top of memory, be careful)
 
 # Bootup and initialization Code
@@ -485,12 +487,12 @@ memcpy:
 dot:
 	push %LOW
 	push %HIGH
-
+	
 	mul %0, %2
 	mov %0, %LOW
 	mul %1, %3
 	add %0, %LOW
-
+	
 	pop %HIGH
 	pop %LOW
 	ret
@@ -500,12 +502,12 @@ dot:
 cross:
 	push %LOW
 	push %HIGH
-
+	
 	mul %0, %3
 	mov %0, %LOW
 	mul %1, %2
 	sub %0, %LOW
-
+	
 	pop %HIGH
 	pop %LOW
 	ret
@@ -517,24 +519,50 @@ FindTheta:
 	push %4
 	push %5
 	push %6
-
-	mov %5, 0
+	push %7
+	
+	mov %7, FIND_THETA_ACCURACY
+	mov %6, DEGREE_90 # Value to be added to the angle
+	mov %5, 0         # Value to be returned
 	mov %4, %0
-	mov %2, 0
-	mov %3, 1
-	call cross
-
-	jg %0, 0, findThetaInTOP # In the top half of the graph
-	# In the bottom half of the graph
-	sub %5, 90
-
-	findThetaInTOP:
-
+	
+	findThetaLoop:
+		mov %0, %6
+		call cos
+		mov %2, %0 # 2 has x of comparison vector
+		mov %0, %6
+		call sin 
+		mov %3, %0 # 3 has y of comparison vector
+		call cross
+		
+		jg %0, 0, findThetaAdd # In the top half of the graph
+		# In the bottom half of the graph
+			sub %5, %7
+			j findThetaAddEnd
+		
+		findThetaAdd:
+			add %5, %7
+		
+		findThetaAddEnd:
+			
+		jne %7, 0, findThetaLoop
+		mov %0, %4
+		sub %7, 1
+		rsh %6, 1
+	
+	mov %0, %5 # Move theta to 0
+	
+	pop %7
 	pop %6
 	pop %5
 	pop %4
 	pop %3
 	pop %2
+	ret
+
+# Take top left x in 0, top left y in 1, bottom right x in 2 bottom right y in 3
+# Draw a square
+drawSquare:
 	ret
 
 # Take a number in the $0 reg, return the sin of that number into the $0 reg
