@@ -109,7 +109,6 @@ mainLoop:
 	mov %HIGH, %0
 	mul %HIGH, AI_SPEED
 	add %5, %LOW           # %5 now has possible AI_Y
-<<<<<<< HEAD
 	j mainAIDoneMoving
 
 mainAITurningRight:
@@ -133,8 +132,6 @@ mainAIDoneTurning:
 	mov [AI_TURNING], %0
 
 mainAIDoneMoving:
-=======
->>>>>>> 445b2531cb74bddd24d0f4896bf2519df8b95993
 
 	# Move Player bullet
 	mov %6, [PLAYER_BULLET_TIME]
