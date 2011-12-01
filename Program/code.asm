@@ -103,7 +103,7 @@ mainLoop:
 	mul %HIGH, %5          # %LOW/HIGH has (UP-DOWN)*cos(theta)
 	add %4, %LOW
 	mov [PLAYER_THETA], %4 # Save the theta
-	
+
 	# Move the AI
 
 	mov %0, [AI_TURNING]
@@ -487,12 +487,12 @@ memcpy:
 dot:
 	push %LOW
 	push %HIGH
-	
+
 	mul %0, %2
 	mov %0, %LOW
 	mul %1, %3
 	add %0, %LOW
-	
+
 	pop %HIGH
 	pop %LOW
 	ret
@@ -502,12 +502,12 @@ dot:
 cross:
 	push %LOW
 	push %HIGH
-	
+
 	mul %0, %3
 	mov %0, %LOW
 	mul %1, %2
 	sub %0, %LOW
-	
+
 	pop %HIGH
 	pop %LOW
 	ret
@@ -520,38 +520,38 @@ FindTheta:
 	push %5
 	push %6
 	push %7
-	
+
 	mov %7, FIND_THETA_ACCURACY
 	mov %6, DEGREE_90 # Value to be added to the angle
 	mov %5, 0         # Value to be returned
 	mov %4, %0
-	
+
 	findThetaLoop:
 		mov %0, %6
 		call cos
 		mov %2, %0 # 2 has x of comparison vector
 		mov %0, %6
-		call sin 
+		call sin
 		mov %3, %0 # 3 has y of comparison vector
 		call cross
-		
+
 		jg %0, 0, findThetaAdd # In the top half of the graph
 		# In the bottom half of the graph
 			sub %5, %7
 			j findThetaAddEnd
-		
+
 		findThetaAdd:
 			add %5, %7
-		
+
 		findThetaAddEnd:
-			
+
 		jne %7, 0, findThetaLoop
 		mov %0, %4
 		sub %7, 1
 		rsh %6, 1
-	
+
 	mov %0, %5 # Move theta to 0
-	
+
 	pop %7
 	pop %6
 	pop %5
@@ -954,25 +954,43 @@ AI_START_THETA:
 
 rotation_matrix_x:
 0
+0	# is fixed point flags for each matrix element are static since matricies are know
 0
+0	# is fixed point
 0
+0	# is fixed point
 0
+0	# is fixed point
 0
+1	# is fixed point
 0
+1	# is fixed point
 0
+0	# is fixed point
 0
+1	# is fixed point
 0
+1	# is fixed point
 
 rotation_matrix_y:
 0
+1	# is fixed point
 0
+0	# is fixed point
 0
+1	# is fixed point
 0
+0	# is fixed point
 0
+0	# is fixed point
 0
+0	# is fixed point
 0
+1	# is fixed point
 0
+0	# is fixed point
 0
+1	# is fixed point
 
 tank_model:
 1
