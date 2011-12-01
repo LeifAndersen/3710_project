@@ -199,6 +199,11 @@ mainEndPlayerBullet:
 
 mainAIBulletFire:
 
+	mov %0, %5
+	sub %0, %3
+	mov %1, %4
+	sub %1, %2
+
 mainEndAIBullet:
 	
 	# Bullet Player collision
@@ -251,6 +256,20 @@ mainEnd:
 	pop $2
 	pop $1
 	pop $0
+	ret
+
+# Take x0 in 0, y0 in 1, x1 in 2 and y1 in 3, return the dot product in 0
+dot:
+	push %LOW
+	push %HIGH
+	
+	mul %0, %2
+	mov %0, %LOW
+	mul %1, %3
+	add %0, %HIGH
+	
+	pop %HIGH
+	pop %LOW
 	ret
 
 # Take a number in the $0 reg, return the sin of that number into the $0 reg
