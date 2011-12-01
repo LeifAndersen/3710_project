@@ -616,6 +616,37 @@ cross:
 	pop %LOW
 	ret
 
+# adds the 3-lenth vector in %0 to the 3-lenth vector in %1 and stores it in %1
+# src vector preserved, dst vector changed (but passed pointer is preserved)
+vector_add:
+	push %0
+	push %1
+	push %2
+	push %3
+
+	mov %2, [%0]
+	mov %3, [%1]
+	add %2, %3
+	mov [%1], %2
+	incr %0
+	incr %1
+	mov %2, [%0]
+	mov %3, [%1]
+	add %2, %3
+	mov [%1], %2
+	incr %0
+	incr %1
+	mov %2, [%0]
+	mov %3, [%1]
+	add %2, %3
+	mov [%1], %2
+
+	pop %3
+	pop %2
+	pop %1
+	pop %0
+	ret
+
 # Take the lines with delX in %0, and dely in %1, and return the angle theta of that line in %0
 FindTheta:
 	push %2
