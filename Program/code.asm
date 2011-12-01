@@ -28,6 +28,7 @@
 `define AI_ROTATION_SPEED 10
 `define PLAYER_START_LIVES 5
 `define BULLET_SPEED 20
+`define BULLET_LIFE 100
 `define FIND_THETA_ACCURACY 5
 `define DEGREE_90 0      # 90 Degrees in our encoding
 `define STACK_TOP 0x2bff # stack starts at 11264 (this is the top of memory, be careful)
@@ -143,6 +144,14 @@ mainAITurningLeft:
 mainAIDoneTurning:
 	mov %0, 0
 	mov [AI_TURNING], %0
+	mov %0, [AI_THETA]
+	mov [AI_BULLET_THETA], %0
+	mov %0, BULLET_LIFE
+	mov [AI_BULLET_TIME], %0
+	mov %0, [AI_X]
+	mov [AI_BULLET_X], %0
+	mov %0, [AI_Y]
+	mov [AI_BULLET_Y], %0
 
 mainAIDoneMoving:
 
@@ -198,6 +207,8 @@ mainPlayerBulletFire:
 	mov [PLAYER_BULLET_Y], %3
 	mov %1, [PLAYER_THETA]
 	mov [PLAYER_BULLET_THETA], %1
+	mov %0, BULLET_LIFE
+	mov [PLAYER_BULLET_TIME], %0
 
 mainEndPlayerBullet:
 
@@ -242,7 +253,6 @@ mainEndPlayerBullet:
 	j mainEndAIBullet
 
 mainAIBulletFire:
-
 	mov %0, %5
 	sub %0, %3
 	mov %1, %4
@@ -256,7 +266,14 @@ mainAIBulletFire:
 	j mainEndAIBullet
 
 mainAIFire:
-
+	mov %0, [AI_THETA]
+	mov [AI_BULLET_THETA], %0
+	mov %0, BULLET_LIFE
+	mov [AI_BULLET_TIME], %0
+	mov %0, [AI_X]
+	mov [AI_BULLET_X], %0
+	mov %0, [AI_Y]
+	mov [AI_BULLET_Y], %0
 
 mainEndAIBullet:
 
@@ -533,7 +550,7 @@ FindTheta:
 		mov %0, %6
 		call sin 
 		mov %3, %0 # 3 has y of comparison vector
-		call cross
+		call dot
 		
 		jg %0, 0, findThetaAdd # In the top half of the graph
 		# In the bottom half of the graph
