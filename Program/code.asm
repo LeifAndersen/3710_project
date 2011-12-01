@@ -351,10 +351,10 @@ mainEndAIBullet:
 	mov %8, %1				# don't touch %8....
 	skiplayerbullet:
 
-	#	Scale models (multiply all points by scale vector).
+#	Scale models (multiply all points by scale vector).
 	# do nothing
 
-	#	Rotate models around x axis by model angle
+#	Rotate models around x axis by model angle
 	#	rotate tank
 	mov %1, [AI_THETA]		# get the rotation for the tank
 	mov %0, 0				# other angle is 0
@@ -457,14 +457,18 @@ mainEndAIBullet:
 
 	skipplayerbulletrotate:
 
-	#	Translate model (add entity location to all points in model).
+#	Translate model (add entity location to all points in model).
 	# translate tank
 	sub %SP, 3				# make temp point
 	mov %0, %SP
 	mov %1, [AI_X]			# copy in AI tank translation (position)
+	mov %2, [PLAYER_X]		# offest by camera pos
+	sub %1, 2
 	mov [%0], %1
 	incr %0
 	mov %1, [AI_Y]
+	mov %2, [PLAYER_Y]		# offest by camera pos
+	sub %1, 2
 	mov [%0], %1
 	incr %0
 	mov %1, 0
@@ -494,9 +498,13 @@ mainEndAIBullet:
 	sub %SP, 3				# make temp point
 	mov %0, %SP
 	mov %1, [AI_BULLET_X]	# copy in AI bullet translation (position)
+	mov %2, [PLAYER_X]		# offest by camera pos
+	sub %1, 2
 	mov [%0], %1
 	incr %0
 	mov %1, [AI_BULLET_Y]
+	mov %2, [PLAYER_Y]		# offest by camera pos
+	sub %1, 2
 	mov [%0], %1
 	incr %0
 	mov %1, 0
@@ -527,9 +535,13 @@ mainEndAIBullet:
 	sub %SP, 3				# make temp point
 	mov %0, %SP
 	mov %1, [PLAYER_BULLET_X]	# copy in AI bullet translation (position)
+	mov %2, [PLAYER_X]		# offest by camera pos
+	sub %1, 2
 	mov [%0], %1
 	incr %0
 	mov %1, [PLAYER_BULLET_Y]
+	mov %2, [PLAYER_Y]		# offest by camera pos
+	sub %1, 2
 	mov [%0], %1
 	incr %0
 	mov %1, 0
@@ -554,10 +566,129 @@ mainEndAIBullet:
 
 	skipplayerbullettranslate:
 
-	#Put model in camera coordinates:
+#Put model in camera coordinates:
 	#	Rotate model around y axis by camera angle.
 	#	Rotate model around x axis by camera angle.
+		#	Rotate models around x axis by model angle
+	#	rotate tank
+	mov %1, [PLAYER_THETA]		# get the rotation for the tank
+	mov %0, 0				# other angle is 0
+	call setup_rotate
+	mov %4, [%10]			# get the size of the tank in triangles
+	sub %SP, 9				# make room for triangle to rotate
+	mov %1, %SP				# top of the temp triangle (first point)
+	mov %0, %10				# pointer to modifiable tank
+	incr %0					# skip size field in tank
+	camerarotatetankloop:			# loop that rotates tank points
+	incr %0					# skip color
+	call rotate_point
+	add %0, 3				# move to next point in triangle
+	add %1, 3
+	call rotate_point
+	add %0, 3				# move to next point in triangle
+	add %1, 3
+	call rotate_point
+	mov %2, 9
+	sub %0, 6
+	sub %1, 6
+	mov %3, %0
+	mov %0, %1
+	mov %1, %3
+	call memcpy				# copy rotated triangle back into tank
+	decr %4					# done rotating one triangle
+	# check if loop again
+	jne %4, 0, camerarotatetankloop
+	# done with tank, remove temp storage on stack
+	add %SP, 9
 
+	# rotate bullets
+	# check if there is an AI bullet to rotate
+	je %9, 0, skipaibulletcamerarotate
+
+	mov %1, [PLAYER_THETA] # get the rotation for the bullet
+	mov %0, 0				# other angle is 0
+	call setup_rotate
+	mov %4, [%9]			# get the size of the bullet in triangles
+	sub %SP, 9				# make room for triangle to rotate
+	mov %1, %SP				# top of the temp triangle (first point)
+	mov %0, %10				# pointer to modifiable bullet
+	incr %0					# skip size field in bullet
+	camerarotateaibulletloop:		# loop that rotates tank points
+	incr %0					# skip color
+	call rotate_point
+	add %0, 3				# move to next point in triangle
+	add %1, 3
+	call rotate_point
+	add %0, 3				# move to next point in triangle
+	add %1, 3
+	call rotate_point
+	mov %2, 9
+	sub %0, 6
+	sub %1, 6
+	mov %3, %0
+	mov %0, %1
+	mov %1, %3
+	call memcpy				# copy rotated triangle back into bullet
+	decr %4					# done rotating one triangle
+	# check if loop again
+	jne %4, 0, camerarotateaibulletloop
+	# done with tank, remove temp storage on stack
+	add %SP, 9
+
+	skipaibulletcamerarotate:
+
+	# check if there is a player bullet to rotate
+	je %8, 0, skipplayerbulletcamerarotate
+
+	mov %1, [PLAYER_THETA] # get the rotation for the bullet
+	mov %0, 0				# other angle is 0
+	call setup_rotate
+	mov %4, [%9]			# get the size of the bullet in triangles
+	sub %SP, 9				# make room for triangle to rotate
+	mov %1, %SP				# top of the temp triangle (first point)
+	mov %0, %10				# pointer to modifiable bullet
+	incr %0					# skip size field in bullet
+	camerarotateplayerbulletloop:	# loop that rotates tank points
+	incr %0					# skip color
+	call rotate_point
+	add %0, 3				# move to next point in triangle
+	add %1, 3
+	call rotate_point
+	add %0, 3				# move to next point in triangle
+	add %1, 3
+	call rotate_point
+	mov %2, 9
+	sub %0, 6
+	sub %1, 6
+	mov %3, %0
+	mov %0, %1
+	mov %1, %3
+	call memcpy				# copy rotated triangle back into bullet
+	decr %4					# done rotating one triangle
+	# check if loop again
+	jne %4, 0, camerarotateplayerbulletloop
+	# done with tank, remove temp storage on stack
+	add %SP, 9
+
+	skipplayerbulletcamerarotate:
+
+	#Split model into individual triangles:
+	#	Back face cull (take cross product of points 1, 2, and 3, if pointing away, don’t proceed, done with this triangle).
+	#	Sort triangles by distance of nearest point (furthest away comes first).
+
+
+	#Front-back clipping:
+	#	If triangle has both positive and negative z values at this point, it must be clipped to only the positive z space.
+	#	Calculate intersection of triangle with screen location via binary subdivision.
+	#	If triangle clip results in quad, split quad into two triangles instead.
+
+
+	#Perspective transform:
+	#	Using similar triangles and binary subdivision, calculate screen coordinates one point at a time.
+
+
+	#Screen clipping:
+	#	If triangle partially off screen, partially on screen, use binary subdivision to find where triangle intersects edges of screen. If result is quad, split into multiple triangles.
 
 	# Rasterise
 
