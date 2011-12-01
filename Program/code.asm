@@ -13,6 +13,7 @@
 `define BULLET_RADIUS 1
 `define TANK_RADIUS 10
 `define AI_SPEED 10
+`define AI_ROTATION_SPEED 10
 `define PLAYER_START_LIVES 5
 `define BULLET_SPEED 20
 `define STACK_TOP 0x2bff # stack starts at 11264 (this is the top of memory, be careful)
@@ -46,6 +47,7 @@ mainNewPlayer:
 	mov [PLAYER_BULLET_TIME], %0
 	mov [AI_BULLET_TIME], %0
 	mov [PLAYER_SCORE], %0
+	mov [AI_TURNING], %0
 	mov %0, [PLAYER_START_X]
 	mov [PLAYER_X], %0
 	mov %0, [PLAYER_START_Y]
@@ -90,6 +92,10 @@ mainLoop:
 	mov [PLAYER_THETA], %4 # Save the theta
 
 	# Move the AI
+
+	mov %0, [AI_TURNING]
+	je %0, 1, mainAITurningRight
+	je %0, -1, mainAITurningRight
 	mov %4, [AI_X]
 	mov %5, [AI_Y]
 	mov %6, [AI_THETA]
@@ -103,6 +109,29 @@ mainLoop:
 	mov %HIGH, %0
 	mul %HIGH, AI_SPEED
 	add %5, %LOW           # %5 now has possible AI_Y
+	j mainAIDoneMoving
+
+mainAITurningRight:
+	mov [AI_TARGET_THETA], %0
+	mov [AI_THETA], %1
+	je %0, %1, mainAIDoneTurning
+	sub %1, AI_ROTATION_SPEED
+	mov [AI_THETA], %1
+	j mainAIDoneMoving
+
+mainAITurningLeft:
+	mov [AI_TARGET_THETA], %0
+	mov [AI_THETA], %1
+	je %0, %1, mainAIDoneTurning
+	add %1, AI_ROTATION_SPEED
+	mov [AI_THETA], %1
+	j mainAIDoneMoving
+
+mainAIDoneTurning:
+	mov %0, 0
+	mov [AI_TURNING], %0
+
+mainAIDoneMoving:
 
 	# Move Player bullet
 	mov %6, [PLAYER_BULLET_TIME]
@@ -112,13 +141,13 @@ mainLoop:
 
 	mov %6, [PLAYER_BULLET_X]
 	mov %7, [PLAYER_BULLET_Y]
-	mov %0, [PLAYYER_BULLET_THETA]
+	mov %0, [PLAYER_BULLET_THETA]
 	call cos
 	mul %0, BULLET_SPEED
 	add %6, %LOW           # 6 now conains bullet x
 	mov %0, [PLAYER_BULLET_THETA]
 	call sin
-	mul $0, BULLET_SPEED
+	mul %0, BULLET_SPEED
 	add %7, %LOW           # 7 now contains bullet y
 
 	# Check bullet AI Collision
@@ -144,12 +173,14 @@ mainLoop:
 	mov [AI_X], %0
 	mov %0, [AI_START_Y]
 	mov [AI_Y], %0
+	mov %0, 0
+	mov [AI_TURNING], %0
 
 	j mainEndPlayerBullet
 
 mainPlayerBulletFire:
 	mov %8, [A_KEY]
-	je %8, 0 mainEndPlayerBullet # Didn't fire
+	je %8, 0, mainEndPlayerBullet # Didn't fire
 	mov [PLAYER_BULLET_X], %2
 	mov [PLAYER_BULLET_Y], %3
 	mov %1, [PLAYER_THETA]
@@ -171,7 +202,7 @@ mainEndPlayerBullet:
 	add %8, %LOW           # 8 now conains bullet x
 	mov %0, [AI_BULLET_THETA]
 	call sin
-	mul $0, BULLET_SPEED
+	mul %0, BULLET_SPEED
 	add %9, %LOW           # 9 now contains bullet y
 
 	# Check bullet AI Collision
@@ -199,6 +230,21 @@ mainEndPlayerBullet:
 
 mainAIBulletFire:
 
+	mov %0, %5
+	sub %0, %3
+	mov %1, %4
+	sub %1, %2
+	call FindTheta
+	mov [AI_TARGET_THETA], %0
+	mov %1, [AI_THETA]
+	je %1, %0, mainAIFire
+	mov %1, 1
+	mov [AI_TURNING], %1
+	j mainEndAIBullet
+
+mainAIFire:
+
+
 mainEndAIBullet:
 
 	# Bullet Player collision
@@ -210,7 +256,8 @@ mainEndAIBullet:
 	mov [AI_Y], %7
 
 	# Reset keyboard counters
-	mov [UP_KEY], 1
+	mov %0, 1
+	mov [UP_KEY], %0
 
 	# -------------------------------
 	# For each triangle, do this, although unless it's an enemy tank, you can skip the AI step.
@@ -400,6 +447,7 @@ mainEnd:
 	pop $0
 	ret
 
+
 # copy memory from [%0], to [%1] of size in %2.
 # preserves args
 memcpy:
@@ -420,6 +468,24 @@ memcpy:
 	pop %2
 	pop %1
 	pop %0
+
+# Take x0 in 0, y0 in 1, x1 in 2 and y1 in 3, return the dot product in 0
+# Does not destory any registers other than the return value in 0.
+dot:
+	push %LOW
+	push %HIGH
+
+	mul %0, %2
+	mov %0, %LOW
+	mul %1, %3
+	add %0, %HIGH
+
+	pop %HIGH
+	pop %LOW
+	ret
+
+# Take the lines with delX in %0, and dely in %1, and return the angle theta of that line in %0
+FindTheta:
 	ret
 
 # Take a number in the $0 reg, return the sin of that number into the $0 reg
@@ -769,6 +835,12 @@ AI_X:
 
 AI_Y:
 100
+
+AI_TURNING:
+0
+
+AI_TARGET_THETA:
+0
 
 AI_THETA:
 0
