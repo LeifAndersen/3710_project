@@ -13,6 +13,7 @@
 `define BULLET_RADIUS 1
 `define TANK_RADIUS 10
 `define AI_SPEED 10
+`define AI_ROTATION_SPEED 10
 `define PLAYER_START_LIVES 5
 `define BULLET_SPEED 20
 `define STACK_TOP 0x2bff # stack starts at 11264 (this is the top of memory, be careful)
@@ -46,6 +47,7 @@ mainNewPlayer:
 	mov [PLAYER_BULLET_TIME], %0
 	mov [AI_BULLET_TIME], %0
 	mov [PLAYER_SCORE], %0
+	mov [AI_TURNING], %0
 	mov %0, [PLAYER_START_X]
 	mov [PLAYER_X], %0
 	mov %0, [PLAYER_START_Y]
@@ -90,6 +92,10 @@ mainLoop:
 	mov [PLAYER_THETA], %4 # Save the theta
 	
 	# Move the AI
+	
+	mov %0, [AI_TURNING]
+	je %0, 1, mainAITurningRight
+	je %0, -1, mainAITurningRight
 	mov %4, [AI_X]
 	mov %5, [AI_Y]
 	mov %6, [AI_THETA]
@@ -103,7 +109,30 @@ mainLoop:
 	mov %HIGH, %0
 	mul %HIGH, AI_SPEED
 	add %5, %LOW           # %5 now has possible AI_Y
+	j mainAIDoneMoving
+
+mainAITurningRight:
+	mov [AI_TARGET_THETA], %0
+	mov [AI_THETA], %1
+	je %0, %1, mainAIDoneTurning
+	sub %1, AI_ROTATION_SPEED
+	mov [AI_THETA], %1
+	j mainAIDoneMoving
+
+mainAITurningLeft:
+	mov [AI_TARGET_THETA], %0
+	mov [AI_THETA], %1
+	je %0, %1, mainAIDoneTurning
+	add %1, AI_ROTATION_SPEED
+	mov [AI_THETA], %1
+	j mainAIDoneMoving
 	
+mainAIDoneTurning:
+	mov %0, 0
+	mov [AI_TURNING], %0
+
+mainAIDoneMoving:
+
 	# Move Player bullet
 	mov %6, [PLAYER_BULLET_TIME]
 	je %6, 0, mainPlayerBulletFire # If unused, let player fire
@@ -144,6 +173,8 @@ mainLoop:
 	mov [AI_X], %0
 	mov %0, [AI_START_Y]
 	mov [AI_Y], %0
+	mov %0, 0
+	mov [AI_TURNING], %0
 
 	j mainEndPlayerBullet
 
@@ -203,6 +234,16 @@ mainAIBulletFire:
 	sub %0, %3
 	mov %1, %4
 	sub %1, %2
+	call FindTheta
+	mov [AI_TARGET_THETA], %0
+	mov %1, [AI_THETA]
+	je %1, %0, mainAIFire
+	mov %1, 1
+	mov [AI_TURNING], %1
+	j mainEndAIBullet
+
+mainAIFire:
+	
 
 mainEndAIBullet:
 	
@@ -219,26 +260,8 @@ mainEndAIBullet:
 	mov [UP_KEY], %0
 
 	# -------------------------------
-	# For each triangle, do this, although unless it's an enimy tank, you can skip the AI step.
 
-	# Get Projection Matrix Based on Players Position
-
-	# Multiply this by world matrix
-
-	# Mutiply AI tank matrix by outputted matrix
-
-	# At this point, the triangle's x and y coordinates should be directly drawable on the screen.  The z coordinate is only used to determin what parts of the triangle is out of range.
-
-	# Rasterise
-	# For each line of pixels, do this:
-	# For each triangle, if it's on that line, do this:
-	# Find the intersection of pixel line, and the tringle, the left one is the ideal left, and the right one is the ideal right.  Special cases for one intersection (point), and when they're the same.
-
-	# If the pixel is lower than 0 or greater than 160, set it as that.  If both of them are off the same side of the screen, just remove it altogether.
-
-	# If z is out of range, find where the line intersects with the max/min z values, set that as your left/right points
-
-	# Send it off to the hardware to be drawn.
+	# Graphics pipeline here
 
 	# -------------------------------
 
@@ -259,6 +282,7 @@ mainEnd:
 	ret
 
 # Take x0 in 0, y0 in 1, x1 in 2 and y1 in 3, return the dot product in 0
+# Does not destory any registers other than the return value in 0.
 dot:
 	push %LOW
 	push %HIGH
@@ -270,6 +294,10 @@ dot:
 	
 	pop %HIGH
 	pop %LOW
+	ret
+
+# Take the lines with delX in %0, and dely in %1, and return the angle theta of that line in %0
+FindTheta:
 	ret
 
 # Take a number in the $0 reg, return the sin of that number into the $0 reg
@@ -596,6 +624,12 @@ AI_X:
 
 AI_Y:
 100
+
+AI_TURNING:
+0
+
+AI_TARGET_THETA:
+0
 
 AI_THETA:
 0
