@@ -755,27 +755,65 @@ mainEndAIBullet:
 	add %LOW, 1
 	add %7 %LOW
 
-	#	Sort triangles by distance of nearest point (furthest away comes first).
+#	Sort triangles by distance of nearest point (furthest away comes first). Insertion sort
+	mov %4, 1				# starting index
+	mov %0, 1
+	sub %SP, 10				# temp triangle
+	mov %2, %SP
+	mov %0, %6				# triangle array pointer
+	incr %6					# skip size
+
+	sorttrianglesouterloop:
+	mov %0, %6				# get pointer to model
+	mul %4, 10				# get index into model (in words, not triangles)
+	add %0, %LOW			# %0 now ready to be used as src in move_triangle
+	mov %1, %2				# move temp pointer into dst arg of move_triangle
+	call move_triangle
+	mov %3, %4				# get a inner loop index
+	decr %3
+
+		sorttrianglesinnerloop:
+		mov %0, %6				# get pointer to model
+		mul %3, 10				# get index into model (in words, not triangles)
+		add %0, %LOW			# triangles[i]
+		mov %2, %0				# save pointer to triangles[i]
+		call find_furthest		# %0 will contain 1 if we should shift and 0 if it is the right position
+		je %0, 0, innersortloopdone	# if the triangles[i] is further than temp, don't shift
+		mov %0, %2				# restore pointer to triangles[i]
+		mov %1, %0
+		add %1, 10				# triangles[i+1]
+		call move_triangle
+		decr %3
+		jge %3, 0, sorttrianlgesinnerloop
+
+	innersortloopdone:
+	mov %1, %6				# set up dst (triangles[i+1])
+	mul %3, 10
+	add %1, %LOW
+	add %1, 10
+	mov %0, %2				# set up src (temp)
+	call move_triangle
+	incr %4
+	jl %4, %5 sorttrianglesouterloop
+
+#Front-back clipping:
+	#	If triangle has both positive and negative z values at this point, it must be clipped to only the positive z space.
 
 
-	#Front-back clipping:
-		#	If triangle has both positive and negative z values at this point, it must be clipped to only the positive z space.
+	#	Calculate intersection of triangle with screen location via binary subdivision.
 
 
-		#	Calculate intersection of triangle with screen location via binary subdivision.
+	#	If triangle clip results in quad, split quad into two triangles instead.
 
 
-		#	If triangle clip results in quad, split quad into two triangles instead.
+#Perspective transform:
+	#	Using similar triangles and binary subdivision, calculate screen coordinates one point at a time.
 
 
-	#Perspective transform:
-		#	Using similar triangles and binary subdivision, calculate screen coordinates one point at a time.
+#Screen clipping:
+	#	If triangle partially off screen, partially on screen, use binary subdivision to find where triangle intersects edges of screen. If result is quad, split into multiple triangles.
 
-
-	#Screen clipping:
-		#	If triangle partially off screen, partially on screen, use binary subdivision to find where triangle intersects edges of screen. If result is quad, split into multiple triangles.
-
-	#Rasterise
+#Rasterise
 
 
 	dontrender:
@@ -855,7 +893,7 @@ distance_squared:
 	pop %1
 	ret
 
-# given two pointers to triangles in %0, and %1, return 0 in %0 if first was furthest and 1 in %0 if second was furthest
+# given two pointers to triangles in %0, and %1, return 1 in %0 if first was furthest and 0 in %0 if second was furthest
 find_furthest:
 	push %1
 	push %2
@@ -878,82 +916,54 @@ find_furthest:
 	pop %1
 	ret
 
-# swap the triangle pointed to by %0 with the triangle pointed to by %1
-swap_triangles:
+# move the triangle pointed to by %0 into the triangle pointed to by %1 (WARNING: overwrites the triangle pointed to by %1)
+move_triangle:
 	push %2
-	push %3
-
 
 	# completely unrolled
-	mov %2, [%0]			# swap color
-	mov %3, [%1]
-	mov [%0], %3
+	mov %2, [%0]			# move color
 	mov [%1], %2
 	incr %0
 	incr %1
-	mov %2, [%0]			# swap x1
-	mov %3, [%1]
-	mov [%0], %3
+	mov %2, [%0]			# mov x1
 	mov [%1], %2
 	incr %0
 	incr %1
-	mov %2, [%0]			# swap y1
-	mov %3, [%1]
-	mov [%0], %3
+	mov %2, [%0]			# mov y1
 	mov [%1], %2
 	incr %0
 	incr %1
-	mov %2, [%0]			# swap z1
-	mov %3, [%1]
-	mov [%0], %3
+	mov %2, [%0]			# move z1
 	mov [%1], %2
 	incr %0
 	incr %1
-	mov %2, [%0]			# swap x2
-	mov %3, [%1]
-	mov [%0], %3
+	mov %2, [%0]			# move x2
 	mov [%1], %2
 	incr %0
 	incr %1
-	mov %2, [%0]			# swap y2
-	mov %3, [%1]
-	mov [%0], %3
+	mov %2, [%0]			# move y2
 	mov [%1], %2
 	incr %0
 	incr %1
-	mov %2, [%0]			# swap z2
-	mov %3, [%1]
-	mov [%0], %3
+	mov %2, [%0]			# move z2
 	mov [%1], %2
 	incr %0
 	incr %1
-	mov %2, [%0]			# swap x3
-	mov %3, [%1]
-	mov [%0], %3
+	mov %2, [%0]			# move x3
 	mov [%1], %2
 	incr %0
 	incr %1
-	mov %2, [%0]			# swap y3
-	mov %3, [%1]
-	mov [%0], %3
+	mov %2, [%0]			# move y3
 	mov [%1], %2
 	incr %0
 	incr %1
-	mov %2, [%0]			# swap z3
-	mov %3, [%1]
-	mov [%0], %3
+	mov %2, [%0]			# move z3
 	mov [%1], %2
 
 	# reset pointers
 	sub %0, 10
 	sub %1, 10
 
-	# swap pointers so they both point to the same triangle they used to
-	mov %2, %0
-	mov %0, %1
-	mov %1, %2
-
-	pop %3
 	pop %2
 	ret
 
