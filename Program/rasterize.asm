@@ -315,6 +315,9 @@ mov LOW, temp1
 #have left points now.
 sub temp1, temp2 # temp1 = c-d
 arsh temp1, 1 #divide by 2
+jge temp1, 0, positive1
+incr temp1
+positive1:
 
 mov temp2, LOW
 sub temp2, temp1 #temp2 = c - (c-d)/2 = midpoint left.
@@ -330,9 +333,9 @@ mov HIGH, %10
 #have right points now.
 sub %10, temp1 # %10 = c-d
 arsh %10, 1 #divide by 2
-jge %10, 0, positive1
+jge %10, 0, positive2
 incr %10
-positive1:
+positive2:
 
 mov temp1, HIGH
 sub temp1, %10 #temp1 = c - (c-d)/2 = midpoint right.
