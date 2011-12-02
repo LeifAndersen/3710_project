@@ -48,7 +48,7 @@ mov [VGA], eax
 #infinite:
 #j infinite
 
-mov eax, 0x1f
+mov eax, 0xf
 call pause
 
 call rasterize
@@ -81,7 +81,7 @@ mov eax, 0xffff
 mov [VGA], eax
 mov [VGA], eax
 
-mov eax, 0x1f
+mov eax, 0xf
 call pause
 
 #call movepoint #This will add motion to the triangle to test various different weird triangles.
@@ -126,12 +126,35 @@ mov [points+1], temp2 # Swap x-coords
 mov [points+5], temp1
 dontswap2: #now ebx holds the smallest y-coord
 
-#Now sort last 2 points by x-value, lowest first, then highest.
+#must do (p2-p1)x(p3-p1)
+#if > 0, good,
+#if < 0, swap x2, x3
+###(x2 - x1) * (y3 - y1) - (x3 - x1) * (y2 - y1)
 
-mov temp1, [points+3]
-mov temp2, [points+5]
-cmp temp1, temp2 #compare x values of other two points
-jl temp1, temp2, dontswap3
+mov temp1, [points+1] #x1
+mov temp2, [points+2] #y1
+mov eax, [points+3] #x2
+mov ebx, [points+4] #y2
+mov ecx, [points+5] #x3
+mov edx, [points+6] #y3
+
+sub eax, temp1
+sub edx, temp2
+sub ecx, temp1
+sub ebx, temp2
+
+mul eax, edx
+mov eax, LOW
+
+mul ecx, ebx
+mov ebx, LOW
+
+sub eax, ebx
+
+#Cross product is done, result in eax.
+jg eax, 0, dontswap3
+mov temp1, [points+3] #x2
+mov temp2, [points+5] #x3
 mov [points+3], temp2
 mov [points+5], temp1
 mov temp1, [points+4] # Load x-coords
@@ -148,7 +171,10 @@ dontswap3: #Now points are sorted so first is lowest y-value, second is lowest x
 #This works until yvalleftue == y2 || yvalleftue == y3.
 #x for given yvalleftue, x = xref + (yvalleftue)*(1/ydif)*xdif.
 
-#Setup for percolate loop:
+###
+###Setup for percolate loop:
+###
+
 #left side
 mov yvalleft, 0 #[points+2] #Initialize loop counter -- Move smallest y-value into line.
 mov yvalright, 0
@@ -254,7 +280,7 @@ nochange:
 #mov [VGA], eex
 
 ####left
-mov eex, edx #use eex as temp register.
+mov eex, edx #use eex as temp register.  eex = 1/ydifleft
 mul ebx, yvalleft # LOW = xdif * yvalleft (max is 159 * 119 which is within 2^16, even when signed.)
 fmul eex, LOW # edx = (yvalleftue)*(1/ydif) * xdif
 add eex, temp1 #temp1 = x for given yvalleftue, x = xref + (yvalleftue)*(1/ydif)*xdif = left index to give to painter.
@@ -262,8 +288,8 @@ add eex, temp1 #temp1 = x for given yvalleftue, x = xref + (yvalleftue)*(1/ydif)
 ####right
 mov %10, ecx #use %10 as temp register.
 mul eax, yvalright # LOW = xdif * yvalleft (max is 159 * 119 which is within 2^16, even when signed.)
-fmul %10, LOW # edx = (yvalleftue)*(1/ydif) * xdif
-add %10, temp2 #temp1 = x for given yvalleftue, x = xref + (yvalleftue)*(1/ydif)*xdif = left index to give to painter.
+fmul %10, LOW # edx = (yvalleft)*(1/ydif) * xdif
+add %10, temp2 #temp1 = x for given yvalleftue, x = xref + (yvalleft)*(1/ydif)*xdif = left index to give to painter.
 
 
 
@@ -363,9 +389,9 @@ mov [VGA], temp1
 
 decr eax
 
-#
-# NEW DRAW METHOD WITH MIDPOINTS
-#
+###
+### NEW DRAW METHOD WITH MIDPOINTS
+###
 #ecx holds prev L/R value.  eax holds current y-value. edx holds current L/R value.  eex holds next L/R y-value.   
 FillLoop:
 mov ebx, eax #Copy eax as temp into ebx.
@@ -391,6 +417,9 @@ mov LOW, temp1
 #have left points now.
 sub temp1, temp2 # temp1 = c-d
 arsh temp1, 1 #divide by 2
+jge temp1, 0, positive3
+incr temp1
+positive3:
 
 mov temp2, LOW
 sub temp2, temp1 #temp2 = c - (c-d)/2 = high midpoint left.
@@ -406,6 +435,9 @@ mov HIGH, %10
 #have right points now.
 sub %10, temp1 # %10 = c-d
 arsh %10, 1 #divide by 2
+jge %10, 0, positive4
+incr %10
+positive4:
 
 mov temp1, HIGH
 sub temp1, %10 #temp1 = c - (c-d)/2 = high midpoint right.
@@ -430,6 +462,9 @@ rsh yvalright, 8
 #have left points now.
 sub yvalleft, yvalright # yvalleft = c-d
 arsh yvalleft, 1 #divide by 2
+jge yvalleft, 0, positive5
+incr yvalleft
+positive5:
 
 mov yvalright, LOW
 add yvalright, yvalleft #yvalright = c + (c-d)/2 = low midpoint left.  Add because LOW is the upper of the two this time, not the lower
@@ -443,6 +478,9 @@ and yvalleft, 0xff #%10 = right point low.
 #have right points now.
 sub %10, yvalleft # %10 = c-d
 arsh %10, 1 #divide by 2
+jge %10, 0, positive6
+incr %10
+positive6:
 
 mov yvalleft, HIGH
 add yvalleft, %10 #yvalleft = c + (c-d)/2 = low midpoint right.  Add because high is the upper of the two this time, not the lower.
@@ -487,6 +525,9 @@ mov LOW, temp1
 #have left points now.
 sub temp1, temp2 # temp1 = c-d
 arsh temp1, 1 #divide by 2
+jge temp1, 0, positive7
+incr temp1
+positive7:
 
 mov temp2, LOW
 sub temp2, temp1 #temp2 = c - (c-d)/2 = midpoint left.
@@ -502,6 +543,9 @@ mov HIGH, %10
 #have right points now.
 sub %10, temp1 # %10 = c-d
 arsh %10, 1 #divide by 2
+jge %10, 0, positive8
+incr %10
+positive8:
 
 mov temp1, HIGH
 sub temp1, %10 #temp1 = c - (c-d)/2 = midpoint right.
@@ -653,7 +697,17 @@ mov [triangle+5], eax
 mov [triangle+6], ebx
 
 endstates2:
-#ret
+
+call newtriangle
+ret
+
+###
+### END MOVEPOINT
+###
+
+movepoint2:
+mov [triangle+1], eax #x1
+mov [triangle+2], ebx #y1
 
 cmp eax, 0
 je movey
@@ -682,10 +736,9 @@ mov [triangle], ecx
 donemovepoint:
 
 call newtriangle
-
 ret
 ###
-### END MOVEPOINT
+### END MOVEPOINT2
 ###
 
 #
@@ -719,21 +772,24 @@ ret
 points:
 1
 
-84 #0 #84 #4
-115 #80 #115 #1
+0 #84 #0 #84 #4
+52 #115 #80 #115 #1
 
 53 #1
-67 #10
+54 #10
 
 114 #7
-54 #10
+67 #10
 
 triangle:
 1
+
 84
 115
+
 53
 54
+
 114
 67
 
