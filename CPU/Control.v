@@ -37,7 +37,7 @@ module Control(
 	output reg			ret
     );
 
-	`include "..\ALU\opcodesLOL.v"
+	`include "../ALU/opcodesLOL.v"
 	`include "InstructionTypes.v"
 
 	//translate flags for easy reading
