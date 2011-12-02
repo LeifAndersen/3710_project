@@ -84,7 +84,7 @@ mov [VGA], eax
 mov eax, 0xf
 call pause
 
-#call movepoint2 #This will add motion to the triangle to test various different weird triangles.
+call movepoint #This will add motion to the triangle to test various different weird triangles.
 
 j infinite2
 
@@ -783,11 +783,11 @@ points:
 triangle:
 1
 
-0 #0 #84 #4
-54 #80 #115 #1
+84 #0 #84 #4
+115 #80 #115 #1
 
-84 #1
-115 #10
+53 #1
+54 #10
 
 114 #7
 67 #10
