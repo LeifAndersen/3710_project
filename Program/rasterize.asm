@@ -53,29 +53,29 @@ call pause
 
 call rasterize
 
-mov eax, [points+2]
-lsh eax, 3
-or eax, 7
-mov [VGA], eax
-mov eax, [points+1]
-lsh eax, 8
-mov [VGA], eax
+#mov eax, [points+2]
+#lsh eax, 3
+#or eax, 7
+#mov [VGA], eax
+#mov eax, [points+1]
+#lsh eax, 8
+#mov [VGA], eax
 
-mov eax, [points+4]
-lsh eax, 3
-or eax, 7
-mov [VGA], eax
-mov eax, [points+3]
-lsh eax, 8
-mov [VGA], eax
+#mov eax, [points+4]
+#lsh eax, 3
+#or eax, 7
+#mov [VGA], eax
+#mov eax, [points+3]
+#lsh eax, 8
+#mov [VGA], eax
 
-mov eax, [points+6]
-lsh eax, 3
-or eax, 7
-mov [VGA], eax
-mov eax, [points+5]
-lsh eax, 8
-mov [VGA], eax
+#mov eax, [points+6]
+#lsh eax, 3
+#or eax, 7
+#mov [VGA], eax
+#mov eax, [points+5]
+#lsh eax, 8
+#mov [VGA], eax
 
 mov eax, 0xffff
 mov [VGA], eax
@@ -613,9 +613,9 @@ ret
 ### END PAUSE
 ###
 
-#
-# MOVEPOINT
-#
+###
+### MOVEPOINT
+###
 movepoint:
 
 mov edx, [UP_KEY]
@@ -679,7 +679,7 @@ incr eax
 checksdone:
 
 mov %10, 1
-mov [UP_KEY], %10 #reset keyboard
+#mov [DOWN_KEY], %10 #reset keyboard
 
 mov %10, [state]
 je %10, 1, stateone2
