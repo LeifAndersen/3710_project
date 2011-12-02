@@ -673,36 +673,97 @@ mainEndAIBullet:
 	skipplayerbulletcamerarotate:
 
 # consolidate models
-	mov %0, [%10]			# get size of first
-	mov %1, %10				# get pointer to first
+	# get total triangle count
+	mov %0, [%10]			# count
+	mov %2, %10				# bottom
+	je %9, 0, skipaibulletcount
+	mov %1, [%9]
+	mov %2, %9				# new bottom
+	add %0, %1
+	skipaibulletcount:
+	je %8, 0, skipplayerbulletcount
+	mov %1, [%8]
+	mov %2, %8				# new bottom
+	add %0, %1
+	skipplayerbulletcount:
+	# write total triangle size to "model" at bottom of stack (this is the "top" when you iterate through by address)
+	mov [%2], %0
+	mov %6, %2
+
+	# shift triangles of models up by one so that all triangles are contiguous in memory
+	je %8, 0, skipaibulletshift
+	je %9, 0, skipaibulletshift
+	mov %2, [%9]			# ai bullet size
+	mul %2, 10
+	mov %2, %LOW
+	add %2, 1
+	mov %1, %9				# shift to location
+	mov %0, %1
+	incr %0					# shift from location
+	call memcpy
+	skipaibulletshift:
+	mov %4, %9
+	or %4, %8				# player bullet or ai bullet
+	je %4, 0, skiptankshift
+	mov %2, [%10]			# tank size
+	mul %2, 10
+	mov %2, %LOW
+	add %2, 1
+	mov %1, %9				# shift to location
+	mov %0, %1
+	incr %0					# shift from location
+	call memcpy
+	skiptankshift:
+
+# loop over all triangles in new total model
+	mov %0, [%6]			# size of total model in triangles
+	mov %1, %6				# pointer to total model
+	incr %1					# now at first triangle's color
+
+	totalmodelloop:
+	push %0
+	push %6
+	push %1
+
+	j dontrender
+
+	#Split model into individual triangles:
+		#	Back face cull (take cross product of points 1, 2, and 3, if pointing away, don’t proceed, done with this triangle).
+		#	(p3 - p1) x (p3 - p2)
 
 
-#Split model into individual triangles:
-	#	Back face cull (take cross product of points 1, 2, and 3, if pointing away, don’t proceed, done with this triangle).
-	#	(p3 - p1) x (p3 - p2)
+
+		#	Sort triangles by distance of nearest point (furthest away comes first).
 
 
-	#	Sort triangles by distance of nearest point (furthest away comes first).
+	#Front-back clipping:
+		#	If triangle has both positive and negative z values at this point, it must be clipped to only the positive z space.
 
 
-#Front-back clipping:
-	#	If triangle has both positive and negative z values at this point, it must be clipped to only the positive z space.
+		#	Calculate intersection of triangle with screen location via binary subdivision.
 
 
-	#	Calculate intersection of triangle with screen location via binary subdivision.
+		#	If triangle clip results in quad, split quad into two triangles instead.
 
 
-	#	If triangle clip results in quad, split quad into two triangles instead.
+	#Perspective transform:
+		#	Using similar triangles and binary subdivision, calculate screen coordinates one point at a time.
 
 
-#Perspective transform:
-	#	Using similar triangles and binary subdivision, calculate screen coordinates one point at a time.
+	#Screen clipping:
+		#	If triangle partially off screen, partially on screen, use binary subdivision to find where triangle intersects edges of screen. If result is quad, split into multiple triangles.
+
+	#Rasterise
 
 
-#Screen clipping:
-	#	If triangle partially off screen, partially on screen, use binary subdivision to find where triangle intersects edges of screen. If result is quad, split into multiple triangles.
+	dontrender:
+	pop %1
+	pop %6
+	pop %0
+	add %1, 10
+	decr %6
 
-#Rasterise
+	jne %6, 0, totalmodelloop:
 
 	# -------------------------------
 
