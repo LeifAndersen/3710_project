@@ -289,7 +289,7 @@ mainEndAIBullet:
 
 	#Put model in world coordinates:
 	#	Create copy of model on stack from data.
-	mov %7, 0				# keep running total of stack frame size
+	mov %7, 0				# keep running total of stack frame size. DO NOT MODIFY %7
 
 	mov %0, [tank_model]	# tank size
 	mov %3, tank_model		# tank location
@@ -684,17 +684,78 @@ mainEndAIBullet:
 	call backfacecull
 	skipplayerbulletcull:
 
+# copy all unculled triangles into array to be sorted
+	mov %5, 0				# keep total unculled triangle count
+	sub %SP, 1				# space for total number of triangles to render
+	mov %6, %SP
+	# tank first
+	mov %4, [%10]			# get size
+	mov %0, %10				# pointer into model
+	copyculledtankloop:
+	incr %0					# pointer now points to color (top of triangle in case we copy)
+	mov %1, [%0]
+	jne %1, 0xFFFF, dontcopytank
+	#should copy
+	sub %SP, 10
+	mov %1, %SP
+	mov %2, 10
+	call memcpy
+	incr %5					# one more unculled triangle
+	dontcopytank:
+	add %0, 10				# on to next triangle
+	decr %4
+	jge %4, 0, copyculledtankloop
+
+		# if ai bullet, do it second
+	je %9, 0, skipaibulletcopy
+	mov %4, [%9]			# get size
+	mov %0, %9				# pointer into model
+	copyculledaibulletloop:
+	incr %0					# pointer now points to color (top of triangle in case we copy)
+	mov %1, [%0]
+	jne %1, 0xFFFF, dontcopyaibullet
+	#should copy
+	sub %SP, 10
+	mov %1, %SP
+	mov %2, 10
+	call memcpy
+	incr %5					# one more unculled triangle
+	dontcopyaibullet:
+	add %0, 10				# on to next triangle
+	decr %4
+	jge %4, 0, copyculledaibulletloop
+	skipaibulletcopy:
+
+	# if player bullets, do it third (or second)
+	je %8, 0, skipplayerbulletcopy
+	mov %4, [%8]			# get size
+	mov %0, %8				# pointer into model
+	copyculledplayerbulletloop:
+	incr %0					# pointer now points to color (top of triangle in case we copy)
+	mov %1, [%0]
+	jne %1, 0xFFFF, dontcopyplayerbullet
+	#should copy
+	sub %SP, 10
+	mov %1, %SP
+	mov %2, 10
+	call memcpy
+	incr %5					# one more unculled triangle
+	dontcopyplayerbullet:
+	add %0, 10				# on to next triangle
+	decr %4
+	jge %4, 0, copyculledplayerbulletloop
+	skipplayerbulletcopy:
+
+	# save total triangle count
+	mov [%6], %5			# %6 is the pointer to the array of triangles
+
+	# add size of array to running stack total
+	mul %5, 10
+	add %LOW, 1
+	add %7 %LOW
+
 	#	Sort triangles by distance of nearest point (furthest away comes first).
 
-# loop over all triangles in new total model
-	mov %0, [%6]			# size of total model in triangles
-	mov %1, %6				# pointer to total model
-	incr %1					# now at first triangle's color
-
-	totalmodelloop:
-	push %0
-	push %6
-	push %1
 
 	#Front-back clipping:
 		#	If triangle has both positive and negative z values at this point, it must be clipped to only the positive z space.
@@ -717,13 +778,6 @@ mainEndAIBullet:
 
 
 	dontrender:
-	pop %1
-	pop %6
-	pop %0
-	add %1, 10
-	decr %6
-
-	jne %6, 0, totalmodelloop
 
 	# -------------------------------
 
@@ -811,6 +865,7 @@ backfacecull:
 
 	dontcull:
 	add %2, 10				# get to next triangle
+	add %SP, 6				# clean up stack
 
 	decr %4					# size--
 	jge %4, 0, backfacecullloop
