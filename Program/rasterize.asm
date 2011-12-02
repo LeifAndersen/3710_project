@@ -49,7 +49,7 @@ mov [VGA], eax
 #j infinite
 
 mov eax, 0xf
-#call pause
+call pause
 
 call rasterize
 
@@ -82,7 +82,7 @@ mov [VGA], eax
 mov [VGA], eax
 
 mov eax, 0xf
-#call pause
+call pause
 
 #call movepoint2 #This will add motion to the triangle to test various different weird triangles.
 
@@ -203,13 +203,15 @@ mov ymax, 0x00ff #This should probably be moved elsewhere.
 #percolate loop:
 
 LineLoop:
-#First check if yvalleft == y2 || yvalright == y3
+#First check if ymax is already set.  If so, flat top, skip this stuff.
+jne ymax, 0xff, nochange
+#Second check if yvalleft == y2 || yvalright == y3
 mov eex, [points+4]
 mov %10, [points+2]
 add %10, yvalright
 cmp eex, %10 #cmp with y2
 jne y3cmp
-	#y2 == yvalleft.
+	#y2 == yvalright + y1.
 	mov temp1, [points+3] #temp1 = xrefleft = x2
 	mov ebx, [points+5] #Move x3 into ebx
 	sub ebx, temp1 #ebx = xdifleft = x3 - xref = x3 - x2.	
@@ -218,7 +220,7 @@ jne y3cmp
 	sub edx, eex #edx = y3 - y2 = ydifleft
 	mov %10, slopes
 	add edx, %10
-	mov edx, [edx] #edx = 1/ydifleft	
+	mov edx, [edx] #edx = 1/ydifleft
 	mov ymax, [points+6]
 	
 	#Check for flat buns
@@ -235,7 +237,7 @@ mov %10, [points+2]
 add %10, yvalleft
 cmp eex, %10 #cmp with y3
 jne nochange
-	#y3 == yvalleft.
+	#y3 == yvalleft + y1.
 	mov temp2, [points+5] #temp2 = xref = x3
 	mov eax, [points+3] #Move x2 into eax
 	sub eax, temp2 #eax = x2-x3 = xdifright.
@@ -781,11 +783,11 @@ points:
 triangle:
 1
 
-0 #84 #0 #84 #4
-54 #115 #80 #115 #1
+0 #0 #84 #4
+54 #80 #115 #1
 
-53 #1
-54 #10
+84 #1
+115 #10
 
 114 #7
 67 #10
