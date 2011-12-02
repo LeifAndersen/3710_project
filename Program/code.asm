@@ -189,12 +189,7 @@ mainAIDoneMoving:
 	mov %0, [PLAYER_SCORE]
 	add %0, 1
 	mov [PLAYER_SCORE], %0
-
-	# Reset AI position
-	mov %0, [AI_START_X]
-	mov [AI_X], %0
-	mov %0, [AI_START_Y]
-	mov [AI_Y], %0
+# Reset AI position mov %0, [AI_START_X] mov [AI_X], %0 mov %0, [AI_START_Y] mov [AI_Y], %0
 	mov %0, 0
 	mov [AI_TURNING], %0
 
@@ -836,6 +831,60 @@ cross:
 	pop %LOW
 	ret
 
+# Take a pointer to an xyz vector in 0, and the second in 1, return the maginude
+# of the cross product (squared) in 0
+cross3:
+	push %2
+	push %3
+	push %4
+	push %5
+	push %6
+	push %7
+	push %LOW
+	push %HIGH
+
+	mov %2, [%0]
+	add %0, 1
+	mov %3, [%0]
+	add %0, 1
+	mov %4, [%0]
+
+	mov %5, [%1]
+	add %1, 1
+	mov %6, [%1]
+	add %1, 1
+	mov %7, [%1]
+
+	mul %3, %7
+	mov %0, %LOW
+	mul %4, %6
+	sub %0, %LOW
+	lsh %0, 1
+
+	mul %4, %5
+	mov %1, %LOW
+	mul %2, %7
+	sub %1, %LOW
+	lsh %1, 1
+	add %0, %1
+
+	mul %2, %6
+	mov %1, %LOW
+	mul %3, %5
+	sub %1, %LOW
+	lsh %1, 1
+	add %0, %1
+
+	pop %HIGH
+	pop %LOW
+	pop %7
+	pop %6
+	pop %5
+	pop %4
+	pop %3
+	pop %2
+	ret
+
 # adds the 3-lenth vector in %0 to the 3-lenth vector in %1 and stores it in %1
 # src vector preserved, dst vector changed (but passed pointer is preserved)
 vector_add:
@@ -933,7 +982,7 @@ FindTheta:
 		jne %7, 0, findThetaLoop
 		mov %0, %4
 		sub %7, 1
-		rsh %6, 1
+		arsh %6, 1
 
 	mov %0, %5 # Move theta to 0
 
@@ -945,9 +994,30 @@ FindTheta:
 	pop %2
 	ret
 
-# Take top left x in 0, top left y in 1, bottom right x in 2 bottom right y in 3
+# Take top left x in 0, top left y in 1, bottom right x in 2 bottom right y in 3,
+# and color in 4
 # Draw a square
 drawSquare:
+
+	push %5
+
+	lsh %0, 8
+	or %0, %2
+	drawSquareLoop:
+		jg %1, %3, endDrawSquare
+
+		mov %2, %1
+		lsh %2, 3
+		or %2, %4
+
+		mov [VGA], %2
+		mov [VGA], %0
+
+		add %1, 1
+		j drawSquareLoop
+	endDrawSquare:
+
+	pop %5
 	ret
 
 # Take a number in the $0 reg, return the sin of that number into the $0 reg
