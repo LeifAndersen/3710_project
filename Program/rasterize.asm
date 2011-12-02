@@ -27,6 +27,7 @@
 `define LEFT_KEY 16379
 `define A_KEY 16378
 `define B_KEY 16377
+`define LCD 16376
 
 mov SP, 0x2b #initialize stack
 lsh SP, 8
@@ -47,7 +48,7 @@ mov [VGA], eax
 #infinite:
 #j infinite
 
-mov eax, 0xf
+mov eax, 0x1f
 call pause
 
 call rasterize
@@ -76,12 +77,12 @@ mov eax, [points+5]
 lsh eax, 8
 mov [VGA], eax
 
-mov eax, 0xf
-call pause
-
 mov eax, 0xffff
 mov [VGA], eax
 mov [VGA], eax
+
+mov eax, 0x1f
+call pause
 
 #call movepoint #This will add motion to the triangle to test various different weird triangles.
 
@@ -297,6 +298,67 @@ jge eax, ebx, haveyvalue
 mov eax, ebx
 haveyvalue:
 
+###First y-value is special case cus no prev value, do it before hand
+pop edx
+pop eex
+
+#want c - (c-d >> 1)
+#right shift c and d to get left points, and with ff to get right points.
+mov temp1, edx
+mov temp2, eex
+
+rsh temp1, 8
+rsh temp2, 8
+
+mov LOW, temp1
+
+#have left points now.
+sub temp1, temp2 # temp1 = c-d
+arsh temp1, 1 #divide by 2
+
+mov temp2, LOW
+sub temp2, temp1 #temp2 = c - (c-d)/2 = midpoint left.
+
+mov %10, edx
+mov temp1, eex
+
+and %10, 0xff #%10 = right point high.
+and temp1, 0xff #%10 = right point low.
+
+mov HIGH, %10
+
+#have right points now.
+sub %10, temp1 # %10 = c-d
+arsh %10, 1 #divide by 2
+
+mov temp1, HIGH
+sub temp1, %10 #temp1 = c - (c-d)/2 = midpoint right.
+
+#Compare all midpoints/endpoints, write the min as left, the max as right.
+jl HIGH, temp1, temp1bigger
+mov temp1, HIGH
+temp1bigger:
+
+jg LOW, temp2, temp2smaller
+mov temp2, LOW
+temp2smaller:
+lsh temp2, 8
+
+mov ebx, eax #Copy eax as temp into ebx.
+lsh ebx, 3
+mov %10, [points]
+or ebx, %10
+mov [VGA], ebx
+
+or temp1, temp2
+mov [VGA], temp1
+
+decr eax
+
+#
+# NEW DRAW METHOD WITH MIDPOINTS
+#
+#ecx holds prev L/R value.  eax holds current y-value. edx holds current L/R value.  eex holds next L/R y-value.   
 FillLoop:
 mov ebx, eax #Copy eax as temp into ebx.
 lsh ebx, 3
@@ -304,32 +366,168 @@ mov %10, [points]
 or ebx, %10
 mov [VGA], ebx
 
-#ebx holds current L/R value.  eax holds current y-value.  
-pop ebx
-mov [VGA], ebx
+mov ecx, edx
+mov edx, eex
+pop eex
+
+#want c - (c-d >> 1)
+#right shift c and d to get left points, and with ff to get right points.
+mov temp1, edx
+mov temp2, eex
+
+rsh temp1, 8
+rsh temp2, 8
+
+mov LOW, temp1
+
+#have left points now.
+sub temp1, temp2 # temp1 = c-d
+arsh temp1, 1 #divide by 2
+
+mov temp2, LOW
+sub temp2, temp1 #temp2 = c - (c-d)/2 = high midpoint left.
+
+mov %10, edx
+mov temp1, eex
+
+and %10, 0xff #%10 = right point high.
+and temp1, 0xff #%10 = right point low.
+
+mov HIGH, %10
+
+#have right points now.
+sub %10, temp1 # %10 = c-d
+arsh %10, 1 #divide by 2
+
+mov temp1, HIGH
+sub temp1, %10 #temp1 = c - (c-d)/2 = high midpoint right.
+
+#Compare all midpoints/endpoints, write the min as left, the max as right.
+jl HIGH, temp1, temp1bigger2
+mov temp1, HIGH
+temp1bigger2:
+
+jg LOW, temp2, temp2smaller2
+mov temp2, LOW
+temp2smaller2:
+
+#Need low midpoint left, low midpoint right.  Available regs: ebx, %10, yvalleft, yvalright, LOW, HIGH
+
+mov yvalleft, ecx
+mov yvalright, edx
+
+rsh yvalleft, 8
+rsh yvalright, 8
+
+#have left points now.
+sub yvalleft, yvalright # yvalleft = c-d
+arsh yvalleft, 1 #divide by 2
+
+mov yvalright, LOW
+add yvalright, yvalleft #yvalright = c + (c-d)/2 = low midpoint left.  Add because LOW is the upper of the two this time, not the lower
+
+mov %10, ecx
+mov yvalleft, edx
+
+and %10, 0xff #%10 = right point high.
+and yvalleft, 0xff #%10 = right point low.
+
+#have right points now.
+sub %10, yvalleft # %10 = c-d
+arsh %10, 1 #divide by 2
+
+mov yvalleft, HIGH
+add yvalleft, %10 #yvalleft = c + (c-d)/2 = low midpoint right.  Add because high is the upper of the two this time, not the lower.
+
+#Compare all midpoints/endpoints, write the min as left, the max as right.
+jl yvalleft, temp1, temp1bigger3
+mov temp1, yvalleft
+temp1bigger3:
+
+jg yvalright, temp2, temp2smaller3
+mov temp2, yvalright
+temp2smaller3:
+
+##
+## temp1 temp2 now contain the correct left/right indices.
+##
+
+lsh temp2, 8
+or temp1, temp2
+mov [VGA], temp1
+
+#pop ebx
+#mov [VGA], ebx
 
 decr eax
-jl eax, ymax, endFillLoop
+jle eax, ymax, endFillLoop
 
 j FillLoop
 
 endFillLoop:
 
+#want c - (c-d >> 1)
+#right shift c and d to get left points, and with ff to get right points.
+mov temp1, eex
+mov temp2, edx
+
+rsh temp1, 8
+rsh temp2, 8
+
+mov LOW, temp1
+
+#have left points now.
+sub temp1, temp2 # temp1 = c-d
+arsh temp1, 1 #divide by 2
+
+mov temp2, LOW
+sub temp2, temp1 #temp2 = c - (c-d)/2 = midpoint left.
+
+mov %10, eex
+mov temp1, edx
+
+and %10, 0xff #%10 = right point high.
+and temp1, 0xff #%10 = right point low.
+
+mov HIGH, %10
+
+#have right points now.
+sub %10, temp1 # %10 = c-d
+arsh %10, 1 #divide by 2
+
+mov temp1, HIGH
+sub temp1, %10 #temp1 = c - (c-d)/2 = midpoint right.
+
+#Compare all midpoints/endpoints, write the min as left, the max as right.
+jl HIGH, temp1, temp1bigger4
+mov temp1, HIGH
+temp1bigger4:
+
+jg LOW, temp2, temp2smaller4
+mov temp2, LOW
+temp2smaller4:
+lsh temp2, 8
+
+mov ebx, eax #Copy eax as temp into ebx.
+lsh ebx, 3
+mov %10, [points]
+or ebx, %10
+mov [VGA], ebx
+
+or temp1, temp2
+mov [VGA], temp1
+
 ret
 
 flatbuns:
-mov eex, [points+6]
-lsh eex, 3
-mov %10, [points]
-or eex, %10
-mov [VGA], eex
-
 mov eex, [points+3]
 lsh eex, 8
 mov %10, [points+5]
 or eex, %10
-mov [VGA], eex
-ret
+push eex
+
+j endloop
+
 ###
 ### END RASTERIZE
 ###
@@ -433,18 +631,18 @@ mov %10, [state]
 je %10, 1, stateone2
 je %10, 2, statetwo2
 #statezero
-mov eax, [triangle+1] #x1
-mov ebx, [triangle+2] #y1
+mov [triangle+1], eax #x1
+mov [triangle+2], ebx #y1
 j endstates2
 
 stateone2:
-mov eax, [triangle+3]
-mov ebx, [triangle+4]
+mov [triangle+3], eax
+mov [triangle+4], ebx
 j endstates2
 
 statetwo2:
-mov eax, [triangle+5]
-mov ebx, [triangle+6]
+mov [triangle+5], eax
+mov [triangle+6], ebx
 
 endstates2:
 #ret
@@ -513,14 +711,14 @@ ret
 points:
 1
 
-0 #84 #4
-80 #115 #1
+84 #0 #84 #4
+115 #80 #115 #1
 
 53 #1
-54 #10
+67 #10
 
 114 #7
-67 #10
+54 #10
 
 triangle:
 1
