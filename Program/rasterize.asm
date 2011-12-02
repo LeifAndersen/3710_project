@@ -37,7 +37,7 @@ mov FP, SP
 
 #Pass in a pointer to a triangle in memory.
 infinite2:
-mov eax, points
+call newtriangle
 
 call rasterize
 
@@ -49,7 +49,7 @@ mov [VGA], eax
 #j infinite
 
 mov eax, 0xf
-call pause
+#call pause
 
 call rasterize
 
@@ -82,9 +82,9 @@ mov [VGA], eax
 mov [VGA], eax
 
 mov eax, 0xf
-call pause
+#call pause
 
-#call movepoint #This will add motion to the triangle to test various different weird triangles.
+#call movepoint2 #This will add motion to the triangle to test various different weird triangles.
 
 j infinite2
 
@@ -706,8 +706,8 @@ ret
 ###
 
 movepoint2:
-mov [triangle+1], eax #x1
-mov [triangle+2], ebx #y1
+mov eax, [triangle+1] #x1
+mov ebx, [triangle+2] #y1
 
 cmp eax, 0
 je movey
@@ -770,28 +770,25 @@ ret
 .data
 
 points:
+0
+0
+0
+0
+0
+0
+0
+
+triangle:
 1
 
 0 #84 #0 #84 #4
-52 #115 #80 #115 #1
+54 #115 #80 #115 #1
 
 53 #1
 54 #10
 
 114 #7
 67 #10
-
-triangle:
-1
-
-84
-115
-
-53
-54
-
-114
-67
 
 state:
 0
