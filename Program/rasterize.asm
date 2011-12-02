@@ -779,10 +779,12 @@ mov eax, 0
 mov ebx, 159
 
 clearloop:
-mov [VGA], eax
+mov ecx, eax
+lsh ecx, 3
+mov [VGA], ecx
 mov [VGA], ebx
 incr eax
-jl eax, 160, clearloop
+jne eax, 120, clearloop
 
 ret
 ###
