@@ -286,7 +286,9 @@ jle yvalleft, ymax, LineLoop
 
 endloop:
 
+###
 ###Currently all line-write values are on the stack in reverse order.  Must now calculate mid-points between to draw triangles.
+###
 
 #Store end yvalue in ymax
 mov ymax, [points+2]
