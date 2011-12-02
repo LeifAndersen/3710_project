@@ -667,48 +667,24 @@ mainEndAIBullet:
 
 	skipplayerbulletcamerarotate:
 
-# consolidate models
-	# get total triangle count
-	mov %0, [%10]			# count
-	mov %2, %10				# bottom
-	je %9, 0, skipaibulletcount
-	mov %1, [%9]
-	mov %2, %9				# new bottom
-	add %0, %1
-	skipaibulletcount:
-	je %8, 0, skipplayerbulletcount
-	mov %1, [%8]
-	mov %2, %8				# new bottom
-	add %0, %1
-	skipplayerbulletcount:
-	# write total triangle size to "model" at bottom of stack (this is the "top" when you iterate through by address)
-	mov [%2], %0
-	mov %6, %2
+# back face cull and set color to FFFF if culled
+	# tank first
+	mov %0, %10
+	call backfacecull
 
-	# shift triangles of models up by one so that all triangles are contiguous in memory
-	je %8, 0, skipaibulletshift
-	je %9, 0, skipaibulletshift
-	mov %2, [%9]			# ai bullet size
-	mul %2, 10
-	mov %2, %LOW
-	add %2, 1
-	mov %1, %9				# shift to location
-	mov %0, %1
-	incr %0					# shift from location
-	call memcpy
-	skipaibulletshift:
-	mov %4, %9
-	or %4, %8				# player bullet or ai bullet
-	je %4, 0, skiptankshift
-	mov %2, [%10]			# tank size
-	mul %2, 10
-	mov %2, %LOW
-	add %2, 1
-	mov %1, %9				# shift to location
-	mov %0, %1
-	incr %0					# shift from location
-	call memcpy
-	skiptankshift:
+	# if ai bullet, do it second
+	je %9, 0, skipaibulletcull
+	mov %0, %9
+	call backfacecull
+	skipaibulletcull:
+
+	# if player bullets, do it third (or second)
+	je %8, 0, skipplayerbulletcull
+	mov %0, %8
+	call backfacecull
+	skipplayerbulletcull:
+
+	#	Sort triangles by distance of nearest point (furthest away comes first).
 
 # loop over all triangles in new total model
 	mov %0, [%6]			# size of total model in triangles
@@ -719,17 +695,6 @@ mainEndAIBullet:
 	push %0
 	push %6
 	push %1
-
-	j dontrender
-
-	#Split model into individual triangles:
-		#	Back face cull (take cross product of points 1, 2, and 3, if pointing away, don’t proceed, done with this triangle).
-		#	(p3 - p1) x (p3 - p2)
-
-
-
-		#	Sort triangles by distance of nearest point (furthest away comes first).
-
 
 	#Front-back clipping:
 		#	If triangle has both positive and negative z values at this point, it must be clipped to only the positive z space.
@@ -758,7 +723,7 @@ mainEndAIBullet:
 	add %1, 10
 	decr %6
 
-	jne %6, 0, totalmodelloop:
+	jne %6, 0, totalmodelloop
 
 	# -------------------------------
 
@@ -776,6 +741,80 @@ mainEnd:
 	pop $2
 	pop $1
 	pop $0
+	ret
+
+# back-face culls all triangles in a model whose pointer is in %0
+backfacecull:
+	push %0
+	push %1
+	push %2
+	push %3
+	push %4
+	push %5
+
+	mov %2, %0				# avoid overwriting
+	mov %4, [%2]			# get size of model in triangles
+	incr %2					# skip size
+
+	#	|(p3 - p1) x (p3 - p2)|
+
+	backfacecullloop:
+	incr %2					# now at first point
+	#	(p3 - p1)
+	sub %SP, 3				# make temp point in %0
+	mov %1, %SP
+	# move p3 data into temp point
+	add %2, 6				# now at p3
+	mov %3, [%2]			# copy x
+	mov [%1], %3
+	incr %2
+	incr %1
+	mov %3, [%2]			# copy y
+	mov [%1], %3
+	incr %2
+	incr %1
+	mov %3, [%2]			# copy z
+	mov [%1], %3
+	sub %2, 8				# reset model pointer to p1
+	mov %0, %2				# move p1 into arg0, temp pointer is already in %1 =]
+	call vector_sub			# temp pointer now points to (p3 - p1)
+	mov %5, %1				# save address to temp point in %5
+
+	#	(p3 - p2)
+	sub %SP, 3				# make another temp point in %0
+	mov %1, %SP
+	# move p3 data into temp point
+	add %2, 6				# now at p3
+	mov %3, [%2]			# copy x
+	mov [%1], %3
+	incr %2
+	incr %1
+	mov %3, [%2]			# copy y
+	mov [%1], %3
+	incr %2
+	incr %1
+	mov %3, [%2]			# copy z
+	mov [%1], %3
+	sub %2, 5				# reset model pointer to p2
+	mov %0, %2				# move p2 into arg0, temp pointer is already in %1 =]
+	call vector_sub			# temp pointer in %1 now points to (p3 - p2)
+
+	# do cross product
+	mov	%0, %5				# move (p3 - p1) pointer to arg0 for arg0 x arg1
+	call cross3
+	# if the magnitude returned in %0 is less than 0, cull by setting color to 0xFFFF
+	sub %2, 4				# reset model pointer to color
+	jl %0, 0, dontcull
+
+	mov %0, 0xFFFF
+	mov [%2], %0			# cull
+
+	dontcull:
+	add %2, 10				# get to next triangle
+
+	decr %4					# size--
+	jge %4, 0, backfacecullloop
+
 	ret
 
 
@@ -831,8 +870,8 @@ cross:
 	pop %LOW
 	ret
 
-# Take a pointer to an xyz vector in 0, and the second in 1, return the maginude
-# of the cross product (squared) in 0
+# Take a pointer to an xyz vector in %0, and the second in %1, return the maginude
+# of the cross product (squared) in %0
 cross3:
 	push %2
 	push %3
@@ -916,7 +955,7 @@ vector_add:
 	pop %0
 	ret
 
-# subtract the 3-lenth vector in %0 to the 3-lenth vector in %1 and stores it in %1
+# subtract the 3-lenth vector in %0 from the 3-lenth vector in %1 and stores it in %1
 # src vector preserved, dst vector changed (but passed pointer is preserved)
 vector_sub:
 	push %0
@@ -926,19 +965,19 @@ vector_sub:
 
 	mov %2, [%0]
 	mov %3, [%1]
-	sub %2, %3
+	sub %3, %2
 	mov [%1], %2
 	incr %0
 	incr %1
 	mov %2, [%0]
 	mov %3, [%1]
-	sub %2, %3
+	sub %3, %2
 	mov [%1], %2
 	incr %0
 	incr %1
 	mov %2, [%0]
 	mov %3, [%1]
-	sub %2, %3
+	sub %3, %2
 	mov [%1], %2
 
 	pop %3
