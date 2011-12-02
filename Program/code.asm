@@ -811,6 +811,7 @@ backfacecull:
 
 	dontcull:
 	add %2, 10				# get to next triangle
+	add %SP, 6				# clean up stack
 
 	decr %4					# size--
 	jge %4, 0, backfacecullloop
