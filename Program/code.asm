@@ -667,27 +667,98 @@ mainEndAIBullet:
 
 	skipplayerbulletcamerarotate:
 
+# consolidate models
+	# get total triangle count
+	mov %0, [%10]			# count
+	mov %2, %10				# bottom
+	je %9, 0, skipaibulletcount
+	mov %1, [%9]
+	mov %2, %9				# new bottom
+	add %0, %1
+	skipaibulletcount:
+	je %8, 0, skipplayerbulletcount
+	mov %1, [%8]
+	mov %2, %8				# new bottom
+	add %0, %1
+	skipplayerbulletcount:
+	# write total triangle size to "model" at bottom of stack (this is the "top" when you iterate through by address)
+	mov [%2], %0
+	mov %6, %2
+
+	# shift triangles of models up by one so that all triangles are contiguous in memory
+	je %8, 0, skipaibulletshift
+	je %9, 0, skipaibulletshift
+	mov %2, [%9]			# ai bullet size
+	mul %2, 10
+	mov %2, %LOW
+	add %2, 1
+	mov %1, %9				# shift to location
+	mov %0, %1
+	incr %0					# shift from location
+	call memcpy
+	skipaibulletshift:
+	mov %4, %9
+	or %4, %8				# player bullet or ai bullet
+	je %4, 0, skiptankshift
+	mov %2, [%10]			# tank size
+	mul %2, 10
+	mov %2, %LOW
+	add %2, 1
+	mov %1, %9				# shift to location
+	mov %0, %1
+	incr %0					# shift from location
+	call memcpy
+	skiptankshift:
+
+# loop over all triangles in new total model
+	mov %0, [%6]			# size of total model in triangles
+	mov %1, %6				# pointer to total model
+	incr %1					# now at first triangle's color
+
+	totalmodelloop:
+	push %0
+	push %6
+	push %1
+
+	j dontrender
+
 	#Split model into individual triangles:
-	#	Back face cull (take cross product of points 1, 2, and 3, if pointing away, don’t proceed, done with this triangle).
-	#	Sort triangles by distance of nearest point (furthest away comes first).
+		#	Back face cull (take cross product of points 1, 2, and 3, if pointing away, don’t proceed, done with this triangle).
+		#	(p3 - p1) x (p3 - p2)
+
+
+
+		#	Sort triangles by distance of nearest point (furthest away comes first).
 
 
 	#Front-back clipping:
-	#	If triangle has both positive and negative z values at this point, it must be clipped to only the positive z space.
-	#	Calculate intersection of triangle with screen location via binary subdivision.
-	#	If triangle clip results in quad, split quad into two triangles instead.
+		#	If triangle has both positive and negative z values at this point, it must be clipped to only the positive z space.
+
+
+		#	Calculate intersection of triangle with screen location via binary subdivision.
+
+
+		#	If triangle clip results in quad, split quad into two triangles instead.
 
 
 	#Perspective transform:
-	#	Using similar triangles and binary subdivision, calculate screen coordinates one point at a time.
+		#	Using similar triangles and binary subdivision, calculate screen coordinates one point at a time.
 
 
 	#Screen clipping:
-	#	If triangle partially off screen, partially on screen, use binary subdivision to find where triangle intersects edges of screen. If result is quad, split into multiple triangles.
+		#	If triangle partially off screen, partially on screen, use binary subdivision to find where triangle intersects edges of screen. If result is quad, split into multiple triangles.
 
-	# Rasterise
+	#Rasterise
 
-	# Send it off to the hardware to be drawn.
+
+	dontrender:
+	pop %1
+	pop %6
+	pop %0
+	add %1, 10
+	decr %6
+
+	jne %6, 0, totalmodelloop:
 
 	# -------------------------------
 
@@ -728,6 +799,7 @@ memcpy:
 	pop %2
 	pop %1
 	pop %0
+	ret
 
 # Take x0 in 0, y0 in 1, x1 in 2 and y1 in 3, return the dot product in 0
 # Does not destory any registers other than the return value in 0.
@@ -836,6 +908,37 @@ vector_add:
 	mov %2, [%0]
 	mov %3, [%1]
 	add %2, %3
+	mov [%1], %2
+
+	pop %3
+	pop %2
+	pop %1
+	pop %0
+	ret
+
+# subtract the 3-lenth vector in %0 to the 3-lenth vector in %1 and stores it in %1
+# src vector preserved, dst vector changed (but passed pointer is preserved)
+vector_sub:
+	push %0
+	push %1
+	push %2
+	push %3
+
+	mov %2, [%0]
+	mov %3, [%1]
+	sub %2, %3
+	mov [%1], %2
+	incr %0
+	incr %1
+	mov %2, [%0]
+	mov %3, [%1]
+	sub %2, %3
+	mov [%1], %2
+	incr %0
+	incr %1
+	mov %2, [%0]
+	mov %3, [%1]
+	sub %2, %3
 	mov [%1], %2
 
 	pop %3
