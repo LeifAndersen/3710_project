@@ -748,6 +748,7 @@ mainEndAIBullet:
 
 	# save total triangle count
 	mov [%6], %5			# %6 is the pointer to the array of triangles
+							# pointers %10, %9, and %8 are up for grabs now that the triangles from those models have been culled
 
 	# add size of array to running stack total
 	mul %5, 10
@@ -795,6 +796,165 @@ mainEnd:
 	pop $2
 	pop $1
 	pop $0
+	ret
+
+# given the pointer to a triangle in %0, find the nearest point and return the distance to it squared
+nearest_point:
+	push %1
+	push %2
+	push %3
+	push %4
+
+	mov %4, %0				# save triangle pointer
+	incr %4					# get to p1
+	mov %0, %4				# set up args
+	call distance_squared	# get distance squared
+	mov %1, %0				# save distance to p1
+	add %4, 3				# get to p2
+	mov %0, %4				# set up args
+	call distance_squared	# get distance squared
+	mov %2, %0				# save distance to p2
+	add %4, 3				# get to p3
+	mov %0, %4				# set up args
+	call distance_squared	# get distance squared
+	mov %3, %0				# save distance to p3
+
+	mov %0, %1				# assume p1 is nearest
+	jle %0, %2, isnearer1	# check if p2 is nearer
+	mov %0, %2				# if so, set return to that
+	isnearer1:				# otherwise keep |p1| in %0
+	jle %0, %3, isnearer2	# check if p3 is nearer
+	mov %0, %3				# if so, set return to that
+	isnearer2:				# otherwise keep %0
+
+	pop $4
+	pop %3
+	pop %2
+	pop %1
+	ret
+
+# given the pointer to a point in %0, find the difference squared and return it in %0
+distance_squared:
+	push %1
+	push %2
+
+	mov %1, [%0]
+	mul %1, %1
+	mov %2, %LOW
+	incr %0
+	mov %1, [%0]
+	mul %1, %1
+	add %2, %LOW
+	incr %0
+	mov %1, [%0]
+	mul %1, %1
+	add %2, %LOW
+	mov %0, %2
+
+	pop %2
+	pop %1
+	ret
+
+# given two pointers to triangles in %0, and %1, return 0 in %0 if first was furthest and 1 in %0 if second was furthest
+find_furthest:
+	push %1
+	push %2
+	push %3
+
+	call nearest_point		# find nearest point in triangle
+	mov %2, %0				# save the distance to the nearest point of first triangle
+
+	mov %0, %1				# move second triangle to arg
+	call nearest_point
+	mov %3, %0				# save the distance to the nearest point of second triangle
+
+	mov %0, 0
+	jge %2, %3, firstwasfurthest	# check whether %0 was further away than %1
+	add %0, 1				# if not, return 1
+	firstwasfurthest:		# if so, return 0
+
+	pop %3
+	pop %2
+	pop %1
+	ret
+
+# swap the triangle pointed to by %0 with the triangle pointed to by %1
+swap_triangles:
+	push %2
+	push %3
+
+
+	# completely unrolled
+	mov %2, [%0]			# swap color
+	mov %3, [%1]
+	mov [%0], %3
+	mov [%1], %2
+	incr %0
+	incr %1
+	mov %2, [%0]			# swap x1
+	mov %3, [%1]
+	mov [%0], %3
+	mov [%1], %2
+	incr %0
+	incr %1
+	mov %2, [%0]			# swap y1
+	mov %3, [%1]
+	mov [%0], %3
+	mov [%1], %2
+	incr %0
+	incr %1
+	mov %2, [%0]			# swap z1
+	mov %3, [%1]
+	mov [%0], %3
+	mov [%1], %2
+	incr %0
+	incr %1
+	mov %2, [%0]			# swap x2
+	mov %3, [%1]
+	mov [%0], %3
+	mov [%1], %2
+	incr %0
+	incr %1
+	mov %2, [%0]			# swap y2
+	mov %3, [%1]
+	mov [%0], %3
+	mov [%1], %2
+	incr %0
+	incr %1
+	mov %2, [%0]			# swap z2
+	mov %3, [%1]
+	mov [%0], %3
+	mov [%1], %2
+	incr %0
+	incr %1
+	mov %2, [%0]			# swap x3
+	mov %3, [%1]
+	mov [%0], %3
+	mov [%1], %2
+	incr %0
+	incr %1
+	mov %2, [%0]			# swap y3
+	mov %3, [%1]
+	mov [%0], %3
+	mov [%1], %2
+	incr %0
+	incr %1
+	mov %2, [%0]			# swap z3
+	mov %3, [%1]
+	mov [%0], %3
+	mov [%1], %2
+
+	# reset pointers
+	sub %0, 10
+	sub %1, 10
+
+	# swap pointers so they both point to the same triangle they used to
+	mov %2, %0
+	mov %0, %1
+	mov %1, %2
+
+	pop %3
+	pop %2
 	ret
 
 # back-face culls all triangles in a model whose pointer is in %0
