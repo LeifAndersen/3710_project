@@ -330,6 +330,9 @@ mov HIGH, %10
 #have right points now.
 sub %10, temp1 # %10 = c-d
 arsh %10, 1 #divide by 2
+jge %10, 0, positive1
+incr %10
+positive1:
 
 mov temp1, HIGH
 sub temp1, %10 #temp1 = c - (c-d)/2 = midpoint right.
