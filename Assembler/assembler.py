@@ -268,25 +268,25 @@ def parse(infile_str, outfile_str):
 						# CMPR
 						# jmp
 						# NOP
-						first_pass_queue.append(encode_cmps(["CMP", tokens[1], tokens[2]], line_num, line))
+						first_pass_queue.append(encode_cmps(["CMPR", tokens[1], tokens[2]], line_num, line))
 						first_pass_queue.append("JB " + tokens[3] + " " + str(line_num))
 					elif tokens[0] == "JBE":
 						# CMPR
 						# jmp
 						# NOP
-						first_pass_queue.append(encode_cmps(["CMP", tokens[1], tokens[2]], line_num, line))
+						first_pass_queue.append(encode_cmps(["CMPR", tokens[1], tokens[2]], line_num, line))
 						first_pass_queue.append("JBE " + tokens[3] + " " + str(line_num))
 					elif tokens[0] == "JL":
 						# CMPR
 						# jmp
 						# NOP
-						first_pass_queue.append(encode_cmps(["CMP", tokens[1], tokens[2]], line_num, line))
+						first_pass_queue.append(encode_cmps(["CMPR", tokens[1], tokens[2]], line_num, line))
 						first_pass_queue.append("JL " + tokens[3] + " " + str(line_num))
 					elif tokens[0] == "JLE":
 						# CMPR
 						# jmp
 						# NOP
-						first_pass_queue.append(encode_cmps(["CMP", tokens[1], tokens[2]], line_num, line))
+						first_pass_queue.append(encode_cmps(["CMPR", tokens[1], tokens[2]], line_num, line))
 						first_pass_queue.append("JLE " + tokens[3] + " " + str(line_num))
 					elif tokens[0] == "JE":
 						# CMPR
