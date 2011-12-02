@@ -787,20 +787,20 @@ cross3:
 	mov %0, %LOW
 	mul %4, %6
 	sub %0, %LOW
-	rsh %0, 1
+	lsh %0, 1
 
 	mul %4, %5
 	mov %1, %LOW
 	mul %2, %7
 	sub %1, %LOW
-	rsh %1, 1
+	lsh %1, 1
 	add %0, %1
 
 	mul %2, %6
 	mov %1, %LOW
 	mul %3, %5
 	sub %1, %LOW
-	rsh %1, 1
+	lsh %1, 1
 	add %0, %1
 
 	pop %HIGH
@@ -879,7 +879,7 @@ FindTheta:
 		jne %7, 0, findThetaLoop
 		mov %0, %4
 		sub %7, 1
-		rsh %6, 1
+		arsh %6, 1
 
 	mov %0, %5 # Move theta to 0
 
@@ -891,9 +891,30 @@ FindTheta:
 	pop %2
 	ret
 
-# Take top left x in 0, top left y in 1, bottom right x in 2 bottom right y in 3
+# Take top left x in 0, top left y in 1, bottom right x in 2 bottom right y in 3,
+# and color in 4
 # Draw a square
 drawSquare:
+
+	push %5
+
+	lsh %0, 8
+	or %0, %2
+	drawSquareLoop:
+		jg %1, %3, endDrawSquare
+
+		mov %2, %1
+		lsh %2, 3
+		or %2, %4
+
+		mov [VGA], %2
+		mov [VGA], %0
+
+		add %1, 1
+		j drawSquareLoop
+	endDrawSquare:
+
+	pop %5
 	ret
 
 # Take a number in the $0 reg, return the sin of that number into the $0 reg
