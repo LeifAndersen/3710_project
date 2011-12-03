@@ -344,7 +344,10 @@ def parse(infile_str, outfile_str):
 
 			elif instruction_type == "PUSH":
 				# encode by hand
-				first_pass_queue.append(str(hex((OP_CODES[tokens[0]] << 14) + (trim_reg(tokens[1]) << 10) + 0)))
+				if is_number(tokens[1]):
+					first_pass_queue.append(str(hex((OP_CODES[tokens[0]] << 14) + (to_number(tokens[1]) << 10) + 0)))
+				else:
+					first_pass_queue.append(str(hex((OP_CODES[tokens[0]] << 14) + (trim_reg(tokens[1]) << 10) + 0)))
 
 			elif instruction_type == "POP":
 				first_pass_queue.append(str(hex((OP_CODES[tokens[0]] << 14) + (trim_reg(tokens[1]) << 10) + 0)))
