@@ -39,5 +39,8 @@ init:
 	mov eax, 115
 	push eax
 	
+	pop ebx
+	pop ecx
+	
 	infinite:
 	j infinite

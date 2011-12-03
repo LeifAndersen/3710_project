@@ -11,6 +11,13 @@
       </db_ref>
    </db_ref_list>
    <WVObjectSize size="28" />
+   <wvobject fp_name="/testdatapath/uut/RegisterFile/reg13" type="array" db_ref_id="1">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">reg13[15:0]</obj_property>
+      <obj_property name="ObjectShortName">reg13[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="label">SP</obj_property>
+   </wvobject>
    <wvobject fp_name="/testdatapath/uut/RegisterFile/reg1" type="array" db_ref_id="1">
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="ElementShortName">reg1[15:0]</obj_property>
@@ -87,7 +94,7 @@
    <wvobject fp_name="/testdatapath/uut/PC/pc" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">pc[15:0]</obj_property>
       <obj_property name="ObjectShortName">pc[15:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/testdatapath/uut/instruction" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">instruction[17:0]</obj_property>
@@ -137,13 +144,6 @@
       <obj_property name="ObjectShortName">reg6[15:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
       <obj_property name="label">ymax</obj_property>
-   </wvobject>
-   <wvobject fp_name="/testdatapath/uut/RegisterFile/reg13" type="array" db_ref_id="1">
-      <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="ElementShortName">reg13[15:0]</obj_property>
-      <obj_property name="ObjectShortName">reg13[15:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-      <obj_property name="label">SP</obj_property>
    </wvobject>
    <wvobject fp_name="/testdatapath/uut/RegisterFile/reg14" type="array" db_ref_id="1">
       <obj_property name="DisplayName">label</obj_property>
