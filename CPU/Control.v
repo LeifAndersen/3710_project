@@ -746,7 +746,6 @@ module Control(
 			BuffCtrl[15:13] <= 3'd0;
 			BuffCtrl[17]    <= 0;
 			BuffCtrl[21]    <= 0;
-			immediate       <= 16'd0;
 			Addr            <= 16'd0;
 			ALUOp           <= 4'd0;
 			ret             <= 0;
@@ -755,6 +754,7 @@ module Control(
 				//POP:
 				ReadSelect2 <= 13;
 				MemWrite    <= 0;
+				immediate   <= 16'd0;
 				if (instruction[13:10] == 13 || instruction[13:10] == 12) begin
 					// NEVER POP INTO THE STACK POINTER!
 					WriteEn1        <= 0;
@@ -806,6 +806,7 @@ module Control(
 				BuffCtrl[19] <= 1;
 				BuffCtrl[22] <= 0;
 				MemRead      <= 0;
+				immediate   <= 16'd0;
 			end
 
 			else if(instruction[17:14] == PUSHI) begin
@@ -826,6 +827,7 @@ module Control(
 				BuffCtrl[19] <= 1;
 				BuffCtrl[22] <= 0;
 				MemRead      <= 0;
+				immediate    <= {2'd0,instruction[13:0]};
 			end
 			else begin
 				ReadSelect2  <= 0;
@@ -844,6 +846,7 @@ module Control(
 				BuffCtrl[19] <= 0;
 				BuffCtrl[22] <= 0;
 				MemRead      <= 0;
+				immediate   <= 16'd0;
 			end
 		end
 
