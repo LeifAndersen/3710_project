@@ -27,22 +27,13 @@
 `define efx %10
 `define LCD 16376
 `define VGA 16383
-`define BULLET_RADIUS 1
-`define TANK_RADIUS 10
-`define AI_SPEED 10
-`define AI_ROTATION_SPEED 10
-`define PLAYER_START_LIVES 5
-`define BULLET_SPEED 20
-`define BULLET_LIFE 100
-`define FIND_THETA_ACCURACY 5
-`define DEGREE_90 0      # 90 Degrees in our encoding
-`define STACK_TOP 0x2bff # stack starts at 11264 (this is the top of memory, be careful)
+`define STACK_TOP 0x2bff
 
 # Bootup and initialization Code
 init:
 	mov SP, STACK_TOP
-	mov FP, %SP
-# Begin der loop
+	mov FP, SP
+	
 	call main
 	
 main:
@@ -227,7 +218,7 @@ clip:
 		
 		mov eex, 119 #Prepare eex for split, eex is a param for it.
 		
-		j presplitsort	
+		j presplitsort
 	
 	checkzone3:
 		### At least one point is in zone 3. Could be two points.
@@ -431,19 +422,19 @@ copyTriangle:
 	mov [triangle1], ebx
 	incr eax
 	mov ebx, [eax]
-	mov [triangle+1], ebx
+	mov [triangle1+1], ebx
 	incr eax
 	mov ebx, [eax]
-	mov [triangle+2], ebx
+	mov [triangle1+2], ebx
 	incr eax
 	mov ebx, [eax]
-	mov [triangle+3], ebx
+	mov [triangle1+3], ebx
 	incr eax
 	mov ebx, [eax]
-	mov [triangle+4], ebx
+	mov [triangle1+4], ebx
 	incr eax
 	mov ebx, [eax]
-	mov [triangle+5], ebx
+	mov [triangle1+5], ebx
 	incr eax
 
 	pop eax
