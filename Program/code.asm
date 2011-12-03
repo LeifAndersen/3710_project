@@ -841,8 +841,8 @@ mainEnd:
 	pop $0
 	ret
 
-# given the pointer to a triangle in %0, find the nearest point and return the distance to it squared
-nearest_point:
+# given the pointer to a triangle in %0, find the farthest point and return the distance to it squared
+furthest_point:
 	push %1
 	push %2
 	push %3
@@ -863,12 +863,12 @@ nearest_point:
 	mov %3, %0				# save distance to p3
 
 	mov %0, %1				# assume p1 is nearest
-	jle %0, %2, isnearer1	# check if p2 is nearer
+	jge %0, %2, isfarther1	# check if p2 is farther
 	mov %0, %2				# if so, set return to that
-	isnearer1:				# otherwise keep |p1| in %0
-	jle %0, %3, isnearer2	# check if p3 is nearer
+	isfarther1:				# otherwise keep |p1| in %0
+	jge %0, %3, isfarther2	# check if p3 is farther
 	mov %0, %3				# if so, set return to that
-	isnearer2:				# otherwise keep %0
+	isfarther2:				# otherwise keep %0
 
 	pop $4
 	pop %3
@@ -904,11 +904,11 @@ find_furthest:
 	push %2
 	push %3
 
-	call nearest_point		# find nearest point in triangle
+	call furthest_point		# find nearest point in triangle
 	mov %2, %0				# save the distance to the nearest point of first triangle
 
 	mov %0, %1				# move second triangle to arg
-	call nearest_point
+	call furthest_point
 	mov %3, %0				# save the distance to the nearest point of second triangle
 
 	mov %0, 0
