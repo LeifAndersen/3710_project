@@ -34,8 +34,10 @@ init:
 	mov SP, STACK_TOP
 	mov FP, SP
 	
-	push 84
-	push 115
+	mov eax, 84
+	push eax
+	mov eax, 115
+	push eax
 	
 	infinite:
 	j infinite
