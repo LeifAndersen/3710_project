@@ -753,7 +753,7 @@ mainEndAIBullet:
 	# add size of array to running stack total
 	mul %5, 10
 	add %LOW, 1
-	add %7 %LOW
+	add %7, %LOW
 
 #	Sort triangles by distance of nearest point (furthest away comes first). Insertion sort
 	mov %4, 1				# starting index
@@ -784,7 +784,7 @@ mainEndAIBullet:
 		add %1, 10				# triangles[i+1]
 		call move_triangle
 		decr %3
-		jge %3, 0, sorttrianlgesinnerloop
+		jge %3, 0, sorttrianglesinnerloop
 
 	innersortloopdone:
 	mov %1, %6				# set up dst (triangles[i+1])
@@ -794,7 +794,10 @@ mainEndAIBullet:
 	mov %0, %2				# set up src (temp)
 	call move_triangle
 	incr %4
-	jl %4, %5 sorttrianglesouterloop
+	jl %4, %5, sorttrianglesouterloop
+
+	# clean up stack
+	add %SP, 10
 
 #Front-back clipping:
 	#	If triangle has both positive and negative z values at this point, it must be clipped to only the positive z space.
@@ -819,6 +822,8 @@ mainEndAIBullet:
 	dontrender:
 
 	# -------------------------------
+	# clean up stack
+	add %SP, %7
 
 	j mainLoop # Loop again.
 
