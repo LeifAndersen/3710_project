@@ -289,7 +289,7 @@ mainEndAIBullet:
 
 	#Put model in world coordinates:
 	#	Create copy of model on stack from data.
-	mov %7, 0				# keep running total of stack frame size
+	mov %7, 0				# keep running total of stack frame size. DO NOT MODIFY %7
 
 	mov %0, [tank_model]	# tank size
 	mov %3, tank_model		# tank location
@@ -684,48 +684,146 @@ mainEndAIBullet:
 	call backfacecull
 	skipplayerbulletcull:
 
-	#	Sort triangles by distance of nearest point (furthest away comes first).
+# copy all unculled triangles into array to be sorted
+	mov %5, 0				# keep total unculled triangle count
+	sub %SP, 1				# space for total number of triangles to render
+	mov %6, %SP
+	# tank first
+	mov %4, [%10]			# get size
+	mov %0, %10				# pointer into model
+	copyculledtankloop:
+	incr %0					# pointer now points to color (top of triangle in case we copy)
+	mov %1, [%0]
+	jne %1, 0xFFFF, dontcopytank
+	#should copy
+	sub %SP, 10
+	mov %1, %SP
+	mov %2, 10
+	call memcpy
+	incr %5					# one more unculled triangle
+	dontcopytank:
+	add %0, 10				# on to next triangle
+	decr %4
+	jge %4, 0, copyculledtankloop
 
-# loop over all triangles in new total model
-	mov %0, [%6]			# size of total model in triangles
-	mov %1, %6				# pointer to total model
-	incr %1					# now at first triangle's color
+		# if ai bullet, do it second
+	je %9, 0, skipaibulletcopy
+	mov %4, [%9]			# get size
+	mov %0, %9				# pointer into model
+	copyculledaibulletloop:
+	incr %0					# pointer now points to color (top of triangle in case we copy)
+	mov %1, [%0]
+	jne %1, 0xFFFF, dontcopyaibullet
+	#should copy
+	sub %SP, 10
+	mov %1, %SP
+	mov %2, 10
+	call memcpy
+	incr %5					# one more unculled triangle
+	dontcopyaibullet:
+	add %0, 10				# on to next triangle
+	decr %4
+	jge %4, 0, copyculledaibulletloop
+	skipaibulletcopy:
 
-	totalmodelloop:
-	push %0
-	push %6
-	push %1
+	# if player bullets, do it third (or second)
+	je %8, 0, skipplayerbulletcopy
+	mov %4, [%8]			# get size
+	mov %0, %8				# pointer into model
+	copyculledplayerbulletloop:
+	incr %0					# pointer now points to color (top of triangle in case we copy)
+	mov %1, [%0]
+	jne %1, 0xFFFF, dontcopyplayerbullet
+	#should copy
+	sub %SP, 10
+	mov %1, %SP
+	mov %2, 10
+	call memcpy
+	incr %5					# one more unculled triangle
+	dontcopyplayerbullet:
+	add %0, 10				# on to next triangle
+	decr %4
+	jge %4, 0, copyculledplayerbulletloop
+	skipplayerbulletcopy:
 
-	#Front-back clipping:
-		#	If triangle has both positive and negative z values at this point, it must be clipped to only the positive z space.
+	# save total triangle count
+	mov [%6], %5			# %6 is the pointer to the array of triangles
+							# pointers %10, %9, and %8 are up for grabs now that the triangles from those models have been culled
+
+	# add size of array to running stack total
+	mul %5, 10
+	add %LOW, 1
+	add %7, %LOW
+
+#	Sort triangles by distance of nearest point (furthest away comes first). Insertion sort
+	mov %4, 1				# starting index
+	mov %0, 1
+	sub %SP, 10				# temp triangle
+	mov %2, %SP
+	mov %0, %6				# triangle array pointer
+	incr %6					# skip size
+
+	sorttrianglesouterloop:
+	mov %0, %6				# get pointer to model
+	mul %4, 10				# get index into model (in words, not triangles)
+	add %0, %LOW			# %0 now ready to be used as src in move_triangle
+	mov %1, %2				# move temp pointer into dst arg of move_triangle
+	call move_triangle
+	mov %3, %4				# get a inner loop index
+	decr %3
+
+		sorttrianglesinnerloop:
+		mov %0, %6				# get pointer to model
+		mul %3, 10				# get index into model (in words, not triangles)
+		add %0, %LOW			# triangles[i]
+		mov %2, %0				# save pointer to triangles[i]
+		call find_furthest		# %0 will contain 1 if we should shift and 0 if it is the right position
+		je %0, 0, innersortloopdone	# if the triangles[i] is further than temp, don't shift
+		mov %0, %2				# restore pointer to triangles[i]
+		mov %1, %0
+		add %1, 10				# triangles[i+1]
+		call move_triangle
+		decr %3
+		jge %3, 0, sorttrianglesinnerloop
+
+	innersortloopdone:
+	mov %1, %6				# set up dst (triangles[i+1])
+	mul %3, 10
+	add %1, %LOW
+	add %1, 10
+	mov %0, %2				# set up src (temp)
+	call move_triangle
+	incr %4
+	jl %4, %5, sorttrianglesouterloop
+
+	# clean up stack
+	add %SP, 10
+
+#Front-back clipping:
+	#	If triangle has both positive and negative z values at this point, it must be clipped to only the positive z space.
 
 
-		#	Calculate intersection of triangle with screen location via binary subdivision.
+	#	Calculate intersection of triangle with screen location via binary subdivision.
 
 
-		#	If triangle clip results in quad, split quad into two triangles instead.
+	#	If triangle clip results in quad, split quad into two triangles instead.
 
 
-	#Perspective transform:
-		#	Using similar triangles and binary subdivision, calculate screen coordinates one point at a time.
+#Perspective transform:
+	#	Using similar triangles and binary subdivision, calculate screen coordinates one point at a time.
 
 
-	#Screen clipping:
-		#	If triangle partially off screen, partially on screen, use binary subdivision to find where triangle intersects edges of screen. If result is quad, split into multiple triangles.
+#Screen clipping:
+	#	If triangle partially off screen, partially on screen, use binary subdivision to find where triangle intersects edges of screen. If result is quad, split into multiple triangles.
 
-	#Rasterise
+#Rasterise
 
 
 	dontrender:
-	pop %1
-	pop %6
-	pop %0
-	add %1, 10
-	decr %6
-
-	jne %6, 0, totalmodelloop
 
 	# -------------------------------
+	# clean up stack
+	add %SP, %7
 
 	j mainLoop # Loop again.
 
@@ -741,6 +839,137 @@ mainEnd:
 	pop $2
 	pop $1
 	pop $0
+	ret
+
+# given the pointer to a triangle in %0, find the nearest point and return the distance to it squared
+nearest_point:
+	push %1
+	push %2
+	push %3
+	push %4
+
+	mov %4, %0				# save triangle pointer
+	incr %4					# get to p1
+	mov %0, %4				# set up args
+	call distance_squared	# get distance squared
+	mov %1, %0				# save distance to p1
+	add %4, 3				# get to p2
+	mov %0, %4				# set up args
+	call distance_squared	# get distance squared
+	mov %2, %0				# save distance to p2
+	add %4, 3				# get to p3
+	mov %0, %4				# set up args
+	call distance_squared	# get distance squared
+	mov %3, %0				# save distance to p3
+
+	mov %0, %1				# assume p1 is nearest
+	jle %0, %2, isnearer1	# check if p2 is nearer
+	mov %0, %2				# if so, set return to that
+	isnearer1:				# otherwise keep |p1| in %0
+	jle %0, %3, isnearer2	# check if p3 is nearer
+	mov %0, %3				# if so, set return to that
+	isnearer2:				# otherwise keep %0
+
+	pop $4
+	pop %3
+	pop %2
+	pop %1
+	ret
+
+# given the pointer to a point in %0, find the difference squared and return it in %0
+distance_squared:
+	push %1
+	push %2
+
+	mov %1, [%0]
+	mul %1, %1
+	mov %2, %LOW
+	incr %0
+	mov %1, [%0]
+	mul %1, %1
+	add %2, %LOW
+	incr %0
+	mov %1, [%0]
+	mul %1, %1
+	add %2, %LOW
+	mov %0, %2
+
+	pop %2
+	pop %1
+	ret
+
+# given two pointers to triangles in %0, and %1, return 1 in %0 if first was furthest and 0 in %0 if second was furthest
+find_furthest:
+	push %1
+	push %2
+	push %3
+
+	call nearest_point		# find nearest point in triangle
+	mov %2, %0				# save the distance to the nearest point of first triangle
+
+	mov %0, %1				# move second triangle to arg
+	call nearest_point
+	mov %3, %0				# save the distance to the nearest point of second triangle
+
+	mov %0, 0
+	jge %2, %3, firstwasfurthest	# check whether %0 was further away than %1
+	add %0, 1				# if not, return 1
+	firstwasfurthest:		# if so, return 0
+
+	pop %3
+	pop %2
+	pop %1
+	ret
+
+# move the triangle pointed to by %0 into the triangle pointed to by %1 (WARNING: overwrites the triangle pointed to by %1)
+move_triangle:
+	push %2
+
+	# completely unrolled
+	mov %2, [%0]			# move color
+	mov [%1], %2
+	incr %0
+	incr %1
+	mov %2, [%0]			# mov x1
+	mov [%1], %2
+	incr %0
+	incr %1
+	mov %2, [%0]			# mov y1
+	mov [%1], %2
+	incr %0
+	incr %1
+	mov %2, [%0]			# move z1
+	mov [%1], %2
+	incr %0
+	incr %1
+	mov %2, [%0]			# move x2
+	mov [%1], %2
+	incr %0
+	incr %1
+	mov %2, [%0]			# move y2
+	mov [%1], %2
+	incr %0
+	incr %1
+	mov %2, [%0]			# move z2
+	mov [%1], %2
+	incr %0
+	incr %1
+	mov %2, [%0]			# move x3
+	mov [%1], %2
+	incr %0
+	incr %1
+	mov %2, [%0]			# move y3
+	mov [%1], %2
+	incr %0
+	incr %1
+	mov %2, [%0]			# move z3
+	mov [%1], %2
+
+	# reset pointers
+	sub %0, 10
+	sub %1, 10
+
+	pop %2
 	ret
 
 # back-face culls all triangles in a model whose pointer is in %0
@@ -811,6 +1040,7 @@ backfacecull:
 
 	dontcull:
 	add %2, 10				# get to next triangle
+	add %SP, 6				# clean up stack
 
 	decr %4					# size--
 	jge %4, 0, backfacecullloop
