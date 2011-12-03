@@ -178,15 +178,53 @@ clip:
 	and ebx, 0b10
 	
 	jne ebx, 0b10, checkzone2
+		### At least one point is in zone 1. Could be two points.
+		### No longer need to save this zone information, so we can modify zone1, zone2, zone3
+		rsh zone1, 1
+		rsh zone2, 1
+		rsh zone3, 1
+		
+		and zone1, 1 #Make zone 0 the only bit left.
+		and zone2, 1
+		and zone3, 1
+		
+		mov eex, 159 #Prepare eex for split, eex is a param for it.
+		
+		j presplitsort	
 	
 	checkzone2:
 	mov ebx, eax
 	and ebx, 0b100
 	
 	jne ebx, 0b100, checkzone3
+		### At least one point is in zone 2. Could be two points.
+		### No longer need to save this zone information, so we can modify zone1, zone2, zone3
+		rsh zone1, 2
+		rsh zone2, 2
+		rsh zone3, 2
+		
+		and zone1, 1 #Make zone 0 the only bit left.
+		and zone2, 1
+		and zone3, 1
+		
+		mov eex, 119 #Prepare eex for split, eex is a param for it.
+		
+		j presplitsort	
 	
 	checkzone3:
-	#We know that it is in zone 3 because it wasnt' in the other zones.
+		### At least one point is in zone 3. Could be two points.
+		### No longer need to save this zone information, so we can modify zone1, zone2, zone3
+		rsh zone1, 3
+		rsh zone2, 3
+		rsh zone3, 3
+		
+		and zone1, 1 #Make zone 0 the only bit left.
+		and zone2, 1
+		and zone3, 1
+		
+		mov eex, 0 #Prepare eex for split, eex is a param for it.
+		
+		j presplitsort	
 	
 	
 	### First find pivot point once zone is established.
@@ -325,15 +363,12 @@ clip:
 				sub SP, 6
 				
 				ret
-	
-
-
-
-
-
-
-
-
+				
+###
+###
+### END CLIP
+###
+###
 
 
 
