@@ -10,7 +10,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="35" />
+   <WVObjectSize size="39" />
    <wvobject fp_name="/testdatapath/uut/CLK_25MHZ" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">CLK_25MHZ</obj_property>
       <obj_property name="ObjectShortName">CLK_25MHZ</obj_property>
@@ -178,5 +178,24 @@
    <wvobject fp_name="/testdatapath/uut/MasterControl/BuffCtrl" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">BuffCtrl[22:0]</obj_property>
       <obj_property name="ObjectShortName">BuffCtrl[22:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/MainMemory/web" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">web</obj_property>
+      <obj_property name="ObjectShortName">web</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/MainMemory/addrb" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">addrb[13:0]</obj_property>
+      <obj_property name="ObjectShortName">addrb[13:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/MainMemory/dinb" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">dinb[17:0]</obj_property>
+      <obj_property name="ObjectShortName">dinb[17:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/aBus" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">aBus[15:0]</obj_property>
+      <obj_property name="ObjectShortName">aBus[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
 </wave_config>
