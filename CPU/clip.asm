@@ -170,38 +170,9 @@ clip:
 		and zone2, 1
 		and zone3, 1
 		
-		#Six possibilities on which points are in zone 0.
-		jne zone1, 1, zone1notin0
-			#point 1 is in 0			
-			jne zone2, 1, zone1in0zone2out
-				#points 1 and 2 are in 0, zone 3 is the pivot point.
-				mov eax, [triangle1+4]
-				mov ebx, [triangle1+5]
-				mov ecx, [triangle1]
-				mov edx, [triangle1+1]
-				mov eex, 0
-				call binarySubdivide
-				mov zone1, eax # Zone1 contains the x-value of p1-p3 edge on y=0.
-				
-				mov eax, [triangle1+4]
-				mov ebx, [triangle1+5]
-				mov ecx, [triangle1+2]
-				mov edx, [triangle1+3]
-				mov eex, 0
-				call binarySubdivide #eax contains the x-value of p2-p3 edge on y=0.
-				
-				
-				
-			zone1in0zone2out:
-			jne zone3, 1, zone1in0zone3out
-				#zones 1 and 3 are in 0, zone 2 is the pivot point.
-				
-			zone1in0zone3out:
-			#Only zone 1 is in 0, zone 1 is the pivot point.
-			
-		zone1notin0:
-	
-	
+		mov eex, 0 #Prepare eex for split, eex is a param for it.
+		
+		j presplitsort	
 	checkzone1:
 	mov ebx, eax
 	and ebx, 0b10
@@ -220,6 +191,140 @@ clip:
 	
 	### First find pivot point once zone is established.
 	
+	### PRE-SPLIT SORT
+	### Determine pivot point and then go to split.
+	###
+	presplitsort:
+	#Six possibilities on which points are in zone 0.
+		jne zone1, 1, point1notin0
+			#point 1 is in 0
+			jne zone2, 1, point1in0point2out
+				# points 1 and 2 are in 0, point 3 is the pivot point.  Already presorted.
+				j split
+			point1in0point2out:
+			jne zone3, 1, point1in0point3out
+				# points 1 and 3 are in 0, point 2 is the pivot point.
+				# Must sort so point 3 is the pivot. Swap points 2 and 3
+				mov eax, [triangle1+2]
+				mov ebx, [triangle1+4]
+				mov [triangle1+2], ebx
+				mov [triangle1+4], eax
+				mov eax, [triangle1+3]
+				mov ebx, [triangle1+5]
+				mov [triangle1+3], ebx
+				mov [triangle1+5], eax
+				
+				j split				
+			point1in0point3out:
+			#Only point 1 is in 0, point 1 is the pivot point. Must swap point 1 and 3.
+				mov eax, [triangle1]
+				mov ebx, [triangle1+4]
+				mov [triangle1], ebx
+				mov [triangle1+4], eax
+				mov eax, [triangle1+1]
+				mov ebx, [triangle1+5]
+				mov [triangle1+1], ebx
+				mov [triangle1+5], eax
+				
+				j split			
+			point1notin0:
+			jne zone2, 1, point2notin0
+				#point 2 is in 0
+				jne zone3, 1, point2in0point3out
+					#points 2 and 3 are in 0. 1 is pivot.  Swap 1 and 3.
+					mov eax, [triangle1]
+					mov ebx, [triangle1+4]
+					mov [triangle1], ebx
+					mov [triangle1+4], eax
+					mov eax, [triangle1+1]
+					mov ebx, [triangle1+5]
+					mov [triangle1+1], ebx
+					mov [triangle1+5], eax
+					
+					j split
+			point2in0point3out:
+				#point 2 is the pivot.  Swap 2 and 3.
+				mov eax, [triangle1+2]
+				mov ebx, [triangle1+4]
+				mov [triangle1+2], ebx
+				mov [triangle1+4], eax
+				mov eax, [triangle1+3]
+				mov ebx, [triangle1+5]
+				mov [triangle1+3], ebx
+				mov [triangle1+5], eax
+				
+				j split
+			point2notin0:
+				#point 3 is the pivot. Already sorted.
+					j split
+	
+	###
+	### SPLIT
+	###
+	split:
+		#points 1 and 2 are in 0, zone 3 is the pivot point.
+				mov eax, [triangle1+4]
+				mov ebx, [triangle1+5]
+				mov ecx, [triangle1]
+				mov edx, [triangle1+1]
+				mov eex, 0
+				call binarySubdivide
+				mov zone1, eax # Zone1 contains the x-value of p1-p3 edge on y=0.
+				
+				mov eax, [triangle1+4]
+				mov ebx, [triangle1+5]
+				mov ecx, [triangle1+2]
+				mov edx, [triangle1+3]
+				mov eex, 0
+				call binarySubdivide #eax contains the x-value of p2-p3 edge on y=0.
+				
+				#Now form the three new triangles and push them onto the stack, recursive call to clip.
+				mov ebx, [triangle1+1]
+				push ebx
+				mov ebx, [triangle1]
+				push ebx
+				push 0
+				push zone1
+				push 0
+				push eax
+				
+				mov ebx, [triangle1+1]
+				push ebx
+				mov ebx, [triangle1]
+				push ebx
+				mov ebx, [triangle1+3]
+				push ebx
+				mov ebx, [triangle1+2]
+				push ebx
+				push 0
+				push eax
+				
+				mov ebx, [triangle1+5]
+				push ebx
+				mov ebx, [triangle1+4]
+				push ebx
+				push 0
+				push zone1
+				push 0
+				push eax
+				
+				mov eax, SP
+				decr eax
+				call clip
+				
+				sub SP, 6
+				mov eax, SP
+				decr eax
+				call clip
+				
+				sub SP, 6
+				mov eax, SP
+				decr eax
+				call clip
+				
+				sub SP, 6
+				
+				ret
 	
 
 
@@ -232,11 +337,7 @@ clip:
 
 
 
-
-
-
-
-
+### BINARY SUBDIVIDE
 ### This method takes in 4 points and a coordinate, and returns the x point of intersection.
 ### eax = x1, ebx = y1, ecx = x2, edx = y2, eex = y-value of intersection.  return = x-value of intersection. Return is put into eax.
 ### Note - x and y can be switched to flip axes
@@ -301,22 +402,6 @@ ret
 
 
 triangle1:
-0
-0
-0
-0
-0
-0
-
-triangle2:
-0
-0
-0
-0
-0
-0
-
-triangle3:
 0
 0
 0
