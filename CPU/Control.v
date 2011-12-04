@@ -94,8 +94,6 @@ module Control(
 		// I-Capable with no immediate
 		if (instType == N0000) begin
 			ALUOp           <= instruction[7:4];
-			ReadSelect1     <= instruction[11:8];
-			ReadSelect2     <= instruction[3:0];
 			BuffCtrl[1]     <= 1;
 			BuffCtrl[16]    <= 1;
 			BuffCtrl[0]     <= 0;
@@ -109,7 +107,6 @@ module Control(
 			ret             <= 0;
 
 			if (instruction[7:4] == ADD ||
-				instruction[7:4] == SUB ||
 				instruction[7:4] == AND ||
 				instruction[7:4] == OR ||
 				instruction[7:4] == XOR ||
@@ -124,6 +121,30 @@ module Control(
 				FlagWrite    <= 1;
 				DestSel      <= instruction[11:8];
 				DestSel2     <= instruction[11:8];
+				ReadSelect1  <= instruction[11:8];
+				ReadSelect2  <= instruction[3:0];
+				if (instruction[11:8] == 12 || instruction[11:8] == 13) begin
+					WriteEn1    <= 0;
+					WriteEn2    <= 1;
+					BuffCtrl[3] <= 1;
+					BuffCtrl[2] <= 0;
+				end else begin
+					WriteEn1    <= 1;
+					WriteEn2    <= 0;
+					BuffCtrl[2] <= 1;
+					BuffCtrl[3] <= 0;
+				end
+			end
+			
+			// r to r sub instructions need to be reversed in order to allow immediates to be use as the subtrahend 
+			else if (instruction[7:4] == SUB) begin
+				BuffCtrl[6]  <= 0;
+				BuffCtrl[7]  <= 0;
+				FlagWrite    <= 1;
+				DestSel      <= instruction[11:8];
+				DestSel2     <= instruction[11:8];
+				ReadSelect1  <= instruction[3:0];
+				ReadSelect2  <= instruction[11:8];
 				if (instruction[11:8] == 12 || instruction[11:8] == 13) begin
 					WriteEn1    <= 0;
 					WriteEn2    <= 1;
@@ -149,6 +170,8 @@ module Control(
 				BuffCtrl[7]  <= 0;
 				DestSel      <= instruction[11:8];
 				DestSel2     <= instruction[11:8];
+				ReadSelect1  <= instruction[11:8];
+				ReadSelect2  <= instruction[3:0];
 			end
 
 			else if (instruction[7:4] == MUL) begin
@@ -162,6 +185,8 @@ module Control(
 				WriteEn2     <= 1;
 				BuffCtrl[21] <= 1;
 				BuffCtrl[2]  <= 1;
+				ReadSelect1  <= instruction[11:8];
+				ReadSelect2  <= instruction[3:0];
 			end
 
 			else if (instruction[7:4] == MOVR) begin
@@ -171,6 +196,8 @@ module Control(
 				FlagWrite    <= 0;
 				DestSel      <= instruction[11:8];
 				DestSel2     <= instruction[11:8];
+				ReadSelect1  <= instruction[11:8];
+				ReadSelect2  <= instruction[3:0];
 				if (instruction[11:8] == 12 || instruction[11:8] == 13) begin
 					WriteEn1    <= 0;
 					WriteEn2    <= 1;
@@ -192,6 +219,8 @@ module Control(
 				BuffCtrl[6] <= 0;
 				BuffCtrl[7] <= 0;
 				DestSel     <= 0;
+				ReadSelect1 <= 0;
+				ReadSelect2 <= 0;
 				DestSel2    <= 0;
 			end
 		end
@@ -390,9 +419,9 @@ module Control(
 				BuffCtrl[18] <= 1;
 				BuffCtrl[15] <= 1;
 				BuffCtrl[11] <= 1;
-				BuffCtrl[8]  <= 1;
+				BuffCtrl[8]  <= 0;
 				BuffCtrl[20] <= 0;
-				BuffCtrl[22] <= 0;
+				BuffCtrl[22] <= 1;
 				BuffCtrl[16] <= 0;
 				BuffCtrl[14] <= 0;
 				BuffCtrl[12] <= 0;
@@ -458,7 +487,7 @@ module Control(
 
 			else if(instruction[17:14] == RET) begin
 				//RET:
-				BuffCtrl[22] <= 1;
+				BuffCtrl[22] <= 0;
 				BuffCtrl[20] <= 1;
 				BuffCtrl[18] <= 0;
 				BuffCtrl[14] <= 1;
@@ -468,7 +497,7 @@ module Control(
 				BuffCtrl[15] <= 0;
 				BuffCtrl[10] <= 0;
 				BuffCtrl[11] <= 0;
-				BuffCtrl[8]  <= 0;
+				BuffCtrl[8]  <= 1;
 				BuffCtrl[9]  <= 0;
 				WriteEn1     <= 0;
 				MemWrite     <= 0;
@@ -779,11 +808,11 @@ module Control(
 					BuffCtrl[1]	 	<= 1;
 					BuffCtrl[19] 	<= 0;
 					BuffCtrl[18] 	<= 0;
-					BuffCtrl[8]	    <= 0;
+					BuffCtrl[8]	    <= 1;
 					BuffCtrl[0]	 	<= 0;
 					BuffCtrl[12] 	<= 1;
 					BuffCtrl[20] 	<= 1;
-					BuffCtrl[22]    <= 1;
+					BuffCtrl[22]    <= 0;
 					MemRead         <= 1;
 				end
 			end
@@ -800,11 +829,11 @@ module Control(
 				BuffCtrl[1]	 <= 1;
 				BuffCtrl[20] <= 0;
 				BuffCtrl[18] <= 1;
-				BuffCtrl[8]	 <= 1;
+				BuffCtrl[8]	 <= 0;
 				BuffCtrl[0]	 <= 0;
 				BuffCtrl[12] <= 0;
 				BuffCtrl[19] <= 1;
-				BuffCtrl[22] <= 0;
+				BuffCtrl[22] <= 1;
 				MemRead      <= 0;
 				immediate   <= 16'd0;
 			end
@@ -821,11 +850,11 @@ module Control(
 				BuffCtrl[0]	 <= 1;
 				BuffCtrl[18] <= 1;
 				BuffCtrl[20] <= 0;
-				BuffCtrl[8]	 <= 1;
+				BuffCtrl[8]	 <= 0;
 				BuffCtrl[1]	 <= 0;
 				BuffCtrl[12] <= 0;
 				BuffCtrl[19] <= 1;
-				BuffCtrl[22] <= 0;
+				BuffCtrl[22] <= 1;
 				MemRead      <= 0;
 				immediate    <= {2'd0,instruction[13:0]};
 			end
