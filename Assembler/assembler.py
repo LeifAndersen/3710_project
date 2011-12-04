@@ -9,7 +9,7 @@ MEM_START = 0
 MEM_INCR = 1
 
 # Lists of instruction ops categorized by type (types unique to assembler)
-I_CAPABLE = ["ADD", "SUB", "AND", "OR", "XOR", "NOT", "LSH", "RSH", "ARSH", "MUL", "FMUL", "CMP"]
+I_CAPABLE = ["ADD", "SUB", "AND", "OR", "XOR", "NOT", "LSH", "RSH", "ARSH", "MUL", "FMUL"]
 SPECIAL_14_BIT = ["RET", "PUSHI"]
 
 # Dictionary of instructions and their opcodes
@@ -148,10 +148,10 @@ def encode_cmps(tokens, line_num, line):
 		return encode_R_to_R_instruction(tokens, 0)
 	elif tokens [1][0] == "%" and tokens[2][0] != "%":
 		# push this
-		return encode_Imm_to_R_instruction(tokens)
-	elif tokens[0] == "CMP" and tokens [1][0] != "%" and tokens[2][0] == "%":
+		return encode_Imm_to_R_instruction(["CMPR", tokens[1], tokens[2]])
+	elif tokens [1][0] != "%" and tokens[2][0] == "%":
 		# push this
-		return encode_Imm_to_R_instruction(["CMPR", tokens[2], tokens[1]])
+		return encode_Imm_to_R_instruction(["CMP", tokens[2], tokens[1]])
 	else:
 		explode_bomb(line_num, line)
 
@@ -268,25 +268,25 @@ def parse(infile_str, outfile_str):
 						# CMPR
 						# jmp
 						# NOP
-						first_pass_queue.append(encode_cmps(["CMP", tokens[2], tokens[1]], line_num, line))
+						first_pass_queue.append(encode_cmps(["CMP", tokens[1], tokens[2]], line_num, line))
 						first_pass_queue.append("JB " + tokens[3] + " " + str(line_num))
 					elif tokens[0] == "JBE":
 						# CMPR
 						# jmp
 						# NOP
-						first_pass_queue.append(encode_cmps(["CMP", tokens[2], tokens[1]], line_num, line))
+						first_pass_queue.append(encode_cmps(["CMP", tokens[1], tokens[2]], line_num, line))
 						first_pass_queue.append("JBE " + tokens[3] + " " + str(line_num))
 					elif tokens[0] == "JL":
 						# CMPR
 						# jmp
 						# NOP
-						first_pass_queue.append(encode_cmps(["CMP", tokens[2], tokens[1]], line_num, line))
+						first_pass_queue.append(encode_cmps(["CMP", tokens[1], tokens[2]], line_num, line))
 						first_pass_queue.append("JL " + tokens[3] + " " + str(line_num))
 					elif tokens[0] == "JLE":
 						# CMPR
 						# jmp
 						# NOP
-						first_pass_queue.append(encode_cmps(["CMP", tokens[2], tokens[1]], line_num, line))
+						first_pass_queue.append(encode_cmps(["CMP", tokens[1], tokens[2]], line_num, line))
 						first_pass_queue.append("JLE " + tokens[3] + " " + str(line_num))
 					elif tokens[0] == "JE":
 						# CMPR
@@ -323,11 +323,13 @@ def parse(infile_str, outfile_str):
 				elif tokens [1][0] == "%" and tokens[2][0] != "%":
 					# push this
 					first_pass_queue.append(encode_Imm_to_R_instruction(tokens))
-				elif tokens[0] == "CMP" and tokens [1][0] != "%" and tokens[2][0] == "%":
-					# push this
-					first_pass_queue.append(encode_Imm_to_R_instruction(["CMPR", tokens[2], tokens[1]]))
 				else:
 					explode_bomb(line_num, line)
+
+			# compares are monsters
+			elif instruction_type == "CMP":
+				verify_token_count(line_num, tokens, 3)
+				encode_cmps(tokens)
 
 			elif instruction_type == "14-Bit Immediate":
 				if tokens[0] == "RET":
