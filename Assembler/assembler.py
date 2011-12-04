@@ -329,7 +329,7 @@ def parse(infile_str, outfile_str):
 			# compares are monsters
 			elif instruction_type == "CMP":
 				verify_token_count(line_num, tokens, 3)
-				encode_cmps(tokens)
+				encode_cmps(tokens, line_num, line)
 
 			elif instruction_type == "14-Bit Immediate":
 				if tokens[0] == "RET":
