@@ -329,7 +329,7 @@ clip:
 				mov ebx, [triangle+6]
 				mov ecx, [triangle+1]
 				mov edx, [triangle+2]
-				mov eex, 0
+				#mov eex, 0
 				call binarySubdivide
 				mov zone1, eax # Zone1 contains the x-value of p1-p3 edge on y=0.
 				
@@ -337,7 +337,7 @@ clip:
 				mov ebx, [triangle+6]
 				mov ecx, [triangle+3]
 				mov edx, [triangle+4]
-				mov eex, 0
+				#mov eex, 0
 				call binarySubdivide #eax contains the x-value of p2-p3 edge on y=0.
 				
 				#Now form the three new triangles and push them onto the stack, recursive call to clip.
@@ -400,7 +400,7 @@ clip:
 ###
 ###
 zclip:
-		push eax
+		mov efx, eax
 	
 		mov zone1, 0
 		mov zone2, 0
@@ -455,133 +455,189 @@ zclip:
 		mov eex, 0 #Prepare eex for split, eex is a param for it.
 		
 		#Six possibilities on which points are in z negative.
-		jne zone1, 1, point1notin0
+		jne zone1, 1, zpoint1notin0
 			#point 1 is in 0
-			jne zone2, 1, point1in0point2out
+			jne zone2, 1, zpoint1in0point2out
 				# points 1 and 2 are in 0, point 3 is the pivot point.  Already presorted.
 				j split
-			point1in0point2out:
-			jne zone3, 1, point1in0point3out
+			zpoint1in0point2out:
+			jne zone3, 1, zpoint1in0point3out
 				# points 1 and 3 are in 0, point 2 is the pivot point.
 				# Must sort so point 3 is the pivot. Swap points 2 and 3
-				mov eax, [triangle+3]
-				mov ebx, [triangle+5]
-				mov [triangle+3], ebx
-				mov [triangle+5], eax
 				mov eax, [triangle+4]
-				mov ebx, [triangle+6]
+				mov ebx, [triangle+7]
 				mov [triangle+4], ebx
-				mov [triangle+6], eax
+				mov [triangle+7], eax
+				mov eax, [triangle+5]
+				mov ebx, [triangle+8]
+				mov [triangle+5], ebx
+				mov [triangle+8], eax
+				mov eax, [triangle+6]
+				mov ebx, [triangle+9]
+				mov [triangle+6], ebx
+				mov [triangle+9], eax
 				
 				j split				
-			point1in0point3out:
+			zpoint1in0point3out:
 			#Only point 1 is in 0, point 1 is the pivot point. Must swap point 1 and 3.
 				mov eax, [triangle+1]
-				mov ebx, [triangle+5]
+				mov ebx, [triangle+7]
 				mov [triangle+1], ebx
-				mov [triangle+5], eax
+				mov [triangle+7], eax
 				mov eax, [triangle+2]
-				mov ebx, [triangle+6]
+				mov ebx, [triangle+8]
 				mov [triangle+2], ebx
-				mov [triangle+6], eax
+				mov [triangle+8], eax
+				mov eax, [triangle+3]
+				mov ebx, [triangle+9]
+				mov [triangle+3], ebx
+				mov [triangle+9], eax
 				
 				j split			
-			point1notin0:
-			jne zone2, 1, point2notin0
+			zpoint1notin0:
+			jne zone2, 1, zpoint2notin0
 				#point 2 is in 0
-				jne zone3, 1, point2in0point3out
+				jne zone3, 1, zpoint2in0point3out
 					#points 2 and 3 are in 0. 1 is pivot.  Swap 1 and 3.
 					mov eax, [triangle+1]
-					mov ebx, [triangle+5]
+					mov ebx, [triangle+7]
 					mov [triangle+1], ebx
-					mov [triangle+5], eax
+					mov [triangle+7], eax
 					mov eax, [triangle+2]
-					mov ebx, [triangle+6]
+					mov ebx, [triangle+8]
 					mov [triangle+2], ebx
-					mov [triangle+6], eax
+					mov [triangle+8], eax
+					mov eax, [triangle+3]
+					mov ebx, [triangle+9]
+					mov [triangle+3], ebx
+					mov [triangle+9], eax
 					
 					j split
-			point2in0point3out:
+			zpoint2in0point3out:
 				#point 2 is the pivot.  Swap 2 and 3.
-				mov eax, [triangle+3]
-				mov ebx, [triangle+5]
-				mov [triangle+3], ebx
-				mov [triangle+5], eax
 				mov eax, [triangle+4]
-				mov ebx, [triangle+6]
+				mov ebx, [triangle+7]
 				mov [triangle+4], ebx
-				mov [triangle+6], eax
+				mov [triangle+7], eax
+				mov eax, [triangle+5]
+				mov ebx, [triangle+8]
+				mov [triangle+5], ebx
+				mov [triangle+8], eax
+				mov eax, [triangle+6]
+				mov ebx, [triangle+9]
+				mov [triangle+6], ebx
+				mov [triangle+9], eax
 				
-				j split
-			point2notin0:
+				j zsplit
+			zpoint2notin0:
 				#point 3 is the pivot. Already sorted.
-					j split
+					j zsplit
 					
 					###
-	### SPLIT
+	### Z SPLIT
 	###
 	zsplit:
 		#points 1 and 2 are in 0, point 3 is the pivot point.
-				mov eax, [triangle+5]
-				mov ebx, [triangle+6]
-				mov ecx, [triangle+1]
-				mov edx, [triangle+2]
-				mov eex, 0
+				mov eax, [triangle+1]
+				mov ebx, [triangle+3]
+				mov ecx, [triangle+7]
+				mov edx, [triangle+9]
 				call binarySubdivide
-				mov zone1, eax # Zone1 contains the x-value of p1-p3 edge on y=0.
+				mov zone1, eax # Zone1 contains the x-value of p1-p3 edge on z=0.
 				
+				mov eax, [triangle+2]
+				mov ebx, [triangle+3]
+				mov ecx, [triangle+8]
+				mov edx, [triangle+9]
+				call binarySubdivide 
+				mov zone2, eax # Zone2 contains the y-value of p1-p3 edge on z=0.
+								
+				mov eax, [triangle+4]
+				mov ebx, [triangle+6]
+				mov ecx, [triangle+7]
+				mov edx, [triangle+9]
+				call binarySubdivide
+				mov zone3, eax # Zone3 contains the x-value of p2-p3 edge on z=0.
+								
 				mov eax, [triangle+5]
 				mov ebx, [triangle+6]
-				mov ecx, [triangle+3]
-				mov edx, [triangle+4]
-				mov eex, 0
-				call binarySubdivide #eax contains the x-value of p2-p3 edge on y=0.
+				mov ecx, [triangle+8]
+				mov edx, [triangle+9]
+				call binarySubdivide #eax contains the y-value of p2-p3 edge on z=0.
 				
-				#Now form the three new triangles and push them onto the stack, recursive call to clip.
-				mov ebx, [triangle+2]
-				push ebx
-				mov ebx, [triangle+1]
-				push ebx
-				push 0
-				push zone1
-				push 0
-				push eax
-				
-				mov ebx, [triangle+2]
-				push ebx
-				mov ebx, [triangle+1]
-				push ebx
-				mov ebx, [triangle+4]
-				push ebx
+			###Now form the three new triangles and push them onto the stack, recursive call to clip.
+			###T1
 				mov ebx, [triangle+3]
 				push ebx
+				mov ebx, [triangle+2]
+				push ebx
+				mov ebx, [triangle+1]				
+				push ebx
+				
+				push 0
+				push zone2
+				push zone1
+				
 				push 0
 				push eax
+				push zone3
+				push [efx]
+				
+			###T2
+				mov ebx, [triangle+3]
+				push ebx
+				mov ebx, [triangle+2]
+				push ebx
+				mov ebx, [triangle+1]
+				push ebx
 				
 				mov ebx, [triangle+6]
 				push ebx
 				mov ebx, [triangle+5]
 				push ebx
-				push 0
-				push zone1
+				mov ebx, [triangle+4]
+				push ebx
+				
 				push 0
 				push eax
+				push zone3
+				push [efx]
+				
+			###T3
+				mov ebx, [triangle+9]
+				push ebx
+				mov ebx, [triangle+8]
+				push ebx
+				mov ebx, [triangle+7]
+				push ebx
+				
+				push 0
+				push zone2
+				push zone1
+				
+				push 0
+				push eax
+				push zone3
+				push [efx]
+			
+			###
+			### DONE PUSHING TRIANGLES
 				
 				mov eax, SP
 				decr eax
-				call clip
+				call perspectivetransform
 				
-				sub SP, 6
+				sub SP, 10
 				mov eax, SP
 				decr eax
-				call clip
+				call perspectivetransform
 				
-				sub SP, 6
+				sub SP, 10
 				mov eax, SP
 				decr eax
-				call clip
+				call perspectivetransform
 				
-				sub SP, 6
+				sub SP, 10
 				
 				ret			
 
