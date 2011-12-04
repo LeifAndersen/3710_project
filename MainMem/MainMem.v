@@ -76,9 +76,13 @@ reg web10;
 wire[17:0] douta10;
 wire[17:0] doutb10;
 
+wire [13:0] addressa;
+
+assign addressa = addra - 1;
+
 always@(*)
 begin
-case(addra[13:10])
+case(addressa[13:10])
 	0:
 	begin
 		douta <= douta0;
