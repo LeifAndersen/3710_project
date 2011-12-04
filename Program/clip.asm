@@ -62,8 +62,6 @@ main:
 	mov eax, SP
 	incr eax
 
-	call copyTriangle
-
 	call clip
 
 	infinite:
@@ -83,7 +81,10 @@ clip:
 	#push zone2
 	#push zone3
 	#add SP, 10
-
+	mov temp2, eax
+	
+	call copyTriangle
+	
 	#Given a triangle pointed at by eax, first do comparisons to establish the zone values of each point.
 		# call copyTriangle # Don't need this because perspective already puts the triangle into triangle:
 		
@@ -349,6 +350,7 @@ clip:
 				push zone1
 				push 0
 				push eax
+				push temp2
 				
 				mov ebx, [triangle+2]
 				push ebx
@@ -360,6 +362,7 @@ clip:
 				push ebx
 				push 0
 				push eax
+				push temp2
 				
 				mov ebx, [triangle+6]
 				push ebx
@@ -369,6 +372,7 @@ clip:
 				push zone1
 				push 0
 				push eax
+				push temp2
 				
 				mov eax, SP
 				decr eax
@@ -778,7 +782,12 @@ binarySubdivide:
 			mov egx, eax #eax = x1
 			sub egx, ecx #egx = x1-x2
 			arsh egx, 1 #egx = (x1-x2)/2
+						
+			mov ecx, eax
+			mov edx, ebx
 			
+		# If efx < 0	
+		jge efx, 0, efxg0
 		# If y1 < eex
 			jge ebx, eex, y1belowlimit
 				sub ebx, efx #ebx = y1 - (y1-y2)/2 = new y1.
@@ -788,9 +797,34 @@ binarySubdivide:
 		# If y1 > eex
 				add ebx, efx #ebx = y1 + (y1-y2)/2 = new y1.
 				add eax, egx #eax = x1 + (x1-x2)/2 = new x1.
+				
+		j binarysubdivideloop
 		
-j binarysubdivideloop
+      efxg0:		
+		# If y1 < eex
+			jge ebx, eex, y1belowlimit2
+				add ebx, efx #ebx = y1 + (y1-y2)/2 = new y1.
+				add eax, egx #eax = x1 + (x1-x2)/2 = new x1.
+			j binarysubdivideloop
+			y1belowlimit2:
+		# If y1 > eex
+				sub ebx, efx #ebx = y1 - (y1-y2)/2 = new y1.
+				sub eax, egx #eax = x1 - (x1-x2)/2 = new x1.
+		
+		j binarysubdivideloop
+		
+###
+###
+### END BINARY SUBDIVIDE
+###
+###
 
+
+###
+###
+### COPY TRIANGLE
+###
+###
 copyTriangle:
 	push ebx
 	push eax
