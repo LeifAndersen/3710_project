@@ -410,7 +410,7 @@ def parse(infile_str, outfile_str):
 					elif tokens [1][0] == "%" and tokens[2][0] != "%":
 						# push this
 						if is_number(tokens[2]):
-							if to_number(tokens[2]) > 256:
+							if to_number(tokens[2]) > 256 or to_number(tokens[2]) < 0:
 								# move top in
 								tokens[0] = "MOVR"
 								constant = to_number(tokens[2])
