@@ -49,6 +49,8 @@ module Keyboard(
 			down <= 16'd0;
 			right <= 16'd0;
 			left <= 16'd0;
+			a <= 16'd0;
+			b <= 16'd0;
 			ps2negedge <= 0;
 		end
 		
