@@ -696,21 +696,12 @@ ret
 
 binarySubdivide:
 	#Find x and y differences, divide them by 2, add to lower point, check closeness.
-
-	binarysubdivideloop:
-		# If yguess == eex, done
-		# efx holds yguess
-			jne ebx, eex, binarySubdividenotdone
-				ret
-			binarySubdividenotdone:
-			
+	
+	###Set up difference outside loop.
 			mov efx, ebx #efx = y1
 			sub efx, edx #efx = y1 - y2
-			
-			jge efx, 0, nooffset
-				add efx, 2
-			nooffset:
-			
+			###Must ensure efx is positive.
+			jge efx, 0, 
 			arsh efx, 1 #efx = (y1-y2)/2
 			
 			mov egx, eax #eax = x1
@@ -721,6 +712,13 @@ binarySubdivide:
 			nooffset2:
 			
 			arsh egx, 1 #egx = (x1-x2)/2
+
+	binarysubdivideloop:
+		# If yguess == eex, done
+		# efx holds yguess
+			jne ebx, eex, binarySubdividenotdone
+				ret
+			binarySubdividenotdone:
 						
 			mov ecx, eax
 			mov edx, ebx
