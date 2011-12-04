@@ -143,6 +143,7 @@ def verify_token_count(line_num, tokens, count):
 		exit(1)
 
 def encode_cmps(tokens, line_num, line):
+	print tokens
 	if tokens[1][0] == "%" and tokens[2][0] == "%":
 		# push this
 		return encode_R_to_R_instruction(tokens, 0)
@@ -329,7 +330,7 @@ def parse(infile_str, outfile_str):
 			# compares are monsters
 			elif instruction_type == "CMP":
 				verify_token_count(line_num, tokens, 3)
-				encode_cmps(tokens, line_num, line)
+				first_pass_queue.append(encode_cmps(tokens, line_num, line))
 
 			elif instruction_type == "14-Bit Immediate":
 				if tokens[0] == "RET":
