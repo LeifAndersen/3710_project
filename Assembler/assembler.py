@@ -318,11 +318,8 @@ def parse(infile_str, outfile_str):
 			if instruction_type == "I-Capable":
 				verify_token_count(line_num, tokens, 3)
 				if tokens[1][0] == "%" and tokens[2][0] == "%":
-					if tokens[0] == "SUB":
-						first_pass_queue.append(encode_R_to_R_instruction([tokens[0], tokens[2], tokens[1]], 0))
-					else:
-						# push this
-						first_pass_queue.append(encode_R_to_R_instruction(tokens, 0))
+					# push this
+					first_pass_queue.append(encode_R_to_R_instruction(tokens, 0))
 				elif tokens [1][0] == "%" and tokens[2][0] != "%":
 					# push this
 					first_pass_queue.append(encode_Imm_to_R_instruction(tokens))
