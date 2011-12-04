@@ -47,6 +47,7 @@ main:
 	mov %3, 3
 	sub %SP, 3
 	mov %1, %SP
+	incr %1
 	mov %0, [foo_model+1]
 	mov [%1], %0
 	incr %1
