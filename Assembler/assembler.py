@@ -143,7 +143,6 @@ def verify_token_count(line_num, tokens, count):
 		exit(1)
 
 def encode_cmps(tokens, line_num, line):
-	print tokens
 	if tokens[1][0] == "%" and tokens[2][0] == "%":
 		# push this
 		return encode_R_to_R_instruction(tokens, 0)
