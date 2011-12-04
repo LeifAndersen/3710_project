@@ -22,6 +22,7 @@ module Keyboard(
     input clk,
 	input ps2_clk,
     input data,
+	input keyboardReset,
 	input reset,
     output reg[15:0] up,
 	output reg[15:0] down,
@@ -40,7 +41,7 @@ module Keyboard(
 	reg ps2negedge;
 
 	always@(posedge clk) begin
-		if(reset) begin
+		if(reset || keyboardReset) begin
 			shiftReg <= 11'b11111111111;
 			rel <= 1'd0;
 			buttons <= 16'd0;
