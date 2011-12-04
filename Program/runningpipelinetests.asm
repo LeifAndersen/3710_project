@@ -42,7 +42,8 @@ init:
 
 # Main Loop
 main:
-
+	mainLoop:
+	
 	sub %SP, 3
 	mov %1, %SP
 	mov %0, [foo_model+1]
