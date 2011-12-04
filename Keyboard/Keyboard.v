@@ -62,6 +62,7 @@ module Keyboard(
 				shiftReg[10:1] <= shiftReg[9:0];
 				shiftReg[0] <= data;
 				if(shiftReg[10] == 1'd0) begin
+					shiftReg[10:0] <= 11'b11111111111;
 					if(rel == 1'b0) begin
 						case(shiftReg)
 						UP: buttons[0] <= 1'b1;
