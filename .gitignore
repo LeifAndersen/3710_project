@@ -1,4 +1,7 @@
 .DS_Store
+CPU/Top_summary.xml
+CPU/Top_usage.xml
+
 *.mem
 *.pyc
 *.pp
