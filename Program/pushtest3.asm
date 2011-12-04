@@ -1,3 +1,5 @@
+#pushtest3
+ 
 `define UP_KEY 16382
 `define DOWN_KEY 16381
 `define RIGHT_KEY 16380
@@ -30,13 +32,10 @@ init:
 	mov SP, STACK_TOP
 	mov FP, SP
 	
-	mov eax, 84
-	push eax
-	mov eax, 115
+	mov eax, -32
 	push eax
 	
 	pop ebx
-	pop ecx
 	
 	infinite:
 	j infinite

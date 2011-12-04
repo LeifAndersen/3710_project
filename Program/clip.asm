@@ -38,26 +38,31 @@ init:
 	call main
 	
 main:
-	mov eax, 84
+	mov eax, 30
 	push eax
 	
-	mov eax, 115
+	mov eax, 120
 	push eax
 	
-	mov eax, 53
+	mov eax, 31
 	push eax
 	
-	mov eax, 54
+	mov eax, 40
 	push eax
 	
-	mov eax, 114
+	mov eax, 0xffe0
 	push eax
 	
-	mov eax, 67
+	mov eax, 80
+	push eax
+	
+	mov eax, 1
 	push eax
 	
 	mov eax, SP
 	incr eax
+
+	call copyTriangle
 
 	call clip
 
@@ -319,7 +324,7 @@ clip:
 	### SPLIT
 	###
 	split:
-		#points 1 and 2 are in 0, zone 3 is the pivot point.
+		#points 1 and 2 are in 0, point 3 is the pivot point.
 				mov eax, [triangle+5]
 				mov ebx, [triangle+6]
 				mov ecx, [triangle+1]
