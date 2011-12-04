@@ -159,7 +159,7 @@ module Top(
 	reg [13:0] memAddrBusF;
 	// Memory controller
 	MemoryController MemCtrl(memWriteBus, memAddrBusF, memWriteEn, pc, data_to_controller, instruction_to_controller, full, memDataOut, instruction, data_to_main, data_addr_to_main, data_wr_en_to_main, inst_addr_to_main, pram_out, pram_wr_en, lcd_data, lcd_en, forward, backward, turnright, turnleft, shoot, escape, keyboard_reset);
-	Keyboard KeyboardControl(CLK_25MHZ, PS2_CLK, PS2_DATA, keyboard_reset, forward, backward, turnleft, turnright, shoot, escape);
+	Keyboard KeyboardControl(CLK_25MHZ, PS2_CLK, PS2_DATA, keyboard_reset, reset, forward, backward, turnleft, turnright, shoot, escape);
 	
 	// control
 	//     Has some forwarding logic around it
