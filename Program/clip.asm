@@ -67,7 +67,7 @@ main:
 
 ### CLIP
 ###
-### Expects a pointer to a triangle in eax.  Triangle is expected to be [eax] = x1, [eax+1] = y1, [eax+2] = x2, [eax+3] = y2, [eax+4] = x3, [eax+5] = y3
+### Expects a pointer to a triangle in eax.  Triangle is expected to be [eax] = color, [eax+1] = x1, [eax+2] = y1, [eax+3] = x2, [eax+4] = y2, [eax+5] = x3, [eax+6] = y3
 ###
 ### NO RETURN VALUE - This function merely clips a triangle that's already been perspective transformed, rasterizes any on-screen parts, then discards the triangle.
 ###
@@ -80,7 +80,7 @@ clip:
 	#add SP, 10
 
 	#Given a triangle pointed at by eax, first do comparisons to establish the zone values of each point.
-		call copyTriangle
+		# call copyTriangle # Don't need this because perspective already puts the triangle into triangle:
 		
 		mov zone1, 0
 		mov zone2, 0
@@ -88,7 +88,7 @@ clip:
 	
 	###Check zone 0, 2
 		#t1
-		mov eax, [triangle+1] #y1
+		mov eax, [triangle+2] #y1
 		jge eax, 0, p1notinzone0
 			or zone1, 1
 		p1notinzone0:
@@ -98,7 +98,7 @@ clip:
 		p1notinzone2:	
 	
 		#t2
-		mov eax, [triangle+3] #y2
+		mov eax, [triangle+4] #y2
 		jge eax, 0, p2notinzone0
 			or zone2, 1
 		p2notinzone0:
@@ -108,7 +108,7 @@ clip:
 		p2notinzone2:
 		
 		#t3
-		mov eax, [triangle+5] #y3
+		mov eax, [triangle+6] #y3
 		jge eax, 0, p3notinzone0
 			or zone3, 1
 		p3notinzone0:
@@ -119,7 +119,7 @@ clip:
 	
 	###Check zone 1,3
 		#t1
-		mov eax, [triangle] #x1
+		mov eax, [triangle+1] #x1
 		jle eax, 159, p1notinzone1
 			or zone1, 0b10
 		p1notinzone1:
@@ -129,7 +129,7 @@ clip:
 		p1notinzone3:
 		
 		#t2
-		mov eax, [triangle+2] #x2
+		mov eax, [triangle+3] #x2
 		jle eax, 159, p2notinzone1
 			or zone2, 0b10
 		p2notinzone1:
@@ -139,7 +139,7 @@ clip:
 		p2notinzone3:
 		
 		#t3
-		mov eax, [triangle+4] #x3
+		mov eax, [triangle+5] #x3
 		jle eax, 159, p3notinzone1
 			or zone3, 0b10
 		p3notinzone1:
@@ -262,26 +262,26 @@ clip:
 			jne zone3, 1, point1in0point3out
 				# points 1 and 3 are in 0, point 2 is the pivot point.
 				# Must sort so point 3 is the pivot. Swap points 2 and 3
-				mov eax, [triangle+2]
-				mov ebx, [triangle+4]
-				mov [triangle+2], ebx
-				mov [triangle+4], eax
 				mov eax, [triangle+3]
 				mov ebx, [triangle+5]
 				mov [triangle+3], ebx
 				mov [triangle+5], eax
+				mov eax, [triangle+4]
+				mov ebx, [triangle+6]
+				mov [triangle+4], ebx
+				mov [triangle+6], eax
 				
 				j split				
 			point1in0point3out:
 			#Only point 1 is in 0, point 1 is the pivot point. Must swap point 1 and 3.
-				mov eax, [triangle]
-				mov ebx, [triangle+4]
-				mov [triangle], ebx
-				mov [triangle+4], eax
 				mov eax, [triangle+1]
 				mov ebx, [triangle+5]
 				mov [triangle+1], ebx
 				mov [triangle+5], eax
+				mov eax, [triangle+2]
+				mov ebx, [triangle+6]
+				mov [triangle+2], ebx
+				mov [triangle+6], eax
 				
 				j split			
 			point1notin0:
@@ -289,26 +289,26 @@ clip:
 				#point 2 is in 0
 				jne zone3, 1, point2in0point3out
 					#points 2 and 3 are in 0. 1 is pivot.  Swap 1 and 3.
-					mov eax, [triangle]
-					mov ebx, [triangle+4]
-					mov [triangle], ebx
-					mov [triangle+4], eax
 					mov eax, [triangle+1]
 					mov ebx, [triangle+5]
 					mov [triangle+1], ebx
 					mov [triangle+5], eax
+					mov eax, [triangle+2]
+					mov ebx, [triangle+6]
+					mov [triangle+2], ebx
+					mov [triangle+6], eax
 					
 					j split
 			point2in0point3out:
 				#point 2 is the pivot.  Swap 2 and 3.
-				mov eax, [triangle+2]
-				mov ebx, [triangle+4]
-				mov [triangle+2], ebx
-				mov [triangle+4], eax
 				mov eax, [triangle+3]
 				mov ebx, [triangle+5]
 				mov [triangle+3], ebx
 				mov [triangle+5], eax
+				mov eax, [triangle+4]
+				mov ebx, [triangle+6]
+				mov [triangle+4], ebx
+				mov [triangle+6], eax
 				
 				j split
 			point2notin0:
@@ -320,45 +320,45 @@ clip:
 	###
 	split:
 		#points 1 and 2 are in 0, zone 3 is the pivot point.
-				mov eax, [triangle+4]
-				mov ebx, [triangle+5]
-				mov ecx, [triangle]
-				mov edx, [triangle+1]
+				mov eax, [triangle+5]
+				mov ebx, [triangle+6]
+				mov ecx, [triangle+1]
+				mov edx, [triangle+2]
 				mov eex, 0
 				call binarySubdivide
 				mov zone1, eax # Zone1 contains the x-value of p1-p3 edge on y=0.
 				
-				mov eax, [triangle+4]
-				mov ebx, [triangle+5]
-				mov ecx, [triangle+2]
-				mov edx, [triangle+3]
+				mov eax, [triangle+5]
+				mov ebx, [triangle+6]
+				mov ecx, [triangle+3]
+				mov edx, [triangle+4]
 				mov eex, 0
 				call binarySubdivide #eax contains the x-value of p2-p3 edge on y=0.
 				
 				#Now form the three new triangles and push them onto the stack, recursive call to clip.
-				mov ebx, [triangle+1]
+				mov ebx, [triangle+2]
 				push ebx
-				mov ebx, [triangle]
+				mov ebx, [triangle+1]
 				push ebx
 				push 0
 				push zone1
 				push 0
 				push eax
 				
+				mov ebx, [triangle+2]
+				push ebx
 				mov ebx, [triangle+1]
 				push ebx
-				mov ebx, [triangle]
+				mov ebx, [triangle+4]
 				push ebx
 				mov ebx, [triangle+3]
-				push ebx
-				mov ebx, [triangle+2]
 				push ebx
 				push 0
 				push eax
 				
-				mov ebx, [triangle+5]
+				mov ebx, [triangle+6]
 				push ebx
-				mov ebx, [triangle+4]
+				mov ebx, [triangle+5]
 				push ebx
 				push 0
 				push zone1
@@ -388,25 +388,116 @@ clip:
 ###
 ###
 
+
+### Z CLIPPING
+###
+### Expects a 3-d triangle to be in the triangle array.
+###
+###
+
+###
+###
+###
+###
+###
+
 ### PERSPECTIVE TRANSFORM
 ###
-### Expects a pointer to a triangle in eax.  Triangle is expected to be [eax] = x1, [eax+1] = y1, [eax+2] = z1, [eax+3] = x2, [eax+4] = y2, [eax+5] = z2, [eax+6] = x3, [eax+7] = y3, [eax+8] = z3
+### Expects a pointer to a triangle in eax.  Triangle is expected to be [eax] = color, [eax+1] = x1, [eax+2] = y1, [eax+3] = z1, [eax+4] = x2, [eax+5] = y2, [eax+66] = z2, [eax+7] = x3, [eax+8] = y3, [eax+9] = z3
 ###
 ###
 perspectivetransform:
 
-	call copypoint
-	add eax, 3
-	push eax
+	###Point 1
+		incr eax
+		call copypoint
+		add eax, 3
+		push eax
+		
+		#Superposition.  First, do x1 and z1, then do y1 and z1.
+		mov eax, [point]
+		mov ebx, [point+2]
+		mov ecx, 0
+		mov edx, PERSPECTIVE
+		mov eex, 0
+		
+		call binarySubdivide
+		
+		mov [triangle+1], eax
+		
+		#Superposition.  First, do x1 and z1, then do y1 and z1.
+		mov eax, [point+1]
+		mov ebx, [point+2]
+		mov ecx, 0
+		mov edx, PERSPECTIVE
+		mov eex, 0
+		
+		call binarySubdivide
+		
+		mov [triangle+2], eax
 	
-	#Superposition.  First, do x1 and z1, then do y1 and z1.
-	mov eax, [point]
-	mov ebx, [point+2]
-	mov ecx, 0
-	mov edx, PERSPECTIVE
-	mov eex, 0
+	###Point 2
 	
-	call binarySubdivide
+		pop eax
+		call copypoint
+		add eax, 3
+		push eax
+		
+		#Superposition.  First, do x1 and z1, then do y1 and z1.
+		mov eax, [point]
+		mov ebx, [point+2]
+		mov ecx, 0
+		mov edx, PERSPECTIVE
+		mov eex, 0
+		
+		call binarySubdivide
+		
+		mov [triangle+3], eax
+		
+		#Superposition.  First, do x1 and z1, then do y1 and z1.
+		mov eax, [point+1]
+		mov ebx, [point+2]
+		mov ecx, 0
+		mov edx, PERSPECTIVE
+		mov eex, 0
+		
+		call binarySubdivide
+		
+		mov [triangle+4], eax
+		
+	###Point 3
+	
+		pop eax
+		call copypoint
+		add eax, 3
+		push eax
+		
+		#Superposition.  First, do x1 and z1, then do y1 and z1.
+		mov eax, [point]
+		mov ebx, [point+2]
+		mov ecx, 0
+		mov edx, PERSPECTIVE
+		mov eex, 0
+		
+		call binarySubdivide
+		
+		mov [triangle+5], eax
+		
+		#Superposition.  First, do x1 and z1, then do y1 and z1.
+		mov eax, [point+1]
+		mov ebx, [point+2]
+		mov ecx, 0
+		mov edx, PERSPECTIVE
+		mov eex, 0
+		
+		call binarySubdivide
+		
+		mov [triangle+6], eax
+	
+	mov eax, triangle
+	
+	call clip
+	
 	###Need to decide on a way to use the outgoing information.  Probably just pump it straight through to clip/rasterize.
 	###Need to know incoming data format.
 	
@@ -475,6 +566,9 @@ copyTriangle:
 	incr eax
 	mov ebx, [eax]
 	mov [triangle+5], ebx
+	incr eax
+	mov ebx, [eax]
+	mov [triangle+6], ebx
 	
 	pop eax
 	pop ebx	
