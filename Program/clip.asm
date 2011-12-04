@@ -81,7 +81,7 @@ clip:
 	#push zone2
 	#push zone3
 	#add SP, 10
-	mov temp2, eax
+	mov temp2, [eax]
 	
 	call copyTriangle
 	
@@ -190,6 +190,10 @@ clip:
 	
 	jne ebx, 1, checkzone1
 		### At least one point is in zone 0. Could be two points.
+	
+		mov egx, 0	
+		mov [zone], egx
+		
 		### No longer need to save this zone information, so we can modify zone1, zone2, zone3
 		and zone1, 1 #Make zone 0 the only bit left.
 		and zone2, 1
@@ -204,6 +208,10 @@ clip:
 	
 	jne ebx, 0b10, checkzone2
 		### At least one point is in zone 1. Could be two points.
+		
+		mov egx, 1
+		mov [zone], egx
+		
 		### No longer need to save this zone information, so we can modify zone1, zone2, zone3
 		rsh zone1, 1
 		rsh zone2, 1
@@ -223,6 +231,10 @@ clip:
 	
 	jne ebx, 0b100, checkzone3
 		### At least one point is in zone 2. Could be two points.
+		
+		mov egx, 2
+		mov [zone], egx
+		
 		### No longer need to save this zone information, so we can modify zone1, zone2, zone3
 		rsh zone1, 2
 		rsh zone2, 2
@@ -238,6 +250,10 @@ clip:
 	
 	checkzone3:
 		### At least one point is in zone 3. Could be two points.
+		
+		mov egx, 3
+		mov [zone], egx
+		
 		### No longer need to save this zone information, so we can modify zone1, zone2, zone3
 		rsh zone1, 3
 		rsh zone2, 3
@@ -341,14 +357,54 @@ clip:
 				#mov eex, 0
 				call binarySubdivide #eax contains the x-value of p2-p3 edge on y=0.
 				
+				###
+				### Must check which side of boundary the pivot is on, and then create the new triangles so ones outside the boundary don't include the boundary value.
+				###
+				
+				mov ebx, [zone]
+				#zone0
+				jne ebx, 0, tryzone1
+					mov efx, -1
+					#If pivot.y < 0, pivotoutsideboundaryx
+					mov ecx, [triangle+6]
+					jl ecx, 0, pivotoutsideboundaryx
+					j pivotinsideboundaryx
+					
+				tryzone1:
+				jne ebx, 1, tryzone2
+					mov efx, 160
+					mov ecx, [triangle+5]
+					jg ecx, 159, pivotoutsideboundaryy
+					j pivotinsideboundaryy
+					
+				tryzone2:
+				jne ebx, 2, tryzone3
+					mov efx, 120
+					mov ecx, [triangle+6]
+					jg ecx, 119, pivotoutsideboundaryx
+					j pivotinsideboundaryx
+					
+				tryzone3:
+				#Must be in this zone if it wasn't in the others.
+					mov efx, -1
+					mov ecx, [triangle+5]
+					jl ecx, 0, pivotoutsideboundaryy
+					j pivotinsideboundaryy
+					
+				### Pivot outside boundary
+				###
+				###
+				
+				pivotoutsideboundaryx:
+				
 				#Now form the three new triangles and push them onto the stack, recursive call to clip.
 				mov ebx, [triangle+2]
 				push ebx
 				mov ebx, [triangle+1]
 				push ebx
-				push 0
+				push eex
 				push zone1
-				push 0
+				push eex
 				push eax
 				push temp2
 				
@@ -360,7 +416,7 @@ clip:
 				push ebx
 				mov ebx, [triangle+3]
 				push ebx
-				push 0
+				push eex
 				push eax
 				push temp2
 				
@@ -368,27 +424,152 @@ clip:
 				push ebx
 				mov ebx, [triangle+5]
 				push ebx
-				push 0
+				push efx
 				push zone1
-				push 0
+				push efx
 				push eax
 				push temp2
 				
+				j donepushingtriangles
+				
+				### Pivot inside boundary
+				###
+				###
+				
+				pivotinsideboundaryx:
+				
+				#Now form the three new triangles and push them onto the stack, recursive call to clip.
+				mov ebx, [triangle+2]
+				push ebx
+				mov ebx, [triangle+1]
+				push ebx
+				push efx
+				push zone1
+				push efx
+				push eax
+				push temp2
+				
+				mov ebx, [triangle+2]
+				push ebx
+				mov ebx, [triangle+1]
+				push ebx
+				mov ebx, [triangle+4]
+				push ebx
+				mov ebx, [triangle+3]
+				push ebx
+				push efx
+				push eax
+				push temp2
+				
+				mov ebx, [triangle+6]
+				push ebx
+				mov ebx, [triangle+5]
+				push ebx
+				push eex
+				push zone1
+				push eex
+				push eax
+				push temp2
+				
+				j donepushingtriangles
+					
+				### Pivot outside boundary
+				###
+				###
+				
+				pivotoutsideboundaryy:
+				
+				#Now form the three new triangles and push them onto the stack, recursive call to clip.
+				mov ebx, [triangle+2]
+				push ebx
+				mov ebx, [triangle+1]
+				push ebx
+				push zone1
+				push eex
+				push eax
+				push eex
+				push temp2
+				
+				mov ebx, [triangle+2]
+				push ebx
+				mov ebx, [triangle+1]
+				push ebx
+				mov ebx, [triangle+4]
+				push ebx
+				mov ebx, [triangle+3]
+				push ebx
+				push eax
+				push eex
+				push temp2
+				
+				mov ebx, [triangle+6]
+				push ebx
+				mov ebx, [triangle+5]
+				push ebx
+				push zone1
+				push efx
+				push eax
+				push efx
+				push temp2
+				
+				j donepushingtriangles
+				
+				### Pivot inside boundary
+				###
+				###
+				
+				pivotinsideboundaryy:
+				
+				#Now form the three new triangles and push them onto the stack, recursive call to clip.
+				mov ebx, [triangle+2]
+				push ebx
+				mov ebx, [triangle+1]
+				push ebx
+				push zone1
+				push efx
+				push eax
+				push efx
+				push temp2
+				
+				mov ebx, [triangle+2]
+				push ebx
+				mov ebx, [triangle+1]
+				push ebx
+				mov ebx, [triangle+4]
+				push ebx
+				mov ebx, [triangle+3]
+				push ebx
+				push eax
+				push efx
+				push temp2
+				
+				mov ebx, [triangle+6]
+				push ebx
+				mov ebx, [triangle+5]
+				push ebx
+				push zone1
+				push eex
+				push eax
+				push eex
+				push temp2
+				
+				donepushingtriangles:
+				
 				mov eax, SP
-				decr eax
+				incr eax
 				call clip
 				
-				sub SP, 6
+				sub SP, 7
 				mov eax, SP
-				decr eax
+				incr eax
 				call clip
 				
-				sub SP, 6
+				sub SP, 7
 				mov eax, SP
-				decr eax
+				incr eax
 				call clip
 				
-				sub SP, 6
+				sub SP, 7
 				
 				ret			
 ###
@@ -775,6 +956,21 @@ binarySubdivide:
 				ret
 			binarySubdividenotdone:
 			
+			and %1, %1
+			and %1, %1
+			and %1, %1
+			and %1, %1
+			and %1, %1
+			and %1, %1
+			and %1, %1
+			and %1, %1
+			and %1, %1
+			and %1, %1
+			and %1, %1
+			and %1, %1
+			and %1, %1
+			and %1, %1
+			
 			mov efx, ebx #efx = y1
 			sub efx, edx #efx = y1 - y2
 			arsh efx, 1 #efx = (y1-y2)/2
@@ -876,6 +1072,9 @@ rasterize:
 ret
 
 .data
+
+zone:
+0
 
 point:
 0
