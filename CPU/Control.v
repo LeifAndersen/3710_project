@@ -419,9 +419,9 @@ module Control(
 				BuffCtrl[18] <= 1;
 				BuffCtrl[15] <= 1;
 				BuffCtrl[11] <= 1;
-				BuffCtrl[8]  <= 1;
+				BuffCtrl[8]  <= 0;
 				BuffCtrl[20] <= 0;
-				BuffCtrl[22] <= 0;
+				BuffCtrl[22] <= 1;
 				BuffCtrl[16] <= 0;
 				BuffCtrl[14] <= 0;
 				BuffCtrl[12] <= 0;
@@ -487,7 +487,7 @@ module Control(
 
 			else if(instruction[17:14] == RET) begin
 				//RET:
-				BuffCtrl[22] <= 1;
+				BuffCtrl[22] <= 0;
 				BuffCtrl[20] <= 1;
 				BuffCtrl[18] <= 0;
 				BuffCtrl[14] <= 1;
@@ -497,7 +497,7 @@ module Control(
 				BuffCtrl[15] <= 0;
 				BuffCtrl[10] <= 0;
 				BuffCtrl[11] <= 0;
-				BuffCtrl[8]  <= 0;
+				BuffCtrl[8]  <= 1;
 				BuffCtrl[9]  <= 0;
 				WriteEn1     <= 0;
 				MemWrite     <= 0;
@@ -808,11 +808,11 @@ module Control(
 					BuffCtrl[1]	 	<= 1;
 					BuffCtrl[19] 	<= 0;
 					BuffCtrl[18] 	<= 0;
-					BuffCtrl[8]	    <= 0;
+					BuffCtrl[8]	    <= 1;
 					BuffCtrl[0]	 	<= 0;
 					BuffCtrl[12] 	<= 1;
 					BuffCtrl[20] 	<= 1;
-					BuffCtrl[22]    <= 1;
+					BuffCtrl[22]    <= 0;
 					MemRead         <= 1;
 				end
 			end
@@ -829,11 +829,11 @@ module Control(
 				BuffCtrl[1]	 <= 1;
 				BuffCtrl[20] <= 0;
 				BuffCtrl[18] <= 1;
-				BuffCtrl[8]	 <= 1;
+				BuffCtrl[8]	 <= 0;
 				BuffCtrl[0]	 <= 0;
 				BuffCtrl[12] <= 0;
 				BuffCtrl[19] <= 1;
-				BuffCtrl[22] <= 0;
+				BuffCtrl[22] <= 1;
 				MemRead      <= 0;
 				immediate   <= 16'd0;
 			end
@@ -850,11 +850,11 @@ module Control(
 				BuffCtrl[0]	 <= 1;
 				BuffCtrl[18] <= 1;
 				BuffCtrl[20] <= 0;
-				BuffCtrl[8]	 <= 1;
+				BuffCtrl[8]	 <= 0;
 				BuffCtrl[1]	 <= 0;
 				BuffCtrl[12] <= 0;
 				BuffCtrl[19] <= 1;
-				BuffCtrl[22] <= 0;
+				BuffCtrl[22] <= 1;
 				MemRead      <= 0;
 				immediate    <= {2'd0,instruction[13:0]};
 			end

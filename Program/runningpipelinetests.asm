@@ -31,7 +31,7 @@
 `define BULLET_LIFE 100
 `define FIND_THETA_ACCURACY 5
 `define DEGREE_90 0      # 90 Degrees in our encoding
-`define STACK_TOP 0x2bff # stack starts at 11264 (this is the top of memory, be careful)
+`define STACK_TOP 11264 # stack starts at 11264 (this is the top of memory, be careful)
 
 # Bootup and initialization Code
 init:
@@ -47,7 +47,6 @@ main:
 	mov %3, 3
 	sub %SP, 3
 	mov %1, %SP
-	incr %1
 	mov %0, [foo_model+1]
 	mov [%1], %0
 	incr %1
