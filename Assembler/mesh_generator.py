@@ -8,27 +8,28 @@ def save(filepath):
     mesh = bpy.data.meshes[0]
 
     file.write(str(2*len(mesh.faces)) + '\n')
-    
+
     for i in range(len(mesh.faces)):
         face = mesh.faces[i]
+        file.write('# Face ' + str(i) + '\n')
         file.write('0 #color\n')
         firstVert = face.vertices[0]
         thirdVert = face.vertices[2]
         for j in range(len(face.vertices)):
-            if j == 4:
-                file.write('color\n')
+            if j == 3:
+                file.write('0 #color\n')
                 vert = firstVert
                 file.write(str(int(mesh.vertices[vert].co[0])) + ' #- \n')
+                file.write(str(int(-mesh.vertices[vert].co[2])) + '\n')
                 file.write(str(int(mesh.vertices[vert].co[1])) + '\n')
-                file.write(str(int(mesh.vertices[vert].co[2])) + '\n')
                 vert = thirdVert
                 file.write(str(int(mesh.vertices[vert].co[0])) + ' #- \n')
+                file.write(str(int(-mesh.vertices[vert].co[2])) + '\n')
                 file.write(str(int(mesh.vertices[vert].co[1])) + '\n')
-                file.write(str(int(mesh.vertices[vert].co[2])) + '\n')
             vert = face.vertices[j]
             file.write(str(int(mesh.vertices[vert].co[0])) + ' #- \n')
+            file.write(str(int(-mesh.vertices[vert].co[2])) + '\n')
             file.write(str(int(mesh.vertices[vert].co[1])) + '\n')
-            file.write(str(int(mesh.vertices[vert].co[2])) + '\n')
             
 	# Save and quit
     file.flush()
