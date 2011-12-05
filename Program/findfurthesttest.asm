@@ -82,17 +82,14 @@ furthest_point:
 	incr %4					# get to p1
 	mov %0, %4				# set up args
 	call distance_squared	# get distance squared
-	mov [LCD], %0
 	mov %1, %0				# save distance to p1
 	add %4, 3				# get to p2
 	mov %0, %4				# set up args
 	call distance_squared	# get distance squared
-	mov [LCD], %0
 	mov %2, %0				# save distance to p2
 	add %4, 3				# get to p3
 	mov %0, %4				# set up args
 	call distance_squared	# get distance squared
-	mov [LCD], %0
 	mov %3, %0				# save distance to p3
 
 	mov %0, %1				# assume p1 is nearest
