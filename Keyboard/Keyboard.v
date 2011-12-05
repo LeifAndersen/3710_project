@@ -59,9 +59,10 @@ module Keyboard(
 			ps2negedge <= ~ps2negedge;
 			if (ps2negedge == 1) //Means its going to change from 1 to zero right now, so negedge.
 			begin
-				shiftReg[10:1] <= shiftReg[9:0];
-				shiftReg[0] <= data;
-				if(shiftReg[10] == 1'd0) begin
+				if(shiftReg[10] != 1'd0) begin
+					shiftReg[10:1] <= shiftReg[9:0];
+					shiftReg[0] <= data;
+				end else begin
 					shiftReg[10:0] <= 11'b11111111111;
 					if(rel == 1'b0) begin
 						case(shiftReg)
