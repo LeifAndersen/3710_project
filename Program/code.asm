@@ -24,8 +24,8 @@
 `define VGA 16383
 `define BULLET_RADIUS 1
 `define TANK_RADIUS 10
-`define AI_SPEED 10
-`define AI_ROTATION_SPEED 10
+`define SPEED 10
+`define ROTATION_SPEED 10
 `define PLAYER_START_LIVES 5
 `define BULLET_SPEED 20
 `define BULLET_LIFE 100
@@ -85,7 +85,8 @@ mainLoop:
 	mov %3, [RIGHT_KEY]
 	mov %4, [PLAYER_THETA]
 	sub %2, %3
-	add %4, %2              # %4 has the theta change
+	mul %2, ROTATION_SPEED
+	add %4, %LOW           # %4 has the theta change
 	mov [PLAYER_THETA], %4 # Save the theta
 
 	# Up/Down, update x/y
@@ -97,15 +98,17 @@ mainLoop:
 	mov %0, %4             #
 	call cos               # %0 has sin(theta)
 	fmul %0, %5            #
-	add %2, %0             # Player X now updated by the move amount
+	mul %0, SPEED
+	add %2, %LOW           # Player X now updated by the move amount
 	                       #
 	mov %0, %4             #
 	call sin               # %0 has cos(theta)
 	fmul %0, %5            # %LOW/HIGH has (UP-DOWN)*cos(theta)
-	add %3, %0
+	mul %0, SPEED
+	add %3, %LOW
 
 	# TODO DEBUGGING ---------------
-	mov [LCD], %2
+	mov [LCD], %3
 	mov [PLAYER_X], %2
 	mov [PLAYER_Y], %3
 
@@ -137,11 +140,11 @@ mainLoop:
 	mov %6, [AI_THETA]
 	mov %0, %6
 	call cos
-	fmul %0, AI_SPEED    # %LOW now has speed*sin(theta), to update Y
+	fmul %0, SPEED    # %LOW now has speed*sin(theta), to update Y
 	add %4, %0           # %4 now has new Y (if possible)
 	mov %0, %6
 	call sin
-	fmul %0, AI_SPEED
+	fmul %0, SPEED
 	add %5, %0           # %5 now has possible AI_Y
 	j mainAIDoneMoving
 
@@ -149,7 +152,7 @@ mainAITurningRight:
 	mov [AI_TARGET_THETA], %0
 	mov [AI_THETA], %1
 	je %0, %1, mainAIDoneTurning
-	sub %1, AI_ROTATION_SPEED
+	sub %1, ROTATION_SPEED
 	mov [AI_THETA], %1
 	j mainAIDoneMoving
 
@@ -157,7 +160,7 @@ mainAITurningLeft:
 	mov [AI_TARGET_THETA], %0
 	mov [AI_THETA], %1
 	je %0, %1, mainAIDoneTurning
-	add %1, AI_ROTATION_SPEED
+	add %1, ROTATION_SPEED
 	mov [AI_THETA], %1
 	j mainAIDoneMoving
 
