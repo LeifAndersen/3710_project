@@ -39,12 +39,37 @@ main:
 
 	mov %0, foo_model
 	add %0, 1			# skip the count
-	call furthest_point
+	mov %1, %0
+	add %1, 3			# second arg
+	call find_furthest
 
 	mov [LCD], %0
 
 	forever:
 	j forever
+
+# given two pointers to triangles in %0, and %1, return 1 in %0 if first was furthest and 0 in %0 if second was furthest
+find_furthest:
+	push %1
+	push %2
+	push %3
+
+	call furthest_point		# find nearest point in triangle
+	mov %2, %0				# save the distance to the nearest point of first triangle
+
+	mov %0, %1				# move second triangle to arg
+	call furthest_point
+	mov %3, %0				# save the distance to the nearest point of second triangle
+
+	mov %0, 0
+	jge %2, %3, firstwasfurthest	# check whether %0 was further away than %1
+	add %0, 1				# if not, return 1
+	firstwasfurthest:		# if so, return 0
+
+	pop %3
+	pop %2
+	pop %1
+	ret
 
 # given the pointer to a triangle in %0, find the farthest point and return the distance to it squared
 furthest_point:
