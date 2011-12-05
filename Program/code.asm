@@ -94,16 +94,24 @@ mainLoop:
 	sub %5, %6             # Up-Down now in %6
 	mov %0, %4             #
 	call sin               # %1 has sin(theta)
-	mov %HIGH, %0          # %HIGH has sin(theta)
-	mul %HIGH, %5          #
-	add %2, %LOW           # Player X now updated by the move amount
+	fmul %0, %5            #
+	add %2, %0             # Player X now updated by the move amount
 	                       #
 	mov %0, %4             #
 	call cos               # %1 has cos(theta)
-	mov %HIGH, %0          #
-	mul %HIGH, %5          # %LOW/HIGH has (UP-DOWN)*cos(theta)
-	add %4, %LOW
+	fmul %0, %5            # %LOW/HIGH has (UP-DOWN)*cos(theta)
+	add %4, %0
 	mov [PLAYER_THETA], %4 # Save the theta
+
+	# TODO DEBUGGING ---------------
+	mov [LCD], %2
+	mov [PLAYER_X], %2
+	mov [PLAYER_Y], %3
+	mov %0, 1
+	mov [UP_KEY], %0
+
+	# TODO DEBUGGING ---------------
+
 
 	# Move the AI
 
