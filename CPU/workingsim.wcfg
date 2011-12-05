@@ -10,7 +10,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="55" />
+   <WVObjectSize size="50" />
    <wvobject fp_name="/testdatapath/uut/CLK_25MHZ" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">CLK_25MHZ</obj_property>
       <obj_property name="ObjectShortName">CLK_25MHZ</obj_property>
@@ -244,28 +244,9 @@
       <obj_property name="ObjectShortName">doutb[17:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
-   <wvobject fp_name="/testdatapath/uut/KeyboardControl/up" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">up[15:0]</obj_property>
-      <obj_property name="ObjectShortName">up[15:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/testdatapath/uut/KeyboardControl/down" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">down[15:0]</obj_property>
-      <obj_property name="ObjectShortName">down[15:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/testdatapath/uut/KeyboardControl/left" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">left[15:0]</obj_property>
-      <obj_property name="ObjectShortName">left[15:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/testdatapath/uut/KeyboardControl/right" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">right[15:0]</obj_property>
-      <obj_property name="ObjectShortName">right[15:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/testdatapath/uut/KeyboardControl/a" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">a[15:0]</obj_property>
-      <obj_property name="ObjectShortName">a[15:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/testdatapath/uut/KeyboardControl/b" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">b[15:0]</obj_property>
-      <obj_property name="ObjectShortName">b[15:0]</obj_property>
+   <wvobject fp_name="/testdatapath/uut/lcdreg_to_lcd" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">lcdreg_to_lcd[15:0]</obj_property>
+      <obj_property name="ObjectShortName">lcdreg_to_lcd[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
 </wave_config>
