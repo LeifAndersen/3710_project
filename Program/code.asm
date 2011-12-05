@@ -132,6 +132,7 @@ mainLoop:
 	je %0, 0, noInput
 		mov [UP_KEY], %0
 	noInput:
+	call drawDebuggingGraphics
 	j mainLoop
 	# TODO DEBUGGING ---------------
 
@@ -323,67 +324,7 @@ mainEndAIBullet:
 
 	j mainEndDebuggingGraphics
 	# DEBUGGING GRAPHICS
-	mov %0, [PLAYER_X]  # Your tank
-	mov %1, [PLAYER_Y]
-	add %0, FIELD_OFFSET
-	add %1, FIELD_OFFSET
-	arsh %0, FIT_SCREEN_SHIFT_AMMOUNT
-	arsh %1, FIT_SCREEN_SHIFT_AMMOUNT
-	mov %0, %2
-	sub %0, DEBUG_TANK_SIZE
-	add %2, DEBUG_TANK_SIZE
-	mov %1, %3
-	sub %1, DEBUG_TANK_SIZE
-	add %3, DEBUG_TANK_SIZE
-	call drawSquare
-
-	mov %0, [AI_X]  # Enemy Tank
-	mov %1, [AI_Y]
-	add %0, FIELD_OFFSET
-	add %1, FIELD_OFFSET
-	arsh %0, FIT_SCREEN_SHIFT_AMMOUNT
-	arsh %1, FIT_SCREEN_SHIFT_AMMOUNT
-	mov %0, %2
-	sub %0, DEBUG_TANK_SIZE
-	add %2, DEBUG_TANK_SIZE
-	mov %1, %3
-	sub %1, DEBUG_TANK_SIZE
-	add %3, DEBUG_TANK_SIZE
-	call drawSquare
-
-	mov %0, [PLAYER_BULLET_TIME]
-	je %0, 0, mainDebugNoDrawPlayerBullet
-		mov %0, [PLAYER_BULLET_X]  # Your bullet
-		mov %1, [PLAYER_BULLET_Y]
-		add %0, FIELD_OFFSET
-		add %1, FIELD_OFFSET
-		arsh %0, FIT_SCREEN_SHIFT_AMMOUNT
-		arsh %1, FIT_SCREEN_SHIFT_AMMOUNT
-		mov %0, %2
-		sub %0, DEBUG_BULLET_SIZE
-		add %2, DEBUG_BULLET_SIZE
-		mov %1, %3
-		sub %1, DEBUG_BULLET_SIZE
-		add %3, DEBUG_BULLET_SIZE
-		call drawSquare
-	mainDebugNoDrawPlayerBullet:
-
-	mov %0, [AI_BULLET_TIME]
-	je %0, 0, mainDebugNoDrawAIBullet
-		mov %0, [AI_BULLET_X]  # Your bullet
-		mov %1, [AI_BULLET_Y]
-		add %0, FIELD_OFFSET
-		add %1, FIELD_OFFSET
-		arsh %0, FIT_SCREEN_SHIFT_AMMOUNT
-		arsh %1, FIT_SCREEN_SHIFT_AMMOUNT
-		mov %0, %2
-		sub %0, DEBUG_BULLET_SIZE
-		add %2, DEBUG_BULLET_SIZE
-		mov %1, %3
-		sub %1, DEBUG_BULLET_SIZE
-		add %3, DEBUG_BULLET_SIZE
-		call drawSquare
-	mainDebugNoDrawAIBullet:
+	call drawDebuggingGraphics
 	# DEBUGGING GRAPHICS
 mainEndDebuggingGraphics:
 
@@ -1169,6 +1110,82 @@ memcpy:
 	incr %0					# dst++
 	decr %2					# count--
 	jne %2, 0, memcpyloop
+
+	pop %3
+	pop %2
+	pop %1
+	pop %0
+	ret
+
+# Simply draws, does not kill any registers
+drawDebuggingGraphics:
+
+	push %0
+	push %1
+	push %2
+	push %3
+
+	mov %0, [PLAYER_X]  # Your tank
+	mov %1, [PLAYER_Y]
+	add %0, FIELD_OFFSET
+	add %1, FIELD_OFFSET
+	arsh %0, FIT_SCREEN_SHIFT_AMMOUNT
+	arsh %1, FIT_SCREEN_SHIFT_AMMOUNT
+	mov %0, %2
+	sub %0, DEBUG_TANK_SIZE
+	add %2, DEBUG_TANK_SIZE
+	mov %1, %3
+	sub %1, DEBUG_TANK_SIZE
+	add %3, DEBUG_TANK_SIZE
+	call drawSquare
+
+	mov %0, [AI_X]  # Enemy Tank
+	mov %1, [AI_Y]
+	add %0, FIELD_OFFSET
+	add %1, FIELD_OFFSET
+	arsh %0, FIT_SCREEN_SHIFT_AMMOUNT
+	arsh %1, FIT_SCREEN_SHIFT_AMMOUNT
+	mov %0, %2
+	sub %0, DEBUG_TANK_SIZE
+	add %2, DEBUG_TANK_SIZE
+	mov %1, %3
+	sub %1, DEBUG_TANK_SIZE
+	add %3, DEBUG_TANK_SIZE
+	call drawSquare
+
+	mov %0, [PLAYER_BULLET_TIME]
+	je %0, 0, mainDebugNoDrawPlayerBullet
+		mov %0, [PLAYER_BULLET_X]  # Your bullet
+		mov %1, [PLAYER_BULLET_Y]
+		add %0, FIELD_OFFSET
+		add %1, FIELD_OFFSET
+		arsh %0, FIT_SCREEN_SHIFT_AMMOUNT
+		arsh %1, FIT_SCREEN_SHIFT_AMMOUNT
+		mov %0, %2
+		sub %0, DEBUG_BULLET_SIZE
+		add %2, DEBUG_BULLET_SIZE
+		mov %1, %3
+		sub %1, DEBUG_BULLET_SIZE
+		add %3, DEBUG_BULLET_SIZE
+		call drawSquare
+	mainDebugNoDrawPlayerBullet:
+
+	mov %0, [AI_BULLET_TIME]
+	je %0, 0, mainDebugNoDrawAIBullet
+		mov %0, [AI_BULLET_X]  # Your bullet
+		mov %1, [AI_BULLET_Y]
+		add %0, FIELD_OFFSET
+		add %1, FIELD_OFFSET
+		arsh %0, FIT_SCREEN_SHIFT_AMMOUNT
+		arsh %1, FIT_SCREEN_SHIFT_AMMOUNT
+		mov %0, %2
+		sub %0, DEBUG_BULLET_SIZE
+		add %2, DEBUG_BULLET_SIZE
+		mov %1, %3
+		sub %1, DEBUG_BULLET_SIZE
+		add %3, DEBUG_BULLET_SIZE
+		call drawSquare
+	mainDebugNoDrawAIBullet:
 
 	pop %3
 	pop %2
