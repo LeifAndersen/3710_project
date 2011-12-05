@@ -84,26 +84,26 @@ sin:
 	second:
 	mov %9, sine_lut
 	mov %8, %10
-	rsh %8, 7
+	rsh %8, 7		# shift down to angle
 	and %8, 0x7F	# mask angle
 	mov %7, 0x7F	# load max
 	sub %7, %8		# max - angle
-	add %9, %7
+	add %9, %7		# get offset into lookup table
 	mov %0, [%9]	# addr
 	mov %9, sine_lut
-	sub %7, 1
-	and %7, 0x7F
-	add %9, %7
+	sub %7, 1		# subtract 1 from (max - angle)
+	and %7, 0x7F	# mask to roll around 127
+	add %9, %7		# get offset into lookup table
 	mov %7, [%9]	# addr-1
 	# multiply
 	and %10, 0x7F	# fraction
-	lsh %10, 7
-	fmul %7, %10
-	mov %9, 0x40
-	lsh %9, 8
+	lsh %10, 7		# put fraction bits right below the radix
+	fmul %7, %10	# fmul fraction and (addr-1)
+	mov %9, 0x40	# make 1.0
+	lsh %9, 8		# still making 1.0
 	sub %9, %10		# 1 - fraction
-	fmul %0, %9
-	add %0, %7
+	fmul %0, %9		# fmul 1.0 - frac and addr
+	add %0, %7		# add the two fmul results together
 	j sinend
 
 	third:
@@ -111,25 +111,25 @@ sin:
 	mov %8, %10
 	rsh %8, 7
 	and %8, 0x7F	# mask angle
-	sub %8, 0x7F	# angle - max
-	and %8, 0x7F	# mask angle
-	add %9, %8
+	add %9, %8		# get offset
 	mov %0, [%9]	# addr
 	mov %9, sine_lut
+	je %8, 127, skipadd3rd	# edge case
 	add %8, 1
 	and %8, 0x7F
-	add %9, %8
+	skipadd3rd:
+	add %9, %8		# get offset
 	mov %7, [%9]	# addr+1
 	# multiply
 	and %10, 0x7F	# fraction
-	lsh %10, 7
-	fmul %7, %10
-	mov %9, 0x40
-	lsh %9, 8
-	sub %9, %10		# 1 - fraction
-	fmul %0, %9
-	add %0, %7
-	xor %0, 0x8000
+	lsh %10, 7		# put up next to radix
+	fmul %7, %10	# frac times addr+1
+	mov %9, 0x40	# 1.0
+	lsh %9, 8		# 1.0
+	sub %9, %10		# 1.0 - fraction
+	fmul %0, %9		# addr * (1.0 - frac)
+	add %0, %7		# add them
+	xor %0, 0x8000	# flip sign bit
 	j sinend
 
 	fourth:
@@ -166,8 +166,10 @@ sin:
 	add %9, %8
 	mov %0, [%9]	# addr
 	mov %9, sine_lut
+	je %8, 127, skipadd1st	# edge case
 	add %8, 1
 	and %8, 0x7F
+	skipadd1st:
 	add %9, %8
 	mov %7, [%9]	# addr+1
 	# multiply
@@ -179,7 +181,7 @@ sin:
 	sub %9, %10		# 1 - fraction
 	fmul %0, %9
 	add %0, %7
-	
+
 	sinend:
 
 	# return
@@ -211,7 +213,7 @@ cos:
 	pop %9
 	pop %10
 	ret
-	
+
 .data
 sine_lut:
 0b0000000000000000
