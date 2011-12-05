@@ -694,56 +694,52 @@ ret
 ### eax = x1, ebx = y1, ecx = x2, edx = y2, eex = y-value of intersection.  return = x-value of intersection. Return is put into eax.
 ### Note - x and y can be switched to flip axes
 
-binarySubdivide:
-	#Find x and y differences, divide them by 2, add to lower point, check closeness.
-	
-	###Set up difference outside loop.
+binarySubdivide:		
+	### Set up difference outside loop. efx is y difference.  egx is x difference.
 			mov efx, ebx #efx = y1
-			sub efx, edx #efx = y1 - y2
-			###Must ensure efx is positive.
-			jge efx, 0, 
-			arsh efx, 1 #efx = (y1-y2)/2
+			sub efx, edx #efx = y1 - y2	
 			
 			mov egx, eax #eax = x1
 			sub egx, ecx #egx = x1-x2
 			
-			jge egx, 0, nooffset2
-				add egx, 2
-			nooffset2:
+		###Must ensure efx is positive.
+			jge efx, 0, efxpositive
+				not efx, efx
+				add efx, 1
+			efxpositive:		
 			
-			arsh egx, 1 #egx = (x1-x2)/2
-
+		###Must ensure egx is positive.
+			jge egx, 0, egxpositive
+				not egx, egx
+				add egx, 1
+			egxpositive:
+			
+		
+	### Find lowest point to start with.
+		jge edx, ebx, ebxislowest
+			mov ebx, edx
+		ebxislowest:
+		
+		jge ecx, eax, eaxislowest
+			mov eax, ecx
+		eaxislowest:
+		
 	binarysubdivideloop:
+		#First divide guess value by two.
+		arsh egx, 1 #egx = (x1-x2)/2
+		arsh efx, 1 #efx = (y1-y2)/2
 		# If yguess == eex, done
 		# efx holds yguess
 			jne ebx, eex, binarySubdividenotdone
 				ret
 			binarySubdividenotdone:
-						
-			mov ecx, eax
-			mov edx, ebx
-			
-		# If efx < 0	
-		jge efx, 0, efxg0
+		
 		# If y1 < eex
 			jge ebx, eex, y1belowlimit
-				sub ebx, efx #ebx = y1 - (y1-y2)/2 = new y1.
-				sub eax, egx #eax = x1 - (x1-x2)/2 = new x1.
+				add ebx, efx #ebx = y1 + (y1-y2)/2 = new y1.
+				add eax, egx #eax = x1 + (x1-x2)/2 = new x1.
 			j binarysubdivideloop
 			y1belowlimit:
-		# If y1 > eex
-				add ebx, efx #ebx = y1 + (y1-y2)/2 = new y1.
-				add eax, egx #eax = x1 + (x1-x2)/2 = new x1.
-				
-		j binarysubdivideloop
-		
-      efxg0:		
-		# If y1 < eex
-			jge ebx, eex, y1belowlimit2
-				add ebx, efx #ebx = y1 + (y1-y2)/2 = new y1.
-				add eax, egx #eax = x1 + (x1-x2)/2 = new x1.
-			j binarysubdivideloop
-			y1belowlimit2:
 		# If y1 > eex
 				sub ebx, efx #ebx = y1 - (y1-y2)/2 = new y1.
 				sub eax, egx #eax = x1 - (x1-x2)/2 = new x1.
