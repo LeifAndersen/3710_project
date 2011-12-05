@@ -86,7 +86,7 @@ mov [VGA], eax
 mov eax, 0xf
 call pause
 
-call movepoint2 #This will add motion to the triangle to test various different weird triangles.
+#call movepoint2 #This will add motion to the triangle to test various different weird triangles.
 
 j infinite2
 
@@ -105,6 +105,45 @@ rasterize:
 mov FP, SP
 mov temp1, [points+2]
 mov temp2, [points+4]
+mov eax, [points+6]
+jne temp1, temp2, notthesamey
+jne temp2, eax, notthesamey
+###Points form horizontal line.  Special case.
+	lsh temp1, 3
+	mov temp2, [points]
+	or temp1, temp2
+	mov [VGA], temp1
+	
+	mov temp1, [points+1]
+	mov temp2, [points+3]
+	mov eax, [points+5]
+	
+	jl temp1, temp2, temp1smallerysame
+		mov temp1, temp2
+	temp1smallerysame:
+	
+	jl temp1, eax, temp1smallerysame2
+		mov temp1, eax
+	temp1smallerysame2:
+	
+	mov ebx, [points+1]
+	mov temp2, [points+3]
+	mov eax, [points+5]
+	
+	jg ebx, temp2, ebxbiggerysame1
+		mov ebx, temp2
+	ebxbiggerysame1:
+	
+	jg ebx, eax, ebxbiggerysame2
+		mov ebx, eax
+	ebxbiggerysame2:
+	
+	lsh temp1, 8
+	or temp1, ebx
+	mov [VGA], temp1
+	ret
+	
+notthesamey:
 
 cmp temp1, temp2
 jg temp2, temp1, dontswap
@@ -805,14 +844,14 @@ points:
 triangle:
 1
 
-84 #0 #84 #4
-115 #80 #115 #1
+0 #0 #84 #4
+119 #80 #115 #1
 
-53 #1
-54 #10
+159 #53 #1
+119 #54 #10
 
-114 #7
-67 #10
+159 #114 #7
+119 #67 #10
 
 state:
 0

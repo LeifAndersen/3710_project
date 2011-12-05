@@ -66,6 +66,10 @@ main:
 	mov eax, SP
 	call clip
 
+	mov eax, 0xffff
+	mov [VGA], eax
+	mov [VGA], eax
+
 	infinite:
 	j infinite
 
@@ -191,7 +195,7 @@ clip:
 	and ebx, 1
 	
 	jne ebx, 1, checkzone1
-		### At least one point is in zone 0. Could be two points.
+		### At least one point is in zone 0. Could be two triangle.
 	
 		mov egx, 0	
 		mov [zone], egx
@@ -209,7 +213,7 @@ clip:
 	and ebx, 0b10
 	
 	jne ebx, 0b10, checkzone2
-		### At least one point is in zone 1. Could be two points.
+		### At least one point is in zone 1. Could be two triangle.
 		
 		mov egx, 1
 		mov [zone], egx
@@ -232,7 +236,7 @@ clip:
 	and ebx, 0b100
 	
 	jne ebx, 0b100, checkzone3
-		### At least one point is in zone 2. Could be two points.
+		### At least one point is in zone 2. Could be two triangle.
 		
 		mov egx, 2
 		mov [zone], egx
@@ -251,7 +255,7 @@ clip:
 		j presplitsort
 	
 	checkzone3:
-		### At least one point is in zone 3. Could be two points.
+		### At least one point is in zone 3. Could be two triangle.
 		
 		mov egx, 3
 		mov [zone], egx
@@ -276,16 +280,16 @@ clip:
 	### Determine pivot point and then go to split.
 	###
 	presplitsort:
-	#Six possibilities on which points are in zone 0.
+	#Six possibilities on which triangle are in zone 0.
 		jne zone1, 1, point1notin0
 			#point 1 is in 0
 			jne zone2, 1, point1in0point2out
-				# points 1 and 2 are in 0, point 3 is the pivot point.  Already presorted.
+				# triangle 1 and 2 are in 0, point 3 is the pivot point.  Already presorted.
 				j split
 			point1in0point2out:
 			jne zone3, 1, point1in0point3out
-				# points 1 and 3 are in 0, point 2 is the pivot point.
-				# Must sort so point 3 is the pivot. Swap points 2 and 3
+				# triangle 1 and 3 are in 0, point 2 is the pivot point.
+				# Must sort so point 3 is the pivot. Swap triangle 2 and 3
 				mov eax, [triangle+3]
 				mov ebx, [triangle+5]
 				mov [triangle+3], ebx
@@ -312,7 +316,7 @@ clip:
 			jne zone2, 1, point2notin0
 				#point 2 is in 0
 				jne zone3, 1, point2in0point3out
-					#points 2 and 3 are in 0. 1 is pivot.  Swap 1 and 3.
+					#triangle 2 and 3 are in 0. 1 is pivot.  Swap 1 and 3.
 					mov eax, [triangle+1]
 					mov ebx, [triangle+5]
 					mov [triangle+1], ebx
@@ -343,7 +347,7 @@ clip:
 	### SPLIT
 	###
 	split:
-		#points 1 and 2 are in 0, point 3 is the pivot point.
+		#triangle 1 and 2 are in 0, point 3 is the pivot point.
 			mov efx, [zone]
 			and efx, 1 #if zone is odd, that means its a side zone, flip input to binarysubdivide.
 			je efx, 1, swapinputsforbinary
@@ -579,17 +583,21 @@ clip:
 				
 				donepushingtriangles:
 				
+				incr FP ########## test code
 				mov eax, SP
 				call clip
 				
+				incr FP ########## test code
 				add SP, 7
 				mov eax, SP
 				call clip
 				
+				incr FP ########## test code
 				add SP, 7
 				mov eax, SP
 				call clip
 				
+				incr FP ########## test code
 				add SP, 7
 				
 				ret			
@@ -711,12 +719,12 @@ ret
 
 
 ### BINARY SUBDIVIDE
-### This method takes in 4 points and a coordinate, and returns the x point of intersection.
+### This method takes in 4 triangle and a coordinate, and returns the x point of intersection.
 ### eax = x1, ebx = y1, ecx = x2, edx = y2, eex = y-value of intersection.  return = x-value of intersection. Return is put into eax.
 ### Note - x and y can be switched to flip axes
 
 binarySubdivide:		
-		
+	mov FP, 0xbbbb	
 	### Find lowest point (most negative y) to start with.
 		jge edx, ebx, ebxislowest
 			mov efx, ebx
@@ -810,6 +818,7 @@ binarySubdivide:
 ###
 ###
 copyTriangle:
+	mov FP, 0xafaf
 	push ebx
 	push eax
 	
@@ -839,6 +848,7 @@ copyTriangle:
 ret
 
 copypoint:
+	mov FP, 0xcbcb
 	push ebx
 	push eax
 	
@@ -857,10 +867,10 @@ ret
 
 ###
 ###
-### Rasterize
+### Rasterize 2
 ###
 ###
-rasterize:
+rasterize2:
 push zone1
 push zone2
 push zone3
@@ -887,7 +897,594 @@ ret
 
 ###
 ###
-### END Rasterize
+### END Rasterize 2
+###
+###
+
+###
+###
+### RASTERIZE
+###
+###
+###
+###
+### RASTERIZE
+###
+###
+###
+###
+### RASTERIZE
+###
+###
+###
+###
+### RASTERIZE
+###
+###
+###
+###
+### RASTERIZE
+###
+###
+
+
+rasterize:
+# Step one: Determine lowest point and percolate up the two edges connecting to it.
+# Possible cases:
+#   One lowest point (normal)
+#   Two lowest point (horizontal bottom)
+#   Three lowest triangle (horizontal line of pixels)
+
+#For lookup table, must map ydif to 1/ydif. ydif has 120 possible values.
+
+
+#Sort triangle by y value, smallest first, biggest last.
+
+mov FP, 0xfefe
+mov temp1, [triangle+2]
+mov temp2, [triangle+4]
+mov eax, [triangle+6]
+jne temp1, temp2, notthesamey
+jne temp2, eax, notthesamey
+###triangle form horizontal line.  Special case.
+	lsh temp1, 3
+	mov temp2, [triangle]
+	or temp1, temp2
+	mov [VGA], temp1
+	
+	mov temp1, [triangle+1]
+	mov temp2, [triangle+3]
+	mov eax, [triangle+5]
+	
+	jl temp1, temp2, temp1smallerysame
+		mov temp1, temp2
+	temp1smallerysame:
+	
+	jl temp1, eax, temp1smallerysame2
+		mov temp1, eax
+	temp1smallerysame2:
+	
+	mov ebx, [triangle+1]
+	mov temp2, [triangle+3]
+	mov eax, [triangle+5]
+	
+	jg ebx, temp2, ebxbiggerysame1
+		mov ebx, temp2
+	ebxbiggerysame1:
+	
+	jg ebx, eax, ebxbiggerysame2
+		mov ebx, eax
+	ebxbiggerysame2:
+	
+	lsh temp1, 8
+	or temp1, ebx
+	mov [VGA], temp1
+	ret
+	
+notthesamey:
+
+cmp temp1, temp2
+jg temp2, temp1, dontswap
+mov [triangle+2], temp2 # Swap y-coords
+mov [triangle+4], temp1
+mov temp1, [triangle+1] # Load x-coords
+mov temp2, [triangle+3]
+mov [triangle+1], temp2 # Swap x-coords
+mov [triangle+3], temp1
+dontswap: #now ebx holds the smaller y-coord of first two triangle
+
+mov temp1, [triangle+2]
+mov temp2, [triangle+6]
+cmp temp1, temp2
+jg temp2, temp1, dontswap2
+mov [triangle+2], temp2
+mov [triangle+6], temp1
+mov temp1, [triangle+1] # Load x-coords
+mov temp2, [triangle+5]
+mov [triangle+1], temp2 # Swap x-coords
+mov [triangle+5], temp1
+dontswap2: #now ebx holds the smallest y-coord
+
+#must do (p2-p1)x(p3-p1)
+#if > 0, good,
+#if < 0, swap x2, x3
+###(x2 - x1) * (y3 - y1) - (x3 - x1) * (y2 - y1)
+
+mov temp1, [triangle+1] #x1
+mov temp2, [triangle+2] #y1
+mov eax, [triangle+3] #x2
+mov ebx, [triangle+4] #y2
+mov ecx, [triangle+5] #x3
+mov edx, [triangle+6] #y3
+
+sub eax, temp1
+sub edx, temp2
+sub ecx, temp1
+sub ebx, temp2
+
+mul eax, edx
+mov eax, LOW
+
+mul ecx, ebx
+mov ebx, LOW
+
+sub eax, ebx
+
+#Cross product is done, result in eax.
+jl eax, 0, dontswap3
+mov temp1, [triangle+3] #x2
+mov temp2, [triangle+5] #x3
+mov [triangle+3], temp2
+mov [triangle+5], temp1
+mov temp1, [triangle+4] # Load x-coords
+mov temp2, [triangle+6]
+mov [triangle+4], temp2 # Swap x-coords
+mov [triangle+6], temp1
+dontswap3: #Now triangle are sorted so first is lowest y-value, second is lowest x-value of remaining two.
+
+#Now xrefleft = xrefright = x1
+#xdifleft = x2 - xref.
+#xdifright = x3-xref.
+#ydifleft = y2-y1
+#ydifright = y3-y1
+#This works until yvalleftue == y2 || yvalleftue == y3.
+#x for given yvalleftue, x = xref + (yvalleftue)*(1/ydif)*xdif.
+
+###
+###Setup for percolate loop:
+###
+
+#left side
+mov yvalleft, 0 #Initialize loop counter -- Move smallest y-value into line.
+mov yvalright, 0
+mov temp1, [triangle+1] #Move xref into temp1
+mov ebx, [triangle+3] #Move x2 into ebx
+sub ebx, temp1 #ebx = xdifleft.
+mov ecx, [triangle+2] #y1
+mov edx, [triangle+4] #y2
+sub edx, ecx #ydifleft.
+mov %10, slopes
+add edx, %10
+mov edx, [edx] #edx = 1/ydifleft
+
+#right side
+mov temp2, [triangle+1] #Move xref into temp2
+mov eax, [triangle+5] #Move x3 into eax
+sub eax, temp2 #eax = x3-x1 = xdifright.
+mov eex, [triangle+2] #y1
+mov ecx, [triangle+6] #y3
+sub ecx, eex # ecx = y3-y1 = ydifright.
+add ecx, %10
+mov ecx, [ecx] #ecx = 1/ydifrigh
+
+mov ymax, 0x00ff #This should probably be moved elsewhere.
+
+#percolate loop:
+
+LineLoop:
+#First check if ymax is already set.  If so, flat top, skip this stuff.
+jne ymax, 0xff, nochange
+#Second check if yvalleft == y2 || yvalright == y3
+mov eex, [triangle+4]
+mov %10, [triangle+2]
+add %10, yvalright
+cmp eex, %10 #cmp with y2
+jne y3cmp
+	#y2 == yvalright + y1.
+	mov temp1, [triangle+3] #temp1 = xrefleft = x2
+	mov ebx, [triangle+5] #Move x3 into ebx
+	sub ebx, temp1 #ebx = xdifleft = x3 - xref = x3 - x2.	
+	mov edx, [triangle+6] #edx = y3
+	mov eex, [triangle+4] #eex = y2
+	sub edx, eex #edx = y3 - y2 = ydifleft
+	mov %10, slopes
+	add edx, %10
+	mov edx, [edx] #edx = 1/ydifleft
+	mov ymax, [triangle+6]
+	
+	#Check for flat buns
+	mov %10, [triangle+4]
+	cmp %10, ymax
+	je flatbuns
+	
+	mov %10, [triangle+2]
+	sub ymax, %10
+	mov yvalleft, 0
+y3cmp:
+mov eex, [triangle+6]
+mov %10, [triangle+2]
+add %10, yvalleft
+cmp eex, %10 #cmp with y3
+jne nochange
+	#y3 == yvalleft + y1.
+	mov temp2, [triangle+5] #temp2 = xref = x3
+	mov eax, [triangle+3] #Move x2 into eax
+	sub eax, temp2 #eax = x2-x3 = xdifright.
+	mov eex, [triangle+6] #y3
+	mov ecx, [triangle+4] #y2
+	sub ecx, eex # ecx = y2-y3 = ydifright.
+	mov %10, slopes
+	add ecx, %10
+	mov ecx, [ecx] #ecx = 1/ydifright
+	mov ymax, [triangle+4] #probably do the check here to see if ymax == [triangle+4] already, then this triangle has flat buns.
+	mov %10, [triangle+2]
+	sub ymax, %10
+	mov yvalright, 0
+nochange:
+
+#If yvalue == y2
+#xrefleft = x2
+#xdifleft = x3-x2
+#ydifleft = y3-y2
+
+#If yvalue == y3
+#xrefright = x3
+#xdifright = x3-x2
+#ydifright = y3-y2
+
+#Increment yvalue til it hits the highest one, then done.
+
+#First vga line-write.
+#mov eex, [triangle+2]
+#cmp yvalleft, yvalright
+#jl leftSmaller
+#add eex, yvalleft
+#j doneSmaller
+
+#leftSmaller:
+#add eex, yvalright
+
+#doneSmaller:
+#lsh eex, 3
+#mov %10, [triangle]
+#or eex, %10
+#mov [VGA], eex
+
+####left
+mov eex, edx #use eex as temp register.  eex = 1/ydifleft
+mul ebx, yvalleft # LOW = xdif * yvalleft (max is 159 * 119 which is within 2^16, even when signed.)
+fmul eex, LOW # edx = (yvalleftue)*(1/ydif) * xdif
+add eex, temp1 #temp1 = x for given yvalleftue, x = xref + (yvalleftue)*(1/ydif)*xdif = left index to give to painter.
+
+####right
+mov %10, ecx #use %10 as temp register.
+mul eax, yvalright # LOW = xdif * yvalleft (max is 159 * 119 which is within 2^16, even when signed.)
+fmul %10, LOW # edx = (yvalleft)*(1/ydif) * xdif
+add %10, temp2 #temp1 = x for given yvalleftue, x = xref + (yvalleft)*(1/ydif)*xdif = right index to give to painter.
+
+
+
+#second vga line-write.
+lsh eex, 8
+or eex, %10
+#mov [VGA], eex
+
+#Push eex onto the stack, going to create an array of all the line-write values.
+push eex
+
+incr yvalleft
+incr yvalright
+#cmp yvalright, ymax
+#je endloop
+#cmp yvalleft, ymax
+#jne LineLoop
+jg yvalright, ymax, endloop
+jle yvalleft, ymax, LineLoop
+
+endloop:
+
+###
+###Currently all line-write values are on the stack in reverse order.  Must now calculate mid-triangle between to draw triangles.
+###
+
+#Store end yvalue in ymax
+mov ymax, [triangle+2]
+
+#Store yvalue counter in eax.
+mov eax, [triangle+4]
+mov ebx, [triangle+6]
+jge eax, ebx, haveyvalue
+mov eax, ebx
+haveyvalue:
+
+###First y-value is special case cus no prev value, do it before hand
+pop edx
+pop eex
+
+#want c - (c-d >> 1)
+#right shift c and d to get left triangle, and with ff to get right triangle.
+mov temp1, edx
+mov temp2, eex
+
+rsh temp1, 8
+rsh temp2, 8
+
+mov LOW, temp1
+
+#have left triangle now.
+sub temp1, temp2 # temp1 = c-d
+arsh temp1, 1 #divide by 2
+jge temp1, 0, positive1
+incr temp1
+positive1:
+
+mov temp2, LOW
+sub temp2, temp1 #temp2 = c - (c-d)/2 = midpoint left.
+
+mov %10, edx
+mov temp1, eex
+
+and %10, 0xff #%10 = right point high.
+and temp1, 0xff #%10 = right point low.
+
+mov HIGH, %10
+
+#have right triangle now.
+sub %10, temp1 # %10 = c-d
+arsh %10, 1 #divide by 2
+jge %10, 0, positive2
+incr %10
+positive2:
+
+mov temp1, HIGH
+sub temp1, %10 #temp1 = c - (c-d)/2 = midpoint right.
+
+#Compare all midtriangle/endtriangle, write the min as left, the max as right.
+jl HIGH, temp1, temp1bigger
+mov temp1, HIGH
+temp1bigger:
+
+jg LOW, temp2, temp2smaller
+mov temp2, LOW
+temp2smaller:
+lsh temp2, 8
+
+mov ebx, eax #Copy eax as temp into ebx.
+lsh ebx, 3
+mov %10, [triangle]
+or ebx, %10
+mov [VGA], ebx
+
+or temp1, temp2
+mov [VGA], temp1
+
+decr eax
+
+###
+### NEW DRAW METHOD WITH MIDtriangle
+###
+#ecx holds prev L/R value.  eax holds current y-value. edx holds current L/R value.  eex holds next L/R y-value.   
+FillLoop:
+mov ebx, eax #Copy eax as temp into ebx.
+lsh ebx, 3
+mov %10, [triangle]
+or ebx, %10
+mov [VGA], ebx
+
+mov ecx, edx
+mov edx, eex
+pop eex
+
+#want c - (c-d >> 1)
+#right shift c and d to get left triangle, and with ff to get right triangle.
+mov temp1, edx
+mov temp2, eex
+
+rsh temp1, 8
+rsh temp2, 8
+
+mov LOW, temp1
+
+#have left triangle now.
+sub temp1, temp2 # temp1 = c-d
+arsh temp1, 1 #divide by 2
+jge temp1, 0, positive3
+incr temp1
+positive3:
+
+mov temp2, LOW
+sub temp2, temp1 #temp2 = c - (c-d)/2 = high midpoint left.
+
+mov %10, edx
+mov temp1, eex
+
+and %10, 0xff #%10 = right point high.
+and temp1, 0xff #%10 = right point low.
+
+mov HIGH, %10
+
+#have right triangle now.
+sub %10, temp1 # %10 = c-d
+arsh %10, 1 #divide by 2
+jge %10, 0, positive4
+incr %10
+positive4:
+
+mov temp1, HIGH
+sub temp1, %10 #temp1 = c - (c-d)/2 = high midpoint right.
+
+#Compare all midtriangle/endtriangle, write the min as left, the max as right.
+jl HIGH, temp1, temp1bigger2
+mov temp1, HIGH
+temp1bigger2:
+
+jg LOW, temp2, temp2smaller2
+mov temp2, LOW
+temp2smaller2:
+
+#Need low midpoint left, low midpoint right.  Available regs: ebx, %10, yvalleft, yvalright, LOW, HIGH
+
+mov yvalleft, ecx
+mov yvalright, edx
+
+rsh yvalleft, 8
+rsh yvalright, 8
+
+#have left triangle now.
+sub yvalleft, yvalright # yvalleft = c-d
+arsh yvalleft, 1 #divide by 2
+jge yvalleft, 0, positive5
+incr yvalleft
+positive5:
+
+mov yvalright, LOW
+add yvalright, yvalleft #yvalright = c + (c-d)/2 = low midpoint left.  Add because LOW is the upper of the two this time, not the lower
+
+mov %10, ecx
+mov yvalleft, edx
+
+and %10, 0xff #%10 = right point high.
+and yvalleft, 0xff #%10 = right point low.
+
+#have right triangle now.
+sub %10, yvalleft # %10 = c-d
+arsh %10, 1 #divide by 2
+jge %10, 0, positive6
+incr %10
+positive6:
+
+mov yvalleft, HIGH
+add yvalleft, %10 #yvalleft = c + (c-d)/2 = low midpoint right.  Add because high is the upper of the two this time, not the lower.
+
+#Compare all midtriangle/endtriangle, write the min as left, the max as right.
+jl yvalleft, temp1, temp1bigger3
+mov temp1, yvalleft
+temp1bigger3:
+
+jg yvalright, temp2, temp2smaller3
+mov temp2, yvalright
+temp2smaller3:
+
+##
+## temp1 temp2 now contain the correct left/right indices.
+##
+
+lsh temp2, 8
+or temp1, temp2
+mov [VGA], temp1
+
+#pop ebx
+#mov [VGA], ebx
+
+decr eax
+jle eax, ymax, endFillLoop
+
+j FillLoop
+
+endFillLoop:
+
+#want c - (c-d >> 1)
+#right shift c and d to get left triangle, and with ff to get right triangle.
+mov temp1, eex
+mov temp2, edx
+
+rsh temp1, 8
+rsh temp2, 8
+
+mov LOW, temp1
+
+#have left triangle now.
+sub temp1, temp2 # temp1 = c-d
+arsh temp1, 1 #divide by 2
+jge temp1, 0, positive7
+incr temp1
+positive7:
+
+mov temp2, LOW
+sub temp2, temp1 #temp2 = c - (c-d)/2 = midpoint left.
+
+mov %10, eex
+mov temp1, edx
+
+and %10, 0xff #%10 = right point high.
+and temp1, 0xff #%10 = right point low.
+
+mov HIGH, %10
+
+#have right triangle now.
+sub %10, temp1 # %10 = c-d
+arsh %10, 1 #divide by 2
+jge %10, 0, positive8
+incr %10
+positive8:
+
+mov temp1, HIGH
+sub temp1, %10 #temp1 = c - (c-d)/2 = midpoint right.
+
+#Compare all midtriangle/endtriangle, write the min as left, the max as right.
+jl HIGH, temp1, temp1bigger4
+mov temp1, HIGH
+temp1bigger4:
+
+jg LOW, temp2, temp2smaller4
+mov temp2, LOW
+temp2smaller4:
+lsh temp2, 8
+
+mov ebx, eax #Copy eax as temp into ebx.
+lsh ebx, 3
+mov %10, [triangle]
+or ebx, %10
+mov [VGA], ebx
+
+or temp1, temp2
+mov [VGA], temp1
+
+ret
+
+flatbuns:
+mov eex, [triangle+3]
+lsh eex, 8
+mov %10, [triangle+5]
+or eex, %10
+push eex
+
+j endloop
+
+
+###
+###
+### END RASTERIZE
+###
+###
+###
+###
+### END RASTERIZE
+###
+###
+###
+###
+### END RASTERIZE
+###
+###
+###
+###
+### END RASTERIZE
+###
+###
+###
+###
+### END RASTERIZE
 ###
 ###
 
@@ -897,16 +1494,6 @@ zone:
 0
 
 point:
-0
-0
-0
-
-
-points:
-0
-0
-0
-0
 0
 0
 0
@@ -921,3 +1508,129 @@ triangle:
 0
 0
 0
+
+
+state:
+0
+
+slopes:
+0b0000000000000000
+0b0100000000000000
+0b0010000000000000
+0b0001010101010101
+0b0001000000000000
+0b0000110011001100
+0b0000101010101010
+0b0000100100100100
+0b0000100000000000
+0b0000011100011100
+0b0000011001100110
+0b0000010111010001
+0b0000010101010101
+0b0000010011101100
+0b0000010010010010
+0b0000010001000100
+0b0000010000000000
+0b0000001111000011
+0b0000001110001110
+0b0000001101011110
+0b0000001100110011
+0b0000001100001100
+0b0000001011101000
+0b0000001011001000
+0b0000001010101010
+0b0000001010001111
+0b0000001001110110
+0b0000001001011110
+0b0000001001001001
+0b0000001000110100
+0b0000001000100010
+0b0000001000010000
+0b0000001000000000
+0b0000000111110000
+0b0000000111100001
+0b0000000111010100
+0b0000000111000111
+0b0000000110111010
+0b0000000110101111
+0b0000000110100100
+0b0000000110011001
+0b0000000110001111
+0b0000000110000110
+0b0000000101111101
+0b0000000101110100
+0b0000000101101100
+0b0000000101100100
+0b0000000101011100
+0b0000000101010101
+0b0000000101001110
+0b0000000101000111
+0b0000000101000001
+0b0000000100111011
+0b0000000100110101
+0b0000000100101111
+0b0000000100101001
+0b0000000100100100
+0b0000000100011111
+0b0000000100011010
+0b0000000100010101
+0b0000000100010001
+0b0000000100001100
+0b0000000100001000
+0b0000000100000100
+0b0000000100000000
+0b0000000011111100
+0b0000000011111000
+0b0000000011110100
+0b0000000011110000
+0b0000000011101101
+0b0000000011101010
+0b0000000011100110
+0b0000000011100011
+0b0000000011100000
+0b0000000011011101
+0b0000000011011010
+0b0000000011010111
+0b0000000011010100
+0b0000000011010010
+0b0000000011001111
+0b0000000011001100
+0b0000000011001010
+0b0000000011000111
+0b0000000011000101
+0b0000000011000011
+0b0000000011000000
+0b0000000010111110
+0b0000000010111100
+0b0000000010111010
+0b0000000010111000
+0b0000000010110110
+0b0000000010110100
+0b0000000010110010
+0b0000000010110000
+0b0000000010101110
+0b0000000010101100
+0b0000000010101010
+0b0000000010101000
+0b0000000010100111
+0b0000000010100101
+0b0000000010100011
+0b0000000010100010
+0b0000000010100000
+0b0000000010011111
+0b0000000010011101
+0b0000000010011100
+0b0000000010011010
+0b0000000010011001
+0b0000000010010111
+0b0000000010010110
+0b0000000010010100
+0b0000000010010011
+0b0000000010010010
+0b0000000010010000
+0b0000000010001111
+0b0000000010001110
+0b0000000010001101
+0b0000000010001100
+0b0000000010001010
+0b0000000010001001
