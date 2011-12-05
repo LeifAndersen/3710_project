@@ -37,10 +37,10 @@ main:
 	mov %SP, STACK_TOP
 	mov %FP, %SP
 
-	mov %1, foo_model
-	add %1, 1			# skip the count
-	mov %0, %1
-	add %0, 3			# second arg
+	mov %0, foo_model
+	add %0, 1			# skip the count
+	mov %1, %0
+	add %1, 10			# second arg
 	call find_furthest
 
 	mov [LCD], %0
@@ -54,16 +54,16 @@ find_furthest:
 	push %2
 	push %3
 
-	call furthest_point		# find nearest point in triangle
-	mov %2, %0				# save the distance to the nearest point of first triangle
+	call furthest_point		# find furthest point in triangle
+	mov %2, %0				# save the distance to the furthest point of first triangle
 
 	mov %0, %1				# move second triangle to arg
 	call furthest_point
-	mov %3, %0				# save the distance to the nearest point of second triangle
+	mov %3, %0				# save the distance to the furthest point of second triangle
 
-	mov %0, 0
+	mov %0, 1
 	jge %2, %3, firstwasfurthest	# check whether %0 was further away than %1
-	add %0, 1				# if not, return 1
+	sub %0, 1				# if not, return 1
 	firstwasfurthest:		# if so, return 0
 
 	pop %3
@@ -82,14 +82,17 @@ furthest_point:
 	incr %4					# get to p1
 	mov %0, %4				# set up args
 	call distance_squared	# get distance squared
+	mov [LCD], %0
 	mov %1, %0				# save distance to p1
 	add %4, 3				# get to p2
 	mov %0, %4				# set up args
 	call distance_squared	# get distance squared
+	mov [LCD], %0
 	mov %2, %0				# save distance to p2
 	add %4, 3				# get to p3
 	mov %0, %4				# set up args
 	call distance_squared	# get distance squared
+	mov [LCD], %0
 	mov %3, %0				# save distance to p3
 
 	mov %0, %1				# assume p1 is nearest
@@ -112,14 +115,17 @@ distance_squared:
 	push %2
 
 	mov %1, [%0]
+	mov [LCD], %1
 	mul %1, %1
 	mov %2, %LOW
 	incr %0
 	mov %1, [%0]
+	mov [LCD], %1
 	mul %1, %1
 	add %2, %LOW
 	incr %0
 	mov %1, [%0]
+	mov [LCD], %1
 	mul %1, %1
 	add %2, %LOW
 	mov %0, %2
@@ -138,7 +144,7 @@ foo_model:
 1
 1
 3
-4
+5
 1
 4
 3

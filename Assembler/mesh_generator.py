@@ -19,17 +19,17 @@ def save(filepath):
             if j == 3:
                 file.write('0 #color\n')
                 vert = firstVert
-                file.write(str(int(mesh.vertices[vert].co[0])) + ' #- \n')
-                file.write(str(int(-mesh.vertices[vert].co[2])) + '\n')
-                file.write(str(int(mesh.vertices[vert].co[1])) + '\n')
+                file.write(str(round(mesh.vertices[vert].co[0])) + ' #- \n')
+                file.write(str(round(-mesh.vertices[vert].co[2])) + '\n')
+                file.write(str(round(mesh.vertices[vert].co[1])) + '\n')
                 vert = thirdVert
-                file.write(str(int(mesh.vertices[vert].co[0])) + ' #- \n')
-                file.write(str(int(-mesh.vertices[vert].co[2])) + '\n')
-                file.write(str(int(mesh.vertices[vert].co[1])) + '\n')
+                file.write(str(round(mesh.vertices[vert].co[0])) + ' #- \n')
+                file.write(str(round(-mesh.vertices[vert].co[2])) + '\n')
+                file.write(str(round(mesh.vertices[vert].co[1])) + '\n')
             vert = face.vertices[j]
-            file.write(str(int(mesh.vertices[vert].co[0])) + ' #- \n')
-            file.write(str(int(-mesh.vertices[vert].co[2])) + '\n')
-            file.write(str(int(mesh.vertices[vert].co[1])) + '\n')
+            file.write(str(round(mesh.vertices[vert].co[0])) + ' #- \n')
+            file.write(str(round(-mesh.vertices[vert].co[2])) + '\n')
+            file.write(str(round(mesh.vertices[vert].co[1])) + '\n')
             
 	# Save and quit
     file.flush()

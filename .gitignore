@@ -1,6 +1,7 @@
 .DS_Store
 CPU/Top_summary.xml
 CPU/Top_usage.xml
+CPU/Top_envsettings.html
 
 *.mem
 *.pyc

@@ -30,7 +30,7 @@
 `define BULLET_SPEED 20
 `define BULLET_LIFE 100
 `define FIND_THETA_ACCURACY 5
-`define DEGREE_90 0      # 90 Degrees in our encoding
+`define DEGREE_90 0x4000      # 90 Degrees in our encoding
 `define STACK_TOP 11264 # stack starts at 11264 (this is the top of memory, be careful)
 
 # Bootup and initialization Code
@@ -78,6 +78,7 @@ mainNewPlayer:
 	mov [PLAYER_LIVES], %0
 
 mainLoop:
+	
 	# Check Inputs
 	# Left/Right, update theta
 	mov %2, [LEFT_KEY]
@@ -91,38 +92,57 @@ mainLoop:
 	mov %3, [PLAYER_Y]
 	mov %5, [UP_KEY]
 	mov %6, [DOWN_KEY]
-	sub %5, %6             # Up-Down now in %6
+	sub %5, %6             # Up-Down now in %5
 	mov %0, %4             #
 	call sin               # %1 has sin(theta)
-	mov %HIGH, %0          # %HIGH has sin(theta)
-	mul %HIGH, %5          #
-	add %2, %LOW           # Player X now updated by the move amount
+	fmul %0, %5            #
+	add %2, %0             # Player X now updated by the move amount
 	                       #
 	mov %0, %4             #
 	call cos               # %1 has cos(theta)
-	mov %HIGH, %0          #
-	mul %HIGH, %5          # %LOW/HIGH has (UP-DOWN)*cos(theta)
-	add %4, %LOW
+	fmul %0, %5            # %LOW/HIGH has (UP-DOWN)*cos(theta)
+	add %4, %0
 	mov [PLAYER_THETA], %4 # Save the theta
+
+	# TODO DEBUGGING ---------------
+	mov [LCD], %2
+	mov [PLAYER_X], %2
+	mov [PLAYER_Y], %3
+
+	mov %0, [UP_KEY]
+	mov %1, [DOWN_KEY]
+	add %0, %1
+	mov %1, [RIGHT_KEY]
+	add %0, %1
+	mov %1, [LEFT_KEY]
+	add %0, %1
+	mov %1, [A_KEY]
+	add %0, %1
+	mov %1, [B_KEY]
+	add %0, %1
+	je %0, 0, noInput
+		mov [UP_KEY], %0
+	noInput:
+	j mainLoop
+	# TODO DEBUGGING ---------------
+
 
 	# Move the AI
 
 	mov %0, [AI_TURNING]
 	je %0, 1, mainAITurningRight
-	je %0, -1, mainAITurningRight
+	je %0, -1, mainAITurningLeft
 	mov %4, [AI_X]
 	mov %5, [AI_Y]
 	mov %6, [AI_THETA]
 	mov %0, %6
 	call cos
-	mov %HIGH, %0
-	mul %HIGH, AI_SPEED    # %LOW now has speed*sin(theta), to update Y
-	add %4, %LOW           # %4 now has new Y (if possible)
+	fmul %0, AI_SPEED    # %LOW now has speed*sin(theta), to update Y
+	add %4, %0           # %4 now has new Y (if possible)
 	mov %0, %6
 	call sin
-	mov %HIGH, %0
-	mul %HIGH, AI_SPEED
-	add %5, %LOW           # %5 now has possible AI_Y
+	fmul %0, AI_SPEED
+	add %5, %0           # %5 now has possible AI_Y
 	j mainAIDoneMoving
 
 mainAITurningRight:
@@ -280,9 +300,21 @@ mainEndAIBullet:
 	mov [AI_X], %6
 	mov [AI_Y], %7
 
-	# Reset keyboard counters
-	mov %0, 1
-	mov [UP_KEY], %0
+	# Reset keyboard counters (if there all 0, just let it slide)
+	mov %0, [UP_KEY]
+	mov %1, [DOWN_KEY]
+	add %0, %1
+	mov %1, [RIGHT_KEY]
+	add %0, %1
+	mov %1, [LEFT_KEY]
+	add %0, %1
+	mov %1, [A_KEY]
+	add %0, %1
+	mov %1, [B_KEY]
+	add %0, %1
+	je %0, 0, mainNoInput
+		mov [UP_KEY], %0
+	mainNoInput:
 
 	# -------------------------------
 	# For each triangle, do this, although unless it's an enemy tank, you can skip the AI step.
@@ -1614,10 +1646,10 @@ PLAYER_Y:
 0
 
 PLAYER_START_X:
-10
+-1000
 
 PLAYER_START_Y:
-10
+-1000
 
 PLAYER_THETA:
 0
@@ -1683,10 +1715,10 @@ AI_BULLET_TIME:
 0
 
 AI_START_X:
-10
+1000
 
 AI_START_Y:
-10
+1000
 
 AI_START_THETA:
 10

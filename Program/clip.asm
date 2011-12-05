@@ -60,8 +60,6 @@ main:
 	push eax
 	
 	mov eax, SP
-	incr eax
-
 	call clip
 
 	infinite:
@@ -556,17 +554,14 @@ clip:
 				donepushingtriangles:
 				
 				mov eax, SP
-				incr eax
 				call clip
 				
 				add SP, 7
 				mov eax, SP
-				incr eax
 				call clip
 				
 				add SP, 7
 				mov eax, SP
-				incr eax
 				call clip
 				
 				add SP, 7
@@ -695,56 +690,86 @@ ret
 ### Note - x and y can be switched to flip axes
 
 binarySubdivide:		
+		
+	### Find lowest point (most negative y) to start with.
+		jge edx, ebx, ebxislowest
+			mov efx, ebx
+			mov ebx, edx
+			mov edx, efx
+			
+			mov efx, eax
+			mov eax, ecx
+			mov ecx, efx
+		ebxislowest:
+		
 	### Set up difference outside loop. efx is y difference.  egx is x difference.
-			mov efx, ebx #efx = y1
-			sub efx, edx #efx = y1 - y2	
+			mov efx, edx #efx = y1
+			sub efx, ebx #efx = y1 - y2
 			
-			mov egx, eax #eax = x1
-			sub egx, ecx #egx = x1-x2
+			mov egx, ecx #eax = x1
+			sub egx, eax #egx = x1-x2
 			
-		###Must ensure efx is positive.
-			jge efx, 0, efxpositive
-				not efx, efx
-				add efx, 1
-			efxpositive:		
+		###efx is guaranteed pos
 			
 		###Must ensure egx is positive.
 			jge egx, 0, egxpositive
 				not egx, egx
 				add egx, 1
+				j binarysubdivideloop2
 			egxpositive:
-			
 		
-	### Find lowest point to start with.
-		jge edx, ebx, ebxislowest
-			mov ebx, edx
-		ebxislowest:
-		
-		jge ecx, eax, eaxislowest
+		jne edx, eex, precheckedx
 			mov eax, ecx
-		eaxislowest:
+			ret
+		precheckedx:
 		
-	binarysubdivideloop:
+	binarysubdivideloop1:
 		#First divide guess value by two.
+		incr egx #round up
+		incr efx #round up
 		arsh egx, 1 #egx = (x1-x2)/2
 		arsh efx, 1 #efx = (y1-y2)/2
 		# If yguess == eex, done
 		# efx holds yguess
-			jne ebx, eex, binarySubdividenotdone
+			jne ebx, eex, binarySubdividenotdone1
 				ret
-			binarySubdividenotdone:
+			binarySubdividenotdone1:
 		
 		# If y1 < eex
-			jge ebx, eex, y1belowlimit
+			jge ebx, eex, y1belowlimit1
 				add ebx, efx #ebx = y1 + (y1-y2)/2 = new y1.
 				add eax, egx #eax = x1 + (x1-x2)/2 = new x1.
-			j binarysubdivideloop
-			y1belowlimit:
+			j binarysubdivideloop1
+			y1belowlimit1:
 		# If y1 > eex
 				sub ebx, efx #ebx = y1 - (y1-y2)/2 = new y1.
 				sub eax, egx #eax = x1 - (x1-x2)/2 = new x1.
 		
-		j binarysubdivideloop
+		j binarysubdivideloop1
+		
+	binarysubdivideloop2:
+		#First divide guess value by two.
+		incr egx #round up
+		incr efx #round up
+		arsh egx, 1 #egx = (x1-x2)/2
+		arsh efx, 1 #efx = (y1-y2)/2
+		# If yguess == eex, done
+		# efx holds yguess
+			jne ebx, eex, binarySubdividenotdone2
+				ret
+			binarySubdividenotdone2:
+		
+		# If y1 < eex
+			jge ebx, eex, y1belowlimit2
+				add ebx, efx #ebx = y1 + (y1-y2)/2 = new y1.
+				sub eax, egx #eax = x1 + (x1-x2)/2 = new x1.
+			j binarysubdivideloop2
+			y1belowlimit2:
+		# If y1 > eex
+				sub ebx, efx #ebx = y1 - (y1-y2)/2 = new y1.
+				add eax, egx #eax = x1 - (x1-x2)/2 = new x1.
+		
+		j binarysubdivideloop2
 		
 ###
 ###
@@ -805,6 +830,27 @@ copypoint:
 ret
 
 rasterize:
+push zone1
+push zone2
+push zone3
+
+mov zone1, 0xffff
+mov zone2, 0xffff
+mov zone3, 0xffff
+mov LOW, 0xffff
+mov HIGH, 0xffff
+
+mov zone1, [triangle]
+mov zone1, [triangle+1]
+mov zone1, [triangle+2]
+mov zone1, [triangle+3]
+mov zone1, [triangle+4]
+mov zone1, [triangle+5]
+mov zone1, [triangle+6]
+
+pop zone3
+pop zone2
+pop zone1
 
 ret
 
