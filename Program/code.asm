@@ -86,6 +86,7 @@ mainLoop:
 	mov %4, [PLAYER_THETA]
 	sub %2, %3
 	add %4, %2              # %4 has the theta change
+	mov [PLAYER_THETA], %4 # Save the theta
 
 	# Up/Down, update x/y
 	mov %2, [PLAYER_X]
@@ -94,15 +95,14 @@ mainLoop:
 	mov %6, [DOWN_KEY]
 	sub %5, %6             # Up-Down now in %5
 	mov %0, %4             #
-	call cos               # %1 has sin(theta)
+	call cos               # %0 has sin(theta)
 	fmul %0, %5            #
 	add %2, %0             # Player X now updated by the move amount
 	                       #
 	mov %0, %4             #
-	call sin               # %1 has cos(theta)
+	call sin               # %0 has cos(theta)
 	fmul %0, %5            # %LOW/HIGH has (UP-DOWN)*cos(theta)
-	add %4, %0
-	mov [PLAYER_THETA], %4 # Save the theta
+	add %3, %0
 
 	# TODO DEBUGGING ---------------
 	mov [LCD], %2
