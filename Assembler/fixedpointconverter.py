@@ -23,12 +23,10 @@ def main():
 	if is_binary(sys.argv[1]):
 		pw = 0
 		y = 0
-		numstr = (bin(int(sys.argv[1], 2))[2:]).zfill(15)
+		numstr = ((bin(int(sys.argv[1], 2))[2:]).zfill(16))[1:]
 		for char in numstr:
 			if char == '1':
 				y += (1 / float(two_to_the(pw)))
-			else:
-				pass
 			pw += 1
 
 		if int(sys.argv[1], 2) > 2**15:
@@ -38,19 +36,17 @@ def main():
 	elif is_hex(sys.argv[1]):
 		pw = 0
 		y = 0
-		numstr = (bin(int(sys.argv[1], 16))[2:]).zfill(15)
+		numstr = ((bin(int(sys.argv[1], 16))[2:]).zfill(16))[1:]
 		for char in numstr:
 			if char == '1':
 				y += (1 / float(two_to_the(pw)))
-			else:
-				pass
 			pw += 1
 
 		if int(sys.argv[1], 16) > 2**15:
 			y *= -1
 		print y
 
-	# if decimal or hex convert to binary
+	# if decimal convert to binary
 	else:
 		y = float(sys.argv[1])
 		if y < 0:
