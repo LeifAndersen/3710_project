@@ -111,6 +111,9 @@ distance_squared:
 foo_model:
 2
 0
+8
+9
+12
 1
 1
 1
@@ -127,6 +130,4 @@ foo_model:
 1
 4
 5
-8
-9
-12
+
