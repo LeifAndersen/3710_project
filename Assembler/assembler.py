@@ -386,7 +386,7 @@ def parse(infile_str, outfile_str):
 									first_pass_queue.append(str(hex((trim_reg(tokens[1]) << 8) + (OP_CODES["MOVR"] << 4) + 15)))
 				elif tokens[1][0] == '[':
 					if tokens[1][-1] != ']':
-						delim_mismatch(line_num)
+						delim_mismatch(line_num, line)
 					else:
 						if tokens[1][1] == "%":	# MOV (%R), %R
 							# MOVRM
