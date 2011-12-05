@@ -34,6 +34,8 @@
 `define STACK_TOP 11264 # stack starts at 11264 (this is the top of memory, be careful)
 
 main:
+	mov %SP, STACK_TOP
+	mov %FP, %SP
 
 	mov %0, foo_model
 	add %0, 1			# skip the count
