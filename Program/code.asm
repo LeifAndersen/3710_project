@@ -131,20 +131,18 @@ mainLoop:
 
 	mov %0, [AI_TURNING]
 	je %0, 1, mainAITurningRight
-	je %0, -1, mainAITurningRight
+	je %0, -1, mainAITurningLeft
 	mov %4, [AI_X]
 	mov %5, [AI_Y]
 	mov %6, [AI_THETA]
 	mov %0, %6
 	call cos
-	mov %HIGH, %0
-	mul %HIGH, AI_SPEED    # %LOW now has speed*sin(theta), to update Y
-	add %4, %LOW           # %4 now has new Y (if possible)
+	fmul %0, AI_SPEED    # %LOW now has speed*sin(theta), to update Y
+	add %4, %0           # %4 now has new Y (if possible)
 	mov %0, %6
 	call sin
-	mov %HIGH, %0
-	mul %HIGH, AI_SPEED
-	add %5, %LOW           # %5 now has possible AI_Y
+	fmul %0, AI_SPEED
+	add %5, %0           # %5 now has possible AI_Y
 	j mainAIDoneMoving
 
 mainAITurningRight:
