@@ -1499,19 +1499,28 @@ setup_rotate:
 	mov %0, %8	# generate and save sin
 	call sin
 	mov %1, %0
-	mov %0, 1	# fill matrix
+	mov %0, 1	# fill matrix. Odd offsets are the flag bits for fmul
 	mov [rotation_matrix_x], %0		# 1
+	mov [rotation_matrix_x+9], %0	# 1
+	mov [rotation_matrix_x+11], %0	# 1
+	mov [rotation_matrix_x+15], %0	# 1
+	mov [rotation_matrix_x+17], %0	# 1
 	mov %0, 0
 	mov [rotation_matrix_x+1], %0	# 0
-	mov [rotation_matrix_x+2], %0	# 0
 	mov [rotation_matrix_x+3], %0	# 0
+	mov [rotation_matrix_x+5], %0	# 0
+	mov [rotation_matrix_x+7], %0	# 0
+	mov [rotation_matrix_x+13], %0	# 0
+	mov [rotation_matrix_x+2], %0	# 0
+	mov [rotation_matrix_x+4], %0	# 0
 	mov [rotation_matrix_x+6], %0	# 0
-	mov [rotation_matrix_x+4], %6	# cos (xtheta)
-	not %0, %1	# negate %1 by inverting the bits and adding one
-	add %0, 1
-	mov [rotation_matrix_x+5], %0	# -sin (xtheta)
-	mov [rotation_matrix_x+7], %1	# sin (xtheta)
+	mov [rotation_matrix_x+12], %0	# 0
 	mov [rotation_matrix_x+8], %6	# cos (xtheta)
+	mov %0, 0x8000
+	xor %0, %1	# negate %1 flipping the sign bit
+	mov [rotation_matrix_x+10], %0	# -sin (xtheta)
+	mov [rotation_matrix_x+14], %1	# sin (xtheta)
+	mov [rotation_matrix_x+16], %6	# cos (xtheta)
 
 	# generate rotation matrix y
 	mov %0, %9	# generate and save cos
@@ -1521,18 +1530,27 @@ setup_rotate:
 	call sin
 	mov %1, %0
 	mov %0, 0
-	mov [rotation_matrix_y+1], %0	# 0
 	mov [rotation_matrix_y+3], %0	# 0
-	mov [rotation_matrix_y+5], %0	# 0
 	mov [rotation_matrix_y+7], %0	# 0
+	mov [rotation_matrix_y+9], %0	# 0
+	mov [rotation_matrix_y+11], %0	# 0
+	mov [rotation_matrix_y+15], %0	# 0
+	mov [rotation_matrix_y+2], %0	# 0
+	mov [rotation_matrix_y+6], %0	# 0
+	mov [rotation_matrix_y+10], %0	# 0
+	mov [rotation_matrix_y+14], %0	# 0
 	mov [rotation_matrix_y], %6		# cos (ytheta)
-	mov [rotation_matrix_y+2], %1	# sin (ytheta)
+	mov [rotation_matrix_y+4], %1	# sin (ytheta)
 	mov %0, 1
-	mov [rotation_matrix_y+4], %6	# 1
-	not %0, %1	# negate %1 by inverting the bits and adding one
-	add %0, 1
-	mov [rotation_matrix_y+6], %0	# -sin (xtheta)
-	mov [rotation_matrix_y+8], %6	# cos (xtheta)
+	mov [rotation_matrix_y+1], %0	# 1
+	mov [rotation_matrix_y+5], %0	# 1
+	mov [rotation_matrix_y+13], %0	# 1
+	mov [rotation_matrix_y+17], %0	# 1
+	mov [rotation_matrix_y+8], %0	# 1
+	mov %0, 0x8000
+	xor %0, %1	# negate %1 flipping the sign bit
+	mov [rotation_matrix_y+12], %0	# -sin (xtheta)
+	mov [rotation_matrix_y+16], %6	# cos (xtheta)
 
 	pop %0
 	pop %1
