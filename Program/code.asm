@@ -1124,6 +1124,7 @@ drawDebuggingGraphics:
 	push %1
 	push %2
 	push %3
+	push %4
 
 	mov %0, [PLAYER_X]  # Your tank
 	mov %1, [PLAYER_Y]
@@ -1137,6 +1138,7 @@ drawDebuggingGraphics:
 	mov %1, %3
 	sub %1, DEBUG_TANK_SIZE
 	add %3, DEBUG_TANK_SIZE
+	mov %4, 1
 	call drawSquare
 
 	mov %0, [AI_X]  # Enemy Tank
@@ -1151,6 +1153,7 @@ drawDebuggingGraphics:
 	mov %1, %3
 	sub %1, DEBUG_TANK_SIZE
 	add %3, DEBUG_TANK_SIZE
+	mov %4, 1
 	call drawSquare
 
 	mov %0, [PLAYER_BULLET_TIME]
@@ -1167,6 +1170,7 @@ drawDebuggingGraphics:
 		mov %1, %3
 		sub %1, DEBUG_BULLET_SIZE
 		add %3, DEBUG_BULLET_SIZE
+		mov %4, 1
 		call drawSquare
 	mainDebugNoDrawPlayerBullet:
 
@@ -1184,9 +1188,11 @@ drawDebuggingGraphics:
 		mov %1, %3
 		sub %1, DEBUG_BULLET_SIZE
 		add %3, DEBUG_BULLET_SIZE
+		mov %4, 1
 		call drawSquare
 	mainDebugNoDrawAIBullet:
 
+	pop %4
 	pop %3
 	pop %2
 	pop %1
@@ -1391,6 +1397,11 @@ FindTheta:
 # Draw a square
 drawSquare:
 
+	push %0
+	push %1
+	push %2
+	push %3
+	push %4
 	push %5
 
 	lsh %0, 8
@@ -1410,6 +1421,11 @@ drawSquare:
 	endDrawSquare:
 
 	pop %5
+	pop %4
+	pop %3
+	pop %2
+	pop %1
+	pop %0
 	ret
 
 # Take a number in the $0 reg, return the sin of that number into the $0 reg
