@@ -1343,7 +1343,7 @@ sin:
 	je third
 	cmp %9, 3
 	je fourth
-	j sinend
+	j first
 
 	second:
 	mov %9, sine_lut
@@ -1354,8 +1354,10 @@ sin:
 	sub %7, %8		# max - angle
 	add %9, %7
 	mov %0, [%9]	# addr
-	decr %9
-	and %9, 0x7F
+	mov %9, sine_lut
+	sub %7, 1
+	and %7, 0x7F
+	add %9, %7
 	mov %7, [%9]	# addr-1
 	# multiply
 	and %10, 0x7F	# fraction
@@ -1374,10 +1376,13 @@ sin:
 	rsh %8, 7
 	and %8, 0x7F	# mask angle
 	sub %8, 0x7F	# angle - max
+	and %8, 0x7F	# mask angle
 	add %9, %8
 	mov %0, [%9]	# addr
-	incr %9
+	mov %9, sine_lut
+	add %8, 1
 	and %8, 0x7F
+	add %9, %8
 	mov %7, [%9]	# addr+1
 	# multiply
 	and %10, 0x7F	# fraction
@@ -1388,8 +1393,7 @@ sin:
 	sub %9, %10		# 1 - fraction
 	fmul %0, %9
 	add %0, %7
-	not %0, %0
-	add %0, 1
+	xor %0, 0x8000
 	j sinend
 
 	fourth:
@@ -1401,8 +1405,10 @@ sin:
 	sub %7, %8		# max - angle
 	add %9, %7
 	mov %0, [%9]	# addr
-	decr %9
-	and %8, 0x7F
+	mov %9, sine_lut
+	sub %7, 1
+	and %7, 0x7F
+	add %9, %7
 	mov %7, [%9]	# addr-1
 	# multiply
 	and %10, 0x7F	# fraction
@@ -1413,19 +1419,20 @@ sin:
 	sub %9, %10		# 1 - fraction
 	fmul %0, %9
 	add %0, %7
-	not %0, %0
-	add %0, 1
+	xor %0, 0x8000
 	j sinend
 
-	sinend:
+	first:
 	mov %9, sine_lut
 	mov %8, %10
 	rsh %8, 7
 	and %8, 0x7F
 	add %9, %8
 	mov %0, [%9]	# addr
-	incr %9
+	mov %9, sine_lut
+	add %8, 1
 	and %8, 0x7F
+	add %9, %8
 	mov %7, [%9]	# addr+1
 	# multiply
 	and %10, 0x7F	# fraction
@@ -1436,6 +1443,8 @@ sin:
 	sub %9, %10		# 1 - fraction
 	fmul %0, %9
 	add %0, %7
+	
+	sinend:
 
 	# return
 	pop %7
