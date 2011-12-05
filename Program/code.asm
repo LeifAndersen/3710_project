@@ -30,8 +30,8 @@
 `define BULLET_SPEED 20
 `define BULLET_LIFE 100
 `define FIND_THETA_ACCURACY 5
-`define DEGREE_90 0      # 90 Degrees in our encoding
-`define STACK_TOP 0x2bff # stack starts at 11264 (this is the top of memory, be careful)
+`define DEGREE_90 0x4000      # 90 Degrees in our encoding
+`define STACK_TOP 11264 # stack starts at 11264 (this is the top of memory, be careful)
 
 # Bootup and initialization Code
 init:
@@ -94,16 +94,24 @@ mainLoop:
 	sub %5, %6             # Up-Down now in %6
 	mov %0, %4             #
 	call sin               # %1 has sin(theta)
-	mov %HIGH, %0          # %HIGH has sin(theta)
-	mul %HIGH, %5          #
-	add %2, %LOW           # Player X now updated by the move amount
+	fmul %0, %5            #
+	add %2, %0             # Player X now updated by the move amount
 	                       #
 	mov %0, %4             #
 	call cos               # %1 has cos(theta)
-	mov %HIGH, %0          #
-	mul %HIGH, %5          # %LOW/HIGH has (UP-DOWN)*cos(theta)
-	add %4, %LOW
+	fmul %0, %5            # %LOW/HIGH has (UP-DOWN)*cos(theta)
+	add %4, %0
 	mov [PLAYER_THETA], %4 # Save the theta
+
+	# TODO DEBUGGING ---------------
+	mov [LCD], %2
+	mov [PLAYER_X], %2
+	mov [PLAYER_Y], %3
+	mov %0, 1
+	mov [UP_KEY], %0
+
+	# TODO DEBUGGING ---------------
+
 
 	# Move the AI
 
@@ -798,6 +806,8 @@ mainEndAIBullet:
 
 	# clean up stack
 	add %SP, 10
+
+	# %6 contains the pointer to the "model" that contains all triangles to be rendered.
 
 #Front-back clipping:
 	#	If triangle has both positive and negative z values at this point, it must be clipped to only the positive z space.
@@ -1733,275 +1743,275 @@ tank_model:
 26
 # Face 0
 0 #color
--49 #- 
+-49 #-
 0
 -80
--84 #- 
+-84 #-
 -69
 -129
-84 #- 
+84 #-
 -70
 -129
 0 #color
--49 #- 
+-49 #-
 0
 -80
-84 #- 
+84 #-
 -70
 -129
-50 #- 
+50 #-
 0
 -80
 # Face 1
 0 #color
-84 #- 
+84 #-
 -70
 -129
--84 #- 
+-84 #-
 -69
 -129
--84 #- 
+-84 #-
 -69
 113
 0 #color
-84 #- 
+84 #-
 -70
 -129
--84 #- 
+-84 #-
 -69
 113
-84 #- 
+84 #-
 -70
 113
 # Face 2
 0 #color
--84 #- 
+-84 #-
 -69
 -129
--49 #- 
+-49 #-
 0
 -80
--50 #- 
+-50 #-
 0
 63
 0 #color
--84 #- 
+-84 #-
 -69
 -129
--50 #- 
+-50 #-
 0
 63
--84 #- 
+-84 #-
 -69
 113
 # Face 3
 0 #color
-50 #- 
+50 #-
 0
 -80
-84 #- 
+84 #-
 -70
 -129
-84 #- 
+84 #-
 -70
 113
 0 #color
-50 #- 
+50 #-
 0
 -80
-84 #- 
+84 #-
 -70
 113
-49 #- 
+49 #-
 0
 63
 # Face 4
 0 #color
-84 #- 
+84 #-
 -70
 113
--84 #- 
+-84 #-
 -69
 113
--50 #- 
+-50 #-
 0
 63
 0 #color
-84 #- 
+84 #-
 -70
 113
--50 #- 
+-50 #-
 0
 63
-49 #- 
+49 #-
 0
 63
 # Face 5
 0 #color
-25 #- 
+25 #-
 -120
 -44
-39 #- 
+39 #-
 -70
 -64
--38 #- 
+-38 #-
 -70
 -64
 0 #color
-25 #- 
+25 #-
 -120
 -44
--38 #- 
+-38 #-
 -70
 -64
--24 #- 
+-24 #-
 -120
 -44
 # Face 6
 0 #color
-25 #- 
+25 #-
 -120
 -44
--24 #- 
+-24 #-
 -120
 -44
--25 #- 
+-25 #-
 -120
 27
 0 #color
-25 #- 
+25 #-
 -120
 -44
--25 #- 
+-25 #-
 -120
 27
-24 #- 
+24 #-
 -120
 27
 # Face 7
 0 #color
--24 #- 
+-24 #-
 -120
 -44
--38 #- 
+-38 #-
 -70
 -64
--39 #- 
+-39 #-
 -70
 48
 0 #color
--24 #- 
+-24 #-
 -120
 -44
--39 #- 
+-39 #-
 -70
 48
--25 #- 
+-25 #-
 -120
 27
 # Face 8
 0 #color
-39 #- 
+39 #-
 -70
 -64
-25 #- 
+25 #-
 -120
 -44
-24 #- 
+24 #-
 -120
 27
 0 #color
-39 #- 
+39 #-
 -70
 -64
-24 #- 
+24 #-
 -120
 27
-38 #- 
+38 #-
 -70
 48
 # Face 9
 0 #color
-24 #- 
+24 #-
 -120
 27
--25 #- 
+-25 #-
 -120
 27
--39 #- 
+-39 #-
 -70
 48
 0 #color
-24 #- 
+24 #-
 -120
 27
--39 #- 
+-39 #-
 -70
 48
-38 #- 
+38 #-
 -70
 48
 # Face 10
 0 #color
-0 #- 
+0 #-
 -110
 27
-0 #- 
+0 #-
 -110
 114
--14 #- 
+-14 #-
 -95
 114
 0 #color
-0 #- 
+0 #-
 -110
 27
--14 #- 
+-14 #-
 -95
 114
--14 #- 
+-14 #-
 -95
 27
 # Face 11
 0 #color
-0 #- 
+0 #-
 -110
 27
-0 #- 
+0 #-
 -110
 114
-14 #- 
+14 #-
 -95
 114
 0 #color
-0 #- 
+0 #-
 -110
 27
-14 #- 
+14 #-
 -95
 114
-14 #- 
+14 #-
 -95
 27
 # Face 12
 0 #color
--14 #- 
+-14 #-
 -95
 27
--14 #- 
+-14 #-
 -95
 114
-14 #- 
+14 #-
 -95
 114
 0 #color
--14 #- 
+-14 #-
 -95
 27
-14 #- 
+14 #-
 -95
 114
-14 #- 
+14 #-
 -95
 27
 
@@ -2010,128 +2020,128 @@ bullet_model:
 12
 # Face 0
 0 #color
-0 #- 
+0 #-
 -49
 3
-0 #- 
+0 #-
 -49
 -3
--1 #- 
+-1 #-
 -49
 -2
 0 #color
-0 #- 
+0 #-
 -49
 3
--1 #- 
+-1 #-
 -49
 -2
-0 #- 
+0 #-
 -49
 3
 # Face 1
 0 #color
-1 #- 
+1 #-
 -51
 2
-0 #- 
+0 #-
 -51
 3
--1 #- 
+-1 #-
 -51
 -2
 0 #color
-1 #- 
+1 #-
 -51
 2
--1 #- 
+-1 #-
 -51
 -2
-0 #- 
+0 #-
 -51
 -3
 # Face 2
 0 #color
-0 #- 
+0 #-
 -49
 3
-1 #- 
+1 #-
 -51
 2
-0 #- 
+0 #-
 -51
 -3
 0 #color
-0 #- 
+0 #-
 -49
 3
-0 #- 
+0 #-
 -51
 -3
-0 #- 
+0 #-
 -49
 -3
 # Face 3
 0 #color
-0 #- 
+0 #-
 -49
 -3
-0 #- 
+0 #-
 -51
 -3
--1 #- 
+-1 #-
 -51
 -2
 0 #color
-0 #- 
+0 #-
 -49
 -3
--1 #- 
+-1 #-
 -51
 -2
--1 #- 
+-1 #-
 -49
 -2
 # Face 4
 0 #color
--1 #- 
+-1 #-
 -49
 -2
--1 #- 
+-1 #-
 -51
 -2
-0 #- 
+0 #-
 -51
 3
 0 #color
--1 #- 
+-1 #-
 -49
 -2
-0 #- 
+0 #-
 -51
 3
-0 #- 
+0 #-
 -49
 3
 # Face 5
 0 #color
-1 #- 
+1 #-
 -51
 2
-0 #- 
+0 #-
 -49
 3
-0 #- 
+0 #-
 -49
 3
 0 #color
-1 #- 
+1 #-
 -51
 2
-0 #- 
+0 #-
 -49
 3
-0 #- 
+0 #-
 -51
 3
 
