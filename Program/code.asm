@@ -31,6 +31,12 @@
 `define BULLET_LIFE 100
 `define FIND_THETA_ACCURACY 5
 `define DEGREE_90 0x4000      # 90 Degrees in our encoding
+`define FIELD_MIN -8192
+`define FIELD_MAZ 8192
+`define FIT_SCREEN_SHIFT_AMMOUNT 7 # THe ammount of shifts needed to make 2*FIELD SIZE fit on the screen in both x and y axis
+`define FIELD_OFFSET 8192 # Offset for field to make it all positive
+`define DEBUG_TANK_SIZE 10
+`define DEBUG_BULLET_SIZE 10
 `define STACK_TOP 11264 # stack starts at 11264 (this is the top of memory, be careful)
 
 # Bootup and initialization Code
@@ -314,6 +320,73 @@ mainEndAIBullet:
 	je %0, 0, mainNoInput
 		mov [UP_KEY], %0
 	mainNoInput:
+
+	j mainEndDebuggingGraphics
+	# DEBUGGING GRAPHICS
+	mov %0, [PLAYER_X]  # Your tank
+	mov %1, [PLAYER_Y]
+	add %0, FIELD_OFFSET
+	add %1, FIELD_OFFSET
+	arsh %0, FIT_SCREEN_SHIFT_AMMOUNT
+	arsh %1, FIT_SCREEN_SHIFT_AMMOUNT
+	mov %0, %2
+	sub %0, DEBUG_TANK_SIZE
+	add %2, DEBUG_TANK_SIZE
+	mov %1, %3
+	sub %1, DEBUG_TANK_SIZE
+	add %3, DEBUG_TANK_SIZE
+	call drawSquare
+
+	mov %0, [AI_X]  # Enemy Tank
+	mov %1, [AI_Y]
+	add %0, FIELD_OFFSET
+	add %1, FIELD_OFFSET
+	arsh %0, FIT_SCREEN_SHIFT_AMMOUNT
+	arsh %1, FIT_SCREEN_SHIFT_AMMOUNT
+	mov %0, %2
+	sub %0, DEBUG_TANK_SIZE
+	add %2, DEBUG_TANK_SIZE
+	mov %1, %3
+	sub %1, DEBUG_TANK_SIZE
+	add %3, DEBUG_TANK_SIZE
+	call drawSquare
+
+	mov %0, [PLAYER_BULLET_TIME]
+	je %0, 0, mainDebugNoDrawPlayerBullet
+		mov %0, [PLAYER_BULLET_X]  # Your bullet
+		mov %1, [PLAYER_BULLET_Y]
+		add %0, FIELD_OFFSET
+		add %1, FIELD_OFFSET
+		arsh %0, FIT_SCREEN_SHIFT_AMMOUNT
+		arsh %1, FIT_SCREEN_SHIFT_AMMOUNT
+		mov %0, %2
+		sub %0, DEBUG_BULLET_SIZE
+		add %2, DEBUG_BULLET_SIZE
+		mov %1, %3
+		sub %1, DEBUG_BULLET_SIZE
+		add %3, DEBUG_BULLET_SIZE
+		call drawSquare
+	mainDebugNoDrawPlayerBullet:
+
+	mov %0, [AI_BULLET_TIME]
+	je %0, 0, mainDebugNoDrawAIBullet
+		mov %0, [AI_BULLET_X]  # Your bullet
+		mov %1, [AI_BULLET_Y]
+		add %0, FIELD_OFFSET
+		add %1, FIELD_OFFSET
+		arsh %0, FIT_SCREEN_SHIFT_AMMOUNT
+		arsh %1, FIT_SCREEN_SHIFT_AMMOUNT
+		mov %0, %2
+		sub %0, DEBUG_BULLET_SIZE
+		add %2, DEBUG_BULLET_SIZE
+		mov %1, %3
+		sub %1, DEBUG_BULLET_SIZE
+		add %3, DEBUG_BULLET_SIZE
+		call drawSquare
+	mainDebugNoDrawAIBullet:
+	# DEBUGGING GRAPHICS
+mainEndDebuggingGraphics:
+
 
 	# -------------------------------
 	# For each triangle, do this, although unless it's an enemy tank, you can skip the AI step.
