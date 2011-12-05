@@ -207,6 +207,7 @@ rotate_point:
 
 	# make room on the stack for temp point
 	sub %SP, 3
+	mov [LCD], %SP
 
 	# set up arguments for matrix multiply
 	mov %0, rotation_matrix_x
