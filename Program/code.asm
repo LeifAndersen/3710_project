@@ -85,6 +85,15 @@ mainNewPlayer:
 
 mainLoop:
 
+	mov %0, 10
+	mov %1, 10
+	mov %2, 50
+	mov %3, 50
+	mov %4, 1
+	call drawSquare
+
+	j mainLoop
+
 	# Check Inputs
 	# Left/Right, update theta
 	mov %2, [LEFT_KEY]
