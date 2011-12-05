@@ -78,6 +78,7 @@ mainNewPlayer:
 	mov [PLAYER_LIVES], %0
 
 mainLoop:
+	
 	# Check Inputs
 	# Left/Right, update theta
 	mov %2, [LEFT_KEY]
@@ -91,7 +92,7 @@ mainLoop:
 	mov %3, [PLAYER_Y]
 	mov %5, [UP_KEY]
 	mov %6, [DOWN_KEY]
-	sub %5, %6             # Up-Down now in %6
+	sub %5, %6             # Up-Down now in %5
 	mov %0, %4             #
 	call sin               # %1 has sin(theta)
 	fmul %0, %5            #
@@ -107,9 +108,22 @@ mainLoop:
 	mov [LCD], %2
 	mov [PLAYER_X], %2
 	mov [PLAYER_Y], %3
-	mov %0, 1
-	mov [UP_KEY], %0
 
+	mov %0, [UP_KEY]
+	mov %1, [DOWN_KEY]
+	add %0, %1
+	mov %1, [RIGHT_KEY]
+	add %0, %1
+	mov %1, [LEFT_KEY]
+	add %0, %1
+	mov %1, [A_KEY]
+	add %0, %1
+	mov %1, [B_KEY]
+	add %0, %1
+	je %0, 0, noInput
+		mov [UP_KEY], %0
+	noInput:
+	j mainLoop
 	# TODO DEBUGGING ---------------
 
 
@@ -288,9 +302,21 @@ mainEndAIBullet:
 	mov [AI_X], %6
 	mov [AI_Y], %7
 
-	# Reset keyboard counters
-	mov %0, 1
-	mov [UP_KEY], %0
+	# Reset keyboard counters (if there all 0, just let it slide)
+	mov %0, [UP_KEY]
+	mov %1, [DOWN_KEY]
+	add %0, %1
+	mov %1, [RIGHT_KEY]
+	add %0, %1
+	mov %1, [LEFT_KEY]
+	add %0, %1
+	mov %1, [A_KEY]
+	add %0, %1
+	mov %1, [B_KEY]
+	add %0, %1
+	je %0, 0, mainNoInput
+		mov [UP_KEY], %0
+	mainNoInput:
 
 	# -------------------------------
 	# For each triangle, do this, although unless it's an enemy tank, you can skip the AI step.
@@ -1622,10 +1648,10 @@ PLAYER_Y:
 0
 
 PLAYER_START_X:
-10
+-1000
 
 PLAYER_START_Y:
-10
+-1000
 
 PLAYER_THETA:
 0
@@ -1691,10 +1717,10 @@ AI_BULLET_TIME:
 0
 
 AI_START_X:
-10
+1000
 
 AI_START_Y:
-10
+1000
 
 AI_START_THETA:
 10
