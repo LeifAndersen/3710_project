@@ -87,8 +87,9 @@ mainLoop:
 
 	call drawDebuggingGraphics
 	mov %0, [PLAYER_X]
-	mov [LCD}, %0
-foo:
+	mov [LCD], %0
+	
+	foo:
 	j foo
 
 	# Check Inputs
@@ -1208,6 +1209,10 @@ drawDebuggingGraphics:
 		call drawSquare
 	mainDebugNoDrawAIBullet:
 
+	mov %0, 0xffff # DRAW
+	mov [VGA], %0
+	mov [VGA], %0
+	
 	pop %4
 	pop %3
 	pop %2
