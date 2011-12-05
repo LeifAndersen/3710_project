@@ -85,14 +85,11 @@ mainNewPlayer:
 
 mainLoop:
 
-	mov %0, 10
-	mov %1, 10
-	mov %2, 50
-	mov %3, 50
-	mov %4, 1
-	call drawSquare
-
-	j mainLoop
+	call drawDebuggingGraphics
+	mov %0, [PLAYER_X]
+	mov [LCD}, %0
+foo:
+	j foo
 
 	# Check Inputs
 	# Left/Right, update theta
@@ -110,34 +107,35 @@ mainLoop:
 	mov %5, [UP_KEY]
 	mov %6, [DOWN_KEY]
 	sub %5, %6             # Up-Down now in %5
-	mov %0, %4             #
-	call cos               # %0 has sin(theta)
-	fmul %0, %5            #
-	mul %0, SPEED
-	add %2, %LOW           # Player X now updated by the move amount
+	add %2, %5 # TODO, KILL LINE!!!!
+	# mov %0, %4             #
+	# call cos               # %0 has sin(theta)
+	# fmul %0, %5            #
+	# mul %0, SPEED
+	# add %2, %LOW           # Player X now updated by the move amount
 	                       #
-	mov %0, %4             #
-	call sin               # %0 has cos(theta)
-	fmul %0, %5            # %LOW/HIGH has (UP-DOWN)*cos(theta)
-	mul %0, SPEED
-	add %3, %LOW
+	# mov %0, %4             #
+	# call sin               # %0 has cos(theta)
+	# fmul %0, %5            # %LOW/HIGH has (UP-DOWN)*cos(theta)
+	# mul %0, SPEED
+	# add %3, %LOW
 
 	# TODO DEBUGGING ---------------
-	mov [LCD], %3
+	# mov [LCD], %2
 	mov [PLAYER_X], %2
 	mov [PLAYER_Y], %3
 
 	mov %0, [UP_KEY]
 	mov %1, [DOWN_KEY]
 	add %0, %1
-	mov %1, [RIGHT_KEY]
-	add %0, %1
-	mov %1, [LEFT_KEY]
-	add %0, %1
-	mov %1, [A_KEY]
-	add %0, %1
-	mov %1, [B_KEY]
-	add %0, %1
+	# mov %1, [RIGHT_KEY]
+	# add %0, %1
+	# mov %1, [LEFT_KEY]
+	# add %0, %1
+	# mov %1, [A_KEY]
+	# add %0, %1
+	# mov %1, [B_KEY]
+	# add %0, %1
 	je %0, 0, noInput
 		mov [UP_KEY], %0
 	noInput:
@@ -1135,6 +1133,12 @@ drawDebuggingGraphics:
 	push %3
 	push %4
 
+	mov %0, 0 # Black screen
+	mov %1, 0
+	mov %2, 160
+	mov %3, 120
+	mov %4, 0
+	
 	mov %0, [PLAYER_X]  # Your tank
 	mov %1, [PLAYER_Y]
 	add %0, FIELD_OFFSET
@@ -1150,6 +1154,8 @@ drawDebuggingGraphics:
 	mov %4, 1
 	call drawSquare
 
+
+	
 	mov %0, [AI_X]  # Enemy Tank
 	mov %1, [AI_Y]
 	add %0, FIELD_OFFSET
@@ -1162,11 +1168,12 @@ drawDebuggingGraphics:
 	mov %1, %3
 	sub %1, DEBUG_TANK_SIZE
 	add %3, DEBUG_TANK_SIZE
-	mov %4, 1
+	mov %4, 3
 	call drawSquare
 
 	mov %0, [PLAYER_BULLET_TIME]
 	je %0, 0, mainDebugNoDrawPlayerBullet
+		mov %0, 0xf00
 		mov %0, [PLAYER_BULLET_X]  # Your bullet
 		mov %1, [PLAYER_BULLET_Y]
 		add %0, FIELD_OFFSET
@@ -1179,7 +1186,7 @@ drawDebuggingGraphics:
 		mov %1, %3
 		sub %1, DEBUG_BULLET_SIZE
 		add %3, DEBUG_BULLET_SIZE
-		mov %4, 1
+		mov %4, 5
 		call drawSquare
 	mainDebugNoDrawPlayerBullet:
 
@@ -1197,7 +1204,7 @@ drawDebuggingGraphics:
 		mov %1, %3
 		sub %1, DEBUG_BULLET_SIZE
 		add %3, DEBUG_BULLET_SIZE
-		mov %4, 1
+		mov %4, 6
 		call drawSquare
 	mainDebugNoDrawAIBullet:
 
@@ -1785,10 +1792,10 @@ matrix_multiply:
 
 .data
 PLAYER_X:
-0
+20
 
 PLAYER_Y:
-0
+20
 
 PLAYER_START_X:
 -1000
