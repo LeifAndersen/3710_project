@@ -11,6 +11,13 @@
       </db_ref>
    </db_ref_list>
    <WVObjectSize size="28" />
+   <wvobject fp_name="/testdatapath/uut/RegisterFile/reg14" type="array" db_ref_id="1">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">reg14[15:0]</obj_property>
+      <obj_property name="ObjectShortName">reg14[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="label">FP</obj_property>
+   </wvobject>
    <wvobject fp_name="/testdatapath/uut/RegisterFile/reg13" type="array" db_ref_id="1">
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="ElementShortName">reg13[15:0]</obj_property>
@@ -60,13 +67,6 @@
       <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
       <obj_property name="label">edx</obj_property>
    </wvobject>
-   <wvobject fp_name="/testdatapath/uut/RegisterFile/reg0" type="array" db_ref_id="1">
-      <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="ElementShortName">reg0[15:0]</obj_property>
-      <obj_property name="ObjectShortName">reg0[15:0]</obj_property>
-      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-      <obj_property name="label">eex</obj_property>
-   </wvobject>
    <wvobject fp_name="/testdatapath/uut/RegisterFile/reg9" type="array" db_ref_id="1">
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="ElementShortName">reg9[15:0]</obj_property>
@@ -80,13 +80,6 @@
       <obj_property name="ObjectShortName">reg5[15:0]</obj_property>
       <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
       <obj_property name="label">yvalright</obj_property>
-   </wvobject>
-   <wvobject fp_name="/testdatapath/uut/RegisterFile/reg10" type="array" db_ref_id="1">
-      <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="ElementShortName">reg10[15:0]</obj_property>
-      <obj_property name="ObjectShortName">reg10[15:0]</obj_property>
-      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-      <obj_property name="label">%10</obj_property>
    </wvobject>
    <wvobject fp_name="/testdatapath/uut/RegisterFile/reg11" type="array" db_ref_id="1">
       <obj_property name="DisplayName">label</obj_property>
@@ -114,6 +107,20 @@
    <wvobject fp_name="/testdatapath/vsync" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">vsync</obj_property>
       <obj_property name="ObjectShortName">vsync</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/RegisterFile/reg0" type="array" db_ref_id="1">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">reg0[15:0]</obj_property>
+      <obj_property name="ObjectShortName">reg0[15:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <obj_property name="label">eex</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/RegisterFile/reg10" type="array" db_ref_id="1">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">reg10[15:0]</obj_property>
+      <obj_property name="ObjectShortName">reg10[15:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <obj_property name="label">%10</obj_property>
    </wvobject>
    <wvobject fp_name="/testdatapath/uut/CLK_25MHZ" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">CLK_25MHZ</obj_property>
@@ -144,13 +151,6 @@
       <obj_property name="ObjectShortName">reg6[15:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
       <obj_property name="label">ymax</obj_property>
-   </wvobject>
-   <wvobject fp_name="/testdatapath/uut/RegisterFile/reg14" type="array" db_ref_id="1">
-      <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="ElementShortName">reg14[15:0]</obj_property>
-      <obj_property name="ObjectShortName">reg14[15:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-      <obj_property name="label">FP</obj_property>
    </wvobject>
    <wvobject fp_name="/testdatapath/uut/RegisterFile/reg15" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">reg15[15:0]</obj_property>

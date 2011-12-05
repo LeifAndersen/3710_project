@@ -1,5 +1,5 @@
 ###
-### CLIPPING
+### CLIPPING/RASTERIZATION
 ###
  
 `define UP_KEY 16382
@@ -181,7 +181,7 @@ clip:
 		jne eax, 0, basecase2fail
 			mov FP, 0xfbfb
 			call rasterize
-			mov FP, 0xdddd
+			or %1, %1 #mov FP, 0xdddd
 			ret
 		basecase2fail:
 	
@@ -587,21 +587,20 @@ clip:
 				
 				donepushingtriangles:
 				
-				incr FP ########## test code
 				mov eax, SP
 				call clip
 				
-				incr FP ########## test code
+				#and %1, %1 ########## test code
 				add SP, 7
 				mov eax, SP
 				call clip
 				
-				incr FP ########## test code
+				#and %1, %1 ########## test code
 				add SP, 7
 				mov eax, SP
 				call clip
 				
-				incr FP ########## test code
+				#and %1, %1 ########## test code
 				add SP, 7
 				
 				mov FP, 0xfbfb
@@ -858,7 +857,9 @@ copyTriangle:
 	mov [triangle+6], ebx
 	
 	pop eax
-	pop ebx	
+	pop ebx
+	#mov FP, 0xabfa
+	and %1, %1
 ret
 
 copypoint:
