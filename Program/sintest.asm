@@ -38,19 +38,22 @@ main:
 	mov %FP, %SP
 
 	mov %0, 0x4000			#90 degrees
-	call sin
+	call cos
 	mov [LCD], %0
 	mov %0, 0x8000			#180 degrees
-	call sin
+	call cos
 	mov [LCD], %0
 	mov %0, 0x0000			#0 degrees
-	call sin
+	call cos
 	mov [LCD], %0
 	mov %0, 0x2000			#45 degrees
-	call sin
+	call cos
 	mov [LCD], %0
 	mov %0, 0x1500			#30 degrees
-	call sin
+	call cos
+	mov [LCD], %0
+	mov %0, 0x5555			#120 degrees
+	call cos
 	mov [LCD], %0
 
 	forever:
