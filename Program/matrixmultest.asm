@@ -37,9 +37,9 @@ main:
 	mov %SP, STACK_TOP
 	mov %FP, %SP
 
-	mov %0, foo_matrix
-	mov %1, bar_vector
-	mov %2, baz_vector
+	mov %0, bar_matrix
+	mov %1, foo_vector
+	mov %2, bar_vector
 	call matrix_multiply
 
 	forever:
@@ -66,37 +66,41 @@ matrix_multiply:
 	mov %5, 0	# accumulator
 	mov %6, 0	# counter
 
-	matmulloop2:
-	# get two elements
-	mov %3, [%1]
-	mov %4, [%0]
-	# check which kind of multiply to do
-	incr %0
-	mov %8, [%0]
-	je %8, 1, matmulfmul
-	# multiply them
-	mul %3, %4
-	j matmuldonemul
-	matmulfmul:
-	fmul %3, %4
-	matmuldonemul:
-	# store in accumulator
-	add %5, %LOW
-	# increment the pointers and counters
-	incr %0
-	incr %1
-	incr %6
-	incr %7
-	# test loop condition
-	cmp %6, 3
-	jl matmulloop2
+		matmulloop2:
+		# get two elements
+		mov %3, [%1]
+		mov %4, [%0]
+		# check which kind of multiply to do
+		incr %0
+		incr %7
+		mov %8, [%0]
+		je %8, 1, matmulfmul
+		# multiply them
+			mul %3, %4
+			# store in accumulator
+			add %5, %LOW
+			j matmuldonemul
+
+			matmulfmul:
+			fmul %3, %4
+			# store in accumulator
+			add %5, %3
+		matmuldonemul:
+		# increment the pointers and counters
+		incr %0
+		incr %1
+		incr %6
+		incr %7
+		# test loop condition
+		cmp %6, 3
+		jl matmulloop2
 	# reset vector pointer
 	sub %1, 3
 	# save new row in return vector
 	mov [%2], %5
 	incr %2
 	# test if we are done
-	cmp %7, 9
+	cmp %7, 18
 	jl matmulloop1
 
 	# done
@@ -132,12 +136,32 @@ foo_matrix:
 0
 0
 
-bar_vector:
+bar_matrix:
+0
+0
+0
+0
+0x4000
+1
+0
+0
+1
+0
+0
+0
+0xb000
+1
+0
+0
+0
+0
+
+foo_vector:
 4
 5
 6
 
-baz_vector:
+bar_vector:
 99
 99
 99

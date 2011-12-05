@@ -127,6 +127,8 @@ setup_rotate:
 	mov %9, %1	# ytheta
 
 	# generate rotation matrix x
+	mov %0, 0xffff
+	mov [LCD], %0
 	mov %0, %8	# generate and save cos
 	call cos
 	mov %6, %0
