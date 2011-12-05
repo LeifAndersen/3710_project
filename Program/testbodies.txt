@@ -1,0 +1,24 @@
+mov %3, 3
+	sub %SP, 3
+	mov %1, %SP
+	mov %0, [foo_model+2]
+	mov [%1], %0
+	incr %1
+	mov %0, [foo_model+3]
+	mov [%1], %0
+	incr %1
+	mov %0, [foo_model+4]
+	mov [%1], %0
+
+	mov %0, foo_model
+	add %0, 2				# skip size and color
+	sub %1, 2
+	call vector_add
+	
+	call vector_sub
+
+	
+	
+	
+	
+	

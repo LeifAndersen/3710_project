@@ -22,6 +22,7 @@ module Keyboard(
     input clk,
 	input ps2_clk,
     input data,
+	input keyboardReset,
 	input reset,
     output reg[15:0] up,
 	output reg[15:0] down,
@@ -40,7 +41,7 @@ module Keyboard(
 	reg ps2negedge;
 
 	always@(posedge clk) begin
-		if(reset) begin
+		if(reset || keyboardReset) begin
 			shiftReg <= 11'b11111111111;
 			rel <= 1'd0;
 			buttons <= 16'd0;
@@ -48,6 +49,8 @@ module Keyboard(
 			down <= 16'd0;
 			right <= 16'd0;
 			left <= 16'd0;
+			a <= 16'd0;
+			b <= 16'd0;
 			ps2negedge <= 0;
 		end
 		
@@ -56,9 +59,11 @@ module Keyboard(
 			ps2negedge <= ~ps2negedge;
 			if (ps2negedge == 1) //Means its going to change from 1 to zero right now, so negedge.
 			begin
-				shiftReg[10:1] <= shiftReg[9:0];
-				shiftReg[0] <= data;
-				if(shiftReg[10] == 1'd0) begin
+				if(shiftReg[10] != 1'd0) begin
+					shiftReg[10:1] <= shiftReg[9:0];
+					shiftReg[0] <= data;
+				end else begin
+					shiftReg[10:0] <= 11'b11111111111;
 					if(rel == 1'b0) begin
 						case(shiftReg)
 						UP: buttons[0] <= 1'b1;

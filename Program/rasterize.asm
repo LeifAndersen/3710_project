@@ -154,7 +154,7 @@ mov ebx, LOW
 sub eax, ebx
 
 #Cross product is done, result in eax.
-jg eax, 0, dontswap3
+jl eax, 0, dontswap3
 mov temp1, [points+3] #x2
 mov temp2, [points+5] #x3
 mov [points+3], temp2
@@ -178,7 +178,7 @@ dontswap3: #Now points are sorted so first is lowest y-value, second is lowest x
 ###
 
 #left side
-mov yvalleft, 0 #[points+2] #Initialize loop counter -- Move smallest y-value into line.
+mov yvalleft, 0 #Initialize loop counter -- Move smallest y-value into line.
 mov yvalright, 0
 mov temp1, [points+1] #Move xref into temp1
 mov ebx, [points+3] #Move x2 into ebx
@@ -293,7 +293,7 @@ add eex, temp1 #temp1 = x for given yvalleftue, x = xref + (yvalleftue)*(1/ydif)
 mov %10, ecx #use %10 as temp register.
 mul eax, yvalright # LOW = xdif * yvalleft (max is 159 * 119 which is within 2^16, even when signed.)
 fmul %10, LOW # edx = (yvalleft)*(1/ydif) * xdif
-add %10, temp2 #temp1 = x for given yvalleftue, x = xref + (yvalleft)*(1/ydif)*xdif = left index to give to painter.
+add %10, temp2 #temp1 = x for given yvalleftue, x = xref + (yvalleft)*(1/ydif)*xdif = right index to give to painter.
 
 
 

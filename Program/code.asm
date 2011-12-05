@@ -44,17 +44,17 @@ init:
 main:
 
 	# Store the registers on the stack
-	push $0
-	push $1
-	push $2
-	push $3
-	push $4
-	push $5
-	push $6
-	push $7
-	push $8
-	push $9
-	push $10
+	push %0
+	push %1
+	push %2
+	push %3
+	push %4
+	push %5
+	push %6
+	push %7
+	push %8
+	push %9
+	push %10
 
 mainNewPlayer:
 	mov %0, 0
@@ -830,17 +830,17 @@ mainEndAIBullet:
 	j mainLoop # Loop again.
 
 mainEnd:
-	pop $10
-	pop $9
-	pop $8
-	pop $7
-	pop $6
-	pop $5
-	pop $4
-	pop $3
-	pop $2
-	pop $1
-	pop $0
+	pop %10
+	pop %9
+	pop %8
+	pop %7
+	pop %6
+	pop %5
+	pop %4
+	pop %3
+	pop %2
+	pop %1
+	pop %0
 	ret
 
 # given the pointer to a triangle in %0, find the farthest point and return the distance to it squared

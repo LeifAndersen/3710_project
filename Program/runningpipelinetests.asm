@@ -31,7 +31,7 @@
 `define BULLET_LIFE 100
 `define FIND_THETA_ACCURACY 5
 `define DEGREE_90 0      # 90 Degrees in our encoding
-`define STACK_TOP 0x2bff # stack starts at 11264 (this is the top of memory, be careful)
+`define STACK_TOP 11264 # stack starts at 11264 (this is the top of memory, be careful)
 
 # Bootup and initialization Code
 init:
@@ -43,27 +43,6 @@ init:
 # Main Loop
 main:
 	mainLoop:
-	
-	mov %3, 3
-	sub %SP, 3
-	mov %1, %SP
-	incr %1
-	mov %0, [foo_model+1]
-	mov [%1], %0
-	incr %1
-	mov %0, [foo_model+2]
-	mov [%1], %0
-	incr %1
-	mov %0, [foo_model+3]
-	mov [%1], %0
-
-	mov %0, foo_model
-	incr %0
-	sub %1, 2
-	call vector_add
-
-	forever:
-	j forever
 
 	# -------------------------------
 	# For each triangle, do this, although unless it's an enemy tank, you can skip the AI step.
@@ -72,8 +51,8 @@ main:
 	#	Create copy of model on stack from data.
 	mov %7, 0				# keep running total of stack frame size. DO NOT MODIFY %7
 
-	mov %0, [foo_model]	# tank size
-	mov %3, foo_model		# tank location
+	mov %0, [bullet_model]	# tank size
+	mov %3, bullet_model		# tank location
 	mul %0, 10				# get full size
 	mov %0, %LOW
 	add %0, 1
@@ -295,6 +274,9 @@ main:
 	# -------------------------------
 	# clean up stack
 	add %SP, %7
+	
+	forever:
+	j forever
 
 	j mainLoop # Loop again.
 
@@ -1203,15 +1185,25 @@ rotation_matrix_y:
 foo_model:
 1
 0 #color
--49 #-
-0
--80
--84 #-
--69
--129
-84 #-
--70
--129
+1 #-
+2
+3
+3 #-
+2
+1
+7 #-
+8
+9
+0 #color
+10 #-
+20
+30
+30 #-
+20
+10
+70 #-
+80
+90
 
 tank_model:
 26
