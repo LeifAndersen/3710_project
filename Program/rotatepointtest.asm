@@ -88,6 +88,7 @@ matrix_multiply:
 			# store in accumulator
 			add %5, %3
 		matmuldonemul:
+		mov [LCD], %7
 		# increment the pointers and counters
 		incr %0
 		incr %1
