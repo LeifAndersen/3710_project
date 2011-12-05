@@ -185,22 +185,21 @@ mainAIDoneMoving:
 	mov %7, [PLAYER_BULLET_Y]
 	mov %0, [PLAYER_BULLET_THETA]
 	call cos
-	mul %0, BULLET_SPEED
-	add %6, %LOW           # 6 now conains bullet x
+	fmul %0, BULLET_SPEED
+	add %6, %0           # 6 now conains bullet x
 	mov %0, [PLAYER_BULLET_THETA]
 	call sin
-	mul %0, BULLET_SPEED
-	add %7, %LOW           # 7 now contains bullet y
+	fmul %0, BULLET_SPEED
+	add %7, %0           # 7 now contains bullet y
 
 	# Check bullet AI Collision
 	mov %0, %4
 	sub %0, %6
-	mul %0, %0
-	mov %0, %LOW
+	lsh %0, 1
 	mov %1, %5
 	sub %1, %7
-	mul %1, %1
-	add %0, %LOW # 0 now contains (x0-x1)^2+(y0-y1)^2
+	lsh %1, 1
+	add %0, %1 # 0 now contains (x0-x1)^2+(y0-y1)^2
 	mov %1, BULLET_RADIUS
 	add %1, TANK_RADIUS
 	jg %0, %1, mainEndPlayerBullet # Not a hit
@@ -237,22 +236,21 @@ mainEndPlayerBullet:
 	mov %9, [AI_BULLET_Y]
 	mov %0, [AI_BULLET_THETA]
 	call cos
-	mul %0, BULLET_SPEED
-	add %8, %LOW           # 8 now conains bullet x
+	fmul %0, BULLET_SPEED
+	add %8, %0            # 8 now conains bullet x
 	mov %0, [AI_BULLET_THETA]
 	call sin
-	mul %0, BULLET_SPEED
-	add %9, %LOW           # 9 now contains bullet y
+	fmul %0, BULLET_SPEED
+	add %9, %0           # 9 now contains bullet y
 
 	# Check bullet AI Collision
 	mov %0, %2
 	sub %0, %8
-	mul %0, %0
-	mov %0, %LOW
+	lsh %0, 1
 	mov %1, %3
 	sub %1, %9
-	mul %1, %1
-	add %0, %LOW # 0 now contains (x0-x1)^2+(y0-y1)^2
+	lsh %1, 1
+	add %0, %1 # 0 now contains (x0-x1)^2+(y0-y1)^2
 	mov %1, BULLET_RADIUS
 	add %1, TANK_RADIUS
 	jg %0, %1, mainEndPlayerBullet # Not a hit
@@ -291,8 +289,6 @@ mainAIFire:
 	mov [AI_BULLET_Y], %0
 
 mainEndAIBullet:
-
-	# Bullet Player collision
 
 	# Store Final Values
 	mov [PLAYER_X], %3
