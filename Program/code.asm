@@ -195,10 +195,10 @@ mainAIDoneMoving:
 	# Check bullet AI Collision
 	mov %0, %4
 	sub %0, %6
-	shl %0, 1
+	lsh %0, 1
 	mov %1, %5
 	sub %1, %7
-	shl %1, 1
+	lsh %1, 1
 	add %0, %1 # 0 now contains (x0-x1)^2+(y0-y1)^2
 	mov %1, BULLET_RADIUS
 	add %1, TANK_RADIUS
@@ -246,10 +246,10 @@ mainEndPlayerBullet:
 	# Check bullet AI Collision
 	mov %0, %2
 	sub %0, %8
-	shl %0, 1
+	lsh %0, 1
 	mov %1, %3
 	sub %1, %9
-	shl %1, 1
+	lsh %1, 1
 	add %0, %1 # 0 now contains (x0-x1)^2+(y0-y1)^2
 	mov %1, BULLET_RADIUS
 	add %1, TANK_RADIUS
