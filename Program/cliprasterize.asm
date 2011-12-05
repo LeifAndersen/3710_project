@@ -87,6 +87,7 @@ clip:
 	#push zone2
 	#push zone3
 	#add SP, 10
+	mov FP, 0xbbaa
 	mov temp2, [eax]
 	
 	call copyTriangle
@@ -107,7 +108,7 @@ clip:
 		
 		jle eax, 119, p1notinzone2
 			or zone1, 0b100
-		p1notinzone2:	
+		p1notinzone2:
 	
 		#t2
 		mov eax, [triangle+4] #y2
@@ -169,6 +170,7 @@ clip:
 		and eax, zone3
 		
 		je eax, 0, basecase1fail
+			mov FP, 0xfbfb
 			ret
 		basecase1fail:
 		
@@ -177,7 +179,9 @@ clip:
 		or eax, zone3
 		
 		jne eax, 0, basecase2fail
+			mov FP, 0xfbfb
 			call rasterize
+			mov FP, 0xdddd
 			ret
 		basecase2fail:
 	
@@ -600,6 +604,7 @@ clip:
 				incr FP ########## test code
 				add SP, 7
 				
+				mov FP, 0xfbfb
 				ret			
 ###
 ###
@@ -614,8 +619,11 @@ clip:
 ###
 ###
 perspectivetransform:
+	mov FP, 0xfafa
 
 	###Point 1
+		mov ebx, [eax]
+		mov [triangle], ebx
 		incr eax
 		call copypoint
 		add eax, 3
@@ -630,6 +638,7 @@ perspectivetransform:
 		
 		call binarySubdivide
 		
+		add eax, 80
 		mov [triangle+1], eax
 		
 		#Superposition.  First, do x1 and z1, then do y1 and z1.
@@ -641,6 +650,7 @@ perspectivetransform:
 		
 		call binarySubdivide
 		
+		add eax, 60
 		mov [triangle+2], eax
 	
 	###Point 2
@@ -659,6 +669,7 @@ perspectivetransform:
 		
 		call binarySubdivide
 		
+		add eax, 80
 		mov [triangle+3], eax
 		
 		#Superposition.  First, do x1 and z1, then do y1 and z1.
@@ -670,6 +681,7 @@ perspectivetransform:
 		
 		call binarySubdivide
 		
+		add eax, 60
 		mov [triangle+4], eax
 		
 	###Point 3
@@ -677,7 +689,6 @@ perspectivetransform:
 		pop eax
 		call copypoint
 		add eax, 3
-		push eax
 		
 		#Superposition.  First, do x1 and z1, then do y1 and z1.
 		mov eax, [point]
@@ -688,6 +699,7 @@ perspectivetransform:
 		
 		call binarySubdivide
 		
+		add eax, 80
 		mov [triangle+5], eax
 		
 		#Superposition.  First, do x1 and z1, then do y1 and z1.
@@ -699,10 +711,12 @@ perspectivetransform:
 		
 		call binarySubdivide
 		
+		add eax, 60
 		mov [triangle+6], eax
 	
 	mov eax, triangle
 	
+	mov FP, 0xbcde
 	call clip
 	
 	###Need to decide on a way to use the outgoing information.  Probably just pump it straight through to clip/rasterize.
@@ -900,6 +914,9 @@ ret
 ### END Rasterize 2
 ###
 ###
+
+
+
 
 ###
 ###

@@ -10,13 +10,18 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="32" />
-   <wvobject fp_name="/testdatapath/uut/RegisterFile/reg13" type="array" db_ref_id="1">
+   <WVObjectSize size="33" />
+   <wvobject fp_name="/testdatapath/uut/drawunit/queue/count" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">count[9:0]</obj_property>
+      <obj_property name="ObjectShortName">count[9:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/RegisterFile/reg14" type="array" db_ref_id="1">
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="ElementShortName">reg13[15:0]</obj_property>
-      <obj_property name="ObjectShortName">reg13[15:0]</obj_property>
-      <obj_property name="label">SP: %13</obj_property>
-      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <obj_property name="ElementShortName">reg14[15:0]</obj_property>
+      <obj_property name="ObjectShortName">reg14[15:0]</obj_property>
+      <obj_property name="label">FP: %14</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/testdatapath/uut/CLK_25MHZ" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">CLK_25MHZ</obj_property>
@@ -97,25 +102,18 @@
       <obj_property name="ObjectShortName">pc[15:0]</obj_property>
       <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
    </wvobject>
-   <wvobject fp_name="/testdatapath/uut/RegisterFile/reg14" type="array" db_ref_id="1">
+   <wvobject fp_name="/testdatapath/uut/RegisterFile/reg13" type="array" db_ref_id="1">
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="ElementShortName">reg14[15:0]</obj_property>
-      <obj_property name="ObjectShortName">reg14[15:0]</obj_property>
-      <obj_property name="label">FP: %14</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="ElementShortName">reg13[15:0]</obj_property>
+      <obj_property name="ObjectShortName">reg13[15:0]</obj_property>
+      <obj_property name="label">SP: %13</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/testdatapath/uut/RegisterFile/reg8" type="array" db_ref_id="1">
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="ElementShortName">reg8[15:0]</obj_property>
       <obj_property name="ObjectShortName">reg8[15:0]</obj_property>
       <obj_property name="label">temp2: %8</obj_property>
-      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/testdatapath/uut/RegisterFile/reg11" type="array" db_ref_id="1">
-      <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="ElementShortName">reg11[15:0]</obj_property>
-      <obj_property name="ObjectShortName">reg11[15:0]</obj_property>
-      <obj_property name="label">LOW: %11</obj_property>
       <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/testdatapath/uut/RegisterFile/reg12" type="array" db_ref_id="1">
@@ -626,6 +624,13 @@
    <wvobject fp_name="/testdatapath/uut/MainMemory/block1/memory[39]" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">[39,17:0]</obj_property>
       <obj_property name="ObjectShortName">memory[39,17:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/RegisterFile/reg11" type="array" db_ref_id="1">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">reg11[15:0]</obj_property>
+      <obj_property name="ObjectShortName">reg11[15:0]</obj_property>
+      <obj_property name="label">LOW: %11</obj_property>
       <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/testdatapath/uut/MainMemory/block1/memory[38]" type="array" db_ref_id="1">
