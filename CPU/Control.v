@@ -135,8 +135,8 @@ module Control(
 					BuffCtrl[3] <= 0;
 				end
 			end
-			
-			// r to r sub instructions need to be reversed in order to allow immediates to be use as the subtrahend 
+
+			// r to r sub instructions need to be reversed in order to allow immediates to be use as the subtrahend
 			else if (instruction[7:4] == SUB) begin
 				BuffCtrl[6]  <= 0;
 				BuffCtrl[7]  <= 0;
@@ -488,7 +488,7 @@ module Control(
 			else if(instruction[17:14] == RET) begin
 				//RET:
 				BuffCtrl[22] <= 0;
-				BuffCtrl[20] <= 1;
+				BuffCtrl[20] <= 0;
 				BuffCtrl[18] <= 0;
 				BuffCtrl[14] <= 1;
 				BuffCtrl[19] <= 0;
@@ -513,7 +513,7 @@ module Control(
 				//JL: low or negative
 				MemRead      <= 0;
 				BuffCtrl[8]  <= 0;
-				BuffCtrl[9]  <= 1;
+				BuffCtrl[9]  <= 0;
 				BuffCtrl[20] <= 0;
 				BuffCtrl[19] <= 0;
 				BuffCtrl[18] <= 0;
@@ -549,7 +549,7 @@ module Control(
 				//JLE: low, negative, or zero
 				MemRead      <= 0;
 				BuffCtrl[8]  <= 0;
-				BuffCtrl[9]  <= 1;
+				BuffCtrl[9]  <= 0;
 				BuffCtrl[20] <= 0;
 				BuffCtrl[19] <= 0;
 				BuffCtrl[18] <= 0;
@@ -584,7 +584,7 @@ module Control(
 				//JNE: not zero
 				MemRead      <= 0;
 				BuffCtrl[8]  <= 0;
-				BuffCtrl[9]  <= 1;
+				BuffCtrl[9]  <= 0;
 				BuffCtrl[20] <= 0;
 				BuffCtrl[19] <= 0;
 				BuffCtrl[18] <= 0;
@@ -619,7 +619,7 @@ module Control(
 				//JE:
 				MemRead      <= 0;
 				BuffCtrl[8]  <= 0;
-				BuffCtrl[9]  <= 1;
+				BuffCtrl[9]  <= 0;
 				BuffCtrl[20] <= 0;
 				BuffCtrl[19] <= 0;
 				BuffCtrl[18] <= 0;
@@ -653,7 +653,7 @@ module Control(
 				//J:
 				MemRead      <= 0;
 				BuffCtrl[8]  <= 0;
-				BuffCtrl[9]  <= 1;
+				BuffCtrl[9]  <= 0;
 				BuffCtrl[15] <= 1;
 				BuffCtrl[12] <= 0;
 				BuffCtrl[16] <= 0;
@@ -676,7 +676,7 @@ module Control(
 				//JBE:
 				MemRead      <= 0;
 				BuffCtrl[8]  <= 0;
-				BuffCtrl[9]  <= 1;
+				BuffCtrl[9]  <= 0;
 				BuffCtrl[20] <= 0;
 				BuffCtrl[19] <= 0;
 				BuffCtrl[18] <= 0;
@@ -710,7 +710,7 @@ module Control(
 				//JB:
 				MemRead      <= 0;
 				BuffCtrl[8]  <= 0;
-				BuffCtrl[9]  <= 1;
+				BuffCtrl[9]  <= 0;
 				BuffCtrl[20] <= 0;
 				BuffCtrl[19] <= 0;
 				BuffCtrl[18] <= 0;
@@ -748,7 +748,7 @@ module Control(
 				BuffCtrl[10] <= 0;
 				BuffCtrl[11] <= 0;
 				BuffCtrl[8]  <= 0;
-				BuffCtrl[9]  <= 1;
+				BuffCtrl[9]  <= 0;
 				BuffCtrl[20] <= 0;
 				BuffCtrl[19] <= 0;
 				BuffCtrl[18] <= 0;
