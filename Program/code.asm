@@ -107,7 +107,8 @@ mainLoop:
 	mov [LCD], %2
 	mov [PLAYER_X], %2
 	mov [PLAYER_Y], %3
-	mov [UP_KEY], 1
+	mov %0, 1
+	mov [UP_KEY], %0
 
 	# TODO DEBUGGING ---------------
 
