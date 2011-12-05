@@ -207,6 +207,9 @@ rotate_point:
 	push %2
 	push %1
 	push %0
+	
+	mov %FP, 0xabab
+	mov %FP, 0xbaba
 
 	mov %7, %0	# src point
 	mov %10, %1	# dest point

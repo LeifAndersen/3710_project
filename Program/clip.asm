@@ -28,7 +28,7 @@
 `define LCD 16376
 `define VGA 16383
 `define STACK_TOP 0x2bff
-`define PERSPECTIVE 10
+`define PERSPECTIVE -100
 `define temp1 %7
 `define yvalleft %9
 `define yvalright %5
@@ -42,29 +42,32 @@ init:
 	call main
 	
 main:
-	mov eax, 180
+	mov eax, 600
+	push eax	
+	mov eax, 60
+	push eax
+	mov eax, 553
 	push eax
 	
-	mov eax, 205
+	mov eax, 600
+	push eax	
+	mov eax, 0
+	push eax	
+	mov eax, 0
 	push eax
 	
-	mov eax, -60
-	push eax
-	
-	mov eax, 140
-	push eax
-	
-	mov eax, 50
-	push eax
-	
-	mov eax, -35
+	mov eax, 600
+	push eax	
+	mov eax, 60
+	push eax	
+	mov eax, -10
 	push eax
 	
 	mov eax, 1
 	push eax
 	
 	mov eax, SP
-	call clip
+	call perspectivetransform
 
 	infinite:
 	j infinite
@@ -77,6 +80,7 @@ main:
 ### NO RETURN VALUE - This function merely clips a triangle that's already been perspective transformed, rasterizes any on-screen parts, then discards the triangle.
 ###
 clip:
+	mov FP, 0xfbff
 	#mov FP, SP
 	#push eax
 	#push zone1
@@ -165,6 +169,7 @@ clip:
 		and eax, zone3
 		
 		je eax, 0, basecase1fail
+				mov FP, 0xfbbf
 			ret
 		basecase1fail:
 		
@@ -173,7 +178,9 @@ clip:
 		or eax, zone3
 		
 		jne eax, 0, basecase2fail
+			mov FP, 0xfbbb
 			call rasterize
+			mov FP, 0xbbbb
 			ret
 		basecase2fail:
 	
@@ -592,6 +599,7 @@ clip:
 				
 				add SP, 7
 				
+				mov FP, 0xfbfb
 				ret			
 ###
 ###
@@ -606,8 +614,11 @@ clip:
 ###
 ###
 perspectivetransform:
+	mov FP, 0xfafa
 
 	###Point 1
+		mov ebx, [eax]
+		mov [triangle], ebx
 		incr eax
 		call copypoint
 		add eax, 3
@@ -622,6 +633,7 @@ perspectivetransform:
 		
 		call binarySubdivide
 		
+		add eax, 80
 		mov [triangle+1], eax
 		
 		#Superposition.  First, do x1 and z1, then do y1 and z1.
@@ -633,6 +645,7 @@ perspectivetransform:
 		
 		call binarySubdivide
 		
+		add eax, 60
 		mov [triangle+2], eax
 	
 	###Point 2
@@ -651,6 +664,7 @@ perspectivetransform:
 		
 		call binarySubdivide
 		
+		add eax, 80
 		mov [triangle+3], eax
 		
 		#Superposition.  First, do x1 and z1, then do y1 and z1.
@@ -662,6 +676,7 @@ perspectivetransform:
 		
 		call binarySubdivide
 		
+		add eax, 60
 		mov [triangle+4], eax
 		
 	###Point 3
@@ -669,7 +684,6 @@ perspectivetransform:
 		pop eax
 		call copypoint
 		add eax, 3
-		push eax
 		
 		#Superposition.  First, do x1 and z1, then do y1 and z1.
 		mov eax, [point]
@@ -680,6 +694,7 @@ perspectivetransform:
 		
 		call binarySubdivide
 		
+		add eax, 80
 		mov [triangle+5], eax
 		
 		#Superposition.  First, do x1 and z1, then do y1 and z1.
@@ -691,15 +706,17 @@ perspectivetransform:
 		
 		call binarySubdivide
 		
+		add eax, 60
 		mov [triangle+6], eax
 	
 	mov eax, triangle
 	
+	mov FP, 0xbcde
 	call clip
+	mov FP, 0xedcb
 	
 	###Need to decide on a way to use the outgoing information.  Probably just pump it straight through to clip/rasterize.
 	###Need to know incoming data format.
-	
 
 
 ret
@@ -716,7 +733,7 @@ ret
 ### Note - x and y can be switched to flip axes
 
 binarySubdivide:		
-		
+	mov FP, 0xbebe	
 	### Find lowest point (most negative y) to start with.
 		jge edx, ebx, ebxislowest
 			mov efx, ebx
@@ -746,6 +763,7 @@ binarySubdivide:
 		
 		jne edx, eex, precheckedx
 			mov eax, ecx
+			mov FP, 0xacac
 			ret
 		precheckedx:
 		
@@ -758,6 +776,7 @@ binarySubdivide:
 		# If yguess == eex, done
 		# efx holds yguess
 			jne ebx, eex, binarySubdividenotdone1
+				mov FP, 0xacac
 				ret
 			binarySubdividenotdone1:
 		
@@ -903,6 +922,98 @@ point:
 
 
 points:
+0xffff
+0xffff
+0xffff
+0xffff
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+00
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
 0
 0
 0

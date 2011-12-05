@@ -31,6 +31,12 @@
 `define BULLET_LIFE 100
 `define FIND_THETA_ACCURACY 5
 `define DEGREE_90 0x4000      # 90 Degrees in our encoding
+`define FIELD_MIN -8192
+`define FIELD_MAZ 8192
+`define FIT_SCREEN_SHIFT_AMMOUNT 7 # THe ammount of shifts needed to make 2*FIELD SIZE fit on the screen in both x and y axis
+`define FIELD_OFFSET 8192 # Offset for field to make it all positive
+`define DEBUG_TANK_SIZE 10
+`define DEBUG_BULLET_SIZE 10
 `define STACK_TOP 11264 # stack starts at 11264 (this is the top of memory, be careful)
 
 # Bootup and initialization Code
@@ -79,6 +85,15 @@ mainNewPlayer:
 
 mainLoop:
 
+	mov %0, 10
+	mov %1, 10
+	mov %2, 50
+	mov %3, 50
+	mov %4, 1
+	call drawSquare
+
+	j mainLoop
+
 	# Check Inputs
 	# Left/Right, update theta
 	mov %2, [LEFT_KEY]
@@ -126,6 +141,7 @@ mainLoop:
 	je %0, 0, noInput
 		mov [UP_KEY], %0
 	noInput:
+	call drawDebuggingGraphics
 	j mainLoop
 	# TODO DEBUGGING ---------------
 
@@ -314,6 +330,13 @@ mainEndAIBullet:
 	je %0, 0, mainNoInput
 		mov [UP_KEY], %0
 	mainNoInput:
+
+	j mainEndDebuggingGraphics
+	# DEBUGGING GRAPHICS
+	call drawDebuggingGraphics
+	# DEBUGGING GRAPHICS
+mainEndDebuggingGraphics:
+
 
 	# -------------------------------
 	# For each triangle, do this, although unless it's an enemy tank, you can skip the AI step.
@@ -1103,6 +1126,88 @@ memcpy:
 	pop %0
 	ret
 
+# Simply draws, does not kill any registers
+drawDebuggingGraphics:
+
+	push %0
+	push %1
+	push %2
+	push %3
+	push %4
+
+	mov %0, [PLAYER_X]  # Your tank
+	mov %1, [PLAYER_Y]
+	add %0, FIELD_OFFSET
+	add %1, FIELD_OFFSET
+	arsh %0, FIT_SCREEN_SHIFT_AMMOUNT
+	arsh %1, FIT_SCREEN_SHIFT_AMMOUNT
+	mov %0, %2
+	sub %0, DEBUG_TANK_SIZE
+	add %2, DEBUG_TANK_SIZE
+	mov %1, %3
+	sub %1, DEBUG_TANK_SIZE
+	add %3, DEBUG_TANK_SIZE
+	mov %4, 1
+	call drawSquare
+
+	mov %0, [AI_X]  # Enemy Tank
+	mov %1, [AI_Y]
+	add %0, FIELD_OFFSET
+	add %1, FIELD_OFFSET
+	arsh %0, FIT_SCREEN_SHIFT_AMMOUNT
+	arsh %1, FIT_SCREEN_SHIFT_AMMOUNT
+	mov %0, %2
+	sub %0, DEBUG_TANK_SIZE
+	add %2, DEBUG_TANK_SIZE
+	mov %1, %3
+	sub %1, DEBUG_TANK_SIZE
+	add %3, DEBUG_TANK_SIZE
+	mov %4, 1
+	call drawSquare
+
+	mov %0, [PLAYER_BULLET_TIME]
+	je %0, 0, mainDebugNoDrawPlayerBullet
+		mov %0, [PLAYER_BULLET_X]  # Your bullet
+		mov %1, [PLAYER_BULLET_Y]
+		add %0, FIELD_OFFSET
+		add %1, FIELD_OFFSET
+		arsh %0, FIT_SCREEN_SHIFT_AMMOUNT
+		arsh %1, FIT_SCREEN_SHIFT_AMMOUNT
+		mov %0, %2
+		sub %0, DEBUG_BULLET_SIZE
+		add %2, DEBUG_BULLET_SIZE
+		mov %1, %3
+		sub %1, DEBUG_BULLET_SIZE
+		add %3, DEBUG_BULLET_SIZE
+		mov %4, 1
+		call drawSquare
+	mainDebugNoDrawPlayerBullet:
+
+	mov %0, [AI_BULLET_TIME]
+	je %0, 0, mainDebugNoDrawAIBullet
+		mov %0, [AI_BULLET_X]  # Your bullet
+		mov %1, [AI_BULLET_Y]
+		add %0, FIELD_OFFSET
+		add %1, FIELD_OFFSET
+		arsh %0, FIT_SCREEN_SHIFT_AMMOUNT
+		arsh %1, FIT_SCREEN_SHIFT_AMMOUNT
+		mov %0, %2
+		sub %0, DEBUG_BULLET_SIZE
+		add %2, DEBUG_BULLET_SIZE
+		mov %1, %3
+		sub %1, DEBUG_BULLET_SIZE
+		add %3, DEBUG_BULLET_SIZE
+		mov %4, 1
+		call drawSquare
+	mainDebugNoDrawAIBullet:
+
+	pop %4
+	pop %3
+	pop %2
+	pop %1
+	pop %0
+	ret
+
 # Take x0 in 0, y0 in 1, x1 in 2 and y1 in 3, return the dot product in 0
 # Does not destory any registers other than the return value in 0.
 dot:
@@ -1301,6 +1406,11 @@ FindTheta:
 # Draw a square
 drawSquare:
 
+	push %0
+	push %1
+	push %2
+	push %3
+	push %4
 	push %5
 
 	lsh %0, 8
@@ -1320,6 +1430,11 @@ drawSquare:
 	endDrawSquare:
 
 	pop %5
+	pop %4
+	pop %3
+	pop %2
+	pop %1
+	pop %0
 	ret
 
 # Take a number in the $0 reg, return the sin of that number into the $0 reg

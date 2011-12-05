@@ -3,7 +3,7 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="C:/Users/Daniel/3710/CPU/testdatapath_isim_beh.wdb" id="1" type="auto">
+      <db_ref path="C:/Users/jhparker/3710/CPU/testdatapath_isim_beh.wdb" id="1" type="auto">
          <top_modules>
             <top_module name="glbl" />
             <top_module name="testdatapath" />
@@ -15,10 +15,45 @@
       <obj_property name="ElementShortName">CLK_25MHZ</obj_property>
       <obj_property name="ObjectShortName">CLK_25MHZ</obj_property>
    </wvobject>
+   <wvobject fp_name="/testdatapath/uut/RegisterFile/reg14" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">reg14[15:0]</obj_property>
+      <obj_property name="ObjectShortName">reg14[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
    <wvobject fp_name="/testdatapath/uut/pc" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">pc[15:0]</obj_property>
       <obj_property name="ObjectShortName">pc[15:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/RegisterFile/reg3" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">reg3[15:0]</obj_property>
+      <obj_property name="ObjectShortName">reg3[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/RegisterFile/reg4" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">reg4[15:0]</obj_property>
+      <obj_property name="ObjectShortName">reg4[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/RegisterFile/reg7" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">reg7[15:0]</obj_property>
+      <obj_property name="ObjectShortName">reg7[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/RegisterFile/reg5" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">reg5[15:0]</obj_property>
+      <obj_property name="ObjectShortName">reg5[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/RegisterFile/reg6" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">reg6[15:0]</obj_property>
+      <obj_property name="ObjectShortName">reg6[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/RegisterFile/reg0" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">reg0[15:0]</obj_property>
+      <obj_property name="ObjectShortName">reg0[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/testdatapath/uut/instruction" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">instruction[17:0]</obj_property>
@@ -63,11 +98,6 @@
       <obj_property name="ObjectShortName">inputReg_2[15:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
-   <wvobject fp_name="/testdatapath/uut/RegisterFile/reg0" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">reg0[15:0]</obj_property>
-      <obj_property name="ObjectShortName">reg0[15:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
    <wvobject fp_name="/testdatapath/uut/RegisterFile/reg1" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">reg1[15:0]</obj_property>
       <obj_property name="ObjectShortName">reg1[15:0]</obj_property>
@@ -76,31 +106,6 @@
    <wvobject fp_name="/testdatapath/uut/RegisterFile/reg2" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">reg2[15:0]</obj_property>
       <obj_property name="ObjectShortName">reg2[15:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/testdatapath/uut/RegisterFile/reg3" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">reg3[15:0]</obj_property>
-      <obj_property name="ObjectShortName">reg3[15:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/testdatapath/uut/RegisterFile/reg4" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">reg4[15:0]</obj_property>
-      <obj_property name="ObjectShortName">reg4[15:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/testdatapath/uut/RegisterFile/reg5" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">reg5[15:0]</obj_property>
-      <obj_property name="ObjectShortName">reg5[15:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/testdatapath/uut/RegisterFile/reg6" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">reg6[15:0]</obj_property>
-      <obj_property name="ObjectShortName">reg6[15:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/testdatapath/uut/RegisterFile/reg7" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">reg7[15:0]</obj_property>
-      <obj_property name="ObjectShortName">reg7[15:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/testdatapath/uut/RegisterFile/reg8" type="array" db_ref_id="1">
@@ -131,11 +136,6 @@
    <wvobject fp_name="/testdatapath/uut/RegisterFile/reg13" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">reg13[15:0]</obj_property>
       <obj_property name="ObjectShortName">reg13[15:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/testdatapath/uut/RegisterFile/reg14" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">reg14[15:0]</obj_property>
-      <obj_property name="ObjectShortName">reg14[15:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/testdatapath/uut/RegisterFile/reg15" type="array" db_ref_id="1">
