@@ -37,10 +37,10 @@ main:
 	mov %SP, STACK_TOP
 	mov %FP, %SP
 
-	mov %0, foo_model
-	add %0, 1			# skip the count
-	mov %1, %0
-	add %1, 3			# second arg
+	mov %1, foo_model
+	add %1, 1			# skip the count
+	mov %0, %1
+	add %0, 3			# second arg
 	call find_furthest
 
 	mov [LCD], %0
