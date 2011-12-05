@@ -24,8 +24,8 @@
 `define VGA 16383
 `define BULLET_RADIUS 1
 `define TANK_RADIUS 10
-`define AI_SPEED 10
-`define AI_ROTATION_SPEED 10
+`define SPEED 10
+`define ROTATION_SPEED 10
 `define PLAYER_START_LIVES 5
 `define BULLET_SPEED 20
 `define BULLET_LIFE 100
@@ -78,38 +78,55 @@ mainNewPlayer:
 	mov [PLAYER_LIVES], %0
 
 mainLoop:
+
 	# Check Inputs
 	# Left/Right, update theta
 	mov %2, [LEFT_KEY]
 	mov %3, [RIGHT_KEY]
 	mov %4, [PLAYER_THETA]
 	sub %2, %3
-	add %4, %2              # %4 has the theta change
+	mul %2, ROTATION_SPEED
+	add %4, %LOW           # %4 has the theta change
+	mov [PLAYER_THETA], %4 # Save the theta
 
 	# Up/Down, update x/y
 	mov %2, [PLAYER_X]
 	mov %3, [PLAYER_Y]
 	mov %5, [UP_KEY]
 	mov %6, [DOWN_KEY]
-	sub %5, %6             # Up-Down now in %6
+	sub %5, %6             # Up-Down now in %5
 	mov %0, %4             #
-	call sin               # %1 has sin(theta)
+	call cos               # %0 has sin(theta)
 	fmul %0, %5            #
-	add %2, %0             # Player X now updated by the move amount
+	mul %0, SPEED
+	add %2, %LOW           # Player X now updated by the move amount
 	                       #
 	mov %0, %4             #
-	call cos               # %1 has cos(theta)
+	call sin               # %0 has cos(theta)
 	fmul %0, %5            # %LOW/HIGH has (UP-DOWN)*cos(theta)
-	add %4, %0
-	mov [PLAYER_THETA], %4 # Save the theta
+	mul %0, SPEED
+	add %3, %LOW
 
 	# TODO DEBUGGING ---------------
-	mov [LCD], %2
+	mov [LCD], %3
 	mov [PLAYER_X], %2
 	mov [PLAYER_Y], %3
-	mov %0, 1
-	mov [UP_KEY], %0
 
+	mov %0, [UP_KEY]
+	mov %1, [DOWN_KEY]
+	add %0, %1
+	mov %1, [RIGHT_KEY]
+	add %0, %1
+	mov %1, [LEFT_KEY]
+	add %0, %1
+	mov %1, [A_KEY]
+	add %0, %1
+	mov %1, [B_KEY]
+	add %0, %1
+	je %0, 0, noInput
+		mov [UP_KEY], %0
+	noInput:
+	j mainLoop
 	# TODO DEBUGGING ---------------
 
 
@@ -117,27 +134,25 @@ mainLoop:
 
 	mov %0, [AI_TURNING]
 	je %0, 1, mainAITurningRight
-	je %0, -1, mainAITurningRight
+	je %0, -1, mainAITurningLeft
 	mov %4, [AI_X]
 	mov %5, [AI_Y]
 	mov %6, [AI_THETA]
 	mov %0, %6
 	call cos
-	mov %HIGH, %0
-	mul %HIGH, AI_SPEED    # %LOW now has speed*sin(theta), to update Y
-	add %4, %LOW           # %4 now has new Y (if possible)
+	fmul %0, SPEED    # %LOW now has speed*sin(theta), to update Y
+	add %4, %0           # %4 now has new Y (if possible)
 	mov %0, %6
 	call sin
-	mov %HIGH, %0
-	mul %HIGH, AI_SPEED
-	add %5, %LOW           # %5 now has possible AI_Y
+	fmul %0, SPEED
+	add %5, %0           # %5 now has possible AI_Y
 	j mainAIDoneMoving
 
 mainAITurningRight:
 	mov [AI_TARGET_THETA], %0
 	mov [AI_THETA], %1
 	je %0, %1, mainAIDoneTurning
-	sub %1, AI_ROTATION_SPEED
+	sub %1, ROTATION_SPEED
 	mov [AI_THETA], %1
 	j mainAIDoneMoving
 
@@ -145,7 +160,7 @@ mainAITurningLeft:
 	mov [AI_TARGET_THETA], %0
 	mov [AI_THETA], %1
 	je %0, %1, mainAIDoneTurning
-	add %1, AI_ROTATION_SPEED
+	add %1, ROTATION_SPEED
 	mov [AI_THETA], %1
 	j mainAIDoneMoving
 
@@ -173,22 +188,21 @@ mainAIDoneMoving:
 	mov %7, [PLAYER_BULLET_Y]
 	mov %0, [PLAYER_BULLET_THETA]
 	call cos
-	mul %0, BULLET_SPEED
-	add %6, %LOW           # 6 now conains bullet x
+	fmul %0, BULLET_SPEED
+	add %6, %0           # 6 now conains bullet x
 	mov %0, [PLAYER_BULLET_THETA]
 	call sin
-	mul %0, BULLET_SPEED
-	add %7, %LOW           # 7 now contains bullet y
+	fmul %0, BULLET_SPEED
+	add %7, %0           # 7 now contains bullet y
 
 	# Check bullet AI Collision
 	mov %0, %4
 	sub %0, %6
-	mul %0, %0
-	mov %0, %LOW
+	lsh %0, 1
 	mov %1, %5
 	sub %1, %7
-	mul %1, %1
-	add %0, %LOW # 0 now contains (x0-x1)^2+(y0-y1)^2
+	lsh %1, 1
+	add %0, %1 # 0 now contains (x0-x1)^2+(y0-y1)^2
 	mov %1, BULLET_RADIUS
 	add %1, TANK_RADIUS
 	jg %0, %1, mainEndPlayerBullet # Not a hit
@@ -225,22 +239,21 @@ mainEndPlayerBullet:
 	mov %9, [AI_BULLET_Y]
 	mov %0, [AI_BULLET_THETA]
 	call cos
-	mul %0, BULLET_SPEED
-	add %8, %LOW           # 8 now conains bullet x
+	fmul %0, BULLET_SPEED
+	add %8, %0            # 8 now conains bullet x
 	mov %0, [AI_BULLET_THETA]
 	call sin
-	mul %0, BULLET_SPEED
-	add %9, %LOW           # 9 now contains bullet y
+	fmul %0, BULLET_SPEED
+	add %9, %0           # 9 now contains bullet y
 
 	# Check bullet AI Collision
 	mov %0, %2
 	sub %0, %8
-	mul %0, %0
-	mov %0, %LOW
+	lsh %0, 1
 	mov %1, %3
 	sub %1, %9
-	mul %1, %1
-	add %0, %LOW # 0 now contains (x0-x1)^2+(y0-y1)^2
+	lsh %1, 1
+	add %0, %1 # 0 now contains (x0-x1)^2+(y0-y1)^2
 	mov %1, BULLET_RADIUS
 	add %1, TANK_RADIUS
 	jg %0, %1, mainEndPlayerBullet # Not a hit
@@ -280,17 +293,27 @@ mainAIFire:
 
 mainEndAIBullet:
 
-	# Bullet Player collision
-
 	# Store Final Values
 	mov [PLAYER_X], %3
 	mov [PLAYER_Y], %4
 	mov [AI_X], %6
 	mov [AI_Y], %7
 
-	# Reset keyboard counters
-	mov %0, 1
-	mov [UP_KEY], %0
+	# Reset keyboard counters (if there all 0, just let it slide)
+	mov %0, [UP_KEY]
+	mov %1, [DOWN_KEY]
+	add %0, %1
+	mov %1, [RIGHT_KEY]
+	add %0, %1
+	mov %1, [LEFT_KEY]
+	add %0, %1
+	mov %1, [A_KEY]
+	add %0, %1
+	mov %1, [B_KEY]
+	add %0, %1
+	je %0, 0, mainNoInput
+		mov [UP_KEY], %0
+	mainNoInput:
 
 	# -------------------------------
 	# For each triangle, do this, although unless it's an enemy tank, you can skip the AI step.
@@ -1319,7 +1342,7 @@ sin:
 	je third
 	cmp %9, 3
 	je fourth
-	j sinend
+	j first
 
 	second:
 	mov %9, sine_lut
@@ -1330,8 +1353,10 @@ sin:
 	sub %7, %8		# max - angle
 	add %9, %7
 	mov %0, [%9]	# addr
-	decr %9
-	and %9, 0x7F
+	mov %9, sine_lut
+	sub %7, 1
+	and %7, 0x7F
+	add %9, %7
 	mov %7, [%9]	# addr-1
 	# multiply
 	and %10, 0x7F	# fraction
@@ -1350,10 +1375,13 @@ sin:
 	rsh %8, 7
 	and %8, 0x7F	# mask angle
 	sub %8, 0x7F	# angle - max
+	and %8, 0x7F	# mask angle
 	add %9, %8
 	mov %0, [%9]	# addr
-	incr %9
+	mov %9, sine_lut
+	add %8, 1
 	and %8, 0x7F
+	add %9, %8
 	mov %7, [%9]	# addr+1
 	# multiply
 	and %10, 0x7F	# fraction
@@ -1364,8 +1392,7 @@ sin:
 	sub %9, %10		# 1 - fraction
 	fmul %0, %9
 	add %0, %7
-	not %0, %0
-	add %0, 1
+	xor %0, 0x8000
 	j sinend
 
 	fourth:
@@ -1377,8 +1404,10 @@ sin:
 	sub %7, %8		# max - angle
 	add %9, %7
 	mov %0, [%9]	# addr
-	decr %9
-	and %8, 0x7F
+	mov %9, sine_lut
+	sub %7, 1
+	and %7, 0x7F
+	add %9, %7
 	mov %7, [%9]	# addr-1
 	# multiply
 	and %10, 0x7F	# fraction
@@ -1389,19 +1418,20 @@ sin:
 	sub %9, %10		# 1 - fraction
 	fmul %0, %9
 	add %0, %7
-	not %0, %0
-	add %0, 1
+	xor %0, 0x8000
 	j sinend
 
-	sinend:
+	first:
 	mov %9, sine_lut
 	mov %8, %10
 	rsh %8, 7
 	and %8, 0x7F
 	add %9, %8
 	mov %0, [%9]	# addr
-	incr %9
+	mov %9, sine_lut
+	add %8, 1
 	and %8, 0x7F
+	add %9, %8
 	mov %7, [%9]	# addr+1
 	# multiply
 	and %10, 0x7F	# fraction
@@ -1412,6 +1442,8 @@ sin:
 	sub %9, %10		# 1 - fraction
 	fmul %0, %9
 	add %0, %7
+
+	sinend:
 
 	# return
 	pop %7
@@ -1622,10 +1654,10 @@ PLAYER_Y:
 0
 
 PLAYER_START_X:
-10
+-1000
 
 PLAYER_START_Y:
-10
+-1000
 
 PLAYER_THETA:
 0
@@ -1691,10 +1723,10 @@ AI_BULLET_TIME:
 0
 
 AI_START_X:
-10
+1000
 
 AI_START_Y:
-10
+1000
 
 AI_START_THETA:
 10
@@ -1743,109 +1775,109 @@ tank_model:
 26
 # Face 0
 0 #color
--49 #-
+-50 #-
 0
 -80
 -84 #-
--69
--129
-84 #-
 -70
--129
+-130
+85 #-
+-70
+-130
 0 #color
--49 #-
+-50 #-
 0
 -80
-84 #-
+85 #-
 -70
--129
+-130
 50 #-
 0
 -80
 # Face 1
 0 #color
-84 #-
+85 #-
 -70
--129
+-130
 -84 #-
--69
--129
--84 #-
--69
-113
+-70
+-130
+-85 #-
+-70
+114
 0 #color
+85 #-
+-70
+-130
+-85 #-
+-70
+114
 84 #-
 -70
--129
--84 #-
--69
-113
-84 #-
--70
-113
+114
 # Face 2
 0 #color
 -84 #-
--69
--129
--49 #-
+-70
+-130
+-50 #-
 0
 -80
 -50 #-
 0
-63
+64
 0 #color
 -84 #-
--69
--129
+-70
+-130
 -50 #-
 0
-63
--84 #-
--69
-113
+64
+-85 #-
+-70
+114
 # Face 3
 0 #color
 50 #-
 0
 -80
+85 #-
+-70
+-130
 84 #-
 -70
--129
-84 #-
--70
-113
+114
 0 #color
 50 #-
 0
 -80
 84 #-
 -70
-113
-49 #-
+114
+50 #-
 0
-63
+64
 # Face 4
 0 #color
 84 #-
 -70
-113
--84 #-
--69
-113
+114
+-85 #-
+-70
+114
 -50 #-
 0
-63
+64
 0 #color
 84 #-
 -70
-113
+114
 -50 #-
 0
-63
-49 #-
+64
+50 #-
 0
-63
+64
 # Face 5
 0 #color
 25 #-
@@ -1854,17 +1886,17 @@ tank_model:
 39 #-
 -70
 -64
--38 #-
+-39 #-
 -70
 -64
 0 #color
 25 #-
 -120
 -44
--38 #-
+-39 #-
 -70
 -64
--24 #-
+-25 #-
 -120
 -44
 # Face 6
@@ -1872,35 +1904,35 @@ tank_model:
 25 #-
 -120
 -44
--24 #-
+-25 #-
 -120
 -44
 -25 #-
 -120
-27
+28
 0 #color
 25 #-
 -120
 -44
 -25 #-
 -120
-27
-24 #-
+28
+25 #-
 -120
-27
+28
 # Face 7
 0 #color
--24 #-
+-25 #-
 -120
 -44
--38 #-
+-39 #-
 -70
 -64
 -39 #-
 -70
 48
 0 #color
--24 #-
+-25 #-
 -120
 -44
 -39 #-
@@ -1908,7 +1940,7 @@ tank_model:
 48
 -25 #-
 -120
-27
+28
 # Face 8
 0 #color
 39 #-
@@ -1917,234 +1949,232 @@ tank_model:
 25 #-
 -120
 -44
-24 #-
+25 #-
 -120
-27
+28
 0 #color
 39 #-
 -70
 -64
-24 #-
+25 #-
 -120
-27
-38 #-
+28
+39 #-
 -70
 48
 # Face 9
 0 #color
-24 #-
+25 #-
 -120
-27
+28
 -25 #-
 -120
-27
+28
 -39 #-
 -70
 48
 0 #color
-24 #-
+25 #-
 -120
-27
+28
 -39 #-
 -70
 48
-38 #-
+39 #-
 -70
 48
 # Face 10
 0 #color
 0 #-
 -110
-27
-0 #-
--110
-114
+28
 -14 #-
--95
+-96
+28
+-14 #-
+-96
 114
 0 #color
 0 #-
 -110
-27
+28
 -14 #-
--95
+-96
 114
--14 #-
--95
-27
+0 #-
+-110
+114
 # Face 11
 0 #color
 0 #-
 -110
-27
-0 #-
--110
-114
+28
 14 #-
--95
+-96
+28
+14 #-
+-96
 114
 0 #color
 0 #-
 -110
-27
+28
 14 #-
--95
+-96
 114
-14 #-
--95
-27
+0 #-
+-110
+114
 # Face 12
 0 #color
 -14 #-
--95
-27
--14 #-
--95
-114
+-96
+28
 14 #-
--95
+-96
+28
+14 #-
+-96
 114
 0 #color
 -14 #-
--95
-27
+-96
+28
 14 #-
--95
+-96
 114
-14 #-
--95
-27
-
+-14 #-
+-96
+114
 
 bullet_model:
 12
 # Face 0
 0 #color
-0 #-
+1 #-
 -49
 3
-0 #-
+-1 #-
+-49
+3
+-1 #-
 -49
 -3
--1 #-
--49
--2
 0 #color
-0 #-
+1 #-
 -49
 3
 -1 #-
 -49
--2
-0 #-
+-3
+1 #-
 -49
-3
+-3
 # Face 1
 0 #color
 1 #-
 -51
-2
-0 #-
+3
+1 #-
+-51
+-3
+-1 #-
+-51
+-3
+0 #color
+1 #-
 -51
 3
 -1 #-
 -51
--2
-0 #color
-1 #-
--51
-2
+-3
 -1 #-
 -51
--2
-0 #-
--51
--3
+3
 # Face 2
 0 #color
-0 #-
+1 #-
+-49
+3
+1 #-
+-49
+-3
+1 #-
+-51
+-3
+0 #color
+1 #-
 -49
 3
 1 #-
 -51
-2
-0 #-
--51
 -3
-0 #color
-0 #-
--49
+1 #-
+-51
 3
-0 #-
--51
--3
-0 #-
--49
--3
 # Face 3
 0 #color
-0 #-
+1 #-
 -49
 -3
-0 #-
--51
+-1 #-
+-49
 -3
 -1 #-
 -51
--2
+-3
 0 #color
-0 #-
+1 #-
 -49
 -3
 -1 #-
 -51
--2
--1 #-
--49
--2
+-3
+1 #-
+-51
+-3
 # Face 4
 0 #color
 -1 #-
 -49
--2
+-3
 -1 #-
--51
--2
-0 #-
+-49
+3
+-1 #-
 -51
 3
 0 #color
 -1 #-
 -49
--2
-0 #-
+-3
+-1 #-
 -51
 3
-0 #-
--49
-3
+-1 #-
+-51
+-3
 # Face 5
 0 #color
-1 #-
--51
-2
-0 #-
+-1 #-
 -49
 3
-0 #-
+1 #-
 -49
+3
+1 #-
+-51
 3
 0 #color
-1 #-
--51
-2
-0 #-
+-1 #-
 -49
 3
-0 #-
+1 #-
 -51
 3
-
+-1 #-
+-51
+3
 
 sine_lut:
 0b0000000000000000
