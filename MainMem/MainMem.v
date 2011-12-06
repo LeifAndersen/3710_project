@@ -76,16 +76,51 @@ reg web10;
 wire[17:0] douta10;
 wire[17:0] doutb10;
 
-wire [13:0] addressa;
+reg [13:0] addradelayed;
+reg [13:0] addrbdelayed;
 
-assign addressa = addra - 1;
+
+always@(posedge clka)
+begin
+	addradelayed <= addra;
+	addrbdelayed <= addrb;
+end
 
 always@(*)
 begin
-case(addressa[13:10])
+	case(addradelayed)
+		0:	douta <= douta0;
+		1: douta <= douta1;
+		2: douta <= douta2;
+		3: douta <= douta3;
+		4: douta <= douta4;
+		5: douta <= douta5;
+		6: douta <= douta6;
+		7: douta <= douta7;
+		8: douta <= douta8;
+		9: douta <= douta9;
+		10: douta <= douta10;
+		default: douta <= 0;
+	endcase
+	
+	case(addrbdelayed)
+		0:	doutb <= doutb0;
+		1:	doutb <= doutb1;
+		2:	doutb <= doutb2;
+		3:	doutb <= doutb3;
+		4:	doutb <= doutb4;
+		5:	doutb <= doutb5;
+		6:	doutb <= doutb6;
+		7:	doutb <= doutb7;
+		8:	doutb <= doutb8;
+		9:	doutb <= doutb9;
+		10: doutb <= doutb10;
+		default: doutb <= 0;
+	endcase
+
+case(addra)
 	0:
 	begin
-		douta <= douta0;
 		wea0 <= wea;
 		wea1 <= 1'b0;
 		wea2 <= 1'b0;
@@ -100,7 +135,6 @@ case(addressa[13:10])
 	end
 	1:
 	begin
-		douta <= douta1;
 		wea0 <= 1'b0;
 		wea1 <= wea;
 		wea2 <= 1'b0;
@@ -115,7 +149,6 @@ case(addressa[13:10])
 	end
 	2:
 	begin
-		douta <= douta2;
 		wea0 <= 1'b0;
 		wea1 <= 1'b0;
 		wea2 <= wea;
@@ -130,7 +163,6 @@ case(addressa[13:10])
 	end
 	3:
 	begin
-		douta <= douta3;
 		wea0 <= 1'b0;
 		wea1 <= 1'b0;
 		wea2 <= 1'b0;
@@ -145,7 +177,6 @@ case(addressa[13:10])
 	end
 	4:
 	begin
-		douta <= douta4;
 		wea0 <= 1'b0;
 		wea1 <= 1'b0;
 		wea2 <= 1'b0;
@@ -160,7 +191,6 @@ case(addressa[13:10])
 	end
 	5:
 	begin
-		douta <= douta5;
 		wea0 <= 1'b0;
 		wea1 <= 1'b0;
 		wea2 <= 1'b0;
@@ -175,7 +205,6 @@ case(addressa[13:10])
 	end
 	6:
 	begin
-		douta <= douta6;
 		wea0 <= 1'b0;
 		wea1 <= 1'b0;
 		wea2 <= 1'b0;
@@ -190,7 +219,6 @@ case(addressa[13:10])
 	end
 	7:
 	begin
-		douta <= douta7;
 		wea0 <= 1'b0;
 		wea1 <= 1'b0;
 		wea2 <= 1'b0;
@@ -205,7 +233,6 @@ case(addressa[13:10])
 	end
 	8:
 	begin
-		douta <= douta8;
 		wea0 <= 1'b0;
 		wea1 <= 1'b0;
 		wea2 <= 1'b0;
@@ -220,7 +247,6 @@ case(addressa[13:10])
 	end
 	9:
 	begin
-		douta <= douta9;
 		wea0 <= 1'b0;
 		wea1 <= 1'b0;
 		wea2 <= 1'b0;
@@ -235,7 +261,6 @@ case(addressa[13:10])
 	end
 	10:
 	begin
-		douta <= douta10;
 		wea0 <= 1'b0;
 		wea1 <= 1'b0;
 		wea2 <= 1'b0;
@@ -251,7 +276,6 @@ case(addressa[13:10])
 	
 	default:
 	begin
-		douta <= 18'b0;
 		wea0 <= 1'b0;
 		wea1 <= 1'b0;
 		wea2 <= 1'b0;
@@ -269,7 +293,6 @@ endcase
 case(addrb[13:10])
 	0:
 	begin
-		doutb <= doutb0;
 		web0 <= web;
 		web1 <= 1'b0;
 		web2 <= 1'b0;
@@ -284,7 +307,6 @@ case(addrb[13:10])
 	end
 	1:
 	begin
-		doutb <= doutb1;
 		web0 <= 1'b0;
 		web1 <= web;
 		web2 <= 1'b0;
@@ -299,7 +321,6 @@ case(addrb[13:10])
 	end
 	2:
 	begin
-		doutb <= doutb2;
 		web0 <= 1'b0;
 		web1 <= 1'b0;
 		web2 <= web;
@@ -314,7 +335,6 @@ case(addrb[13:10])
 	end
 	3:
 	begin
-		doutb <= doutb3;
 		web0 <= 1'b0;
 		web1 <= 1'b0;
 		web2 <= 1'b0;
@@ -329,7 +349,6 @@ case(addrb[13:10])
 	end
 	4:
 	begin
-		doutb <= doutb4;
 		web0 <= 1'b0;
 		web1 <= 1'b0;
 		web2 <= 1'b0;
@@ -344,7 +363,6 @@ case(addrb[13:10])
 	end
 	5:
 	begin
-		doutb <= doutb5;
 		web0 <= 1'b0;
 		web1 <= 1'b0;
 		web2 <= 1'b0;
@@ -359,7 +377,6 @@ case(addrb[13:10])
 	end
 	6:
 	begin
-		doutb <= doutb6;
 		web0 <= 1'b0;
 		web1 <= 1'b0;
 		web2 <= 1'b0;
@@ -374,7 +391,6 @@ case(addrb[13:10])
 	end
 	7:
 	begin
-		doutb <= doutb7;
 		web0 <= 1'b0;
 		web1 <= 1'b0;
 		web2 <= 1'b0;
@@ -389,7 +405,6 @@ case(addrb[13:10])
 	end
 	8:
 	begin
-		doutb <= doutb8;
 		web0 <= 1'b0;
 		web1 <= 1'b0;
 		web2 <= 1'b0;
@@ -404,7 +419,6 @@ case(addrb[13:10])
 	end
 	9:
 	begin
-		doutb <= doutb9;
 		web0 <= 1'b0;
 		web1 <= 1'b0;
 		web2 <= 1'b0;
@@ -419,7 +433,6 @@ case(addrb[13:10])
 	end
 	10:
 	begin
-		doutb <= doutb10;
 		web0 <= 1'b0;
 		web1 <= 1'b0;
 		web2 <= 1'b0;
@@ -435,7 +448,6 @@ case(addrb[13:10])
 	
 	default:
 	begin
-		doutb <= 18'b0;
 		web0 <= 1'b0;
 		web1 <= 1'b0;
 		web2 <= 1'b0;
