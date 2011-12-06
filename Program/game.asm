@@ -333,11 +333,7 @@ mainEndAIBullet:
 		mov [UP_KEY], %0
 	mainNoInput:
 
-	j mainEndDebuggingGraphics
-	# DEBUGGING GRAPHICS
-	call drawDebuggingGraphics
-	# DEBUGGING GRAPHICS
-mainEndDebuggingGraphics:
+mainEndGameState:
 
 
 	# -------------------------------
