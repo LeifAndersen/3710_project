@@ -808,7 +808,7 @@ mainEndGameState:
 	mul %5, 10
 	add %LOW, 1
 	add %7, %LOW
-
+	
 #	Sort triangles by distance of furthest point (furthest away comes first). Insertion sort
 	mov %4, 1				# starting index
 	mov %0, 1
