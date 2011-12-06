@@ -51,13 +51,30 @@ main:
 	
 	mov %0, bullet_model
 	mov %2, [%0] # Number of triangles.
-	incr %0 #eax points at first point.
-	
-	drawloop:
-	
+	incr %0 # %0 points at first triangle.
 	mov %1, point
 	
-	call rotate_point
+	drawloop:
+	mov %3, [%0] # %3 is the color of the triangle.
+	mov [triangle], %3 #Move color into temp. triangle.
+	incr %0 #0 points at first point.
+	
+	call rotate_point #returns rotated point at [point]
+	
+	###copy rotated point into triangle for now
+	mov %4, [point] #use %4 as temp to copy data out of point
+	mov [triangle+1], %4
+	mov %4, [point+1] #use %4 as temp to copy data out of point
+	mov [triangle+2], %4
+	mov %4, [point+2] #use %4 as temp to copy data out of point
+	mov [triangle+#], %4
+	
+	add %0, 3 # second point.
+	call rotate_point #returns rotated point at [point]
+	
+	
+	
+	push
 	
 	mov eax, SP	
 	
@@ -66,9 +83,8 @@ main:
 	mov eax, 0xffff
 	mov [VGA], eax
 	mov [VGA], eax
-
-	infinite:
-	j infinite
+	
+	j main
 
 
 ### CLIP
