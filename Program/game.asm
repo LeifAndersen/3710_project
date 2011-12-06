@@ -853,6 +853,7 @@ mainEndGameState:
 
 	# %6 contains the pointer to the "model" that contains all triangles to be rendered.
 
+	call drawtriangles
 #Front-back clipping:
 	#	If triangle has both positive and negative z values at this point, it must be clipped to only the positive z space.
 
@@ -2619,19 +2620,6 @@ ret
 ###
 zclip:
 
-	push %0
-	push %1
-	push %2
-	push %3
-	push %4
-	push %5
-	push %6
-	push %7
-	push %8
-	push %9
-	push %10
-	push FP
-
 	mov eax, %0
 	add eax, 4
 	mov ebx, [eax]
@@ -2653,19 +2641,6 @@ zclip:
 	###Triangle is entirely in positive z. Safe to draw.
 	mov eax, %0
 	call perspectivetransform
-
-	pop FP
-	pop %10
-	pop %9
-	pop %8
-	pop %7
-	pop %6
-	pop %5
-	pop %4
-	pop %3
-	pop %2
-	pop %1
-	pop %0
 
 ret
 ###
@@ -3258,6 +3233,62 @@ j endloop
 ###
 ###
 ### END RASTERIZE
+###
+###
+
+### DRAW TRIANGLES
+###
+### Expects a pointer to a triangle list in %6
+###
+###
+drawtriangles:
+
+	push %0
+	push %1
+	push %2
+	push %3
+	push %4
+	push %5
+	push %6
+	push %7
+	push %8
+	push %9
+	push %10
+	push FP
+
+	mov %0, %6
+	mov %1, [%6] #%1 is size in triangle count.
+	incr %0
+	mov %2, 1 #%2 is loop counter.
+	
+	drawtriangleloop:
+	
+	call zclip
+	incr %2
+	jg %2, %1, drawtrianglecleanup
+	add %0, 10
+	
+	j drawtriangleloop
+	
+	drawtrianglecleanup:
+
+	pop FP
+	pop %10
+	pop %9
+	pop %8
+	pop %7
+	pop %6
+	pop %5
+	pop %4
+	pop %3
+	pop %2
+	pop %1
+	pop %0
+	
+ret
+###
+###
+### END DRAW TRIANGLES
 ###
 ###
 
