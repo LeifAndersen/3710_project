@@ -506,12 +506,12 @@ mainEndGameState:
 	mov %0, %SP
 	mov %1, [AI_X]			# copy in AI tank translation (position)
 	mov %2, [PLAYER_X]		# offest by camera pos
-	sub %1, 2
+	sub %1, %2
 	mov [%0], %1
 	incr %0
 	mov %1, [AI_Y]
 	mov %2, [PLAYER_Y]		# offest by camera pos
-	sub %1, 2
+	sub %1, %2
 	mov [%0], %1
 	incr %0
 	mov %1, 0
@@ -542,12 +542,12 @@ mainEndGameState:
 	mov %0, %SP
 	mov %1, [AI_BULLET_X]	# copy in AI bullet translation (position)
 	mov %2, [PLAYER_X]		# offest by camera pos
-	sub %1, 2
+	sub %1, %2
 	mov [%0], %1
 	incr %0
 	mov %1, [AI_BULLET_Y]
 	mov %2, [PLAYER_Y]		# offest by camera pos
-	sub %1, 2
+	sub %1, %2
 	mov [%0], %1
 	incr %0
 	mov %1, 0
@@ -579,12 +579,12 @@ mainEndGameState:
 	mov %0, %SP
 	mov %1, [PLAYER_BULLET_X]	# copy in AI bullet translation (position)
 	mov %2, [PLAYER_X]		# offest by camera pos
-	sub %1, 2
+	sub %1, %2
 	mov [%0], %1
 	incr %0
 	mov %1, [PLAYER_BULLET_Y]
 	mov %2, [PLAYER_Y]		# offest by camera pos
-	sub %1, 2
+	sub %1, %2
 	mov [%0], %1
 	incr %0
 	mov %1, 0
@@ -731,10 +731,6 @@ mainEndGameState:
 	mov %0, %8
 	call backfacecull
 	skipplayerbulletcull:
-
-	foo:
-	j foo
-
 	
 # copy all unculled triangles into array to be sorted
 	mov %5, 0				# keep total unculled triangle count

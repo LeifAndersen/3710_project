@@ -726,6 +726,7 @@ mainEndGameState:
 # back face cull and set color to FFFF if culled
 	# tank first
 	mov %0, %10
+	mov [LCD], %0
 	call backfacecull
 	mov FP, 0xf1
 
