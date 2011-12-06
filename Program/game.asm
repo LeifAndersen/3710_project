@@ -121,8 +121,8 @@ mainLoop:
 	add %3, %0
 
 	# TODO DEBUGGING ---------------
-	# mov [LCD], %2
-	mov [LCD], %3
+	mov [LCD], %2
+	# mov [LCD], %3
 	mov [PLAYER_X], %2
 	mov [PLAYER_Y], %3
 
