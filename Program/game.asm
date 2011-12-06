@@ -105,6 +105,7 @@ mainLoop:
 	# Up/Down, update x/y
 	mov %2, [PLAYER_X]
 	mov %3, [PLAYER_Y]
+	mov [LCD], %3
 	mov %5, [UP_KEY]
 	mov %6, [DOWN_KEY]
 	sub %5, %6             # Up-Down now in %5
@@ -122,7 +123,6 @@ mainLoop:
 
 	# TODO DEBUGGING ---------------
 	mov %7, [PLAYER_THETA]
-	mov [LCD], %7
 	mov [PLAYER_X], %2
 	mov [PLAYER_Y], %3
 
@@ -855,8 +855,6 @@ mainEndGameState:
 	add %LOW, 1
 	add %7, %LOW
 
-	j debugskipsort
-
 #	Sort triangles by distance of furthest point (furthest away comes first). Insertion sort
 	mov %4, 1				# starting index
 	mov %0, 1
@@ -904,7 +902,6 @@ mainEndGameState:
 	add %SP, 10
 
 	# %6 contains the pointer to the "model" that contains all triangles to be rendered.
-debugskipsort:
 	call drawtriangles
 #Front-back clipping:
 	#	If triangle has both positive and negative z values at this point, it must be clipped to only the positive z space.
@@ -3338,10 +3335,10 @@ PLAYER_START_Y:
 0
 
 PLAYER_THETA:
-0
+0x4000
 
 PLAYER_START_THETA:
-0b0001111111111111
+0x4000
 
 PLAYER_RADIUS:
 10
@@ -3365,10 +3362,10 @@ PLAYER_BULLET_TIME:
 0
 
 AI_X:
-100
+0
 
 AI_Y:
-0
+100
 
 AI_TURNING:
 0
@@ -3401,10 +3398,10 @@ AI_BULLET_TIME:
 0
 
 AI_START_X:
-100
+0
 
 AI_START_Y:
-0
+100
 
 AI_START_THETA:
 0x4000
