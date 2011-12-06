@@ -76,46 +76,10 @@ main:
 	
 	mov %6, cube2
 	
+	call translate_model20
+
 	call translate_model
 	
-	j skiprotate
-	
-	add %14, 100			# this is the angle of the cube
-	mov %1, %14				# get the rotation for the tank
-	mov %0, 0				# other angle is 0
-	call setup_rotate
-	mov %4, [cube2]			# get the size of the tank in triangles
-	sub %SP, 9				# make room for triangle to rotate
-	mov %1, %SP				# top of the temp triangle (first point)
-	mov %0, cube2			# pointer to modifiable tank
-	incr %0					# skip size field in tank
-	rotatetankloop:			# loop that rotates tank points
-	incr %0					# skip color
-	call rotate_point
-	add %0, 3				# move to next point in triangle
-	add %1, 3
-	call rotate_point
-	add %0, 3				# move to next point in triangle
-	add %1, 3
-	call rotate_point
-	mov %2, 9
-	sub %0, 6
-	sub %1, 6
-	mov %3, %0
-	mov %0, %1
-	mov %1, %3
-	call memcpy				# copy rotated triangle back into tank
-	mov %3, %1
-	mov %1, %0
-	mov %0, %3
-	add %0, 9				# go to next triangle
-	decr %4					# done rotating one triangle
-	# check if loop again
-	jne %4, 0, rotatetankloop
-	# done with tank, remove temp storage on stack
-	add %SP, 9
-	
-	skiprotate:
 	call drawtriangles
 	
 	#call perspectivetransform
@@ -2652,387 +2616,138 @@ slopes:
 0xFFFF
 
 cube:
-
-12
-
-#Front
-
-1
-
--25
--25
-10
-
--25
-25
-10
-
-25
-25
-10
-
-1
-
--25
--25
-10
-
-25
-25
-10
-
-25
--25
-10
-
-#Back
-
-1
-
--25
--25
-60
-
--25
-25
-60
-
-25
-25
-60
-
-1
-
--25
--25
-60
-
-25
-25
-60
-
-25
--25
-60
-
-#Left
-
-2
-
--25
--25
-10
-
--25
-25
-10
-
--25
-25
-60
-
-2
-
--25
--25
-60
-
--25
-25
-60
-
--25
--25
-10
-
-#Right
-
-2
-
-25
-25
-10
-
-25
-25
-10
-
-25
-25
-60
-
-2
-
-25
-25
-60
-
-25
-25
-60
-
-25
-25
-10
-
-#Top
-
 3
 
--25
--25
-10
+#bot
+1
 
+-50
+50
+0
+
+0
+50
+50
+
+50
+50
+0
+
+#left
+2
+
+-50
+50
+0
+
+0
+50
+50
+
+0
+-50
 25
--25
-10
 
-25
--25
-60
-
+#right
 3
 
--25
--25
-60
+50
+50
+0
 
--25
--25
-10
+0
+50
+50
 
+0
+-50
 25
--25
-60
 
-#Bot
+#front
+#4
 
-3
+#50
+#50
+#0
 
--25
-25
-10
+#-50
+#50
+#0
 
-25
-25
-10
-
-25
-25
-60
-
-3
-
--25
-25
-60
-
--25
-25
-10
-
-25
-25
-60
-
-
-
-
-
-
-
+#0
+#-50
+#25
 
 
 cube2:
+4
 
-12
-
-#Front
-
+#bot
 1
 
--25
--25
-10
+-50
+50
+0
 
--25
-25
-10
+0
+50
+50
 
-25
-25
-10
+50
+50
+0
 
-1
-
--25
--25
-10
-
-25
-25
-10
-
-25
--25
-10
-
-#Back
-
-1
-
--25
--25
-60
-
--25
-25
-60
-
-25
-25
-60
-
-1
-
--25
--25
-60
-
-25
-25
-60
-
-25
--25
-60
-
-#Left
-
+#left
 2
 
--25
--25
-10
+-50
+50
+0
 
--25
+0
+50
+50
+
+0
+-50
 25
-10
 
--25
-25
-60
-
-2
-
--25
--25
-60
-
--25
-25
-60
-
--25
--25
-10
-
-#Right
-
-2
-
-25
-25
-10
-
-25
-25
-10
-
-25
-25
-60
-
-2
-
-25
-25
-60
-
-25
-25
-60
-
-25
-25
-10
-
-#Top
-
+#right
 3
 
--25
--25
-10
+50
+50
+0
 
+0
+50
+50
+
+0
+-50
 25
--25
-10
 
+#front
+4
+
+50
+50
+0
+
+-50
+50
+0
+
+0
+-50
 25
--25
-60
-
-3
-
--25
--25
-60
-
--25
--25
-10
-
-25
--25
-60
-
-#Bot
-
-3
-
--25
-25
-10
-
-25
-25
-10
-
-25
-25
-60
-
-3
-
--25
-25
-60
-
--25
-25
-10
-
-25
-25
-60
 
 
 AI_X:
 0
 
 AI_Y:
-20
+35
 
 
 subtract35x:
