@@ -88,7 +88,7 @@ end
 
 always@(*)
 begin
-	case(addradelayed)
+	case(addradelayed[13:10])
 		0:	douta <= douta0;
 		1: douta <= douta1;
 		2: douta <= douta2;
@@ -103,7 +103,7 @@ begin
 		default: douta <= 0;
 	endcase
 	
-	case(addrbdelayed)
+	case(addrbdelayed[13:10])
 		0:	doutb <= doutb0;
 		1:	doutb <= doutb1;
 		2:	doutb <= doutb2;
@@ -118,7 +118,7 @@ begin
 		default: doutb <= 0;
 	endcase
 
-case(addra)
+case(addra[13:10])
 	0:
 	begin
 		wea0 <= wea;

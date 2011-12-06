@@ -10,7 +10,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="19" />
+   <WVObjectSize size="31" />
    <wvobject fp_name="/testdatapath/uut/drawunit/queue/count" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">count[9:0]</obj_property>
       <obj_property name="ObjectShortName">count[9:0]</obj_property>
@@ -26,6 +26,20 @@
    <wvobject fp_name="/testdatapath/uut/CLK_25MHZ" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">CLK_25MHZ</obj_property>
       <obj_property name="ObjectShortName">CLK_25MHZ</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/RegisterFile/reg7" type="array" db_ref_id="1">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">reg7[15:0]</obj_property>
+      <obj_property name="ObjectShortName">reg7[15:0]</obj_property>
+      <obj_property name="label">egx: temp1: %7</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/RegisterFile/reg8" type="array" db_ref_id="1">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">reg8[15:0]</obj_property>
+      <obj_property name="ObjectShortName">reg8[15:0]</obj_property>
+      <obj_property name="label">temp2: %8</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/testdatapath/uut/RegisterFile/reg1" type="array" db_ref_id="1">
       <obj_property name="DisplayName">label</obj_property>
@@ -53,20 +67,13 @@
       <obj_property name="ElementShortName">reg4[15:0]</obj_property>
       <obj_property name="ObjectShortName">reg4[15:0]</obj_property>
       <obj_property name="label">edx: %4</obj_property>
-      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/testdatapath/uut/RegisterFile/reg10" type="array" db_ref_id="1">
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="ElementShortName">reg10[15:0]</obj_property>
       <obj_property name="ObjectShortName">reg10[15:0]</obj_property>
       <obj_property name="label">efx: %10</obj_property>
-      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/testdatapath/uut/RegisterFile/reg7" type="array" db_ref_id="1">
-      <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="ElementShortName">reg7[15:0]</obj_property>
-      <obj_property name="ObjectShortName">reg7[15:0]</obj_property>
-      <obj_property name="label">egx: temp1: %7</obj_property>
       <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/testdatapath/uut/RegisterFile/reg0" type="array" db_ref_id="1">
@@ -109,13 +116,6 @@
       <obj_property name="label">SP: %13</obj_property>
       <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
    </wvobject>
-   <wvobject fp_name="/testdatapath/uut/RegisterFile/reg8" type="array" db_ref_id="1">
-      <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="ElementShortName">reg8[15:0]</obj_property>
-      <obj_property name="ObjectShortName">reg8[15:0]</obj_property>
-      <obj_property name="label">temp2: %8</obj_property>
-      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-   </wvobject>
    <wvobject fp_name="/testdatapath/uut/RegisterFile/reg12" type="array" db_ref_id="1">
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="ElementShortName">reg12[15:0]</obj_property>
@@ -134,5 +134,250 @@
       <obj_property name="ObjectShortName">reg11[15:0]</obj_property>
       <obj_property name="label">LOW: %11</obj_property>
       <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/MasterControl/instruction" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">instruction[17:0]</obj_property>
+      <obj_property name="ObjectShortName">instruction[17:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="vbus123" type="vbus" db_ref_id="1">
+      <obj_property name="label">jx</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[900,15]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[900,15]</obj_property>
+         <obj_property name="ObjectShortName">memory[900,15]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[900,14]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[900,14]</obj_property>
+         <obj_property name="ObjectShortName">memory[900,14]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[900,13]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[900,13]</obj_property>
+         <obj_property name="ObjectShortName">memory[900,13]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[900,12]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[900,12]</obj_property>
+         <obj_property name="ObjectShortName">memory[900,12]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[900,11]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[900,11]</obj_property>
+         <obj_property name="ObjectShortName">memory[900,11]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[900,10]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[900,10]</obj_property>
+         <obj_property name="ObjectShortName">memory[900,10]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[900,9]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[900,9]</obj_property>
+         <obj_property name="ObjectShortName">memory[900,9]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[900,8]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[900,8]</obj_property>
+         <obj_property name="ObjectShortName">memory[900,8]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[900,7]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[900,7]</obj_property>
+         <obj_property name="ObjectShortName">memory[900,7]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[900,6]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[900,6]</obj_property>
+         <obj_property name="ObjectShortName">memory[900,6]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[900,5]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[900,5]</obj_property>
+         <obj_property name="ObjectShortName">memory[900,5]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[900,4]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[900,4]</obj_property>
+         <obj_property name="ObjectShortName">memory[900,4]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[900,3]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[900,3]</obj_property>
+         <obj_property name="ObjectShortName">memory[900,3]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[900,2]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[900,2]</obj_property>
+         <obj_property name="ObjectShortName">memory[900,2]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[900,1]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[900,1]</obj_property>
+         <obj_property name="ObjectShortName">memory[900,1]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[900,0]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[900,0]</obj_property>
+         <obj_property name="ObjectShortName">memory[900,0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="vbus88" type="vbus" db_ref_id="1">
+      <obj_property name="label">jy</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[901,15]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[901,15]</obj_property>
+         <obj_property name="ObjectShortName">memory[901,15]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[901,14]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[901,14]</obj_property>
+         <obj_property name="ObjectShortName">memory[901,14]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[901,13]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[901,13]</obj_property>
+         <obj_property name="ObjectShortName">memory[901,13]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[901,12]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[901,12]</obj_property>
+         <obj_property name="ObjectShortName">memory[901,12]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[901,11]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[901,11]</obj_property>
+         <obj_property name="ObjectShortName">memory[901,11]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[901,10]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[901,10]</obj_property>
+         <obj_property name="ObjectShortName">memory[901,10]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[901,9]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[901,9]</obj_property>
+         <obj_property name="ObjectShortName">memory[901,9]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[901,8]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[901,8]</obj_property>
+         <obj_property name="ObjectShortName">memory[901,8]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[901,7]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[901,7]</obj_property>
+         <obj_property name="ObjectShortName">memory[901,7]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[901,6]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[901,6]</obj_property>
+         <obj_property name="ObjectShortName">memory[901,6]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[901,5]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[901,5]</obj_property>
+         <obj_property name="ObjectShortName">memory[901,5]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[901,4]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[901,4]</obj_property>
+         <obj_property name="ObjectShortName">memory[901,4]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[901,3]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[901,3]</obj_property>
+         <obj_property name="ObjectShortName">memory[901,3]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[901,2]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[901,2]</obj_property>
+         <obj_property name="ObjectShortName">memory[901,2]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[901,1]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[901,1]</obj_property>
+         <obj_property name="ObjectShortName">memory[901,1]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[901,0]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[901,0]</obj_property>
+         <obj_property name="ObjectShortName">memory[901,0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="vbus53" type="vbus" db_ref_id="1">
+      <obj_property name="label">jz</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[902,15]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[902,15]</obj_property>
+         <obj_property name="ObjectShortName">memory[902,15]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[902,14]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[902,14]</obj_property>
+         <obj_property name="ObjectShortName">memory[902,14]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[902,13]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[902,13]</obj_property>
+         <obj_property name="ObjectShortName">memory[902,13]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[902,12]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[902,12]</obj_property>
+         <obj_property name="ObjectShortName">memory[902,12]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[902,11]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[902,11]</obj_property>
+         <obj_property name="ObjectShortName">memory[902,11]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[902,10]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[902,10]</obj_property>
+         <obj_property name="ObjectShortName">memory[902,10]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[902,9]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[902,9]</obj_property>
+         <obj_property name="ObjectShortName">memory[902,9]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[902,8]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[902,8]</obj_property>
+         <obj_property name="ObjectShortName">memory[902,8]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[902,7]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[902,7]</obj_property>
+         <obj_property name="ObjectShortName">memory[902,7]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[902,6]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[902,6]</obj_property>
+         <obj_property name="ObjectShortName">memory[902,6]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[902,5]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[902,5]</obj_property>
+         <obj_property name="ObjectShortName">memory[902,5]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[902,4]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[902,4]</obj_property>
+         <obj_property name="ObjectShortName">memory[902,4]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[902,3]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[902,3]</obj_property>
+         <obj_property name="ObjectShortName">memory[902,3]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[902,2]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[902,2]</obj_property>
+         <obj_property name="ObjectShortName">memory[902,2]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[902,1]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[902,1]</obj_property>
+         <obj_property name="ObjectShortName">memory[902,1]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[902,0]" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">[902,0]</obj_property>
+         <obj_property name="ObjectShortName">memory[902,0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[902]" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">[902,17:0]</obj_property>
+      <obj_property name="ObjectShortName">memory[902,17:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[901]" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">[901,17:0]</obj_property>
+      <obj_property name="ObjectShortName">memory[901,17:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/MainMemory/block0/memory[900]" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">[900,17:0]</obj_property>
+      <obj_property name="ObjectShortName">memory[900,17:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/ALUinstance/A" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">A[15:0]</obj_property>
+      <obj_property name="ObjectShortName">A[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/ALUinstance/B" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">B[15:0]</obj_property>
+      <obj_property name="ObjectShortName">B[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/ALUinstance/D" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">D[15:0]</obj_property>
+      <obj_property name="ObjectShortName">D[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/ALUinstance/C" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">C[15:0]</obj_property>
+      <obj_property name="ObjectShortName">C[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testdatapath/uut/ALUinstance/temp" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">temp[64:0]</obj_property>
+      <obj_property name="ObjectShortName">temp[64:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
 </wave_config>
