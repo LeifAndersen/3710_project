@@ -422,6 +422,7 @@ mainEndGameState:
 	mov %0, %1
 	mov %1, %3
 	call memcpy				# copy rotated triangle back into tank
+	add %0, 9				# go to next triangle
 	decr %4					# done rotating one triangle
 	# check if loop again
 	jne %4, 0, rotatetankloop
@@ -456,6 +457,7 @@ mainEndGameState:
 	mov %0, %1
 	mov %1, %3
 	call memcpy				# copy rotated triangle back into bullet
+	add %0, 9				# go to next triangle
 	decr %4					# done rotating one triangle
 	# check if loop again
 	jne %4, 0, rotateaibulletloop
@@ -491,6 +493,7 @@ mainEndGameState:
 	mov %0, %1
 	mov %1, %3
 	call memcpy				# copy rotated triangle back into bullet
+	add %0, 9				# go to next triangle
 	decr %4					# done rotating one triangle
 	# check if loop again
 	jne %4, 0, rotateplayerbulletloop
@@ -638,6 +641,7 @@ mainEndGameState:
 	mov %0, %1
 	mov %1, %3
 	call memcpy				# copy rotated triangle back into tank
+	add %0, 9				# go to next triangle
 	decr %4					# done rotating one triangle
 	# check if loop again
 	jne %4, 0, camerarotatetankloop
@@ -672,6 +676,7 @@ mainEndGameState:
 	mov %0, %1
 	mov %1, %3
 	call memcpy				# copy rotated triangle back into bullet
+	add %0, 9				# go to next triangle
 	decr %4					# done rotating one triangle
 	# check if loop again
 	jne %4, 0, camerarotateaibulletloop
@@ -707,6 +712,7 @@ mainEndGameState:
 	mov %0, %1
 	mov %1, %3
 	call memcpy				# copy rotated triangle back into bullet
+	add %0, 9				# go to next triangle
 	decr %4					# done rotating one triangle
 	# check if loop again
 	jne %4, 0, camerarotateplayerbulletloop
