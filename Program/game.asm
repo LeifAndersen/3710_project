@@ -740,8 +740,6 @@ mainEndGameState:
 	
 # copy all unculled triangles into array to be sorted
 	mov %5, 0				# keep total unculled triangle count
-	sub %SP, 1				# space for total number of triangles to render
-	mov %6, %SP
 	# tank first
 	mov %4, [%10]			# get size
 	mov %0, %10				# pointer into model
@@ -801,6 +799,8 @@ mainEndGameState:
 	skipplayerbulletcopy:
 
 	# save total triangle count
+	sub %SP, 1				# space for total number of triangles to render
+	mov %6, %SP
 	mov [%6], %5			# %6 is the pointer to the array of triangles
 							# pointers %10, %9, and %8 are up for grabs now that the triangles from those models have been culled
 
