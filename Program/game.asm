@@ -396,7 +396,7 @@ mainEndGameState:
 #	Scale models (multiply all points by scale vector).
 	# do nothing
 
-#	Rotate models around x axis by model angle
+#	Rotate models around y axis by model angle
 	#	rotate tank
 	mov %1, [AI_THETA]		# get the rotation for the tank
 	mov %0, 0				# other angle is 0
@@ -422,6 +422,9 @@ mainEndGameState:
 	mov %0, %1
 	mov %1, %3
 	call memcpy				# copy rotated triangle back into tank
+	mov %3, %1
+	mov %1, %0
+	mov %0, %3
 	add %0, 9				# go to next triangle
 	decr %4					# done rotating one triangle
 	# check if loop again
@@ -457,6 +460,9 @@ mainEndGameState:
 	mov %0, %1
 	mov %1, %3
 	call memcpy				# copy rotated triangle back into bullet
+	mov %3, %1
+	mov %1, %0
+	mov %0, %3
 	add %0, 9				# go to next triangle
 	decr %4					# done rotating one triangle
 	# check if loop again
@@ -493,6 +499,9 @@ mainEndGameState:
 	mov %0, %1
 	mov %1, %3
 	call memcpy				# copy rotated triangle back into bullet
+	mov %3, %1
+	mov %1, %0
+	mov %0, %3
 	add %0, 9				# go to next triangle
 	decr %4					# done rotating one triangle
 	# check if loop again
@@ -501,7 +510,6 @@ mainEndGameState:
 	add %SP, 9
 
 	skipplayerbulletrotate:
-
 
 #	Translate model (add entity location to all points in model).
 	# translate tank
@@ -641,6 +649,9 @@ mainEndGameState:
 	mov %0, %1
 	mov %1, %3
 	call memcpy				# copy rotated triangle back into tank
+	mov %3, %1
+	mov %1, %0
+	mov %0, %3
 	add %0, 9				# go to next triangle
 	decr %4					# done rotating one triangle
 	# check if loop again
@@ -676,6 +687,9 @@ mainEndGameState:
 	mov %0, %1
 	mov %1, %3
 	call memcpy				# copy rotated triangle back into bullet
+	mov %3, %1
+	mov %1, %0
+	mov %0, %3
 	add %0, 9				# go to next triangle
 	decr %4					# done rotating one triangle
 	# check if loop again
@@ -712,6 +726,9 @@ mainEndGameState:
 	mov %0, %1
 	mov %1, %3
 	call memcpy				# copy rotated triangle back into bullet
+	mov %3, %1
+	mov %1, %0
+	mov %0, %3
 	add %0, 9				# go to next triangle
 	decr %4					# done rotating one triangle
 	# check if loop again
@@ -743,10 +760,12 @@ mainEndGameState:
 	# tank first
 	mov %4, [%10]			# get size
 	mov %0, %10				# pointer into model
-	copyculledtankloop:
 	incr %0					# pointer now points to color (top of triangle in case we copy)
+	copyculledtankloop:
 	mov %1, [%0]
 	je %1, 0xFFFF, dontcopytank
+	foo:
+	j foo
 	#should copy
 	sub %SP, 10
 	mov %1, %SP
@@ -756,14 +775,14 @@ mainEndGameState:
 	dontcopytank:
 	add %0, 10				# on to next triangle
 	decr %4
-	jge %4, 0, copyculledtankloop
+	jg %4, 0, copyculledtankloop
 
 		# if ai bullet, do it second
 	je %9, 0, skipaibulletcopy
 	mov %4, [%9]			# get size
 	mov %0, %9				# pointer into model
-	copyculledaibulletloop:
 	incr %0					# pointer now points to color (top of triangle in case we copy)
+	copyculledaibulletloop:
 	mov %1, [%0]
 	je %1, 0xFFFF, dontcopyaibullet
 	#should copy
@@ -775,15 +794,15 @@ mainEndGameState:
 	dontcopyaibullet:
 	add %0, 10				# on to next triangle
 	decr %4
-	jge %4, 0, copyculledaibulletloop
+	jg %4, 0, copyculledaibulletloop
 	skipaibulletcopy:
 
 	# if player bullets, do it third (or second)
 	je %8, 0, skipplayerbulletcopy
 	mov %4, [%8]			# get size
 	mov %0, %8				# pointer into model
-	copyculledplayerbulletloop:
 	incr %0					# pointer now points to color (top of triangle in case we copy)
+	copyculledplayerbulletloop:
 	mov %1, [%0]
 	je %1, 0xFFFF, dontcopyplayerbullet
 	#should copy
@@ -795,7 +814,7 @@ mainEndGameState:
 	dontcopyplayerbullet:
 	add %0, 10				# on to next triangle
 	decr %4
-	jge %4, 0, copyculledplayerbulletloop
+	jg %4, 0, copyculledplayerbulletloop
 	skipplayerbulletcopy:
 
 	# save total triangle count
@@ -808,7 +827,9 @@ mainEndGameState:
 	mul %5, 10
 	add %LOW, 1
 	add %7, %LOW
-	
+
+	j debugskipsort
+
 #	Sort triangles by distance of furthest point (furthest away comes first). Insertion sort
 	mov %4, 1				# starting index
 	mov %0, 1
@@ -856,7 +877,7 @@ mainEndGameState:
 	add %SP, 10
 
 	# %6 contains the pointer to the "model" that contains all triangles to be rendered.
-
+debugskipsort:
 	call drawtriangles
 #Front-back clipping:
 	#	If triangle has both positive and negative z values at this point, it must be clipped to only the positive z space.
@@ -1645,28 +1666,19 @@ setup_rotate:
 	mov %0, %8	# generate and save sin
 	call sin
 	mov %1, %0
-	mov %0, 1	# fill matrix. Odd offsets are the flag bits for fmul
-	mov [rotation_matrix_x], %0		# 1
-	mov [rotation_matrix_x+9], %0	# 1
-	mov [rotation_matrix_x+11], %0	# 1
-	mov [rotation_matrix_x+15], %0	# 1
-	mov [rotation_matrix_x+17], %0	# 1
+	mov %0, 0x4000	# fill matrix. this is 1.0 
+	mov [rotation_matrix_x], %0		# 1.0
 	mov %0, 0
 	mov [rotation_matrix_x+1], %0	# 0
-	mov [rotation_matrix_x+3], %0	# 0
-	mov [rotation_matrix_x+5], %0	# 0
-	mov [rotation_matrix_x+7], %0	# 0
-	mov [rotation_matrix_x+13], %0	# 0
 	mov [rotation_matrix_x+2], %0	# 0
-	mov [rotation_matrix_x+4], %0	# 0
+	mov [rotation_matrix_x+3], %0	# 0
 	mov [rotation_matrix_x+6], %0	# 0
-	mov [rotation_matrix_x+12], %0	# 0
-	mov [rotation_matrix_x+8], %6	# cos (xtheta)
+	mov [rotation_matrix_x+4], %6	# cos (xtheta)
 	not %0, %1		# negate, two's comliment style
 	add %0, 1
-	mov [rotation_matrix_x+10], %0	# -sin (xtheta)
-	mov [rotation_matrix_x+14], %1	# sin (xtheta)
-	mov [rotation_matrix_x+16], %6	# cos (xtheta)
+	mov [rotation_matrix_x+5], %0	# -sin (xtheta)
+	mov [rotation_matrix_x+7], %1	# sin (xtheta)
+	mov [rotation_matrix_x+8], %6	# cos (xtheta)
 
 	# generate rotation matrix y
 	mov %0, %9	# generate and save cos
@@ -1676,27 +1688,18 @@ setup_rotate:
 	call sin
 	mov %1, %0
 	mov %0, 0
+	mov [rotation_matrix_y+1], %0	# 0
 	mov [rotation_matrix_y+3], %0	# 0
+	mov [rotation_matrix_y+5], %0	# 0
 	mov [rotation_matrix_y+7], %0	# 0
-	mov [rotation_matrix_y+9], %0	# 0
-	mov [rotation_matrix_y+11], %0	# 0
-	mov [rotation_matrix_y+15], %0	# 0
-	mov [rotation_matrix_y+2], %0	# 0
-	mov [rotation_matrix_y+6], %0	# 0
-	mov [rotation_matrix_y+10], %0	# 0
-	mov [rotation_matrix_y+14], %0	# 0
 	mov [rotation_matrix_y], %6		# cos (ytheta)
-	mov [rotation_matrix_y+4], %1	# sin (ytheta)
-	mov %0, 1
-	mov [rotation_matrix_y+1], %0	# 1
-	mov [rotation_matrix_y+5], %0	# 1
-	mov [rotation_matrix_y+13], %0	# 1
-	mov [rotation_matrix_y+17], %0	# 1
-	mov [rotation_matrix_y+8], %0	# 1
+	mov [rotation_matrix_y+2], %1	# sin (ytheta)
+	mov %0, 0x4000
+	mov [rotation_matrix_y+4], %0	# 1.0
 	not %0, %1		# negate, two's comliment style
 	add %0, 1
-	mov [rotation_matrix_y+12], %0	# -sin (xtheta)
-	mov [rotation_matrix_y+16], %6	# cos (xtheta)
+	mov [rotation_matrix_y+6], %0	# -sin (ytheta)
+	mov [rotation_matrix_y+8], %6	# cos (ytheta)
 
 	pop %0
 	pop %1
@@ -1768,23 +1771,10 @@ matrix_multiply:
 		matmulloop2:
 		# get two elements
 		mov %3, [%1]
-		mov %4, [%0]
-		# check which kind of multiply to do
-		incr %0
-		incr %7
-		mov %8, [%0]
-		je %8, 1, matmulfmul
-		# multiply them
-			mul %3, %4
-			# store in accumulator
-			add %5, %LOW
-			j matmuldonemul
-
-			matmulfmul:
-			fmul %3, %4
-			# store in accumulator
-			add %5, %3
-		matmuldonemul:
+		mov %4, [%0]	
+		fmul %3, %4				# multuply
+		# store in accumulator
+		add %5, %3
 		# increment the pointers and counters
 		incr %0
 		incr %1
@@ -1799,7 +1789,7 @@ matrix_multiply:
 	mov [%2], %5
 	incr %2
 	# test if we are done
-	cmp %7, 18
+	cmp %7, 9
 	jl matmulloop1
 
 	# done
@@ -3360,7 +3350,7 @@ AI_TARGET_THETA:
 0
 
 AI_THETA:
-0
+0x4000
 
 AI_RADIUS:
 10
@@ -3390,47 +3380,29 @@ AI_START_Y:
 0
 
 AI_START_THETA:
-10
+0x4000
 
 rotation_matrix_x:
 0
-0	# is fixed point flags for each matrix element are static since matricies are know
 0
-0	# is fixed point
 0
-0	# is fixed point
 0
-0	# is fixed point
 0
-1	# is fixed point
 0
-1	# is fixed point
 0
-0	# is fixed point
 0
-1	# is fixed point
 0
-1	# is fixed point
 
 rotation_matrix_y:
 0
-1	# is fixed point
 0
-0	# is fixed point
 0
-1	# is fixed point
 0
-0	# is fixed point
 0
-0	# is fixed point
 0
-0	# is fixed point
 0
-1	# is fixed point
 0
-0	# is fixed point
 0
-1	# is fixed point
 
 tank_model:
 26

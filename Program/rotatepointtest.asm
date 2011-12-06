@@ -37,8 +37,8 @@ main:
 	mov %SP, STACK_TOP
 	mov %FP, %SP
 
-	mov %0, 0
-	mov %1, DEGREE_90
+	mov %0, DEGREE_90
+	mov %1, 0
 	call setup_rotate
 	mov %0, foo_point
 	mov %1, bar_point
@@ -46,6 +46,107 @@ main:
 
 	forever:
 	j forever
+
+# setup rotation matricies with two angles (%0 and %1)
+# preserves args
+setup_rotate:
+	push %9
+	push %8
+	push %6
+	push %1
+	push %0
+
+	# move arguments into registers that aren't overwritten
+	mov %8, %0	# xtheta
+	mov %9, %1	# ytheta
+
+	# generate rotation matrix x
+	mov %0, %8	# generate and save cos
+	call cos
+	mov %6, %0
+	mov %0, %8	# generate and save sin
+	call sin
+	mov %1, %0
+	mov %0, 0x4000	# fill matrix. this is 1.0 
+	mov [rotation_matrix_x], %0		# 1.0
+	mov %0, 0
+	mov [rotation_matrix_x+1], %0	# 0
+	mov [rotation_matrix_x+2], %0	# 0
+	mov [rotation_matrix_x+3], %0	# 0
+	mov [rotation_matrix_x+6], %0	# 0
+	mov [rotation_matrix_x+4], %6	# cos (xtheta)
+	not %0, %1		# negate, two's comliment style
+	add %0, 1
+	mov [rotation_matrix_x+5], %0	# -sin (xtheta)
+	mov [rotation_matrix_x+7], %1	# sin (xtheta)
+	mov [rotation_matrix_x+8], %6	# cos (xtheta)
+
+	# generate rotation matrix y
+	mov %0, %9	# generate and save cos
+	call cos
+	mov %6, %0
+	mov %0, %9	# generate and save sin
+	call sin
+	mov %1, %0
+	mov %0, 0
+	mov [rotation_matrix_y+1], %0	# 0
+	mov [rotation_matrix_y+3], %0	# 0
+	mov [rotation_matrix_y+5], %0	# 0
+	mov [rotation_matrix_y+7], %0	# 0
+	mov [rotation_matrix_y], %6		# cos (ytheta)
+	mov [rotation_matrix_y+2], %1	# sin (ytheta)
+	mov %0, 0x4000
+	mov [rotation_matrix_y+4], %0	# 1.0
+	not %0, %1		# negate, two's comliment style
+	add %0, 1
+	mov [rotation_matrix_y+6], %0	# -sin (ytheta)
+	mov [rotation_matrix_y+8], %6	# cos (ytheta)
+
+	pop %0
+	pop %1
+	pop %6
+	pop %8
+	pop %9
+	ret
+
+# rotate a point %0 (pointer) and stores it in %1 (pointer)
+# preserves arguments
+rotate_point:
+	push %10
+	push %7
+	push %2
+	push %1
+	push %0
+
+	mov %7, %0	# src point
+	mov %10, %1	# dest point
+
+	# make room on the stack for temp point
+	sub %SP, 3
+
+	# set up arguments for matrix multiply
+	mov %0, rotation_matrix_x
+	mov %1, %7
+	mov %2, %SP
+	# multiply first one
+	call matrix_multiply
+
+	# set up arguments for matrix multiply again
+	mov %0, rotation_matrix_y	# matrix
+	mov %1, %2					# temp point
+	mov %2, %10					# dest point
+	# multiply first one
+	call matrix_multiply
+
+	# clean up stack frame
+	add %SP, 3
+
+	pop %0
+	pop %1
+	pop %2
+	pop %7
+	pop %10
+	ret
 
 # Multiply a matrix in %0 (pointer) by a vector in %1 (pointer) and store the result in the vector in %2 (pointer)
 # ASSUMES NO ALIASING!!!!!!!!!!!
@@ -71,24 +172,10 @@ matrix_multiply:
 		matmulloop2:
 		# get two elements
 		mov %3, [%1]
-		mov %4, [%0]
-		# check which kind of multiply to do
-		incr %0
-		incr %7
-		mov %8, [%0]
-		je %8, 1, matmulfmul
-		# multiply them
-			mul %3, %4
-			# store in accumulator
-			add %5, %LOW
-			j matmuldonemul
-
-			matmulfmul:
-			fmul %3, %4
-			# store in accumulator
-			add %5, %3
-		matmuldonemul:
-		mov [LCD], %7
+		mov %4, [%0]	
+		fmul %3, %4				# multuply
+		# store in accumulator
+		add %5, %3
 		# increment the pointers and counters
 		incr %0
 		incr %1
@@ -103,7 +190,7 @@ matrix_multiply:
 	mov [%2], %5
 	incr %2
 	# test if we are done
-	cmp %7, 18
+	cmp %7, 9
 	jl matmulloop1
 
 	# done
@@ -116,129 +203,6 @@ matrix_multiply:
 	pop %5
 	pop %4
 	pop %3
-	ret
-
-# setup rotation matricies with two angles (%0 and %1)
-# preserves args
-setup_rotate:
-	push %9
-	push %8
-	push %6
-	push %1
-	push %0
-
-	# move arguments into registers that aren't overwritten
-	mov %8, %0	# xtheta
-	mov %9, %1	# ytheta
-
-	# generate rotation matrix x
-	mov %0, %8	# generate and save cos
-	call cos
-	mov %6, %0
-	mov %0, %8	# generate and save sin
-	call sin
-	mov %1, %0
-	mov %0, 1	# fill matrix. Odd offsets are the flag bits for fmul
-	mov [rotation_matrix_x], %0		# 1
-	mov [rotation_matrix_x+9], %0	# 1
-	mov [rotation_matrix_x+11], %0	# 1
-	mov [rotation_matrix_x+15], %0	# 1
-	mov [rotation_matrix_x+17], %0	# 1
-	mov %0, 0
-	mov [rotation_matrix_x+1], %0	# 0
-	mov [rotation_matrix_x+3], %0	# 0
-	mov [rotation_matrix_x+5], %0	# 0
-	mov [rotation_matrix_x+7], %0	# 0
-	mov [rotation_matrix_x+13], %0	# 0
-	mov [rotation_matrix_x+2], %0	# 0
-	mov [rotation_matrix_x+4], %0	# 0
-	mov [rotation_matrix_x+6], %0	# 0
-	mov [rotation_matrix_x+12], %0	# 0
-	mov [rotation_matrix_x+8], %6	# cos (xtheta)
-	not %0, %1		# negate, two's comliment style
-	add %0, 1
-	mov [rotation_matrix_x+10], %0	# -sin (xtheta)
-	mov [rotation_matrix_x+14], %1	# sin (xtheta)
-	mov [rotation_matrix_x+16], %6	# cos (xtheta)
-
-	# generate rotation matrix y
-	mov %0, %9	# generate and save cos
-	call cos
-	mov %6, %0
-	mov %0, %9	# generate and save sin
-	call sin
-	mov %1, %0
-	mov %0, 0
-	mov [rotation_matrix_y+3], %0	# 0
-	mov [rotation_matrix_y+7], %0	# 0
-	mov [rotation_matrix_y+9], %0	# 0
-	mov [rotation_matrix_y+11], %0	# 0
-	mov [rotation_matrix_y+15], %0	# 0
-	mov [rotation_matrix_y+2], %0	# 0
-	mov [rotation_matrix_y+6], %0	# 0
-	mov [rotation_matrix_y+10], %0	# 0
-	mov [rotation_matrix_y+14], %0	# 0
-	mov [rotation_matrix_y], %6		# cos (ytheta)
-	mov [rotation_matrix_y+4], %1	# sin (ytheta)
-	mov %0, 1
-	mov [rotation_matrix_y+1], %0	# 1
-	mov [rotation_matrix_y+5], %0	# 1
-	mov [rotation_matrix_y+13], %0	# 1
-	mov [rotation_matrix_y+17], %0	# 1
-	mov [rotation_matrix_y+8], %0	# 1
-	not %0, %1		# negate, two's comliment style
-	add %0, 1
-	mov [rotation_matrix_y+12], %0	# -sin (xtheta)
-	mov [rotation_matrix_y+16], %6	# cos (xtheta)
-
-	pop %0
-	pop %1
-	pop %6
-	pop %8
-	pop %9
-	ret
-
-# rotate a point %0 (pointer) and stores it in %1 (pointer)
-# preserves arguments
-rotate_point:
-	push %10
-	push %7
-	push %2
-	push %1
-	push %0
-	
-	mov %FP, 0xabab
-	mov %FP, 0xbaba
-
-	mov %7, %0	# src point
-	mov %10, %1	# dest point
-
-	# make room on the stack for temp point
-	sub %SP, 3
-	mov [LCD], %SP
-
-	# set up arguments for matrix multiply
-	mov %0, rotation_matrix_x
-	mov %1, %7
-	mov %2, %SP
-	# multiply first one
-	call matrix_multiply
-
-	# set up arguments for matrix multiply again
-	mov %0, rotation_matrix_y	# matrix
-	mov %1, %2					# temp point
-	mov %2, %10					# dest point
-	# multiply first one
-	call matrix_multiply
-
-	# clean up stack frame
-	add %SP, 3
-
-	pop %0
-	pop %1
-	pop %2
-	pop %7
-	pop %10
 	ret
 
 # Take a number in the $0 reg, return the sin of that number into the $0 reg
@@ -406,9 +370,9 @@ cos:
 0xFFFF
 
 foo_point:
-0
-0
-200
+-7
+3
+50
 
 0xFFFF
 
