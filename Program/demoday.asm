@@ -49,10 +49,10 @@ main:
 	
 		
 	jge %5, 6, resetBackColor
-		incr %5
+		mov %5, 7
 		j donebackcolor
 	resetBackColor:
-		mov %5, 0
+		mov %5, 7
 	donebackcolor:
 	
 	VGAfull1:
@@ -76,7 +76,7 @@ main:
 	
 	mov %6, cube2
 	
-	call translate_model20
+	#call translate_model20
 
 	call translate_model
 	
@@ -2744,17 +2744,17 @@ cube2:
 
 
 AI_X:
-0
+1
 
 AI_Y:
-35
+0
 
 
 subtract35x:
-0
+-10
 
 subtract35z:
--35
+0
 
 twotriangles:
 2
