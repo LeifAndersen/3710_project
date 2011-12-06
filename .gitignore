@@ -3,6 +3,9 @@ CPU/Top_summary.xml
 CPU/Top_usage.xml
 CPU/Top_envsettings.html
 
+*.blend[1-9]*
+**/*.blend[1-9]*
+
 *.mem
 *.pyc
 *.pp
