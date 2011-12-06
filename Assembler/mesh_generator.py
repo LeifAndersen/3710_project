@@ -12,12 +12,12 @@ def save(filepath):
     for i in range(len(mesh.faces)):
         face = mesh.faces[i]
         file.write('# Face ' + str(i) + '\n')
-        file.write(str((i%7)+1) + '#color\n')
+        file.write(str((i%7)+1) + ' #color\n')
         firstVert = face.vertices[0]
         thirdVert = face.vertices[2]
         for j in range(len(face.vertices)):
             if j == 3:
-                file.write(str((i%7)+1)+'#color\n')
+                file.write(str((i%7)+1)+' #color\n')
                 vert = firstVert
                 file.write(str(round(mesh.vertices[vert].co[0])) + ' #- \n')
                 file.write(str(round(-mesh.vertices[vert].co[2])) + '\n')
