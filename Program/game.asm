@@ -1230,9 +1230,10 @@ drawDebuggingGraphics:
 # Take x0 in 0, y0 in 1, x1 in 2 and y1 in 3, return the dot product in 0
 # Does not destory any registers other than the return value in 0.
 dot:
+	push %1
 	push %LOW
 	push %HIGH
-
+ 
 	mul %0, %2
 	mov %0, %LOW
 	mul %1, %3
@@ -1240,11 +1241,13 @@ dot:
 
 	pop %HIGH
 	pop %LOW
+	pop %1
 	ret
 
 # Take x0 in 0, y0 in 1, x1 in 2 and y1 in 3, return the cross product in 0
 # Does not destory any registers other than the return value in 0.
 cross:
+	push %1
 	push %LOW
 	push %HIGH
 
@@ -1255,6 +1258,7 @@ cross:
 
 	pop %HIGH
 	pop %LOW
+	pop %1
 	ret
 
 # Take a pointer to an xyz vector in %0, and the second in %1, return the maginude
