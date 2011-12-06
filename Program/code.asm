@@ -1519,7 +1519,8 @@ sin:
 	sub %9, %10		# 1.0 - fraction
 	fmul %0, %9		# addr * (1.0 - frac)
 	add %0, %7		# add them
-	xor %0, 0x8000	# flip sign bit
+	not %0, %0		# negate, two's comliment style
+	add %0, 1
 	j sinend
 
 	fourth:
@@ -1545,7 +1546,8 @@ sin:
 	sub %9, %10		# 1 - fraction
 	fmul %0, %9
 	add %0, %7
-	xor %0, 0x8000
+	not %0, %0		# negate, two's comliment style
+	add %0, 1
 	j sinend
 
 	first:
@@ -1645,8 +1647,8 @@ setup_rotate:
 	mov [rotation_matrix_x+6], %0	# 0
 	mov [rotation_matrix_x+12], %0	# 0
 	mov [rotation_matrix_x+8], %6	# cos (xtheta)
-	mov %0, 0x8000
-	xor %0, %1	# negate %1 flipping the sign bit
+	not %0, %1		# negate, two's comliment style
+	add %0, 1
 	mov [rotation_matrix_x+10], %0	# -sin (xtheta)
 	mov [rotation_matrix_x+14], %1	# sin (xtheta)
 	mov [rotation_matrix_x+16], %6	# cos (xtheta)
@@ -1676,8 +1678,8 @@ setup_rotate:
 	mov [rotation_matrix_y+13], %0	# 1
 	mov [rotation_matrix_y+17], %0	# 1
 	mov [rotation_matrix_y+8], %0	# 1
-	mov %0, 0x8000
-	xor %0, %1	# negate %1 flipping the sign bit
+	not %0, %1		# negate, two's comliment style
+	add %0, 1
 	mov [rotation_matrix_y+12], %0	# -sin (xtheta)
 	mov [rotation_matrix_y+16], %6	# cos (xtheta)
 
