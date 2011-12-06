@@ -156,9 +156,8 @@ module Top(
 	wire [15:0]	shoot;
 	wire [15:0]	escape;
 	wire [15:0]	keyboard_reset;
-	reg [13:0] memAddrBusF;
 	// Memory controller
-	MemoryController MemCtrl(memWriteBus, memAddrBusF, memWriteEn, pc, data_to_controller, instruction_to_controller, full, memDataOut, instruction, data_to_main, data_addr_to_main, data_wr_en_to_main, inst_addr_to_main, pram_out, pram_wr_en, lcd_data, lcd_en, forward, backward, turnright, turnleft, shoot, escape, keyboard_reset);
+	MemoryController MemCtrl(memWriteBus, memAddrBus, memWriteEn, pc, data_to_controller, instruction_to_controller, full, memDataOut, instruction, data_to_main, data_addr_to_main, data_wr_en_to_main, inst_addr_to_main, pram_out, pram_wr_en, lcd_data, lcd_en, forward, backward, turnright, turnleft, shoot, escape, keyboard_reset);
 	Keyboard KeyboardControl(CLK_25MHZ, PS2_CLK, PS2_DATA, keyboard_reset, reset, forward, backward, turnleft, turnright, shoot, escape);
 	
 	// control
@@ -173,30 +172,26 @@ module Top(
 	wire       regWriteEn2P;
 	wire       memRead;
 	wire       memReadP;
-	wire[13:0] memAddrBusP;
 	//     Pipeline Register
-	PipelineRegister PReg(CLK_25MHZ, reset, memRead, memReadP, regWriteEn, regWriteEnP, regWriteEn2, regWriteEn2P, buffCtrl[14:12], buffCtrlP[14:12], destSel, destSelP, memAddrBus, memAddrBusP, ret, retP);
+	PipelineRegister PReg(CLK_25MHZ, reset, memRead, memReadP, regWriteEn, regWriteEnP, regWriteEn2, regWriteEn2P, buffCtrl[14:12], buffCtrlP[14:12], destSel, destSelP, ret, retP);
 	//     Control
 	Control MasterControl(instruction, flagsToControl, aluOp, regWriteEn, regWriteEn2, immediate, buffCtrl, destSel, destSel2, readSelect1, readSelect2, flagWrite, memWriteEn, memRead, specialAddr, ret);
 	//     Forwarding logic
-	always@(destSel, destSelP, regWriteEn, regWriteEn2, regWriteEnP, regWriteEn2P, memReadP, memRead, memAddrBus, memAddrBusP) begin
+	always@(destSel, destSelP, regWriteEn, regWriteEn2, regWriteEnP, regWriteEn2P, memReadP, memRead) begin
 		if(memReadP == 1'b1) begin
 			destSelF     <= destSelP;
 			regWriteEnF  <= regWriteEnP;
 			regWriteEn2F <= regWriteEn2P;
-			memAddrBusF  <= memAddrBusP;
 		end
 		else if(memRead == 1'b1) begin
 			destSelF     <= destSel;
 			regWriteEnF  <= 0;
 			regWriteEn2F <= 0;
-			memAddrBusF  <= memAddrBus;
 		end
 		else begin
 			destSelF     <= destSel;
 			regWriteEnF  <= regWriteEn;
 			regWriteEn2F <= regWriteEn2;
-			memAddrBusF  <= memAddrBus;
 		end
 	end
 
