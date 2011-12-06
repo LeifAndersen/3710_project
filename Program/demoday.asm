@@ -47,7 +47,6 @@ init:
 main:
 	mov SP, STACK_TOP
 	
-	add %14, 100				# this is the angle of the cube
 		
 	jge %5, 6, resetBackColor
 		incr %5
@@ -75,11 +74,13 @@ main:
 	mov %2, [cube]
 	call memcpy
 	
-	mov %6, triangle2
+	mov %6, cube2
 	
 	call translate_model
 	
+	j skiprotate
 	
+	add %14, 100			# this is the angle of the cube
 	mov %1, %14				# get the rotation for the tank
 	mov %0, 0				# other angle is 0
 	call setup_rotate
@@ -114,7 +115,7 @@ main:
 	# done with tank, remove temp storage on stack
 	add %SP, 9
 	
-	
+	skiprotate:
 	call drawtriangles
 	
 	#call perspectivetransform
@@ -2037,6 +2038,52 @@ ret
 ###
 ###
 
+#	Translate model (add entity location to all points in model).
+# take a model in %6
+translate_model20:
+	push %0
+	push %1
+	push %2
+	push %4
+
+	# translate tank
+	sub %SP, 3				# make temp point
+	mov %0, %SP
+	mov %1, [subtract35x]			# copy in AI tank translation (position)
+	mov %2, 0		# offest by camera pos
+	sub %1, %2
+	mov [%0], %1
+	incr %0
+	mov %1, 0
+	mov [%0], %1
+	incr %0
+	mov %1, [subtract35z]			# y = z, mind = blown
+	mov %2, 0		# offest by camera pos
+	sub %1, %2
+	mov [%0], %1
+	sub %0, 2				# restore pointer
+	mov %4, [%6]			# get the size of the tank in triangles
+	mov %1, %6				# pointer to modifiable tank
+	incr %1					# skip size field in tank
+	translatetankloop20:		# loop that translates tank points
+	incr %1					# skip color
+	call vector_add
+	add %1, 3				# move to next point
+	call vector_add
+	add %1, 3				# move to next point
+	call vector_add
+	add %1, 3				# move to next triangle
+	decr %4					# done rotating one triangle
+	# check if loop again
+	jne %4, 0, translatetankloop20
+	# done with tank, remove temp storage on stack
+	add %SP, 3
+
+	pop %4
+	pop %2
+	pop %1
+	pop %0
+	ret
 
 #	Translate model (add entity location to all points in model).
 # take a model in %6
@@ -2606,8 +2653,379 @@ slopes:
 
 cube:
 
+12
+
+#Front
+
+1
+
+-25
+-25
+10
+
+-25
+25
+10
+
+25
+25
+10
+
+1
+
+-25
+-25
+10
+
+25
+25
+10
+
+25
+-25
+10
+
+#Back
+
+1
+
+-25
+-25
+60
+
+-25
+25
+60
+
+25
+25
+60
+
+1
+
+-25
+-25
+60
+
+25
+25
+60
+
+25
+-25
+60
+
+#Left
+
+2
+
+-25
+-25
+10
+
+-25
+25
+10
+
+-25
+25
+60
+
+2
+
+-25
+-25
+60
+
+-25
+25
+60
+
+-25
+-25
+10
+
+#Right
+
+2
+
+25
+25
+10
+
+25
+25
+10
+
+25
+25
+60
+
+2
+
+25
+25
+60
+
+25
+25
+60
+
+25
+25
+10
+
+#Top
+
+3
+
+-25
+-25
+10
+
+25
+-25
+10
+
+25
+-25
+60
+
+3
+
+-25
+-25
+60
+
+-25
+-25
+10
+
+25
+-25
+60
+
+#Bot
+
+3
+
+-25
+25
+10
+
+25
+25
+10
+
+25
+25
+60
+
+3
+
+-25
+25
+60
+
+-25
+25
+10
+
+25
+25
+60
+
+
+
+
+
+
+
+
 
 cube2:
+
+12
+
+#Front
+
+1
+
+-25
+-25
+10
+
+-25
+25
+10
+
+25
+25
+10
+
+1
+
+-25
+-25
+10
+
+25
+25
+10
+
+25
+-25
+10
+
+#Back
+
+1
+
+-25
+-25
+60
+
+-25
+25
+60
+
+25
+25
+60
+
+1
+
+-25
+-25
+60
+
+25
+25
+60
+
+25
+-25
+60
+
+#Left
+
+2
+
+-25
+-25
+10
+
+-25
+25
+10
+
+-25
+25
+60
+
+2
+
+-25
+-25
+60
+
+-25
+25
+60
+
+-25
+-25
+10
+
+#Right
+
+2
+
+25
+25
+10
+
+25
+25
+10
+
+25
+25
+60
+
+2
+
+25
+25
+60
+
+25
+25
+60
+
+25
+25
+10
+
+#Top
+
+3
+
+-25
+-25
+10
+
+25
+-25
+10
+
+25
+-25
+60
+
+3
+
+-25
+-25
+60
+
+-25
+-25
+10
+
+25
+-25
+60
+
+#Bot
+
+3
+
+-25
+25
+10
+
+25
+25
+10
+
+25
+25
+60
+
+3
+
+-25
+25
+60
+
+-25
+25
+10
+
+25
+25
+60
 
 
 AI_X:
@@ -2615,6 +3033,13 @@ AI_X:
 
 AI_Y:
 20
+
+
+subtract35x:
+0
+
+subtract35z:
+-35
 
 twotriangles:
 2
