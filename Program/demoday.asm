@@ -45,51 +45,7 @@ init:
 	call main
 	
 main:
-
-	mov FP, 20
-	mov [LCD], FP
-	
-	#### CHECK KEYBOARD INPUT TO SET theta.
-	mov %9, [xrot]
-	mov %7, 1
-	
-	mov %10, [UP_KEY]
-	je %10, 0, noupkey
-		add %9, 0x3e00
-		mov [UP_KEY], %7
-	noupkey:
-	
-	mov %10, [DOWN_KEY]
-	je %10, 0, nodownkey
-		sub %9, 0x3e00	
-		mov [DOWN_KEY], %7
-	nodownkey:
-	
-	mov [xrot], %9
-	mov %9, [yrot]
-	add %9, 0x4000
-	
-	mov %10, [LEFT_KEY]
-	je %10, 0, noleftkey
-		add %9, 0x3e00
-		mov [LEFT_KEY], %7
-	noleftkey:
-	
-	mov %10, [RIGHT_KEY]
-	je %10, 0, norightkey
-		sub %9, 0x3e00	
-		mov [RIGHT_KEY], %7
-	norightkey:
-	
-	mov [yrot], %9
-	
-	and %1, %1
-	and %1, %1
-	
-	mov %0, 0
-	mov %1, 0x4000
-	call setup_rotate
-	
+		
 	jge %5, 6, resetBackColor
 		incr %5
 		j donebackcolor
@@ -107,97 +63,35 @@ main:
 	je %6, 1, VGAfull2
 	mov [VGA], %5
 	
-	#call clearbuffer
+	###call clearbuffer
 	
-	mov %0, twotriangles
-	mov %2, [%0] # Number of triangles.
-	mov %3, 0 #loop counter.
-	incr %0 # %0 points at first triangle.
-	mov %1, point
-	
-	drawloop:
-		incr %3
-	
-		mov %4, [%0] # %4 is the color of the triangle.
-		mov [triangle], %4 #Move color into temp. triangle.
-		incr %0 #0 points at first point.
-		
-		call rotate_point #returns rotated point at [point]
-		mov FP, 0xdddd
-		
-		###copy rotated point into triangle for now
-		mov %4, [point] #use %4 as temp to copy data out of point
-		mov [triangle+1], %4
-		mov %4, [point+1] #use %4 as temp to copy data out of point
-		mov [triangle+2], %4
-		mov %4, [point+2] #use %4 as temp to copy data out of point
-		mov [triangle+3], %4
-		
-		add %0, 3 #Points at second point.
-		
-		call rotate_point #returns rotated point at [point]
-		mov FP, 0xddee
-		
-		###copy rotated point into triangle
-		mov %4, [point] #use %4 as temp to copy data out of point
-		mov [triangle+4], %4
-		mov %4, [point+1] #use %4 as temp to copy data out of point
-		mov [triangle+5], %4
-		mov %4, [point+2] #use %4 as temp to copy data out of point
-		mov [triangle+6], %4
-			
-		add %0, 3 #Points at third point.
-		
-		call rotate_point #returns rotated point at [point]
-		mov FP, 0xeeee
-		
-		###copy rotated point into triangle
-		mov %4, [point] #use %4 as temp to copy data out of point
-		mov [triangle+7], %4
-		mov %4, [point+1] #use %4 as temp to copy data out of point
-		mov [triangle+8], %4
-		mov %4, [point+2] #use %4 as temp to copy data out of point
-		mov [triangle+9], %4
-		
-		####Done with first triangle, push it onto stack, do next triangle.
-		mov %4, [triangle+9]
-		push %4
-		mov %4, [triangle+8]
-		push %4
-		mov %4, [triangle+7]
-		push %4
-		mov %4, [triangle+6]
-		push %4
-		mov %4, [triangle+5]
-		push %4
-		mov %4, [triangle+4]
-		push %4
-		mov %4, [triangle+3]
-		push %4
-		mov %4, [triangle+2]
-		push %4
-		mov %4, [triangle+1]
-		push %4
-		mov %4, [triangle]
-		push %4
-	
-		add %0, 3 #point him at next points' color.
-	
-	jne %3, %2, drawloop
-	
-	###All triangles stacked, write size to stack.
-	push %2
 	
 	###Properly formatted data
-	mov %6, SP
+	mov %6, [twotriangles]
+	mov [triangle2], %6
+	mov %6, [twotriangles+1]
+	mov [triangle2+1], %6
+	mov %6, [twotriangles+2]
+	mov [triangle2+2], %6
+	mov %6, [twotriangles+3]
+	mov [triangle2+3], %6
+	mov %6, [twotriangles+4]
+	mov [triangle2+4], %6
+	mov %6, [twotriangles+5]
+	mov [triangle2+5], %6
+	mov %6, [twotriangles+6]
+	mov [triangle2+6], %6
+	mov %6, [twotriangles+7]
+	mov [triangle2+7], %6
+	mov %6, [twotriangles+8]
+	mov [triangle2+8], %6	
+	mov %6, [twotriangles+9]
+	mov [triangle2+9], %6
 	
-	mov FP, 1
-	mov [LCD], FP
+	mov %6, triangle2
+	
+	#call translate_model
 	call drawtriangles
-	
-	mov FP, 2
-	mov [LCD], FP
-	#mov eax, SP	
 	
 	#call perspectivetransform
 
@@ -2026,6 +1920,8 @@ drawtriangles:
 	mov %1, [%6] #%1 is size in triangle count.
 	mov %2, 1 #%2 is loop counter.
 	
+	mov HIGH, 0xffff
+	
 	mov FP, [%0]
 	incr %0
 	
@@ -2095,6 +1991,87 @@ ret
 ### END DRAW TRIANGLES
 ###
 ###
+
+
+#	Translate model (add entity location to all points in model).
+# take a model in %6
+translate_model:
+	push %0
+	push %1
+	push %2
+	push %4
+
+	# translate tank
+	sub %SP, 3				# make temp point
+	mov %0, %SP
+	mov %1, [AI_X]			# copy in AI tank translation (position)
+	mov %2, 0		# offest by camera pos
+	sub %1, %2
+	mov [%0], %1
+	incr %0
+	mov %1, 0
+	mov [%0], %1
+	incr %0
+	mov %1, [AI_Y]			# y = z, mind = blown
+	mov %2, 0		# offest by camera pos
+	sub %1, %2
+	mov [%0], %1
+	sub %0, 2				# restore pointer
+	mov %4, [%6]			# get the size of the tank in triangles
+	mov %1, %6				# pointer to modifiable tank
+	incr %1					# skip size field in tank
+	translatetankloop:		# loop that translates tank points
+	incr %1					# skip color
+	call vector_add
+	add %1, 3				# move to next point
+	call vector_add
+	add %1, 3				# move to next point
+	call vector_add
+	add %1, 3				# move to next triangle
+	decr %4					# done rotating one triangle
+	# check if loop again
+	jne %4, 0, translatetankloop
+	# done with tank, remove temp storage on stack
+	add %SP, 3
+
+	pop %4
+	pop %2
+	pop %1
+	pop %0
+	ret
+
+
+# adds the 3-lenth vector in %0 to the 3-lenth vector in %1 and stores it in %1
+# src vector preserved, dst vector changed (but passed pointer is preserved)
+vector_add:
+	push %0
+	push %1
+	push %2
+	push %3
+
+	mov %2, [%0]
+	mov %3, [%1]
+	add %2, %3
+	mov [%1], %2
+	incr %0
+	incr %1
+	mov %2, [%0]
+	mov %3, [%1]
+	add %2, %3
+	mov [%1], %2
+	incr %0
+	incr %1
+	mov %2, [%0]
+	mov %3, [%1]
+	add %2, %3
+	mov [%1], %2
+
+	pop %3
+	pop %2
+	pop %1
+	pop %0
+	ret
+
 
 ### Z CLIP
 ###
@@ -2713,28 +2690,34 @@ bullet_model:
 
 cube:
 
+AI_X:
+0
+
+AI_Y:
+20
+
 twotriangles:
 2
-7
+2
 -50
 -30
-0
+10
 0
 30
-0
+10
 50
 -30
-0
-7
-0
--30
+10
+1
 50
-0
-0
-0
-0
 -30
--50
+10
+0
+30
+10
+50
+30
+10
 
 state:
 0
@@ -2826,6 +2809,18 @@ matpoint:
 0
 
 triangle:
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+triangle2:
 0
 0
 0
