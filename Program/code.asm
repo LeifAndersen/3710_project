@@ -104,19 +104,18 @@ mainLoop:
 	mov %3, [PLAYER_Y]
 	mov %5, [UP_KEY]
 	mov %6, [DOWN_KEY]
-	sub %5, %6             # Up-Down now in %5
-	add %2, %5 # TODO, KILL LINE!!!!
-	# mov %0, %4             #
-	# call cos               # %0 has sin(theta)
-	# fmul %0, %5            #
-	# mul %0, SPEED
-	# add %2, %LOW           # Player X now updated by the move amount
-	                       #
-	# mov %0, %4             #
-	# call sin               # %0 has cos(theta)
-	# fmul %0, %5            # %LOW/HIGH has (UP-DOWN)*cos(theta)
-	# mul %0, SPEED
-	# add %3, %LOW
+	sub %5, %6               # Up-Down now in %5
+	mov %0, %4             #
+	call cos               # %0 has sin(theta)
+	fmul %0, %5            #
+	mul %0, SPEED
+	add %2, %LOW           # Player X now updated by the move amount
+	                         #
+	mov %0, %4             #
+	call sin               # %0 has cos(theta)
+	fmul %0, %5            # %LOW/HIGH has (UP-DOWN)*cos(theta)
+	mul %0, SPEED
+	add %3, %LOW
 
 	# TODO DEBUGGING ---------------
 	# mov [LCD], %2
