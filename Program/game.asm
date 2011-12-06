@@ -92,6 +92,7 @@ mainNewPlayer:
 	mov [PLAYER_LIVES], %0
 
 mainLoop:
+
 	# Check Inputs
 	# Left/Right, update theta
 	mov %2, [LEFT_KEY]
@@ -105,24 +106,24 @@ mainLoop:
 	# Up/Down, update x/y
 	mov %2, [PLAYER_X]
 	mov %3, [PLAYER_Y]
+	mov [LCD], %3
 	mov %5, [UP_KEY]
 	mov %6, [DOWN_KEY]
 	sub %5, %6             # Up-Down now in %5
 	mul %5, SPEED
 	mov %5, %LOW           # %5 now hoas ammount to go forward
 	mov %0, %4             #
-	call cos               # %0 has sin(theta)
+	call sin               # %0 has sin(theta)
 	fmul %0, %5            #
 	add %2, %0            # Player X now updated by the move amount
 	                         #
 	mov %0, %4             #
-	call sin               # %0 has cos(theta)
+	call cos               # %0 has cos(theta)
 	fmul %0, %5            # %LOW/HIGH has (UP-DOWN)*cos(theta)
 	add %3, %0
 
 	# TODO DEBUGGING ---------------
 	mov %7, [PLAYER_THETA]
-	mov [LCD], %7
 	mov [PLAYER_X], %2
 	mov [PLAYER_Y], %3
 
@@ -140,8 +141,7 @@ mainLoop:
 	je %0, 0, noInput2
 		mov [UP_KEY], %0
 	noInput2:
-	j mainLoop # TODO, kill
-	# j mainEndGameState
+	j mainEndGameState
 	# TODO DEBUGGING ---------------
 
 	# Move the AI
@@ -153,11 +153,11 @@ mainLoop:
 	mov %5, [AI_Y]
 	mov %6, [AI_THETA]
 	mov %0, %6
-	call cos
+	call sin
 	fmul %0, SPEED    # %LOW now has speed*sin(theta), to update Y
 	add %4, %0           # %4 now has new Y (if possible)
 	mov %0, %6
-	call sin
+	call cos
 	fmul %0, SPEED
 	add %5, %0           # %5 now has possible AI_Y
 	j mainAIDoneMoving
@@ -214,8 +214,7 @@ mainAIDoneMoving:
 	je %0, 0, noInput
 		mov [UP_KEY], %0
 	noInput:
-	j mainLoop # TODO, kill
-	# j mainEndGameState
+	j mainEndGameState
 	# TODO DEBUGGING ---------------
 
 	# Move Player bullet
@@ -227,11 +226,11 @@ mainAIDoneMoving:
 	mov %6, [PLAYER_BULLET_X]
 	mov %7, [PLAYER_BULLET_Y]
 	mov %0, [PLAYER_BULLET_THETA]
-	call cos
+	call sin
 	fmul %0, BULLET_SPEED
 	add %6, %0           # 6 now conains bullet x
 	mov %0, [PLAYER_BULLET_THETA]
-	call sin
+	call cos
 	fmul %0, BULLET_SPEED
 	add %7, %0           # 7 now contains bullet y
 
@@ -278,11 +277,11 @@ mainEndPlayerBullet:
 	mov %8, [AI_BULLET_X]
 	mov %9, [AI_BULLET_Y]
 	mov %0, [AI_BULLET_THETA]
-	call cos
+	call sin
 	fmul %0, BULLET_SPEED
 	add %8, %0            # 8 now conains bullet x
 	mov %0, [AI_BULLET_THETA]
-	call sin
+	call cos
 	fmul %0, BULLET_SPEED
 	add %9, %0           # 9 now contains bullet y
 
@@ -418,7 +417,7 @@ mainEndGameState:
 	# save local tank pointer
 	mov %8, %1				# don't touch %8....
 	skiplayerbullet:
-	
+
 #	Scale models (multiply all points by scale vector).
 	# do nothing
 
@@ -546,12 +545,12 @@ mainEndGameState:
 	sub %1, %2
 	mov [%0], %1
 	incr %0
-	mov %1, [AI_Y]
-	mov %2, [PLAYER_Y]		# offest by camera pos
-	sub %1, %2
+	mov %1, 0
 	mov [%0], %1
 	incr %0
-	mov %1, 0
+	mov %1, [AI_Y]			# y = z, mind = blown
+	mov %2, [PLAYER_Y]		# offest by camera pos
+	sub %1, %2
 	mov [%0], %1
 	sub %0, 2				# restore pointer
 	mov %4, [%10]			# get the size of the tank in triangles
@@ -582,12 +581,12 @@ mainEndGameState:
 	sub %1, %2
 	mov [%0], %1
 	incr %0
+	mov %1, 0
+	mov [%0], %1
+	incr %0
 	mov %1, [AI_BULLET_Y]
 	mov %2, [PLAYER_Y]		# offest by camera pos
 	sub %1, %2
-	mov [%0], %1
-	incr %0
-	mov %1, 0
 	mov [%0], %1
 	sub %0, 2				# restore pointer
 	mov %4, [%9]			# get the size of the bullet in triangles
@@ -619,12 +618,12 @@ mainEndGameState:
 	sub %1, %2
 	mov [%0], %1
 	incr %0
+	mov %1, 0
+	mov [%0], %1
+	incr %0
 	mov %1, [PLAYER_BULLET_Y]
 	mov %2, [PLAYER_Y]		# offest by camera pos
 	sub %1, %2
-	mov [%0], %1
-	incr %0
-	mov %1, 0
 	mov [%0], %1
 	sub %0, 2				# restore pointer
 	mov %4, [%8]			# get the size of the bullet in triangles
@@ -645,7 +644,7 @@ mainEndGameState:
 	add %SP, 3
 
 	skipplayerbullettranslate:
-	
+
 #Put model in camera coordinates:
 	#	Rotate model around y axis by camera angle.
 	#	Rotate model around x axis by camera angle.
@@ -763,7 +762,7 @@ mainEndGameState:
 	add %SP, 9
 
 	skipplayerbulletcamerarotate:
-	
+
 # back face cull and set color to FFFF if culled
 	# tank first
 	mov %0, %10
@@ -780,7 +779,7 @@ mainEndGameState:
 	mov %0, %8
 	call backfacecull
 	skipplayerbulletcull:
-	
+
 # copy all unculled triangles into array to be sorted
 	mov %5, 0				# keep total unculled triangle count
 	# tank first
@@ -789,9 +788,8 @@ mainEndGameState:
 	incr %0					# pointer now points to color (top of triangle in case we copy)
 	copyculledtankloop:
 	mov %1, [%0]
-	je %1, 0xFFFF, dontcopytank
-	foo:
-	j foo
+	mov %FP, 0xFFFF
+	je %1, %FP, dontcopytank
 	#should copy
 	sub %SP, 10
 	mov %1, %SP
@@ -810,7 +808,8 @@ mainEndGameState:
 	incr %0					# pointer now points to color (top of triangle in case we copy)
 	copyculledaibulletloop:
 	mov %1, [%0]
-	je %1, 0xFFFF, dontcopyaibullet
+	mov %FP, 0xFFFF
+	je %1, %FP, dontcopyaibullet
 	#should copy
 	sub %SP, 10
 	mov %1, %SP
@@ -830,7 +829,8 @@ mainEndGameState:
 	incr %0					# pointer now points to color (top of triangle in case we copy)
 	copyculledplayerbulletloop:
 	mov %1, [%0]
-	je %1, 0xFFFF, dontcopyplayerbullet
+	mov %FP, 0xFFFF
+	je %1, %FP, dontcopyplayerbullet
 	#should copy
 	sub %SP, 10
 	mov %1, %SP
@@ -853,8 +853,6 @@ mainEndGameState:
 	mul %5, 10
 	add %LOW, 1
 	add %7, %LOW
-
-	j debugskipsort
 
 #	Sort triangles by distance of furthest point (furthest away comes first). Insertion sort
 	mov %4, 1				# starting index
@@ -895,15 +893,16 @@ mainEndGameState:
 	call move_triangle
 	incr %4
 	jl %4, %5, sorttrianglesouterloop
-	
+
 	# get back to size
 	decr %6
 
 	# clean up stack
 	add %SP, 10
 
+	foo:
+	j foo
 	# %6 contains the pointer to the "model" that contains all triangles to be rendered.
-debugskipsort:
 	call drawtriangles
 #Front-back clipping:
 	#	If triangle has both positive and negative z values at this point, it must be clipped to only the positive z space.
@@ -1197,7 +1196,7 @@ drawDebuggingGraphics:
 	mov %3, 120
 	mov %4, 0
 	call drawSquare
-	
+
 	mov %0, [PLAYER_X]  # Your tank
 	mov %1, [PLAYER_Y]
 	add %0, FIELD_OFFSET
@@ -1214,7 +1213,7 @@ drawDebuggingGraphics:
 	call drawSquare
 
 
-	
+
 	mov %0, [AI_X]  # Enemy Tank
 	mov %1, [AI_Y]
 	add %0, FIELD_OFFSET
@@ -1270,7 +1269,7 @@ drawDebuggingGraphics:
 	mov %0, 0xffff # DRAW
 	mov [VGA], %0
 	mov [VGA], %0
-	
+
 	pop %4
 	pop %3
 	pop %2
@@ -1284,7 +1283,7 @@ dot:
 	push %1
 	push %LOW
 	push %HIGH
- 
+
 	mul %0, %2
 	mov %0, %LOW
 	mul %1, %3
@@ -1473,6 +1472,79 @@ FindTheta:
 	pop %4
 	pop %3
 	pop %2
+	ret
+
+drawHealth:
+	push %0
+	push %1
+	push %2
+	push %3
+	push %4
+
+	mov %0, 40
+	mov %1, 115
+	mov %3, 119
+	mov %4, 7
+	mov %2, [PLAYER_LIVES]
+	je %2, 2, drawHealth2
+	je %2, 3, drawHealth3
+	je %2, 4, drawHealth4
+	je %2, 5, drawHealth5
+	mov %2, 50
+	j drawHealthEnd
+
+	drawHealth2:
+	mov %2, 60
+	j drawHealthEnd
+
+	drawHealth3:
+	mov %2, 70
+	j drawHealthEnd
+
+	drawHealth4:
+	mov %2, 80
+	j drawHealthEnd
+
+	drawHealth5:
+	mov %2, 90
+
+	drawHealthEnd:
+
+	call drawSquare
+
+	pop %4
+	pop %3
+	pop %2
+	pop %1
+	pop %0
+	ret
+
+drawCross:
+	push %0
+	push %1
+	push %2
+	push %3
+	push %4
+
+	mov %0,	79
+	mov %1, 50
+	mov %2, 91
+	mov %3, 70
+	mov %4, 7
+	call drawSquare
+
+	mov %0, 70
+	mov %1, 59
+	mov %2, 90
+	mov %3, 61
+	mov %4, 7
+	call drawSquare
+
+	pop %4
+	pop %3
+	pop %2
+	pop %1
+	pop %0
 	ret
 
 # Take top left x in 0, top left y in 1, bottom right x in 2 bottom right y in 3,
@@ -1692,7 +1764,7 @@ setup_rotate:
 	mov %0, %8	# generate and save sin
 	call sin
 	mov %1, %0
-	mov %0, 0x4000	# fill matrix. this is 1.0 
+	mov %0, 0x4000	# fill matrix. this is 1.0
 	mov [rotation_matrix_x], %0		# 1.0
 	mov %0, 0
 	mov [rotation_matrix_x+1], %0	# 0
@@ -1797,7 +1869,7 @@ matrix_multiply:
 		matmulloop2:
 		# get two elements
 		mov %3, [%1]
-		mov %4, [%0]	
+		mov %4, [%0]
 		fmul %3, %4				# multuply
 		# store in accumulator
 		add %5, %3
@@ -1829,8 +1901,8 @@ matrix_multiply:
 	pop %4
 	pop %3
 	ret
-	
-	
+
+
 ### CLIP
 ###
 ### Expects a pointer to a triangle in eax.  Triangle is expected to be [eax] = color, [eax+1] = x1, [eax+2] = y1, [eax+3] = x2, [eax+4] = y2, [eax+5] = x3, [eax+6] = y3
@@ -1846,78 +1918,78 @@ clip:
 	#add SP, 10
 	mov FP, 0xbbaa
 	mov temp2, [eax]
-	
+
 	call copyTriangle
-	
+
 	#Given a triangle pointed at by eax, first do comparisons to establish the zone values of each point.
 		# call copyTriangle # Don't need this because perspective already puts the triangle into triangle:
-		
+
 		mov zone1, 0
 		mov zone2, 0
 		mov zone3, 0
-	
+
 	###Check zone 0, 2
 		#t1
 		mov eax, [triangle+2] #y1
 		jge eax, 0, p1notinzone0
 			or zone1, 1
 		p1notinzone0:
-		
+
 		jle eax, 119, p1notinzone2
 			or zone1, 0b100
 		p1notinzone2:
-	
+
 		#t2
 		mov eax, [triangle+4] #y2
 		jge eax, 0, p2notinzone0
 			or zone2, 1
 		p2notinzone0:
-		
+
 		jle eax, 119, p2notinzone2
 			or zone2, 0b100
 		p2notinzone2:
-		
+
 		#t3
 		mov eax, [triangle+6] #y3
 		jge eax, 0, p3notinzone0
 			or zone3, 1
 		p3notinzone0:
-		
+
 		jle eax, 119, p3notinzone2
 			or zone3, 0b100
 		p3notinzone2:
-	
+
 	###Check zone 1,3
 		#t1
 		mov eax, [triangle+1] #x1
 		jle eax, 159, p1notinzone1
 			or zone1, 0b10
 		p1notinzone1:
-		
+
 		jge eax, 0, p1notinzone3
 			or zone1, 0b1000
 		p1notinzone3:
-		
+
 		#t2
 		mov eax, [triangle+3] #x2
 		jle eax, 159, p2notinzone1
 			or zone2, 0b10
 		p2notinzone1:
-		
+
 		jge eax, 0, p2notinzone3
 			or zone2, 0b1000
 		p2notinzone3:
-		
+
 		#t3
 		mov eax, [triangle+5] #x3
 		jle eax, 159, p3notinzone1
 			or zone3, 0b10
 		p3notinzone1:
-		
+
 		jge eax, 0, p3notinzone3
 			or zone3, 0b1000
 		p3notinzone3:
-		
+
 	### Now we have established which zones every1 is in
 	### Next step is the base case: if zone1 & zone2 & zone3 != 0, return.
 	### Else if zone1 | zone2 | zone3 == 0, rasterize.
@@ -1925,118 +1997,118 @@ clip:
 		mov eax, zone1
 		and eax, zone2
 		and eax, zone3
-		
+
 		je eax, 0, basecase1fail
 			mov FP, 0xfbfb
 			ret
 		basecase1fail:
-		
+
 		mov eax, zone1
 		or eax, zone2
 		or eax, zone3
-		
+
 		jne eax, 0, basecase2fail
 			mov FP, 0xfbfb
 			call rasterize
 			or %1, %1 #mov FP, 0xdddd
 			ret
 		basecase2fail:
-	
+
 	### Reduction step.  Check zone by zone.
-	### 
 	###
-	
+	###
+
 	mov eax, zone1
 	or eax, zone2
 	or eax, zone3
-	
-	
+
+
 	#Check zone 0.
 	mov ebx, eax
 	and ebx, 1
-	
+
 	jne ebx, 1, checkzone1
 		### At least one point is in zone 0. Could be two triangle.
-	
-		mov egx, 0	
+
+		mov egx, 0
 		mov [zone], egx
-		
+
 		### No longer need to save this zone information, so we can modify zone1, zone2, zone3
 		and zone1, 1 #Make zone 0 the only bit left.
 		and zone2, 1
 		and zone3, 1
-		
+
 		mov eex, 0 #Prepare eex for split, eex is a param for it.
-		
-		j presplitsort	
+
+		j presplitsort
 	checkzone1:
 	mov ebx, eax
 	and ebx, 0b10
-	
+
 	jne ebx, 0b10, checkzone2
 		### At least one point is in zone 1. Could be two triangle.
-		
+
 		mov egx, 1
 		mov [zone], egx
-		
+
 		### No longer need to save this zone information, so we can modify zone1, zone2, zone3
 		rsh zone1, 1
 		rsh zone2, 1
 		rsh zone3, 1
-		
+
 		and zone1, 1 #Make zone 0 the only bit left.
 		and zone2, 1
 		and zone3, 1
-		
+
 		mov eex, 159 #Prepare eex for split, eex is a param for it.
-		
-		j presplitsort	
-	
+
+		j presplitsort
+
 	checkzone2:
 	mov ebx, eax
 	and ebx, 0b100
-	
+
 	jne ebx, 0b100, checkzone3
 		### At least one point is in zone 2. Could be two triangle.
-		
+
 		mov egx, 2
 		mov [zone], egx
-		
+
 		### No longer need to save this zone information, so we can modify zone1, zone2, zone3
 		rsh zone1, 2
 		rsh zone2, 2
 		rsh zone3, 2
-		
+
 		and zone1, 1 #Make zone 0 the only bit left.
 		and zone2, 1
 		and zone3, 1
-		
+
 		mov eex, 119 #Prepare eex for split, eex is a param for it.
-		
+
 		j presplitsort
-	
+
 	checkzone3:
 		### At least one point is in zone 3. Could be two triangle.
-		
+
 		mov egx, 3
 		mov [zone], egx
-		
+
 		### No longer need to save this zone information, so we can modify zone1, zone2, zone3
 		rsh zone1, 3
 		rsh zone2, 3
 		rsh zone3, 3
-		
+
 		and zone1, 1 #Make zone 0 the only bit left.
 		and zone2, 1
 		and zone3, 1
-		
+
 		mov eex, 0 #Prepare eex for split, eex is a param for it.
-		
-		j presplitsort	
-	
-	
+
+		j presplitsort
+
+
 	### First find pivot point once zone is established.
-	
+
 	### PRE-SPLIT SORT
 	### Determine pivot point and then go to split.
 	###
@@ -2059,8 +2131,8 @@ clip:
 				mov ebx, [triangle+6]
 				mov [triangle+4], ebx
 				mov [triangle+6], eax
-				
-				j split				
+
+				j split
 			point1in0point3out:
 			#Only point 1 is in 0, point 1 is the pivot point. Must swap point 1 and 3.
 				mov eax, [triangle+1]
@@ -2071,8 +2143,8 @@ clip:
 				mov ebx, [triangle+6]
 				mov [triangle+2], ebx
 				mov [triangle+6], eax
-				
-				j split			
+
+				j split
 			point1notin0:
 			jne zone2, 1, point2notin0
 				#point 2 is in 0
@@ -2086,7 +2158,7 @@ clip:
 					mov ebx, [triangle+6]
 					mov [triangle+2], ebx
 					mov [triangle+6], eax
-					
+
 					j split
 			point2in0point3out:
 				#point 2 is the pivot.  Swap 2 and 3.
@@ -2098,12 +2170,12 @@ clip:
 				mov ebx, [triangle+6]
 				mov [triangle+4], ebx
 				mov [triangle+6], eax
-				
+
 				j split
 			point2notin0:
 				#point 3 is the pivot. Already sorted.
 					j split
-	
+
 	###
 	### SPLIT
 	###
@@ -2119,7 +2191,7 @@ clip:
 				#mov eex, 0
 				call binarySubdivide
 				mov zone1, eax # Zone1 contains the x-value of p1-p3 edge on y=0.
-				
+
 				mov eax, [triangle+5]
 				mov ebx, [triangle+6]
 				mov ecx, [triangle+3]
@@ -2127,7 +2199,7 @@ clip:
 				#mov eex, 0
 				call binarySubdivide #eax contains the x-value of p2-p3 edge on y=0.
 				j checkpivotside
-				
+
 			swapinputsforbinary:
 				mov eax, [triangle+6]
 				mov ebx, [triangle+5]
@@ -2136,20 +2208,20 @@ clip:
 				#mov eex, 0
 				call binarySubdivide
 				mov zone1, eax # Zone1 contains the x-value of p1-p3 edge on y=0.
-				
+
 				mov eax, [triangle+6]
 				mov ebx, [triangle+5]
 				mov ecx, [triangle+4]
 				mov edx, [triangle+3]
 				#mov eex, 0
 				call binarySubdivide #eax contains the x-value of p2-p3 edge on y=0.
-			
+
 			checkpivotside:
-				
+
 				###
 				### Must check which side of boundary the pivot is on, and then create the new triangles so ones outside the boundary don't include the boundary value.
 				###
-				
+
 				mov ebx, [zone]
 				#zone0
 				jne ebx, 0, tryzone1
@@ -2158,34 +2230,34 @@ clip:
 					mov ecx, [triangle+6]
 					jl ecx, 0, pivotoutsideboundaryx
 					j pivotinsideboundaryx
-					
+
 				tryzone1:
 				jne ebx, 1, tryzone2
 					mov efx, 160
 					mov ecx, [triangle+5]
 					jg ecx, 159, pivotoutsideboundaryy
 					j pivotinsideboundaryy
-					
+
 				tryzone2:
 				jne ebx, 2, tryzone3
 					mov efx, 120
 					mov ecx, [triangle+6]
 					jg ecx, 119, pivotoutsideboundaryx
 					j pivotinsideboundaryx
-					
+
 				tryzone3:
 				#Must be in this zone if it wasn't in the others.
 					mov efx, -1
 					mov ecx, [triangle+5]
 					jl ecx, 0, pivotoutsideboundaryy
 					j pivotinsideboundaryy
-					
+
 				### Pivot outside boundary
 				###
 				###
-				
+
 				pivotoutsideboundaryx:
-				
+
 				#Now form the three new triangles and push them onto the stack, recursive call to clip.
 				mov ebx, [triangle+2]
 				push ebx
@@ -2196,7 +2268,7 @@ clip:
 				push eex
 				push eax
 				push temp2
-				
+
 				mov ebx, [triangle+2]
 				push ebx
 				mov ebx, [triangle+1]
@@ -2208,7 +2280,7 @@ clip:
 				push eex
 				push eax
 				push temp2
-				
+
 				mov ebx, [triangle+6]
 				push ebx
 				mov ebx, [triangle+5]
@@ -2218,15 +2290,15 @@ clip:
 				push efx
 				push eax
 				push temp2
-				
+
 				j donepushingtriangles
-				
+
 				### Pivot inside boundary
 				###
 				###
-				
+
 				pivotinsideboundaryx:
-				
+
 				#Now form the three new triangles and push them onto the stack, recursive call to clip.
 				mov ebx, [triangle+2]
 				push ebx
@@ -2237,7 +2309,7 @@ clip:
 				push efx
 				push eax
 				push temp2
-				
+
 				mov ebx, [triangle+2]
 				push ebx
 				mov ebx, [triangle+1]
@@ -2249,7 +2321,7 @@ clip:
 				push efx
 				push eax
 				push temp2
-				
+
 				mov ebx, [triangle+6]
 				push ebx
 				mov ebx, [triangle+5]
@@ -2259,15 +2331,15 @@ clip:
 				push eex
 				push eax
 				push temp2
-				
+
 				j donepushingtriangles
-					
+
 				### Pivot outside boundary
 				###
 				###
-				
+
 				pivotoutsideboundaryy:
-				
+
 				#Now form the three new triangles and push them onto the stack, recursive call to clip.
 				mov ebx, [triangle+2]
 				push ebx
@@ -2278,7 +2350,7 @@ clip:
 				push eax
 				push eex
 				push temp2
-				
+
 				mov ebx, [triangle+2]
 				push ebx
 				mov ebx, [triangle+1]
@@ -2290,7 +2362,7 @@ clip:
 				push eax
 				push eex
 				push temp2
-				
+
 				mov ebx, [triangle+6]
 				push ebx
 				mov ebx, [triangle+5]
@@ -2300,15 +2372,15 @@ clip:
 				push eax
 				push efx
 				push temp2
-				
+
 				j donepushingtriangles
-				
+
 				### Pivot inside boundary
 				###
 				###
-				
+
 				pivotinsideboundaryy:
-				
+
 				#Now form the three new triangles and push them onto the stack, recursive call to clip.
 				mov ebx, [triangle+2]
 				push ebx
@@ -2319,7 +2391,7 @@ clip:
 				push eax
 				push efx
 				push temp2
-				
+
 				mov ebx, [triangle+2]
 				push ebx
 				mov ebx, [triangle+1]
@@ -2331,7 +2403,7 @@ clip:
 				push eax
 				push efx
 				push temp2
-				
+
 				mov ebx, [triangle+6]
 				push ebx
 				mov ebx, [triangle+5]
@@ -2341,30 +2413,63 @@ clip:
 				push eax
 				push eex
 				push temp2
-				
+
 				donepushingtriangles:
-				
+
 				mov eax, SP
 				call clip
-				
+
 				#and %1, %1 ########## test code
 				add SP, 7
 				mov eax, SP
 				call clip
-				
+
 				#and %1, %1 ########## test code
 				add SP, 7
 				mov eax, SP
 				call clip
-				
+
 				#and %1, %1 ########## test code
 				add SP, 7
-				
+
 				mov FP, 0xfbfb
-				ret			
+				ret
 ###
 ###
 ### END CLIP
+###
+###
+
+###
+###
+### CLEAR BUFFER
+###
+###
+clearbuffer:
+mov eax, 0
+mov ebx, 159
+
+clearloop:
+mov ecx, eax
+lsh ecx, 3
+or ecx, %5
+
+	VGAfull3:
+		mov %6, [VGA]
+	je %6, 1, VGAfull3
+mov [VGA], ecx
+
+	VGAfull4:
+		mov %6, [VGA]
+	je %6, 1, VGAfull4
+mov [VGA], ebx
+incr eax
+jne eax, 120, clearloop
+
+ret
+###
+###
+### END CLEAR BUFFER
 ###
 ###
 
@@ -2384,98 +2489,98 @@ perspectivetransform:
 		call copypoint
 		add eax, 3
 		push eax
-		
+
 		#Superposition.  First, do x1 and z1, then do y1 and z1.
 		mov eax, [point]
 		mov ebx, [point+2]
 		mov ecx, 0
 		mov edx, PERSPECTIVE
 		mov eex, 0
-		
+
 		call binarySubdivide
-		
+
 		add eax, 80
 		mov [triangle+1], eax
-		
+
 		#Superposition.  First, do x1 and z1, then do y1 and z1.
 		mov eax, [point+1]
 		mov ebx, [point+2]
 		mov ecx, 0
 		mov edx, PERSPECTIVE
 		mov eex, 0
-		
+
 		call binarySubdivide
-		
+
 		add eax, 60
 		mov [triangle+2], eax
-	
+
 	###Point 2
-	
+
 		pop eax
 		call copypoint
 		add eax, 3
 		push eax
-		
+
 		#Superposition.  First, do x1 and z1, then do y1 and z1.
 		mov eax, [point]
 		mov ebx, [point+2]
 		mov ecx, 0
 		mov edx, PERSPECTIVE
 		mov eex, 0
-		
+
 		call binarySubdivide
-		
+
 		add eax, 80
 		mov [triangle+3], eax
-		
+
 		#Superposition.  First, do x1 and z1, then do y1 and z1.
 		mov eax, [point+1]
 		mov ebx, [point+2]
 		mov ecx, 0
 		mov edx, PERSPECTIVE
 		mov eex, 0
-		
+
 		call binarySubdivide
-		
+
 		add eax, 60
 		mov [triangle+4], eax
-		
+
 	###Point 3
-	
+
 		pop eax
 		call copypoint
 		add eax, 3
-		
+
 		#Superposition.  First, do x1 and z1, then do y1 and z1.
 		mov eax, [point]
 		mov ebx, [point+2]
 		mov ecx, 0
 		mov edx, PERSPECTIVE
 		mov eex, 0
-		
+
 		call binarySubdivide
-		
+
 		add eax, 80
 		mov [triangle+5], eax
-		
+
 		#Superposition.  First, do x1 and z1, then do y1 and z1.
 		mov eax, [point+1]
 		mov ebx, [point+2]
 		mov ecx, 0
 		mov edx, PERSPECTIVE
 		mov eex, 0
-		
+
 		call binarySubdivide
-		
+
 		add eax, 60
 		mov [triangle+6], eax
-	
+
 	mov eax, triangle
-	
+
 	mov FP, 0xbcde
 	call clip
 	mov FP, 0xedcb
-	
+
 	###Need to decide on a way to use the outgoing information.  Probably just pump it straight through to clip/rasterize.
 	###Need to know incoming data format.
 
@@ -2493,41 +2598,41 @@ ret
 ### eax = x1, ebx = y1, ecx = x2, edx = y2, eex = y-value of intersection.  return = x-value of intersection. Return is put into eax.
 ### Note - x and y can be switched to flip axes
 
-binarySubdivide:		
-	mov FP, 0xbbbb	
+binarySubdivide:
+	mov FP, 0xbbbb
 	### Find lowest point (most negative y) to start with.
 		jge edx, ebx, ebxislowest
 			mov efx, ebx
 			mov ebx, edx
 			mov edx, efx
-			
+
 			mov efx, eax
 			mov eax, ecx
 			mov ecx, efx
 		ebxislowest:
-		
+
 	### Set up difference outside loop. efx is y difference.  egx is x difference.
 			mov efx, edx #efx = y1
 			sub efx, ebx #efx = y1 - y2
-			
+
 			mov egx, ecx #eax = x1
 			sub egx, eax #egx = x1-x2
-			
+
 		###efx is guaranteed pos
-			
+
 		###Must ensure egx is positive.
 			jge egx, 0, egxpositive
 				not egx, egx
 				add egx, 1
 				j binarysubdivideloop2
 			egxpositive:
-		
+
 		jne edx, eex, precheckedx
 			mov FP, 0xacac
 			mov eax, ecx
 			ret
 		precheckedx:
-		
+
 	binarysubdivideloop1:
 		#First divide guess value by two.
 		je egx, 1, dontround1
@@ -2542,7 +2647,7 @@ binarySubdivide:
 				mov FP, 0xacac
 				ret
 			binarySubdividenotdone1:
-		
+
 		# If y1 < eex
 			jge ebx, eex, y1belowlimit1
 				add ebx, efx #ebx = y1 + (y1-y2)/2 = new y1.
@@ -2552,9 +2657,9 @@ binarySubdivide:
 		# If y1 > eex
 				sub ebx, efx #ebx = y1 - (y1-y2)/2 = new y1.
 				sub eax, egx #eax = x1 - (x1-x2)/2 = new x1.
-		
+
 		j binarysubdivideloop1
-		
+
 	binarysubdivideloop2:
 		#First divide guess value by two.
 		je egx, 1, dontround2
@@ -2569,7 +2674,7 @@ binarySubdivide:
 				mov FP, 0xacac
 				ret
 			binarySubdividenotdone2:
-		
+
 		# If y1 < eex
 			jge ebx, eex, y1belowlimit2
 				add ebx, efx #ebx = y1 + (y1-y2)/2 = new y1.
@@ -2579,9 +2684,9 @@ binarySubdivide:
 		# If y1 > eex
 				sub ebx, efx #ebx = y1 - (y1-y2)/2 = new y1.
 				add eax, egx #eax = x1 - (x1-x2)/2 = new x1.
-		
+
 		j binarysubdivideloop2
-		
+
 ###
 ###
 ### END BINARY SUBDIVIDE
@@ -2598,7 +2703,7 @@ copyTriangle:
 	mov FP, 0xafaf
 	push ebx
 	push eax
-	
+
 	mov ebx, [eax]
 	mov [triangle], ebx
 	incr eax
@@ -2619,7 +2724,7 @@ copyTriangle:
 	incr eax
 	mov ebx, [eax]
 	mov [triangle+6], ebx
-	
+
 	pop eax
 	pop ebx
 	#mov FP, 0xabfa
@@ -2630,7 +2735,7 @@ copypoint:
 	mov FP, 0xcbcb
 	push ebx
 	push eax
-	
+
 	mov ebx, [eax]
 	mov [point], ebx
 	incr eax
@@ -2639,7 +2744,7 @@ copypoint:
 	incr eax
 	mov ebx, [eax]
 	mov [point+2], ebx
-	
+
 	pop eax
 	pop ebx
 ret
@@ -2662,13 +2767,13 @@ zclip:
 	jge ebx, 0, safepoint2
 		ret
 	safepoint2:
-	
+
 	add eax, 3
 	mov ebx, [eax]
 	jge ebx, 0, safepoint3
 		ret
 	safepoint3:
-	
+
 	###Triangle is entirely in positive z. Safe to draw.
 	mov eax, %0
 	call perspectivetransform
@@ -2730,36 +2835,36 @@ jne temp2, eax, notthesamey
 	mov temp2, [triangle]
 	or temp1, temp2
 	mov [VGA], temp1
-	
+
 	mov temp1, [triangle+1]
 	mov temp2, [triangle+3]
 	mov eax, [triangle+5]
-	
+
 	jl temp1, temp2, temp1smallerysame
 		mov temp1, temp2
 	temp1smallerysame:
-	
+
 	jl temp1, eax, temp1smallerysame2
 		mov temp1, eax
 	temp1smallerysame2:
-	
+
 	mov ebx, [triangle+1]
 	mov temp2, [triangle+3]
 	mov eax, [triangle+5]
-	
+
 	jg ebx, temp2, ebxbiggerysame1
 		mov ebx, temp2
 	ebxbiggerysame1:
-	
+
 	jg ebx, eax, ebxbiggerysame2
 		mov ebx, eax
 	ebxbiggerysame2:
-	
+
 	lsh temp1, 8
 	or temp1, ebx
 	mov [VGA], temp1
 	ret
-	
+
 notthesamey:
 
 cmp temp1, temp2
@@ -2872,7 +2977,7 @@ jne y3cmp
 	#y2 == yvalright + y1.
 	mov temp1, [triangle+3] #temp1 = xrefleft = x2
 	mov ebx, [triangle+5] #Move x3 into ebx
-	sub ebx, temp1 #ebx = xdifleft = x3 - xref = x3 - x2.	
+	sub ebx, temp1 #ebx = xdifleft = x3 - xref = x3 - x2.
 	mov edx, [triangle+6] #edx = y3
 	mov eex, [triangle+4] #eex = y2
 	sub edx, eex #edx = y3 - y2 = ydifleft
@@ -2880,12 +2985,12 @@ jne y3cmp
 	add edx, %10
 	mov edx, [edx] #edx = 1/ydifleft
 	mov ymax, [triangle+6]
-	
+
 	#Check for flat buns
 	mov %10, [triangle+4]
 	cmp %10, ymax
 	je flatbuns
-	
+
 	mov %10, [triangle+2]
 	sub ymax, %10
 	mov yvalleft, 0
@@ -3052,7 +3157,7 @@ decr eax
 ###
 ### NEW DRAW METHOD WITH MIDtriangle
 ###
-#ecx holds prev L/R value.  eax holds current y-value. edx holds current L/R value.  eex holds next L/R y-value.   
+#ecx holds prev L/R value.  eax holds current y-value. edx holds current L/R value.  eex holds next L/R y-value.
 FillLoop:
 mov ebx, eax #Copy eax as temp into ebx.
 lsh ebx, 3
@@ -3291,16 +3396,16 @@ drawtriangles:
 	mov %1, [%6] #%1 is size in triangle count.
 	incr %0
 	mov %2, 1 #%2 is loop counter.
-	
+
 	drawtriangleloop:
-	
+
 	call zclip
 	incr %2
 	jg %2, %1, drawtrianglecleanup
 	add %0, 10
-	
+
 	j drawtriangleloop
-	
+
 	drawtrianglecleanup:
 
 	pop FP
@@ -3315,7 +3420,7 @@ drawtriangles:
 	pop %2
 	pop %1
 	pop %0
-	
+
 ret
 ###
 ###
@@ -3337,10 +3442,10 @@ PLAYER_START_Y:
 0
 
 PLAYER_THETA:
-0
+0x4000
 
 PLAYER_START_THETA:
-0b0001111111111111
+0x4000
 
 PLAYER_RADIUS:
 10
@@ -3364,10 +3469,10 @@ PLAYER_BULLET_TIME:
 0
 
 AI_X:
-100
+0
 
 AI_Y:
-0
+100
 
 AI_TURNING:
 0
@@ -3400,10 +3505,10 @@ AI_BULLET_TIME:
 0
 
 AI_START_X:
-100
+0
 
 AI_START_Y:
-0
+100
 
 AI_START_THETA:
 0x4000
