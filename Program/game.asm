@@ -422,6 +422,7 @@ mainEndGameState:
 	mov %0, %1
 	mov %1, %3
 	call memcpy				# copy rotated triangle back into tank
+	add %0, 9				# go to next triangle
 	decr %4					# done rotating one triangle
 	# check if loop again
 	jne %4, 0, rotatetankloop
@@ -456,6 +457,7 @@ mainEndGameState:
 	mov %0, %1
 	mov %1, %3
 	call memcpy				# copy rotated triangle back into bullet
+	add %0, 9				# go to next triangle
 	decr %4					# done rotating one triangle
 	# check if loop again
 	jne %4, 0, rotateaibulletloop
@@ -491,6 +493,7 @@ mainEndGameState:
 	mov %0, %1
 	mov %1, %3
 	call memcpy				# copy rotated triangle back into bullet
+	add %0, 9				# go to next triangle
 	decr %4					# done rotating one triangle
 	# check if loop again
 	jne %4, 0, rotateplayerbulletloop
@@ -506,12 +509,12 @@ mainEndGameState:
 	mov %0, %SP
 	mov %1, [AI_X]			# copy in AI tank translation (position)
 	mov %2, [PLAYER_X]		# offest by camera pos
-	sub %1, 2
+	sub %1, %2
 	mov [%0], %1
 	incr %0
 	mov %1, [AI_Y]
 	mov %2, [PLAYER_Y]		# offest by camera pos
-	sub %1, 2
+	sub %1, %2
 	mov [%0], %1
 	incr %0
 	mov %1, 0
@@ -542,12 +545,12 @@ mainEndGameState:
 	mov %0, %SP
 	mov %1, [AI_BULLET_X]	# copy in AI bullet translation (position)
 	mov %2, [PLAYER_X]		# offest by camera pos
-	sub %1, 2
+	sub %1, %2
 	mov [%0], %1
 	incr %0
 	mov %1, [AI_BULLET_Y]
 	mov %2, [PLAYER_Y]		# offest by camera pos
-	sub %1, 2
+	sub %1, %2
 	mov [%0], %1
 	incr %0
 	mov %1, 0
@@ -579,12 +582,12 @@ mainEndGameState:
 	mov %0, %SP
 	mov %1, [PLAYER_BULLET_X]	# copy in AI bullet translation (position)
 	mov %2, [PLAYER_X]		# offest by camera pos
-	sub %1, 2
+	sub %1, %2
 	mov [%0], %1
 	incr %0
 	mov %1, [PLAYER_BULLET_Y]
 	mov %2, [PLAYER_Y]		# offest by camera pos
-	sub %1, 2
+	sub %1, %2
 	mov [%0], %1
 	incr %0
 	mov %1, 0
@@ -638,6 +641,7 @@ mainEndGameState:
 	mov %0, %1
 	mov %1, %3
 	call memcpy				# copy rotated triangle back into tank
+	add %0, 9				# go to next triangle
 	decr %4					# done rotating one triangle
 	# check if loop again
 	jne %4, 0, camerarotatetankloop
@@ -672,6 +676,7 @@ mainEndGameState:
 	mov %0, %1
 	mov %1, %3
 	call memcpy				# copy rotated triangle back into bullet
+	add %0, 9				# go to next triangle
 	decr %4					# done rotating one triangle
 	# check if loop again
 	jne %4, 0, camerarotateaibulletloop
@@ -707,6 +712,7 @@ mainEndGameState:
 	mov %0, %1
 	mov %1, %3
 	call memcpy				# copy rotated triangle back into bullet
+	add %0, 9				# go to next triangle
 	decr %4					# done rotating one triangle
 	# check if loop again
 	jne %4, 0, camerarotateplayerbulletloop
@@ -731,22 +737,16 @@ mainEndGameState:
 	mov %0, %8
 	call backfacecull
 	skipplayerbulletcull:
-
-	foo:
-	j foo
-
 	
 # copy all unculled triangles into array to be sorted
 	mov %5, 0				# keep total unculled triangle count
-	sub %SP, 1				# space for total number of triangles to render
-	mov %6, %SP
 	# tank first
 	mov %4, [%10]			# get size
 	mov %0, %10				# pointer into model
 	copyculledtankloop:
 	incr %0					# pointer now points to color (top of triangle in case we copy)
 	mov %1, [%0]
-	jne %1, 0xFFFF, dontcopytank
+	je %1, 0xFFFF, dontcopytank
 	#should copy
 	sub %SP, 10
 	mov %1, %SP
@@ -765,7 +765,7 @@ mainEndGameState:
 	copyculledaibulletloop:
 	incr %0					# pointer now points to color (top of triangle in case we copy)
 	mov %1, [%0]
-	jne %1, 0xFFFF, dontcopyaibullet
+	je %1, 0xFFFF, dontcopyaibullet
 	#should copy
 	sub %SP, 10
 	mov %1, %SP
@@ -785,7 +785,7 @@ mainEndGameState:
 	copyculledplayerbulletloop:
 	incr %0					# pointer now points to color (top of triangle in case we copy)
 	mov %1, [%0]
-	jne %1, 0xFFFF, dontcopyplayerbullet
+	je %1, 0xFFFF, dontcopyplayerbullet
 	#should copy
 	sub %SP, 10
 	mov %1, %SP
@@ -799,6 +799,8 @@ mainEndGameState:
 	skipplayerbulletcopy:
 
 	# save total triangle count
+	sub %SP, 1				# space for total number of triangles to render
+	mov %6, %SP
 	mov [%6], %5			# %6 is the pointer to the array of triangles
 							# pointers %10, %9, and %8 are up for grabs now that the triangles from those models have been culled
 
@@ -807,12 +809,11 @@ mainEndGameState:
 	add %LOW, 1
 	add %7, %LOW
 
-#	Sort triangles by distance of nearest point (furthest away comes first). Insertion sort
+#	Sort triangles by distance of furthest point (furthest away comes first). Insertion sort
 	mov %4, 1				# starting index
 	mov %0, 1
 	sub %SP, 10				# temp triangle
 	mov %2, %SP
-	mov %0, %6				# triangle array pointer
 	incr %6					# skip size
 
 	sorttrianglesouterloop:
@@ -822,7 +823,7 @@ mainEndGameState:
 	mov %1, %2				# move temp pointer into dst arg of move_triangle
 	call move_triangle
 	mov %3, %4				# get a inner loop index
-	decr %3
+	decr %3					# i - 1
 
 		sorttrianglesinnerloop:
 		mov %0, %6				# get pointer to model
@@ -847,6 +848,9 @@ mainEndGameState:
 	call move_triangle
 	incr %4
 	jl %4, %5, sorttrianglesouterloop
+	
+	# get back to size
+	decr %6
 
 	# clean up stack
 	add %SP, 10
