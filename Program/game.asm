@@ -808,7 +808,7 @@ mainEndGameState:
 	mul %5, 10
 	add %LOW, 1
 	add %7, %LOW
-
+	
 #	Sort triangles by distance of furthest point (furthest away comes first). Insertion sort
 	mov %4, 1				# starting index
 	mov %0, 1
@@ -3309,16 +3309,16 @@ ret
 
 .data
 PLAYER_X:
-20
+0
 
 PLAYER_Y:
-20
+0
 
 PLAYER_START_X:
--1000
+0
 
 PLAYER_START_Y:
--1000
+0
 
 PLAYER_THETA:
 0
@@ -3351,7 +3351,7 @@ AI_X:
 100
 
 AI_Y:
-100
+0
 
 AI_TURNING:
 0
@@ -3384,10 +3384,10 @@ AI_BULLET_TIME:
 0
 
 AI_START_X:
-1000
+100
 
 AI_START_Y:
-1000
+0
 
 AI_START_THETA:
 10
