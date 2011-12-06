@@ -92,6 +92,7 @@ mainNewPlayer:
 	mov [PLAYER_LIVES], %0
 
 mainLoop:
+
 	# Check Inputs
 	# Left/Right, update theta
 	mov %2, [LEFT_KEY]
@@ -112,12 +113,12 @@ mainLoop:
 	mul %5, SPEED
 	mov %5, %LOW           # %5 now hoas ammount to go forward
 	mov %0, %4             #
-	call cos               # %0 has sin(theta)
+	call sin               # %0 has sin(theta)
 	fmul %0, %5            #
 	add %2, %0            # Player X now updated by the move amount
 	                         #
 	mov %0, %4             #
-	call sin               # %0 has cos(theta)
+	call cos               # %0 has cos(theta)
 	fmul %0, %5            # %LOW/HIGH has (UP-DOWN)*cos(theta)
 	add %3, %0
 
@@ -140,7 +141,6 @@ mainLoop:
 	je %0, 0, noInput2
 		mov [UP_KEY], %0
 	noInput2:
-	#j mainLoop # TODO, kill
 	j mainEndGameState
 	# TODO DEBUGGING ---------------
 
@@ -153,11 +153,11 @@ mainLoop:
 	mov %5, [AI_Y]
 	mov %6, [AI_THETA]
 	mov %0, %6
-	call cos
+	call sin
 	fmul %0, SPEED    # %LOW now has speed*sin(theta), to update Y
 	add %4, %0           # %4 now has new Y (if possible)
 	mov %0, %6
-	call sin
+	call cost
 	fmul %0, SPEED
 	add %5, %0           # %5 now has possible AI_Y
 	j mainAIDoneMoving
@@ -214,8 +214,7 @@ mainAIDoneMoving:
 	je %0, 0, noInput
 		mov [UP_KEY], %0
 	noInput:
-	j mainLoop # TODO, kill
-	# j mainEndGameState
+	j mainEndGameState
 	# TODO DEBUGGING ---------------
 
 	# Move Player bullet
@@ -227,11 +226,11 @@ mainAIDoneMoving:
 	mov %6, [PLAYER_BULLET_X]
 	mov %7, [PLAYER_BULLET_Y]
 	mov %0, [PLAYER_BULLET_THETA]
-	call cos
+	call sin
 	fmul %0, BULLET_SPEED
 	add %6, %0           # 6 now conains bullet x
 	mov %0, [PLAYER_BULLET_THETA]
-	call sin
+	call cos
 	fmul %0, BULLET_SPEED
 	add %7, %0           # 7 now contains bullet y
 
@@ -278,11 +277,11 @@ mainEndPlayerBullet:
 	mov %8, [AI_BULLET_X]
 	mov %9, [AI_BULLET_Y]
 	mov %0, [AI_BULLET_THETA]
-	call cos
+	call sin
 	fmul %0, BULLET_SPEED
 	add %8, %0            # 8 now conains bullet x
 	mov %0, [AI_BULLET_THETA]
-	call sin
+	call cos
 	fmul %0, BULLET_SPEED
 	add %9, %0           # 9 now contains bullet y
 
@@ -1473,6 +1472,79 @@ FindTheta:
 	pop %2
 	ret
 
+drawHealth:
+	push %0
+	push %1
+	push %2
+	push %3
+	push %4
+
+	mov %0, 40
+	mov %1, 115
+	mov %3, 119
+	mov %4, 7
+	mov %2, [PLAYER_LIVES]
+	je %2, 2, drawHealth2
+	je %2, 3, drawHealth3
+	je %2, 4, drawHealth4
+	je %2, 5, drawHealth5
+	mov %2, 50
+	j drawHealthEnd
+
+	drawHealth2:
+	mov %2, 60
+	j drawHealthEnd
+
+	drawHealth3:
+	mov %2, 70
+	j drawHealthEnd
+
+	drawHealth4:
+	mov %2, 80
+	j drawHealthEnd
+
+	drawHealth5:
+	mov %2, 90
+
+	drawHealthEnd:
+
+	call drawSquare
+
+	pop %4
+	pop %3
+	pop %2
+	pop %1
+	pop %0
+	ret
+
+drawCross:
+	push %0
+	push %1
+	push %2
+	push %3
+	push %4
+
+	mov %0,	79
+	mov %1, 50
+	mov %2, 91
+	mov %3, 70
+	mov %4, 7
+	call drawSquare
+	
+	mov %0, 70
+	mov %1, 59
+	mov %2, 90
+	mov %3, 61
+	mov %4, 7
+	call drawSquare
+
+	pop %4
+	pop %3
+	pop %2
+	pop %1
+	pop %0
+	ret
+
 # Take top left x in 0, top left y in 1, bottom right x in 2 bottom right y in 3,
 # and color in 4
 # Draw a square
@@ -2363,6 +2435,39 @@ clip:
 ###
 ###
 ### END CLIP
+###
+###
+
+###
+###
+### CLEAR BUFFER
+###
+###
+clearbuffer:
+mov eax, 0
+mov ebx, 159
+
+clearloop:
+mov ecx, eax
+lsh ecx, 3
+or ecx, %5
+
+	VGAfull3:
+		mov %6, [VGA]
+	je %6, 1, VGAfull3
+mov [VGA], ecx
+
+	VGAfull4:
+		mov %6, [VGA]
+	je %6, 1, VGAfull4
+mov [VGA], ebx
+incr eax
+jne eax, 120, clearloop
+
+ret
+###
+###
+### END CLEAR BUFFER
 ###
 ###
 
