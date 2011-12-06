@@ -917,45 +917,6 @@ ret
 
 ###
 ###
-### Rasterize 2
-###
-###
-rasterize2:
-push zone1
-push zone2
-push zone3
-
-mov zone1, 0xffff
-mov zone2, 0xffff
-mov zone3, 0xffff
-mov LOW, 0xffff
-mov HIGH, 0xffff
-
-mov zone1, [triangle]
-mov zone1, [triangle+1]
-mov zone1, [triangle+2]
-mov zone1, [triangle+3]
-mov zone1, [triangle+4]
-mov zone1, [triangle+5]
-mov zone1, [triangle+6]
-
-pop zone3
-pop zone2
-pop zone1
-
-ret
-
-###
-###
-### END Rasterize 2
-###
-###
-
-
-
-
-###
-###
 ### RASTERIZE
 ###
 ###
