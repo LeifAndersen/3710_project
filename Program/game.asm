@@ -1475,6 +1475,51 @@ FindTheta:
 	pop %2
 	ret
 
+drawHealth:
+	push %0
+	push %1
+	push %2
+	push %3
+	push %4
+
+	mov %0, 40
+	mov %1, 115
+	mov %3, 119
+	mov %4, 7
+	mov %2, [PLAYER_LIVES]
+	je %2, 2, drawHealth2
+	je %2, 3, drawHealth3
+	je %2, 4, drawHealth4
+	je %2, 5, drawHealth5
+	mov %2, 50
+	j drawHealthEnd
+
+	drawHealth2:
+	mov %2, 60
+	j drawHealthEnd
+
+	drawHealth3:
+	mov %2, 70
+	j drawHealthEnd
+
+	drawHealth4:
+	mov %2, 80
+	j drawHealthEnd
+
+	drawHealth5:
+	mov %2, 90
+
+	drawHealthEnd:
+
+	call drawSquare
+
+	pop %4
+	pop %3
+	pop %2
+	pop %1
+	pop %0
+	ret
+
 drawCross:
 	push %0
 	push %1
