@@ -12,6 +12,8 @@
 `define %HIGH %12
 `define SP %13
 `define FP %14
+`define %SP %13
+`define %FP %14
 `define LOW %11
 `define HIGH %12
 `define eax %1
@@ -33,6 +35,7 @@
 `define yvalleft %9
 `define yvalright %5
 `define ymax %6
+`define DEGREE_90 0x4000
 
 # Bootup and initialization Code
 init:
@@ -42,64 +45,170 @@ init:
 	call main
 	
 main:
-	#mov eax, 180
-	#push eax
 	
-	#mov eax, 205
-	#push eax
+	#### CHECK KEYBOARD INPUT TO SET theta.
+	mov %9, [xrot]
+	mov %7, 1
 	
-	#mov eax, -60
-	#push eax
+	mov %10, [UP_KEY]
+	je %10, 0, noupkey
+		add %9, 0x3e00
+		mov [UP_KEY], %7
+	noupkey:
 	
-	#mov eax, 140
-	#push eax
+	mov %10, [DOWN_KEY]
+	je %10, 0, nodownkey
+		sub %9, 0x3e00	
+		mov [DOWN_KEY], %7
+	nodownkey:
 	
-	#mov eax, 50
-	#push eax
+	mov [xrot], %9
+	mov %9, [yrot]
+	add %9, 0x3e00
 	
-	#mov eax, -35
-	#push eax
+	mov %10, [LEFT_KEY]
+	je %10, 0, noleftkey
+		add %9, 0x3e00
+		mov [LEFT_KEY], %7
+	noleftkey:
 	
-	#mov eax, 1
-	#push eax
+	mov %10, [RIGHT_KEY]
+	je %10, 0, norightkey
+		sub %9, 0x3e00	
+		mov [RIGHT_KEY], %7
+	norightkey:
 	
-	#mov eax, SP
-	#call clip
+	mov [yrot], %9
 	
-	mov eax, 600
-	push eax	
-	mov eax, 60
-	push eax
-	mov eax, 553
-	push eax
+	and %1, %1
+	and %1, %1
 	
-	mov eax, 600
-	push eax	
-	mov eax, 0
-	push eax	
-	mov eax, 0
-	push eax
+	mov %0, 0
+	mov %1, 0x3200
+	call setup_rotate
 	
-	mov eax, 600
-	push eax	
-	mov eax, 60
-	push eax	
-	mov eax, -10000
-	push eax
+	jge %5, 6, resetBackColor
+		incr %5
+		j donebackcolor
+	resetBackColor:
+		mov %5, 0
+	donebackcolor:
 	
-	mov eax, 1
-	push eax
+	VGAfull1:
+		mov %6, [VGA]
+	je %6, 1, VGAfull1
+	mov [VGA], %5
 	
-	mov eax, SP
+	VGAfull2:
+		mov %6, [VGA]
+	je %6, 1, VGAfull2
+	mov [VGA], %5
 	
-	call perspectivetransform
+	#call clearbuffer
+	
+	mov %0, twotriangles
+	mov %2, [%0] # Number of triangles.
+	mov %3, 0 #loop counter.
+	incr %0 # %0 points at first triangle.
+	mov %1, point
+	
+	drawloop:
+		incr %3
+	
+		mov %4, [%0] # %4 is the color of the triangle.
+		mov [triangle], %4 #Move color into temp. triangle.
+		incr %0 #0 points at first point.
+		
+		call rotate_point #returns rotated point at [point]
+		mov FP, 0xdddd
+		
+		###copy rotated point into triangle for now
+		mov %4, [point] #use %4 as temp to copy data out of point
+		mov [triangle+1], %4
+		mov %4, [point+1] #use %4 as temp to copy data out of point
+		mov [triangle+2], %4
+		mov %4, [point+2] #use %4 as temp to copy data out of point
+		mov [triangle+3], %4
+		
+		add %0, 3 #Points at second point.
+		
+		call rotate_point #returns rotated point at [point]
+		mov FP, 0xddee
+		
+		###copy rotated point into triangle
+		mov %4, [point] #use %4 as temp to copy data out of point
+		mov [triangle+4], %4
+		mov %4, [point+1] #use %4 as temp to copy data out of point
+		mov [triangle+5], %4
+		mov %4, [point+2] #use %4 as temp to copy data out of point
+		mov [triangle+6], %4
+			
+		add %0, 3 #Points at third point.
+		
+		call rotate_point #returns rotated point at [point]
+		mov FP, 0xeeee
+		
+		###copy rotated point into triangle
+		mov %4, [point] #use %4 as temp to copy data out of point
+		mov [triangle+7], %4
+		mov %4, [point+1] #use %4 as temp to copy data out of point
+		mov [triangle+8], %4
+		mov %4, [point+2] #use %4 as temp to copy data out of point
+		mov [triangle+9], %4
+		
+		####Done with first triangle, push it onto stack, do next triangle.
+		mov %4, [triangle+9]
+		push %4
+		mov %4, [triangle+8]
+		push %4
+		mov %4, [triangle+7]
+		push %4
+		mov %4, [triangle+6]
+		push %4
+		mov %4, [triangle+5]
+		push %4
+		mov %4, [triangle+4]
+		push %4
+		mov %4, [triangle+3]
+		push %4
+		mov %4, [triangle+2]
+		push %4
+		mov %4, [triangle+1]
+		push %4
+		mov %4, [triangle]
+		push %4
+	
+		add %0, 3 #point him at next points' color.
+	
+	jne %3, %2, drawloop
+	
+	###All triangles stacked, write size to stack.
+	push %2
+	
+	###Properly formatted data
+	mov %6, SP
+	
+	call drawtriangles
+	
+	#mov eax, SP	
+	
+	#call perspectivetransform
 
 	mov eax, 0xffff
+	VGAfull5:
+		mov %6, [VGA]
+	je %6, 1, VGAfull1
 	mov [VGA], eax
+	
+	VGAfull6:
+		mov %6, [VGA]
+	je %6, 1, VGAfull1
 	mov [VGA], eax
-
-	infinite:
-	j infinite
+	
+	mov eax, 0xf
+	call pause
+	
+	j main
 
 
 ### CLIP
@@ -1277,9 +1386,17 @@ mov ebx, eax #Copy eax as temp into ebx.
 lsh ebx, 3
 mov %10, [triangle]
 or ebx, %10
+
+VGAfull7:
+		mov %10, [VGA]
+	je %10, 1, VGAfull7
 mov [VGA], ebx
 
 or temp1, temp2
+
+VGAfull8:
+		mov %10, [VGA]
+	je %10, 1, VGAfull8
 mov [VGA], temp1
 
 decr eax
@@ -1293,7 +1410,12 @@ mov ebx, eax #Copy eax as temp into ebx.
 lsh ebx, 3
 mov %10, [triangle]
 or ebx, %10
-mov [VGA], ebx
+
+	VGAfull9:
+		mov ecx, [VGA]
+	je ecx, 1, VGAfull9
+	
+	mov [VGA], ebx
 
 mov ecx, edx
 mov edx, eex
@@ -1389,12 +1511,16 @@ jg yvalright, temp2, temp2smaller3
 mov temp2, yvalright
 temp2smaller3:
 
-##
-## temp1 temp2 now contain the correct left/right indices.
-##
+###
+### temp1 temp2 now contain the correct left/right indices.
+###
 
 lsh temp2, 8
 or temp1, temp2
+
+	VGAfull10:
+		mov ebx, [VGA]
+	je ebx, 1, VGAfull10
 mov [VGA], temp1
 
 #pop ebx
@@ -1459,9 +1585,17 @@ mov ebx, eax #Copy eax as temp into ebx.
 lsh ebx, 3
 mov %10, [triangle]
 or ebx, %10
+
+	VGAfull11:
+		mov %10, [VGA]
+	je %10, 1, VGAfull11
 mov [VGA], ebx
 
 or temp1, temp2
+
+VGAfull12:
+		mov %10, [VGA]
+	je %10, 1, VGAfull12
 mov [VGA], temp1
 
 ret
@@ -1502,66 +1636,817 @@ j endloop
 ###
 ###
 
+# Multiply a matrix in %0 (pointer) by a vector in %1 (pointer) and store the result in the vector in %2 (pointer)
+# ASSUMES NO ALIASING!!!!!!!!!!!
+# matricies are row-major
+# preserves arguments
+matrix_multiply:
+	push %3
+	push %4
+	push %5
+	push %6
+	push %7
+	push %8
+	push %2
+	push %1
+	push %0
+
+	mov %7, 0	# matrix position counter
+
+	matmulloop1:
+	mov %5, 0	# accumulator
+	mov %6, 0	# counter
+
+		matmulloop2:
+		# get two elements
+		mov %3, [%1]
+		mov %4, [%0]
+		# check which kind of multiply to do
+		incr %0
+		incr %7
+		mov %8, [%0]
+		je %8, 1, matmulfmul
+		# multiply them
+			mul %3, %4
+			# store in accumulator
+			add %5, %LOW
+			j matmuldonemul
+
+			matmulfmul:
+			fmul %3, %4
+			# store in accumulator
+			add %5, %3
+		matmuldonemul:
+		mov [LCD], %7
+		# increment the pointers and counters
+		incr %0
+		incr %1
+		incr %6
+		incr %7
+		# test loop condition
+		cmp %6, 3
+		jl matmulloop2
+	# reset vector pointer
+	sub %1, 3
+	# save new row in return vector
+	mov [%2], %5
+	incr %2
+	# test if we are done
+	cmp %7, 18
+	jl matmulloop1
+
+	# done
+	pop %0
+	pop %1
+	pop %2
+	pop %8
+	pop %7
+	pop %6
+	pop %5
+	pop %4
+	pop %3
+	ret
+
+# setup rotation matricies with two angles (%0 and %1)
+# preserves args
+setup_rotate:
+	push %9
+	push %8
+	push %6
+	push %1
+	push %0
+
+	# move arguments into registers that aren't overwritten
+	mov %8, %0	# xtheta
+	mov %9, %1	# ytheta
+
+	# generate rotation matrix x
+	mov %0, %8	# generate and save cos
+	call cos
+	mov %6, %0
+	mov %0, %8	# generate and save sin
+	call sin
+	mov %1, %0
+	mov %0, 1	# fill matrix. Odd offsets are the flag bits for fmul
+	mov [rotation_matrix_x], %0		# 1
+	mov [rotation_matrix_x+9], %0	# 1
+	mov [rotation_matrix_x+11], %0	# 1
+	mov [rotation_matrix_x+15], %0	# 1
+	mov [rotation_matrix_x+17], %0	# 1
+	mov %0, 0
+	mov [rotation_matrix_x+1], %0	# 0
+	mov [rotation_matrix_x+3], %0	# 0
+	mov [rotation_matrix_x+5], %0	# 0
+	mov [rotation_matrix_x+7], %0	# 0
+	mov [rotation_matrix_x+13], %0	# 0
+	mov [rotation_matrix_x+2], %0	# 0
+	mov [rotation_matrix_x+4], %0	# 0
+	mov [rotation_matrix_x+6], %0	# 0
+	mov [rotation_matrix_x+12], %0	# 0
+	mov [rotation_matrix_x+8], %6	# cos (xtheta)
+	not %0, %1		# negate, two's comliment style
+	add %0, 1
+	mov [rotation_matrix_x+10], %0	# -sin (xtheta)
+	mov [rotation_matrix_x+14], %1	# sin (xtheta)
+	mov [rotation_matrix_x+16], %6	# cos (xtheta)
+
+	# generate rotation matrix y
+	mov %0, %9	# generate and save cos
+	call cos
+	mov %6, %0
+	mov %0, %9	# generate and save sin
+	call sin
+	mov %1, %0
+	mov %0, 0
+	mov [rotation_matrix_y+3], %0	# 0
+	mov [rotation_matrix_y+7], %0	# 0
+	mov [rotation_matrix_y+9], %0	# 0
+	mov [rotation_matrix_y+11], %0	# 0
+	mov [rotation_matrix_y+15], %0	# 0
+	mov [rotation_matrix_y+2], %0	# 0
+	mov [rotation_matrix_y+6], %0	# 0
+	mov [rotation_matrix_y+10], %0	# 0
+	mov [rotation_matrix_y+14], %0	# 0
+	mov [rotation_matrix_y], %6		# cos (ytheta)
+	mov [rotation_matrix_y+4], %1	# sin (ytheta)
+	mov %0, 1
+	mov [rotation_matrix_y+1], %0	# 1
+	mov [rotation_matrix_y+5], %0	# 1
+	mov [rotation_matrix_y+13], %0	# 1
+	mov [rotation_matrix_y+17], %0	# 1
+	mov [rotation_matrix_y+8], %0	# 1
+	not %0, %1		# negate, two's comliment style
+	add %0, 1
+	mov [rotation_matrix_y+12], %0	# -sin (xtheta)
+	mov [rotation_matrix_y+16], %6	# cos (xtheta)
+
+	pop %0
+	pop %1
+	pop %6
+	pop %8
+	pop %9
+	ret
+
+# rotate a point %0 (pointer) and stores it in %1 (pointer)
+# preserves arguments
+rotate_point:
+	push %10
+	push %7
+	push %2
+	push %1
+	push %0
+	
+	mov %FP, 0xbaba
+
+	mov %7, %0	# src point
+	mov %10, %1	# dest point
+
+	# make room on the stack for temp point
+	sub %SP, 3
+	mov [LCD], %SP
+
+	# set up arguments for matrix multiply
+	mov %0, rotation_matrix_x
+	mov %1, %7
+	mov %2, %SP
+	# multiply first one
+	call matrix_multiply
+
+	# set up arguments for matrix multiply again
+	mov %0, rotation_matrix_y	# matrix
+	mov %1, %2					# temp point
+	mov %2, %10					# dest point
+	# multiply first one
+	call matrix_multiply
+
+	# clean up stack frame
+	add %SP, 3
+
+	pop %0
+	pop %1
+	pop %2
+	pop %7
+	pop %10
+	ret
+
+# Take a number in the $0 reg, return the sin of that number into the $0 reg
+sin:
+	push %10
+	push %9
+	push %8
+	push %7
+
+	# move arg into %10
+	mov %10, %0
+
+	# quadrant modify the angles
+
+	mov %9, %10		# switch on quadrant
+	rsh %9, 14
+	cmp %9, 1
+	je second
+	cmp %9, 2
+	je third
+	cmp %9, 3
+	je fourth
+	j first
+
+	second:
+	mov %9, sine_lut
+	mov %8, %10
+	rsh %8, 7		# shift down to angle
+	and %8, 0x7F	# mask angle
+	mov %7, 0x7F	# load max
+	sub %7, %8		# max - angle
+	add %9, %7		# get offset into lookup table
+	mov %0, [%9]	# addr
+	mov %9, sine_lut
+	sub %7, 1		# subtract 1 from (max - angle)
+	and %7, 0x7F	# mask to roll around 127
+	add %9, %7		# get offset into lookup table
+	mov %7, [%9]	# addr-1
+	# multiply
+	and %10, 0x7F	# fraction
+	lsh %10, 7		# put fraction bits right below the radix
+	fmul %7, %10	# fmul fraction and (addr-1)
+	mov %9, 0x40	# make 1.0
+	lsh %9, 8		# still making 1.0
+	sub %9, %10		# 1 - fraction
+	fmul %0, %9		# fmul 1.0 - frac and addr
+	add %0, %7		# add the two fmul results together
+	j sinend
+
+	third:
+	mov %9, sine_lut
+	mov %8, %10
+	rsh %8, 7
+	and %8, 0x7F	# mask angle
+	add %9, %8		# get offset
+	mov %0, [%9]	# addr
+	mov %9, sine_lut
+	je %8, 127, skipadd3rd	# edge case
+	add %8, 1
+	and %8, 0x7F
+	skipadd3rd:
+	add %9, %8		# get offset
+	mov %7, [%9]	# addr+1
+	# multiply
+	and %10, 0x7F	# fraction
+	lsh %10, 7		# put up next to radix
+	fmul %7, %10	# frac times addr+1
+	mov %9, 0x40	# 1.0
+	lsh %9, 8		# 1.0
+	sub %9, %10		# 1.0 - fraction
+	fmul %0, %9		# addr * (1.0 - frac)
+	add %0, %7		# add them
+	not %0, %0		# negate, two's comliment style
+	add %0, 1
+	j sinend
+
+	fourth:
+	mov %9, sine_lut
+	mov %8, %10
+	rsh %8, 7
+	and %8, 0x7F	# mask angle
+	mov %7, 0x7F	# load max
+	sub %7, %8		# max - angle
+	add %9, %7
+	mov %0, [%9]	# addr
+	mov %9, sine_lut
+	sub %7, 1
+	and %7, 0x7F
+	add %9, %7
+	mov %7, [%9]	# addr-1
+	# multiply
+	and %10, 0x7F	# fraction
+	lsh %10, 7
+	fmul %7, %10
+	mov %9, 0x40
+	lsh %9, 8
+	sub %9, %10		# 1 - fraction
+	fmul %0, %9
+	add %0, %7
+	not %0, %0		# negate, two's comliment style
+	add %0, 1
+	j sinend
+
+	first:
+	mov %9, sine_lut
+	mov %8, %10
+	rsh %8, 7
+	and %8, 0x7F
+	add %9, %8
+	mov %0, [%9]	# addr
+	mov %9, sine_lut
+	je %8, 127, skipadd1st	# edge case
+	add %8, 1
+	and %8, 0x7F
+	skipadd1st:
+	add %9, %8
+	mov %7, [%9]	# addr+1
+	# multiply
+	and %10, 0x7F	# fraction
+	lsh %10, 7
+	fmul %7, %10
+	mov %9, 0x40
+	lsh %9, 8
+	sub %9, %10		# 1 - fraction
+	fmul %0, %9
+	add %0, %7
+
+	sinend:
+
+	# return
+	pop %7
+	pop %8
+	pop %9
+	pop %10
+
+	ret
+
+# Take a number in the $0 reg, return the cos of that number into the $0 reg
+cos:
+	push %10
+	push %9
+
+	mov %10, %0
+	mov %9, 0xC0	#load 1100000000000000
+	lsh %9, 8
+	rsh %10, 14		#increment quadrant
+	incr %10
+	lsh %10, 14
+	not %9, %9		#replace quadrant
+	and %0, %9
+	or %0, %10
+
+	# call sin
+	call sin
+
+	pop %9
+	pop %10
+	ret
+	
+###
+###
+### END COS
+###
+###
+
+### DRAW TRIANGLES
+###
+### Expects a pointer to a triangle list in %6
+###
+###
+drawtriangles:
+
+	push %0
+	push %1
+	push %2
+	push %3
+	push %4
+	push %5
+	push %6
+	push %7
+	push %8
+	push %9
+	push %10
+	push FP
+
+	mov %0, %6
+	mov %1, [%6] #%1 is size in triangle count.
+	mov %2, 1 #%2 is loop counter.
+	
+	mov FP, [%0]
+	incr %0
+	
+	checktriangles:
+	mov FP, [%0]
+	incr %0
+	mov FP, [%0]
+	incr %0
+	mov FP, [%0]
+	incr %0
+	mov FP, [%0]
+	incr %0
+	mov FP, [%0]
+	incr %0
+	mov FP, [%0]
+	incr %0
+	mov FP, [%0]
+	incr %0
+	mov FP, [%0]
+	incr %0
+	mov FP, [%0]
+	incr %0
+	mov FP, [%0]
+	incr %0
+	
+	je %2, %1, endchecktriangles
+	
+	incr %2
+	j checktriangles
+	
+	endchecktriangles:
+	
+	
+	mov %0, %6
+	mov %1, [%6] #%1 is size in triangle count.
+	
+	incr %0 #0 points to color1 now.
+	mov %2, 1 #%2 is loop counter.
+	
+	drawtriangleloop:
+	
+	call zclip
+	incr %2
+	jg %2, %1, drawtrianglecleanup
+	add %0, 10
+	
+	j drawtriangleloop
+	
+	drawtrianglecleanup:
+
+	pop FP
+	pop %10
+	pop %9
+	pop %8
+	pop %7
+	pop %6
+	pop %5
+	pop %4
+	pop %3
+	pop %2
+	pop %1
+	pop %0
+	
+ret
+###
+###
+### END DRAW TRIANGLES
+###
+###
+
+### Z CLIP
+###
+### Expects a pointer to a triangle (1 color, 3 sets of xyz in that order) in %0
+###
+###
+zclip:
+
+	push %0
+	push %1
+	push %2
+	push %3
+	push %4
+	push %5
+	push %6
+	push %7
+	push %8
+	push %9
+	push %10
+	push FP
+
+	mov FP, 1337
+
+	mov eax, %0
+	add eax, 3
+	mov ebx, [eax]
+	jge ebx, 0, safepoint1
+		ret
+	safepoint1:
+	add eax, 3
+	mov ebx, [eax]
+	jge ebx, 0, safepoint2
+		ret
+	safepoint2:
+	
+	add eax, 3
+	mov ebx, [eax]
+	jge ebx, 0, safepoint3
+		ret
+	safepoint3:
+	
+	###Triangle is entirely in positive z. Safe to draw.
+	mov eax, %0
+	call perspectivetransform
+
+	pop FP
+	pop %10
+	pop %9
+	pop %8
+	pop %7
+	pop %6
+	pop %5
+	pop %4
+	pop %3
+	pop %2
+	pop %1
+	pop %0
+ret
+###
+###
+### END Z CLIP
+###
+###
+
+###
+###
+### CLEAR BUFFER
+###
+###
+clearbuffer:
+mov eax, 0
+mov ebx, 159
+
+clearloop:
+mov ecx, eax
+lsh ecx, 3
+or ecx, %5
+
+	VGAfull3:
+		mov %6, [VGA]
+	je %6, 1, VGAfull3
+mov [VGA], ecx
+
+	VGAfull4:
+		mov %6, [VGA]
+	je %6, 1, VGAfull4
+mov [VGA], ebx
+incr eax
+jne eax, 120, clearloop
+
+ret
+###
+###
+### END CLEAR BUFFER
+###
+###
+
+###
+### PAUSE - Handy helper function for drawing stuff and not flashing between buffers too fast.  Send a pause value in on eax ;)
+###
+pause:
+mov ebx, 0xffff
+mov edx, 0
+
+pauseLoop2:
+mov ecx, 0
+pauseLoop1:
+incr ecx
+cmp ecx, ebx
+jne pauseLoop1
+incr edx
+cmp edx, eax
+jne pauseLoop2
+
+ret
+
+###
+### END PAUSE
+###
+
+###
+###
+### JONS MATRIX MULT
+### gimmie 3x3 in %0, 3x1 in %1, returns result in matpoint.
+###
+jonsmatrixmult:
+
+	mov %2, %0
+	mov %3, %1
+	
+	mov %4, [%2]
+	incr %2
+	mov %5, [%3]
+	incr %3
+	
+	fmul %4, %5
+	mov %6, %4
+	
+	
+	mov %4, [%2]
+	incr %2
+	mov %5, [%3]
+	incr %3
+	
+	fmul %4, %5
+	add %6, %4
+
+	mov %4, [%2]
+	incr %2
+	mov %5, [%3]
+	incr %3
+	
+	fmul %4, %5	
+	add %6, %4
+	
+	###6 now holds first result value
+	mov [matpoint], %6
+	mov %3, %1
+	
+	mov %4, [%2]
+	incr %2
+	mov %5, [%3]
+	incr %3
+	
+	fmul %4, %5
+	mov %6, %4
+	
+	
+	mov %4, [%2]
+	incr %2
+	mov %5, [%3]
+	incr %3
+	
+	fmul %4, %5
+	add %6, %4
+
+	mov %4, [%2]
+	incr %2
+	mov %5, [%3]
+	incr %3
+	
+	fmul %4, %5	
+	add %6, %4
+	
+	###6 now holds second result value
+	mov [matpoint+1], %6
+	mov %3, %1
+	
+	mov %4, [%2]
+	incr %2
+	mov %5, [%3]
+	incr %3
+	
+	fmul %4, %5
+	mov %6, %4
+	
+	
+	mov %4, [%2]
+	incr %2
+	mov %5, [%3]
+	incr %3
+	
+	fmul %4, %5
+	add %6, %4
+
+	mov %4, [%2]
+	incr %2
+	mov %5, [%3]
+	incr %3
+	
+	fmul %4, %5	
+	add %6, %4
+	
+	###6 now holds third result value
+	mov [matpoint+2], %6
+	
+	ret 
+
+ret
+###
+###
+### END JONS MATRIX MULT
+###
+###
+
 .data
 
 zone:
 0
 
-point:
-0
-0
-0
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
+model:
 
-triangle:
-0
-0
-0
-0
-0
-0
-0
-0
-0
-
-
-state:
-0
+sine_lut:
+0b0000000000000000
+0b0000000011001001
+0b0000000110010010
+0b0000001001011011
+0b0000001100100011
+0b0000001111101100
+0b0000010010110101
+0b0000010101111101
+0b0000011001000101
+0b0000011100001101
+0b0000011111010101
+0b0000100010011100
+0b0000100101100100
+0b0000101000101010
+0b0000101011110001
+0b0000101110110110
+0b0000110001111100
+0b0000110101000001
+0b0000111000000101
+0b0000111011001001
+0b0000111110001100
+0b0001000001001111
+0b0001000100010001
+0b0001000111010011
+0b0001001010010100
+0b0001001101010100
+0b0001010000010011
+0b0001010011010001
+0b0001010110001111
+0b0001011001001100
+0b0001011100001000
+0b0001011111000011
+0b0001100001111101
+0b0001100100110111
+0b0001100111101111
+0b0001101010100110
+0b0001101101011101
+0b0001110000010010
+0b0001110011000110
+0b0001110101111001
+0b0001111000101011
+0b0001111011011100
+0b0001111110001011
+0b0010000000111001
+0b0010000011100111
+0b0010000110010010
+0b0010001000111101
+0b0010001011100110
+0b0010001110001110
+0b0010010000110100
+0b0010010011011010
+0b0010010101111101
+0b0010011000011111
+0b0010011011000000
+0b0010011101011111
+0b0010011111111101
+0b0010100010011001
+0b0010100100110100
+0b0010100111001101
+0b0010101001100101
+0b0010101011111010
+0b0010101110001110
+0b0010110000100001
+0b0010110010110010
+0b0010110101000001
+0b0010110111001110
+0b0010111001011010
+0b0010111011100011
+0b0010111101101011
+0b0010111111110001
+0b0011000001110110
+0b0011000011111000
+0b0011000101111001
+0b0011000111110111
+0b0011001001110100
+0b0011001011101110
+0b0011001101100111
+0b0011001111011110
+0b0011010001010011
+0b0011010011000110
+0b0011010100110110
+0b0011010110100101
+0b0011011000010010
+0b0011011001111100
+0b0011011011100101
+0b0011011101001011
+0b0011011110101111
+0b0011100000010001
+0b0011100001110001
+0b0011100011001111
+0b0011100100101010
+0b0011100110000011
+0b0011100111011010
+0b0011101000101111
+0b0011101010000010
+0b0011101011010010
+0b0011101100100000
+0b0011101101101100
+0b0011101110110110
+0b0011101111111101
+0b0011110001000010
+0b0011110010000100
+0b0011110011000101
+0b0011110100000010
+0b0011110100111110
+0b0011110101110111
+0b0011110110101110
+0b0011110111100010
+0b0011111000010100
+0b0011111001000100
+0b0011111001110001
+0b0011111010011100
+0b0011111011000101
+0b0011111011101011
+0b0011111100001110
+0b0011111100101111
+0b0011111101001110
+0b0011111101101010
+0b0011111110000100
+0b0011111110011100
+0b0011111110110001
+0b0011111111000011
+0b0011111111010011
+0b0011111111100001
+0b0011111111101100
+0b0011111111110100
+0b0011111111111011
+0b0011111111111110
+0b0100000000000000
 
 slopes:
 0b0000000000000000
@@ -1684,3 +2569,260 @@ slopes:
 0b0000000010001100
 0b0000000010001010
 0b0000000010001001
+
+0xFFFF
+
+bullet_model:
+12
+# Face 0
+1 #color
+1 #-
+-49
+3
+-1 #-
+-49
+3
+-1 #-
+-49
+-3
+1 #color
+1 #-
+-49
+3
+-1 #-
+-49
+-3
+1 #-
+-49
+-3
+# Face 1
+2 #color
+1 #-
+-51
+3
+1 #-
+-51
+-3
+-1 #-
+-51
+-3
+2 #color
+1 #-
+-51
+3
+-1 #-
+-51
+-3
+-1 #-
+-51
+3
+# Face 2
+1 #color
+1 #-
+-49
+3
+1 #-
+-49
+-3
+1 #-
+-51
+-3
+1 #color
+1 #-
+-49
+3
+1 #-
+-51
+-3
+1 #-
+-51
+3
+# Face 3
+2 #color
+1 #-
+-49
+-3
+-1 #-
+-49
+-3
+-1 #-
+-51
+-3
+2 #color
+1 #-
+-49
+-3
+-1 #-
+-51
+-3
+1 #-
+-51
+-3
+# Face 4
+1 #color
+-1 #-
+-49
+-3
+-1 #-
+-49
+3
+-1 #-
+-51
+3
+1 #color
+-1 #-
+-49
+-3
+-1 #-
+-51
+3
+-1 #-
+-51
+-3
+# Face 5
+2 #color
+-1 #-
+-49
+3
+1 #-
+-49
+3
+1 #-
+-51
+3
+2 #color
+-1 #-
+-49
+3
+1 #-
+-51
+3
+-1 #-
+-51
+3
+
+cube:
+
+twotriangles:
+2
+7
+553
+60
+600
+0
+0
+600
+-10
+60
+600
+7
+-200
+0
+0
+-250
+60
+50
+-150
+60
+50
+
+state:
+0
+
+rotation_matrix_x:
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+
+0xFFFF
+
+rotation_matrix_y:
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+
+xrot:
+0
+
+yrot:
+0
+
+point:
+0
+0
+0
+
+matpoint:
+0
+0
+0
+
+triangle:
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
