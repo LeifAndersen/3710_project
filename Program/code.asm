@@ -24,8 +24,8 @@
 `define VGA 16383
 `define BULLET_RADIUS 1
 `define TANK_RADIUS 10
-`define SPEED 50
-`define ROTATION_SPEED 200
+`define SPEED 100
+`define ROTATION_SPEED 5000
 `define PLAYER_START_LIVES 5
 `define BULLET_SPEED 20
 `define BULLET_LIFE 100
@@ -84,9 +84,6 @@ mainNewPlayer:
 	mov [PLAYER_LIVES], %0
 
 mainLoop:
-
-	call drawDebuggingGraphics
-
 	# Check Inputs
 	# Left/Right, update theta
 	mov %2, [LEFT_KEY]
@@ -108,18 +105,16 @@ mainLoop:
 	mov %0, %4             #
 	call cos               # %0 has sin(theta)
 	fmul %0, %5            #
-	mul %0, SPEED
-	add %2, %LOW           # Player X now updated by the move amount
+	add %2, %0           # Player X now updated by the move amount
 	                         #
 	mov %0, %4             #
 	call sin               # %0 has cos(theta)
 	fmul %0, %5            # %LOW/HIGH has (UP-DOWN)*cos(theta)
-	mul %0, SPEED
-	add %3, %LOW
+	add %3, %0
 
 	# TODO DEBUGGING ---------------
 	# mov [LCD], %2
-	mov [LCD], %3
+	mov [LCD], %2
 	mov [PLAYER_X], %2
 	mov [PLAYER_Y], %3
 
@@ -138,6 +133,7 @@ mainLoop:
 		mov [UP_KEY], %0
 	noInput:
 	call drawDebuggingGraphics
+	add %0, %0
 	j mainLoop
 	# TODO DEBUGGING ---------------
 
@@ -1136,6 +1132,7 @@ drawDebuggingGraphics:
 	mov %2, 160
 	mov %3, 120
 	mov %4, 0
+	call drawSquare
 	
 	mov %0, [PLAYER_X]  # Your tank
 	mov %1, [PLAYER_Y]
@@ -1166,7 +1163,7 @@ drawDebuggingGraphics:
 	mov %1, %3
 	sub %1, DEBUG_TANK_SIZE
 	add %3, DEBUG_TANK_SIZE
-	mov %4, 3
+	mov %4, 0
 	call drawSquare
 
 	mov %0, [PLAYER_BULLET_TIME]
