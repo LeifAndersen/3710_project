@@ -92,6 +92,7 @@ mainNewPlayer:
 	mov [PLAYER_LIVES], %0
 
 mainLoop:
+
 	# Check Inputs
 	# Left/Right, update theta
 	mov %2, [LEFT_KEY]
@@ -1472,6 +1473,34 @@ FindTheta:
 	pop %4
 	pop %3
 	pop %2
+	ret
+
+drawCross:
+	push %0
+	push %1
+	push %2
+	push %3
+	push %4
+
+	mov %0,	79
+	mov %1, 50
+	mov %2, 91
+	mov %3, 70
+	mov %4, 7
+	call drawSquare
+	
+	mov %0, 70
+	mov %1, 59
+	mov %2, 90
+	mov %3, 61
+	mov %4, 7
+	call drawSquare
+
+	pop %4
+	pop %3
+	pop %2
+	pop %1
+	pop %0
 	ret
 
 # Take top left x in 0, top left y in 1, bottom right x in 2 bottom right y in 3,
