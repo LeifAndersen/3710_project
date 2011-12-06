@@ -2396,6 +2396,39 @@ clip:
 ###
 ###
 
+###
+###
+### CLEAR BUFFER
+###
+###
+clearbuffer:
+mov eax, 0
+mov ebx, 159
+
+clearloop:
+mov ecx, eax
+lsh ecx, 3
+or ecx, %5
+
+	VGAfull3:
+		mov %6, [VGA]
+	je %6, 1, VGAfull3
+mov [VGA], ecx
+
+	VGAfull4:
+		mov %6, [VGA]
+	je %6, 1, VGAfull4
+mov [VGA], ebx
+incr eax
+jne eax, 120, clearloop
+
+ret
+###
+###
+### END CLEAR BUFFER
+###
+###
+
 
 ### PERSPECTIVE TRANSFORM
 ###
