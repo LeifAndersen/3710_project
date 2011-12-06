@@ -140,8 +140,8 @@ mainLoop:
 	je %0, 0, noInput2
 		mov [UP_KEY], %0
 	noInput2:
-	j mainLoop # TODO, kill
-	# j mainEndGameState
+	#j mainLoop # TODO, kill
+	j mainEndGameState
 	# TODO DEBUGGING ---------------
 
 	# Move the AI
@@ -546,12 +546,12 @@ mainEndGameState:
 	sub %1, %2
 	mov [%0], %1
 	incr %0
-	mov %1, [AI_Y]
-	mov %2, [PLAYER_Y]		# offest by camera pos
-	sub %1, %2
+	mov %1, 0
 	mov [%0], %1
 	incr %0
-	mov %1, 0
+	mov %1, [AI_Y]			# y = z, mind = blown
+	mov %2, [PLAYER_Y]		# offest by camera pos
+	sub %1, %2
 	mov [%0], %1
 	sub %0, 2				# restore pointer
 	mov %4, [%10]			# get the size of the tank in triangles
@@ -582,12 +582,12 @@ mainEndGameState:
 	sub %1, %2
 	mov [%0], %1
 	incr %0
+	mov %1, 0
+	mov [%0], %1
+	incr %0
 	mov %1, [AI_BULLET_Y]
 	mov %2, [PLAYER_Y]		# offest by camera pos
 	sub %1, %2
-	mov [%0], %1
-	incr %0
-	mov %1, 0
 	mov [%0], %1
 	sub %0, 2				# restore pointer
 	mov %4, [%9]			# get the size of the bullet in triangles
@@ -619,12 +619,12 @@ mainEndGameState:
 	sub %1, %2
 	mov [%0], %1
 	incr %0
+	mov %1, 0
+	mov [%0], %1
+	incr %0
 	mov %1, [PLAYER_BULLET_Y]
 	mov %2, [PLAYER_Y]		# offest by camera pos
 	sub %1, %2
-	mov [%0], %1
-	incr %0
-	mov %1, 0
 	mov [%0], %1
 	sub %0, 2				# restore pointer
 	mov %4, [%8]			# get the size of the bullet in triangles
@@ -789,9 +789,8 @@ mainEndGameState:
 	incr %0					# pointer now points to color (top of triangle in case we copy)
 	copyculledtankloop:
 	mov %1, [%0]
-	je %1, 0xFFFF, dontcopytank
-	foo:
-	j foo
+	mov %FP, 0xFFFF
+	je %1, %FP, dontcopytank
 	#should copy
 	sub %SP, 10
 	mov %1, %SP
@@ -810,7 +809,8 @@ mainEndGameState:
 	incr %0					# pointer now points to color (top of triangle in case we copy)
 	copyculledaibulletloop:
 	mov %1, [%0]
-	je %1, 0xFFFF, dontcopyaibullet
+	mov %FP, 0xFFFF
+	je %1, %FP, dontcopyaibullet
 	#should copy
 	sub %SP, 10
 	mov %1, %SP
@@ -830,7 +830,8 @@ mainEndGameState:
 	incr %0					# pointer now points to color (top of triangle in case we copy)
 	copyculledplayerbulletloop:
 	mov %1, [%0]
-	je %1, 0xFFFF, dontcopyplayerbullet
+	mov %FP, 0xFFFF
+	je %1, %FP, dontcopyplayerbullet
 	#should copy
 	sub %SP, 10
 	mov %1, %SP
