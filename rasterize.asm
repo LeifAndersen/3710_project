@@ -85,7 +85,7 @@ mov [VGA], eax
 mov eax, 0xf
 call pause
 
-call movepoint2 #This will add motion to the triangle to test various different weird triangles.
+# call movepoint2 #This will add motion to the triangle to test various different weird triangles.
 
 # TODO LEIF
 # Move by keyboard input
