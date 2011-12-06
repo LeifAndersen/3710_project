@@ -76,19 +76,19 @@ reg web10;
 wire[17:0] douta10;
 wire[17:0] doutb10;
 
-reg [13:0] addradelayed;
-reg [13:0] addrbdelayed;
+reg [3:0] addradelayed;
+reg [3:0] addrbdelayed;
 
 
 always@(posedge clka)
 begin
-	addradelayed <= addra;
-	addrbdelayed <= addrb;
+	addradelayed <= addra[13:10];
+	addrbdelayed <= addrb[13:10];
 end
 
 always@(*)
 begin
-	case(addradelayed[13:10])
+	case(addradelayed)
 		0:	douta <= douta0;
 		1: douta <= douta1;
 		2: douta <= douta2;
@@ -103,7 +103,7 @@ begin
 		default: douta <= 0;
 	endcase
 	
-	case(addrbdelayed[13:10])
+	case(addrbdelayed)
 		0:	doutb <= doutb0;
 		1:	doutb <= doutb1;
 		2:	doutb <= doutb2;
