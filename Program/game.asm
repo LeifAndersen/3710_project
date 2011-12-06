@@ -92,9 +92,6 @@ mainNewPlayer:
 	mov [PLAYER_LIVES], %0
 
 mainLoop:
-
-	call drawDebuggingGraphics
-
 	# Check Inputs
 	# Left/Right, update theta
 	mov %2, [LEFT_KEY]
@@ -143,8 +140,7 @@ mainLoop:
 	je %0, 0, noInput
 		mov [UP_KEY], %0
 	noInput:
-	call drawDebuggingGraphics
-	j mainLoop
+	j mainEndGameState
 	# TODO DEBUGGING ---------------
 
 
@@ -1139,6 +1135,7 @@ drawDebuggingGraphics:
 	mov %2, 160
 	mov %3, 120
 	mov %4, 0
+	call drawSquare
 	
 	mov %0, [PLAYER_X]  # Your tank
 	mov %1, [PLAYER_Y]
