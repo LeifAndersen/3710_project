@@ -41,13 +41,10 @@
 init:
 	mov SP, STACK_TOP
 	mov FP, SP
-	mov %14, 0					# this is the angle of the cube
+	
 	call main
 	
 main:
-	mov SP, STACK_TOP
-	
-	add %14, 100				# this is the angle of the cube
 		
 	jge %5, 6, resetBackColor
 		incr %5
@@ -70,51 +67,14 @@ main:
 	
 	
 	###Properly formatted data
-	mov %0, cube
-	mov %1, cube2
-	mov %2, [cube]
+	mov %0, twotriangles
+	mov %1, triangle2
+	mov %2, 21
 	call memcpy
 	
 	mov %6, triangle2
 	
-	call translate_model
-	
-	
-	mov %1, %14				# get the rotation for the tank
-	mov %0, 0				# other angle is 0
-	call setup_rotate
-	mov %4, [cube2]			# get the size of the tank in triangles
-	sub %SP, 9				# make room for triangle to rotate
-	mov %1, %SP				# top of the temp triangle (first point)
-	mov %0, cube2			# pointer to modifiable tank
-	incr %0					# skip size field in tank
-	rotatetankloop:			# loop that rotates tank points
-	incr %0					# skip color
-	call rotate_point
-	add %0, 3				# move to next point in triangle
-	add %1, 3
-	call rotate_point
-	add %0, 3				# move to next point in triangle
-	add %1, 3
-	call rotate_point
-	mov %2, 9
-	sub %0, 6
-	sub %1, 6
-	mov %3, %0
-	mov %0, %1
-	mov %1, %3
-	call memcpy				# copy rotated triangle back into tank
-	mov %3, %1
-	mov %1, %0
-	mov %0, %3
-	add %0, 9				# go to next triangle
-	decr %4					# done rotating one triangle
-	# check if loop again
-	jne %4, 0, rotatetankloop
-	# done with tank, remove temp storage on stack
-	add %SP, 9
-	
-	
+	#call translate_model
 	call drawtriangles
 	
 	#call perspectivetransform
@@ -2604,11 +2564,263 @@ slopes:
 
 0xFFFF
 
-cube:
+bullet_model:
+12
+# Face 0
+1 #color
+1 #-
+-49
+3
+-1 #-
+-49
+3
+-1 #-
+-49
+-3
+1 #color
+1 #-
+-49
+3
+-1 #-
+-49
+-3
+1 #-
+-49
+-3
+# Face 1
+2 #color
+1 #-
+-51
+3
+1 #-
+-51
+-3
+-1 #-
+-51
+-3
+2 #color
+1 #-
+-51
+3
+-1 #-
+-51
+-3
+-1 #-
+-51
+3
+# Face 2
+1 #color
+1 #-
+-49
+3
+1 #-
+-49
+-3
+1 #-
+-51
+-3
+1 #color
+1 #-
+-49
+3
+1 #-
+-51
+-3
+1 #-
+-51
+3
+# Face 3
+2 #color
+1 #-
+-49
+-3
+-1 #-
+-49
+-3
+-1 #-
+-51
+-3
+2 #color
+1 #-
+-49
+-3
+-1 #-
+-51
+-3
+1 #-
+-51
+-3
+# Face 4
+1 #color
+-1 #-
+-49
+-3
+-1 #-
+-49
+3
+-1 #-
+-51
+3
+1 #color
+-1 #-
+-49
+-3
+-1 #-
+-51
+3
+-1 #-
+-51
+-3
+# Face 5
+2 #color
+-1 #-
+-49
+3
+1 #-
+-49
+3
+1 #-
+-51
+3
+2 #color
+-1 #-
+-49
+3
+1 #-
+-51
+3
+-1 #-
+-51
+3
 
-
-cube2:
-
+bullet_model2:
+12
+# Face 0
+1 #color
+1 #-
+-49
+3
+-1 #-
+-49
+3
+-1 #-
+-49
+-3
+1 #color
+1 #-
+-49
+3
+-1 #-
+-49
+-3
+1 #-
+-49
+-3
+# Face 1
+2 #color
+1 #-
+-51
+3
+1 #-
+-51
+-3
+-1 #-
+-51
+-3
+2 #color
+1 #-
+-51
+3
+-1 #-
+-51
+-3
+-1 #-
+-51
+3
+# Face 2
+1 #color
+1 #-
+-49
+3
+1 #-
+-49
+-3
+1 #-
+-51
+-3
+1 #color
+1 #-
+-49
+3
+1 #-
+-51
+-3
+1 #-
+-51
+3
+# Face 3
+2 #color
+1 #-
+-49
+-3
+-1 #-
+-49
+-3
+-1 #-
+-51
+-3
+2 #color
+1 #-
+-49
+-3
+-1 #-
+-51
+-3
+1 #-
+-51
+-3
+# Face 4
+1 #color
+-1 #-
+-49
+-3
+-1 #-
+-49
+3
+-1 #-
+-51
+3
+1 #color
+-1 #-
+-49
+-3
+-1 #-
+-51
+3
+-1 #-
+-51
+-3
+# Face 5
+2 #color
+-1 #-
+-49
+3
+1 #-
+-49
+3
+1 #-
+-51
+3
+2 #color
+-1 #-
+-49
+3
+1 #-
+-51
+3
+-1 #-
+-51
+3
 
 AI_X:
 0
