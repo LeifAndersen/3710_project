@@ -357,7 +357,7 @@ clip:
 	jne ebx, 1, checkzone1
 		### At least one point is in zone 0. Could be two triangle.
 	
-		mov egx, 0	
+		mov egx, 0
 		mov [zone], egx
 		
 		### No longer need to save this zone information, so we can modify zone1, zone2, zone3
