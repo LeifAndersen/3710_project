@@ -157,7 +157,7 @@ mainLoop:
 	fmul %0, SPEED    # %LOW now has speed*sin(theta), to update Y
 	add %4, %0           # %4 now has new Y (if possible)
 	mov %0, %6
-	call cost
+	call cos
 	fmul %0, SPEED
 	add %5, %0           # %5 now has possible AI_Y
 	j mainAIDoneMoving
@@ -899,7 +899,9 @@ mainEndGameState:
 
 	# clean up stack
 	add %SP, 10
-
+	
+	foo:
+	j foo
 	# %6 contains the pointer to the "model" that contains all triangles to be rendered.
 	call drawtriangles
 #Front-back clipping:
