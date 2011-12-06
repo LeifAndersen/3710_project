@@ -35,6 +35,7 @@
 `define yvalleft %9
 `define yvalright %5
 `define ymax %6
+`define DEGREE_90 0x4000
 
 # Bootup and initialization Code
 init:
@@ -45,44 +46,167 @@ init:
 	
 main:
 	
+	#### CHECK KEYBOARD INPUT TO SET theta.
+	mov %9, [xrot]
+	mov %7, 1
+	
+	mov %10, [UP_KEY]
+	je %10, 0, noupkey
+		add %9, 0x3e00
+		mov [UP_KEY], %7
+	noupkey:
+	
+	mov %10, [DOWN_KEY]
+	je %10, 0, nodownkey
+		sub %9, 0x3e00	
+		mov [DOWN_KEY], %7
+	nodownkey:
+	
+	mov [xrot], %9
+	mov %9, [yrot]
+	add %9, 0x3e00
+	
+	mov %10, [LEFT_KEY]
+	je %10, 0, noleftkey
+		add %9, 0x3e00
+		mov [LEFT_KEY], %7
+	noleftkey:
+	
+	mov %10, [RIGHT_KEY]
+	je %10, 0, norightkey
+		sub %9, 0x3e00	
+		mov [RIGHT_KEY], %7
+	norightkey:
+	
+	mov [yrot], %9
+	
+	and %1, %1
+	and %1, %1
+	
 	mov %0, 0
-	mov %1, DEGREE_90
+	mov %1, 0x3200
 	call setup_rotate
 	
-	mov %0, bullet_model
+	jge %5, 6, resetBackColor
+		incr %5
+		j donebackcolor
+	resetBackColor:
+		mov %5, 0
+	donebackcolor:
+	
+	VGAfull1:
+		mov %6, [VGA]
+	je %6, 1, VGAfull1
+	mov [VGA], %5
+	
+	VGAfull2:
+		mov %6, [VGA]
+	je %6, 1, VGAfull2
+	mov [VGA], %5
+	
+	#call clearbuffer
+	
+	mov %0, twotriangles
 	mov %2, [%0] # Number of triangles.
+	mov %3, 0 #loop counter.
 	incr %0 # %0 points at first triangle.
 	mov %1, point
 	
 	drawloop:
-	mov %3, [%0] # %3 is the color of the triangle.
-	mov [triangle], %3 #Move color into temp. triangle.
-	incr %0 #0 points at first point.
+		incr %3
 	
-	call rotate_point #returns rotated point at [point]
+		mov %4, [%0] # %4 is the color of the triangle.
+		mov [triangle], %4 #Move color into temp. triangle.
+		incr %0 #0 points at first point.
+		
+		call rotate_point #returns rotated point at [point]
+		mov FP, 0xdddd
+		
+		###copy rotated point into triangle for now
+		mov %4, [point] #use %4 as temp to copy data out of point
+		mov [triangle+1], %4
+		mov %4, [point+1] #use %4 as temp to copy data out of point
+		mov [triangle+2], %4
+		mov %4, [point+2] #use %4 as temp to copy data out of point
+		mov [triangle+3], %4
+		
+		add %0, 3 #Points at second point.
+		
+		call rotate_point #returns rotated point at [point]
+		mov FP, 0xddee
+		
+		###copy rotated point into triangle
+		mov %4, [point] #use %4 as temp to copy data out of point
+		mov [triangle+4], %4
+		mov %4, [point+1] #use %4 as temp to copy data out of point
+		mov [triangle+5], %4
+		mov %4, [point+2] #use %4 as temp to copy data out of point
+		mov [triangle+6], %4
+			
+		add %0, 3 #Points at third point.
+		
+		call rotate_point #returns rotated point at [point]
+		mov FP, 0xeeee
+		
+		###copy rotated point into triangle
+		mov %4, [point] #use %4 as temp to copy data out of point
+		mov [triangle+7], %4
+		mov %4, [point+1] #use %4 as temp to copy data out of point
+		mov [triangle+8], %4
+		mov %4, [point+2] #use %4 as temp to copy data out of point
+		mov [triangle+9], %4
+		
+		####Done with first triangle, push it onto stack, do next triangle.
+		mov %4, [triangle+9]
+		push %4
+		mov %4, [triangle+8]
+		push %4
+		mov %4, [triangle+7]
+		push %4
+		mov %4, [triangle+6]
+		push %4
+		mov %4, [triangle+5]
+		push %4
+		mov %4, [triangle+4]
+		push %4
+		mov %4, [triangle+3]
+		push %4
+		mov %4, [triangle+2]
+		push %4
+		mov %4, [triangle+1]
+		push %4
+		mov %4, [triangle]
+		push %4
 	
-	###copy rotated point into triangle for now
-	mov %4, [point] #use %4 as temp to copy data out of point
-	mov [triangle+1], %4
-	mov %4, [point+1] #use %4 as temp to copy data out of point
-	mov [triangle+2], %4
-	mov %4, [point+2] #use %4 as temp to copy data out of point
-	mov [triangle+#], %4
+		add %0, 3 #point him at next points' color.
 	
-	add %0, 3 # second point.
-	call rotate_point #returns rotated point at [point]
+	jne %3, %2, drawloop
 	
+	###All triangles stacked, write size to stack.
+	push %2
 	
+	###Properly formatted data
+	mov %6, SP
 	
-	push
+	call drawtriangles
 	
-	mov eax, SP	
+	#mov eax, SP	
 	
-	call perspectivetransform
+	#call perspectivetransform
 
 	mov eax, 0xffff
+	VGAfull5:
+		mov %6, [VGA]
+	je %6, 1, VGAfull1
 	mov [VGA], eax
+	
+	VGAfull6:
+		mov %6, [VGA]
+	je %6, 1, VGAfull1
 	mov [VGA], eax
+	
+	mov eax, 0xf
+	call pause
 	
 	j main
 
@@ -1262,9 +1386,17 @@ mov ebx, eax #Copy eax as temp into ebx.
 lsh ebx, 3
 mov %10, [triangle]
 or ebx, %10
+
+VGAfull7:
+		mov %10, [VGA]
+	je %10, 1, VGAfull7
 mov [VGA], ebx
 
 or temp1, temp2
+
+VGAfull8:
+		mov %10, [VGA]
+	je %10, 1, VGAfull8
 mov [VGA], temp1
 
 decr eax
@@ -1278,7 +1410,12 @@ mov ebx, eax #Copy eax as temp into ebx.
 lsh ebx, 3
 mov %10, [triangle]
 or ebx, %10
-mov [VGA], ebx
+
+	VGAfull9:
+		mov ecx, [VGA]
+	je ecx, 1, VGAfull9
+	
+	mov [VGA], ebx
 
 mov ecx, edx
 mov edx, eex
@@ -1374,12 +1511,16 @@ jg yvalright, temp2, temp2smaller3
 mov temp2, yvalright
 temp2smaller3:
 
-##
-## temp1 temp2 now contain the correct left/right indices.
-##
+###
+### temp1 temp2 now contain the correct left/right indices.
+###
 
 lsh temp2, 8
 or temp1, temp2
+
+	VGAfull10:
+		mov ebx, [VGA]
+	je ebx, 1, VGAfull10
 mov [VGA], temp1
 
 #pop ebx
@@ -1444,9 +1585,17 @@ mov ebx, eax #Copy eax as temp into ebx.
 lsh ebx, 3
 mov %10, [triangle]
 or ebx, %10
+
+	VGAfull11:
+		mov %10, [VGA]
+	je %10, 1, VGAfull11
 mov [VGA], ebx
 
 or temp1, temp2
+
+VGAfull12:
+		mov %10, [VGA]
+	je %10, 1, VGAfull12
 mov [VGA], temp1
 
 ret
@@ -1647,7 +1796,6 @@ rotate_point:
 	push %1
 	push %0
 	
-	mov %FP, 0xabab
 	mov %FP, 0xbaba
 
 	mov %7, %0	# src point
@@ -1866,7 +2014,45 @@ drawtriangles:
 
 	mov %0, %6
 	mov %1, [%6] #%1 is size in triangle count.
+	mov %2, 1 #%2 is loop counter.
+	
+	mov FP, [%0]
 	incr %0
+	
+	checktriangles:
+	mov FP, [%0]
+	incr %0
+	mov FP, [%0]
+	incr %0
+	mov FP, [%0]
+	incr %0
+	mov FP, [%0]
+	incr %0
+	mov FP, [%0]
+	incr %0
+	mov FP, [%0]
+	incr %0
+	mov FP, [%0]
+	incr %0
+	mov FP, [%0]
+	incr %0
+	mov FP, [%0]
+	incr %0
+	mov FP, [%0]
+	incr %0
+	
+	je %2, %1, endchecktriangles
+	
+	incr %2
+	j checktriangles
+	
+	endchecktriangles:
+	
+	
+	mov %0, %6
+	mov %1, [%6] #%1 is size in triangle count.
+	
+	incr %0 #0 points to color1 now.
 	mov %2, 1 #%2 is loop counter.
 	
 	drawtriangleloop:
@@ -1907,8 +2093,23 @@ ret
 ###
 zclip:
 
+	push %0
+	push %1
+	push %2
+	push %3
+	push %4
+	push %5
+	push %6
+	push %7
+	push %8
+	push %9
+	push %10
+	push FP
+
+	mov FP, 1337
+
 	mov eax, %0
-	add eax, 4
+	add eax, 3
 	mov ebx, [eax]
 	jge ebx, 0, safepoint1
 		ret
@@ -1929,10 +2130,183 @@ zclip:
 	mov eax, %0
 	call perspectivetransform
 
+	pop FP
+	pop %10
+	pop %9
+	pop %8
+	pop %7
+	pop %6
+	pop %5
+	pop %4
+	pop %3
+	pop %2
+	pop %1
+	pop %0
 ret
 ###
 ###
 ### END Z CLIP
+###
+###
+
+###
+###
+### CLEAR BUFFER
+###
+###
+clearbuffer:
+mov eax, 0
+mov ebx, 159
+
+clearloop:
+mov ecx, eax
+lsh ecx, 3
+or ecx, %5
+
+	VGAfull3:
+		mov %6, [VGA]
+	je %6, 1, VGAfull3
+mov [VGA], ecx
+
+	VGAfull4:
+		mov %6, [VGA]
+	je %6, 1, VGAfull4
+mov [VGA], ebx
+incr eax
+jne eax, 120, clearloop
+
+ret
+###
+###
+### END CLEAR BUFFER
+###
+###
+
+###
+### PAUSE - Handy helper function for drawing stuff and not flashing between buffers too fast.  Send a pause value in on eax ;)
+###
+pause:
+mov ebx, 0xffff
+mov edx, 0
+
+pauseLoop2:
+mov ecx, 0
+pauseLoop1:
+incr ecx
+cmp ecx, ebx
+jne pauseLoop1
+incr edx
+cmp edx, eax
+jne pauseLoop2
+
+ret
+
+###
+### END PAUSE
+###
+
+###
+###
+### JONS MATRIX MULT
+### gimmie 3x3 in %0, 3x1 in %1, returns result in matpoint.
+###
+jonsmatrixmult:
+
+	mov %2, %0
+	mov %3, %1
+	
+	mov %4, [%2]
+	incr %2
+	mov %5, [%3]
+	incr %3
+	
+	fmul %4, %5
+	mov %6, %4
+	
+	
+	mov %4, [%2]
+	incr %2
+	mov %5, [%3]
+	incr %3
+	
+	fmul %4, %5
+	add %6, %4
+
+	mov %4, [%2]
+	incr %2
+	mov %5, [%3]
+	incr %3
+	
+	fmul %4, %5	
+	add %6, %4
+	
+	###6 now holds first result value
+	mov [matpoint], %6
+	mov %3, %1
+	
+	mov %4, [%2]
+	incr %2
+	mov %5, [%3]
+	incr %3
+	
+	fmul %4, %5
+	mov %6, %4
+	
+	
+	mov %4, [%2]
+	incr %2
+	mov %5, [%3]
+	incr %3
+	
+	fmul %4, %5
+	add %6, %4
+
+	mov %4, [%2]
+	incr %2
+	mov %5, [%3]
+	incr %3
+	
+	fmul %4, %5	
+	add %6, %4
+	
+	###6 now holds second result value
+	mov [matpoint+1], %6
+	mov %3, %1
+	
+	mov %4, [%2]
+	incr %2
+	mov %5, [%3]
+	incr %3
+	
+	fmul %4, %5
+	mov %6, %4
+	
+	
+	mov %4, [%2]
+	incr %2
+	mov %5, [%3]
+	incr %3
+	
+	fmul %4, %5
+	add %6, %4
+
+	mov %4, [%2]
+	incr %2
+	mov %5, [%3]
+	incr %3
+	
+	fmul %4, %5	
+	add %6, %4
+	
+	###6 now holds third result value
+	mov [matpoint+2], %6
+	
+	ret 
+
+ret
+###
+###
+### END JONS MATRIX MULT
 ###
 ###
 
@@ -1942,236 +2316,6 @@ zone:
 0
 
 model:
-
-point:
-0
-0
-0
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-0xffff
-
-triangle:
-0
-0
-0
-0
-0
-0
-0
-0
-0
-
-
-state:
-0
-
-rotation_matrix_x:
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-
-
-0xFFFF
-
-rotation_matrix_y:
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-
-0xFFFF
-
-bullet_model:
-12
-# Face 0
-1 #color
-1 #-
--49
-3
--1 #-
--49
-3
--1 #-
--49
--3
-1 #color
-1 #-
--49
-3
--1 #-
--49
--3
-1 #-
--49
--3
-# Face 1
-2 #color
-1 #-
--51
-3
-1 #-
--51
--3
--1 #-
--51
--3
-2 #color
-1 #-
--51
-3
--1 #-
--51
--3
--1 #-
--51
-3
-# Face 2
-1 #color
-1 #-
--49
-3
-1 #-
--49
--3
-1 #-
--51
--3
-1 #color
-1 #-
--49
-3
-1 #-
--51
--3
-1 #-
--51
-3
-# Face 3
-2 #color
-1 #-
--49
--3
--1 #-
--49
--3
--1 #-
--51
--3
-2 #color
-1 #-
--49
--3
--1 #-
--51
--3
-1 #-
--51
--3
-# Face 4
-1 #color
--1 #-
--49
--3
--1 #-
--49
-3
--1 #-
--51
-3
-1 #color
--1 #-
--49
--3
--1 #-
--51
-3
--1 #-
--51
--3
-# Face 5
-2 #color
--1 #-
--49
-3
-1 #-
--49
-3
-1 #-
--51
-3
-2 #color
--1 #-
--49
-3
-1 #-
--51
-3
--1 #-
--51
-3
 
 sine_lut:
 0b0000000000000000
@@ -2425,3 +2569,260 @@ slopes:
 0b0000000010001100
 0b0000000010001010
 0b0000000010001001
+
+0xFFFF
+
+bullet_model:
+12
+# Face 0
+1 #color
+1 #-
+-49
+3
+-1 #-
+-49
+3
+-1 #-
+-49
+-3
+1 #color
+1 #-
+-49
+3
+-1 #-
+-49
+-3
+1 #-
+-49
+-3
+# Face 1
+2 #color
+1 #-
+-51
+3
+1 #-
+-51
+-3
+-1 #-
+-51
+-3
+2 #color
+1 #-
+-51
+3
+-1 #-
+-51
+-3
+-1 #-
+-51
+3
+# Face 2
+1 #color
+1 #-
+-49
+3
+1 #-
+-49
+-3
+1 #-
+-51
+-3
+1 #color
+1 #-
+-49
+3
+1 #-
+-51
+-3
+1 #-
+-51
+3
+# Face 3
+2 #color
+1 #-
+-49
+-3
+-1 #-
+-49
+-3
+-1 #-
+-51
+-3
+2 #color
+1 #-
+-49
+-3
+-1 #-
+-51
+-3
+1 #-
+-51
+-3
+# Face 4
+1 #color
+-1 #-
+-49
+-3
+-1 #-
+-49
+3
+-1 #-
+-51
+3
+1 #color
+-1 #-
+-49
+-3
+-1 #-
+-51
+3
+-1 #-
+-51
+-3
+# Face 5
+2 #color
+-1 #-
+-49
+3
+1 #-
+-49
+3
+1 #-
+-51
+3
+2 #color
+-1 #-
+-49
+3
+1 #-
+-51
+3
+-1 #-
+-51
+3
+
+cube:
+
+twotriangles:
+2
+7
+553
+60
+600
+0
+0
+600
+-10
+60
+600
+7
+-200
+0
+0
+-250
+60
+50
+-150
+60
+50
+
+state:
+0
+
+rotation_matrix_x:
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+
+0xFFFF
+
+rotation_matrix_y:
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+
+xrot:
+0
+
+yrot:
+0
+
+point:
+0
+0
+0
+
+matpoint:
+0
+0
+0
+
+triangle:
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
