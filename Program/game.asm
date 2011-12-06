@@ -121,8 +121,8 @@ mainLoop:
 	add %3, %0
 
 	# TODO DEBUGGING ---------------
-	mov [LCD], %2
-	# mov [LCD], %3
+	mov %7, [PLAYER_THETA]
+	mov [LCD], %7
 	mov [PLAYER_X], %2
 	mov [PLAYER_Y], %3
 
@@ -137,12 +137,12 @@ mainLoop:
 	add %0, %1
 	mov %1, [B_KEY]
 	add %0, %1
-	je %0, 0, noInput
+	je %0, 0, noInput2
 		mov [UP_KEY], %0
-	noInput:
-	j mainEndGameState
+	noInput2:
+	j mainLoop # TODO, kill
+	# j mainEndGameState
 	# TODO DEBUGGING ---------------
-
 
 	# Move the AI
 
@@ -191,6 +191,32 @@ mainAIDoneTurning:
 	mov [AI_BULLET_Y], %0
 
 mainAIDoneMoving:
+
+	# TODO DEBUGGING ---------------
+	mov %7, [PLAYER_THETA]
+	mov [LCD], %7
+	mov [PLAYER_X], %2
+	mov [PLAYER_Y], %3
+	mov [AI_X], %4
+	mov [AI_Y], %5
+
+	mov %0, [UP_KEY]
+	mov %1, [DOWN_KEY]
+	add %0, %1
+	mov %1, [RIGHT_KEY]
+	add %0, %1
+	mov %1, [LEFT_KEY]
+	add %0, %1
+	mov %1, [A_KEY]
+	add %0, %1
+	mov %1, [B_KEY]
+	add %0, %1
+	je %0, 0, noInput
+		mov [UP_KEY], %0
+	noInput:
+	j mainLoop # TODO, kill
+	# j mainEndGameState
+	# TODO DEBUGGING ---------------
 
 	# Move Player bullet
 	mov %6, [PLAYER_BULLET_TIME]
@@ -3324,7 +3350,7 @@ PLAYER_THETA:
 0
 
 PLAYER_START_THETA:
-0
+0b0001111111111111
 
 PLAYER_RADIUS:
 10
@@ -3390,7 +3416,7 @@ AI_START_Y:
 0
 
 AI_START_THETA:
-10
+0b10011111111111
 
 rotation_matrix_x:
 0
