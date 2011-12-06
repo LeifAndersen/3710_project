@@ -331,7 +331,6 @@ mainEndAIBullet:
 
 mainEndGameState:
 
-
 	# -------------------------------
 	# For each triangle, do this, although unless it's an enemy tank, you can skip the AI step.
 
@@ -393,7 +392,7 @@ mainEndGameState:
 	# save local tank pointer
 	mov %8, %1				# don't touch %8....
 	skiplayerbullet:
-
+	
 #	Scale models (multiply all points by scale vector).
 	# do nothing
 
@@ -499,6 +498,7 @@ mainEndGameState:
 	add %SP, 9
 
 	skipplayerbulletrotate:
+
 
 #	Translate model (add entity location to all points in model).
 	# translate tank
@@ -608,13 +608,13 @@ mainEndGameState:
 	add %SP, 3
 
 	skipplayerbullettranslate:
-
+	
 #Put model in camera coordinates:
 	#	Rotate model around y axis by camera angle.
 	#	Rotate model around x axis by camera angle.
 		#	Rotate models around x axis by model angle
 	#	rotate tank
-	mov %1, [PLAYER_THETA]		# get the rotation for the tank
+	mov %1, [PLAYER_THETA]	# get the rotation for the tank
 	mov %0, 0				# other angle is 0
 	call setup_rotate
 	mov %4, [%10]			# get the size of the tank in triangles
@@ -622,7 +622,7 @@ mainEndGameState:
 	mov %1, %SP				# top of the temp triangle (first point)
 	mov %0, %10				# pointer to modifiable tank
 	incr %0					# skip size field in tank
-	camerarotatetankloop:			# loop that rotates tank points
+	camerarotatetankloop:	# loop that rotates tank points
 	incr %0					# skip color
 	call rotate_point
 	add %0, 3				# move to next point in triangle
@@ -714,7 +714,7 @@ mainEndGameState:
 	add %SP, 9
 
 	skipplayerbulletcamerarotate:
-
+	
 # back face cull and set color to FFFF if culled
 	# tank first
 	mov %0, %10
@@ -732,6 +732,10 @@ mainEndGameState:
 	call backfacecull
 	skipplayerbulletcull:
 
+	foo:
+	j foo
+
+	
 # copy all unculled triangles into array to be sorted
 	mov %5, 0				# keep total unculled triangle count
 	sub %SP, 1				# space for total number of triangles to render
@@ -1096,6 +1100,12 @@ backfacecull:
 	decr %4					# size--
 	jge %4, 0, backfacecullloop
 
+	pop %5
+	pop %4
+	pop %3
+	pop %2
+	pop %1
+	pop %0
 	ret
 
 
