@@ -40,6 +40,7 @@
       <obj_property name="ElementShortName">reg8[15:0]</obj_property>
       <obj_property name="ObjectShortName">reg8[15:0]</obj_property>
       <obj_property name="label">temp2: %8</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/testdatapath/uut/RegisterFile/reg1" type="array" db_ref_id="1">
       <obj_property name="DisplayName">label</obj_property>

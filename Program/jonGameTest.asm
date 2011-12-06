@@ -1048,6 +1048,7 @@ backfacecull:
 	push %5
 
 	mov %2, %0				# avoid overwriting
+	mov FP, 0xfdfd
 	mov %4, [%2]			# get size of model in triangles
 	incr %2					# skip size
 
@@ -1101,6 +1102,7 @@ backfacecull:
 	# do cross product
 	mov	%0, %5				# move (p3 - p1) pointer to arg0 for arg0 x arg1
 	mov FP, 0xb4
+	mov FP, [SP]
 	call cross3
 	mov FP, 0xb5
 	# if the magnitude returned in %0 is less than 0, cull by setting color to 0xFFFF
@@ -1278,6 +1280,8 @@ cross:
 # Take a pointer to an xyz vector in %0, and the second in %1, return the maginude
 # of the cross product (squared) in %0
 cross3:
+	mov FP, 0xdbdb
+	mov FP, [SP]
 	push %2
 	push %3
 	push %4
@@ -1286,6 +1290,7 @@ cross3:
 	push %7
 	push %LOW
 	push %HIGH
+	
 
 	mov %2, [%0]
 	add %0, 1
@@ -1319,6 +1324,8 @@ cross3:
 	lsh %1, 1
 	add %0, %1
 
+	mov FP, 0xd0
+	
 	pop %HIGH
 	pop %LOW
 	pop %7
@@ -1328,7 +1335,10 @@ cross3:
 	pop %3
 	pop %2
 	
-	mov FP, 0xd0
+	#mov FP, [SP]
+	
+	#incr FP
+	#incr FP
 	
 	ret
 
