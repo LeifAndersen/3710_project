@@ -748,7 +748,7 @@ mainEndGameState:
 	copyculledtankloop:
 	incr %0					# pointer now points to color (top of triangle in case we copy)
 	mov %1, [%0]
-	jne %1, 0xFFFF, dontcopytank
+	je %1, 0xFFFF, dontcopytank
 	#should copy
 	sub %SP, 10
 	mov %1, %SP
@@ -767,7 +767,7 @@ mainEndGameState:
 	copyculledaibulletloop:
 	incr %0					# pointer now points to color (top of triangle in case we copy)
 	mov %1, [%0]
-	jne %1, 0xFFFF, dontcopyaibullet
+	je %1, 0xFFFF, dontcopyaibullet
 	#should copy
 	sub %SP, 10
 	mov %1, %SP
@@ -787,7 +787,7 @@ mainEndGameState:
 	copyculledplayerbulletloop:
 	incr %0					# pointer now points to color (top of triangle in case we copy)
 	mov %1, [%0]
-	jne %1, 0xFFFF, dontcopyplayerbullet
+	je %1, 0xFFFF, dontcopyplayerbullet
 	#should copy
 	sub %SP, 10
 	mov %1, %SP
