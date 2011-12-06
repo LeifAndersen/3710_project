@@ -24,8 +24,8 @@
 `define VGA 16383
 `define BULLET_RADIUS 1
 `define TANK_RADIUS 10
-`define SPEED 10
-`define ROTATION_SPEED 10
+`define SPEED 50
+`define ROTATION_SPEED 200
 `define PLAYER_START_LIVES 5
 `define BULLET_SPEED 20
 `define BULLET_LIFE 100
@@ -86,13 +86,11 @@ mainNewPlayer:
 mainLoop:
 
 	call drawDebuggingGraphics
-	mov %0, [PLAYER_X]
-	mov [LCD], %0
 
 	# Check Inputs
 	# Left/Right, update theta
-	# mov %2, [LEFT_KEY]
-	# mov %3, [RIGHT_KEY]
+	mov %2, [LEFT_KEY]
+	mov %3, [RIGHT_KEY]
 	mov %4, [PLAYER_THETA]
 	sub %2, %3
 	mul %2, ROTATION_SPEED
@@ -104,7 +102,9 @@ mainLoop:
 	mov %3, [PLAYER_Y]
 	mov %5, [UP_KEY]
 	mov %6, [DOWN_KEY]
-	sub %5, %6               # Up-Down now in %5
+	sub %5, %6             # Up-Down now in %5
+	mul %5, SPEED
+	mov %5, %LOW           # %5 now hoas ammount to go forward
 	mov %0, %4             #
 	call cos               # %0 has sin(theta)
 	fmul %0, %5            #
@@ -119,6 +119,7 @@ mainLoop:
 
 	# TODO DEBUGGING ---------------
 	# mov [LCD], %2
+	mov [LCD], %3
 	mov [PLAYER_X], %2
 	mov [PLAYER_Y], %3
 
