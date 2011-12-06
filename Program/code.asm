@@ -88,14 +88,11 @@ mainLoop:
 	call drawDebuggingGraphics
 	mov %0, [PLAYER_X]
 	mov [LCD], %0
-	
-	foo:
-	j foo
 
 	# Check Inputs
 	# Left/Right, update theta
-	mov %2, [LEFT_KEY]
-	mov %3, [RIGHT_KEY]
+	# mov %2, [LEFT_KEY]
+	# mov %3, [RIGHT_KEY]
 	mov %4, [PLAYER_THETA]
 	sub %2, %3
 	mul %2, ROTATION_SPEED
@@ -129,14 +126,14 @@ mainLoop:
 	mov %0, [UP_KEY]
 	mov %1, [DOWN_KEY]
 	add %0, %1
-	# mov %1, [RIGHT_KEY]
-	# add %0, %1
-	# mov %1, [LEFT_KEY]
-	# add %0, %1
-	# mov %1, [A_KEY]
-	# add %0, %1
-	# mov %1, [B_KEY]
-	# add %0, %1
+	mov %1, [RIGHT_KEY]
+	add %0, %1
+	mov %1, [LEFT_KEY]
+	add %0, %1
+	mov %1, [A_KEY]
+	add %0, %1
+	mov %1, [B_KEY]
+	add %0, %1
 	je %0, 0, noInput
 		mov [UP_KEY], %0
 	noInput:
@@ -1927,7 +1924,7 @@ rotation_matrix_y:
 tank_model:
 26
 # Face 0
-0 #color
+1 #color
 -50 #-
 0
 -80
@@ -1937,7 +1934,7 @@ tank_model:
 85 #-
 -70
 -130
-0 #color
+1 #color
 -50 #-
 0
 -80
@@ -1948,7 +1945,7 @@ tank_model:
 0
 -80
 # Face 1
-0 #color
+2 #color
 85 #-
 -70
 -130
@@ -1958,7 +1955,7 @@ tank_model:
 -85 #-
 -70
 114
-0 #color
+2 #color
 85 #-
 -70
 -130
@@ -1969,7 +1966,7 @@ tank_model:
 -70
 114
 # Face 2
-0 #color
+1 #color
 -84 #-
 -70
 -130
@@ -1979,7 +1976,7 @@ tank_model:
 -50 #-
 0
 64
-0 #color
+1 #color
 -84 #-
 -70
 -130
@@ -1990,7 +1987,7 @@ tank_model:
 -70
 114
 # Face 3
-0 #color
+2 #color
 50 #-
 0
 -80
@@ -2000,7 +1997,7 @@ tank_model:
 84 #-
 -70
 114
-0 #color
+2 #color
 50 #-
 0
 -80
@@ -2011,7 +2008,7 @@ tank_model:
 0
 64
 # Face 4
-0 #color
+3 #color
 84 #-
 -70
 114
@@ -2021,7 +2018,7 @@ tank_model:
 -50 #-
 0
 64
-0 #color
+3 #color
 84 #-
 -70
 114
@@ -2032,7 +2029,7 @@ tank_model:
 0
 64
 # Face 5
-0 #color
+4 #color
 25 #-
 -120
 -44
@@ -2042,7 +2039,7 @@ tank_model:
 -39 #-
 -70
 -64
-0 #color
+4 #color
 25 #-
 -120
 -44
@@ -2053,7 +2050,7 @@ tank_model:
 -120
 -44
 # Face 6
-0 #color
+3 #color
 25 #-
 -120
 -44
@@ -2063,7 +2060,7 @@ tank_model:
 -25 #-
 -120
 28
-0 #color
+3 #color
 25 #-
 -120
 -44
@@ -2074,7 +2071,7 @@ tank_model:
 -120
 28
 # Face 7
-0 #color
+4 #color
 -25 #-
 -120
 -44
@@ -2084,7 +2081,7 @@ tank_model:
 -39 #-
 -70
 48
-0 #color
+4 #color
 -25 #-
 -120
 -44
@@ -2095,7 +2092,7 @@ tank_model:
 -120
 28
 # Face 8
-0 #color
+1 #color
 39 #-
 -70
 -64
@@ -2105,7 +2102,7 @@ tank_model:
 25 #-
 -120
 28
-0 #color
+1 #color
 39 #-
 -70
 -64
@@ -2116,7 +2113,7 @@ tank_model:
 -70
 48
 # Face 9
-0 #color
+1 #color
 25 #-
 -120
 28
@@ -2126,7 +2123,7 @@ tank_model:
 -39 #-
 -70
 48
-0 #color
+1 #color
 25 #-
 -120
 28
@@ -2137,7 +2134,7 @@ tank_model:
 -70
 48
 # Face 10
-0 #color
+1 #color
 0 #-
 -110
 28
@@ -2147,7 +2144,7 @@ tank_model:
 -14 #-
 -96
 114
-0 #color
+1 #color
 0 #-
 -110
 28
@@ -2158,7 +2155,7 @@ tank_model:
 -110
 114
 # Face 11
-0 #color
+1 #color
 0 #-
 -110
 28
@@ -2168,7 +2165,7 @@ tank_model:
 14 #-
 -96
 114
-0 #color
+1 #color
 0 #-
 -110
 28
@@ -2179,7 +2176,7 @@ tank_model:
 -110
 114
 # Face 12
-0 #color
+1 #color
 -14 #-
 -96
 28
@@ -2189,7 +2186,7 @@ tank_model:
 14 #-
 -96
 114
-0 #color
+1 #color
 -14 #-
 -96
 28
@@ -2203,7 +2200,7 @@ tank_model:
 bullet_model:
 12
 # Face 0
-0 #color
+1 #color
 1 #-
 -49
 3
@@ -2213,7 +2210,7 @@ bullet_model:
 -1 #-
 -49
 -3
-0 #color
+1 #color
 1 #-
 -49
 3
@@ -2224,7 +2221,7 @@ bullet_model:
 -49
 -3
 # Face 1
-0 #color
+2 #color
 1 #-
 -51
 3
@@ -2234,7 +2231,7 @@ bullet_model:
 -1 #-
 -51
 -3
-0 #color
+2 #color
 1 #-
 -51
 3
@@ -2245,7 +2242,7 @@ bullet_model:
 -51
 3
 # Face 2
-0 #color
+1 #color
 1 #-
 -49
 3
@@ -2255,7 +2252,7 @@ bullet_model:
 1 #-
 -51
 -3
-0 #color
+1 #color
 1 #-
 -49
 3
@@ -2266,7 +2263,7 @@ bullet_model:
 -51
 3
 # Face 3
-0 #color
+2 #color
 1 #-
 -49
 -3
@@ -2276,7 +2273,7 @@ bullet_model:
 -1 #-
 -51
 -3
-0 #color
+2 #color
 1 #-
 -49
 -3
@@ -2287,7 +2284,7 @@ bullet_model:
 -51
 -3
 # Face 4
-0 #color
+1 #color
 -1 #-
 -49
 -3
@@ -2297,7 +2294,7 @@ bullet_model:
 -1 #-
 -51
 3
-0 #color
+1 #color
 -1 #-
 -49
 -3
@@ -2308,7 +2305,7 @@ bullet_model:
 -51
 -3
 # Face 5
-0 #color
+2 #color
 -1 #-
 -49
 3
@@ -2318,7 +2315,7 @@ bullet_model:
 1 #-
 -51
 3
-0 #color
+2 #color
 -1 #-
 -49
 3
