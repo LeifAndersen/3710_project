@@ -28,7 +28,7 @@
 `define LCD 16376
 `define VGA 16383
 `define STACK_TOP 0x2bff
-`define PERSPECTIVE 10
+`define PERSPECTIVE -100
 `define temp1 %7
 `define yvalleft %9
 `define yvalright %5
@@ -42,29 +42,57 @@ init:
 	call main
 	
 main:
-	mov eax, 180
+	#mov eax, 180
+	#push eax
+	
+	#mov eax, 205
+	#push eax
+	
+	#mov eax, -60
+	#push eax
+	
+	#mov eax, 140
+	#push eax
+	
+	#mov eax, 50
+	#push eax
+	
+	#mov eax, -35
+	#push eax
+	
+	#mov eax, 1
+	#push eax
+	
+	#mov eax, SP
+	#call clip
+	
+	mov eax, 600
+	push eax	
+	mov eax, 60
+	push eax
+	mov eax, 553
 	push eax
 	
-	mov eax, 205
+	mov eax, 600
+	push eax	
+	mov eax, 0
+	push eax	
+	mov eax, 0
 	push eax
 	
-	mov eax, -60
-	push eax
-	
-	mov eax, 140
-	push eax
-	
-	mov eax, 50
-	push eax
-	
-	mov eax, -35
+	mov eax, 600
+	push eax	
+	mov eax, 60
+	push eax	
+	mov eax, -10000
 	push eax
 	
 	mov eax, 1
 	push eax
 	
 	mov eax, SP
-	call clip
+	
+	call perspectivetransform
 
 	mov eax, 0xffff
 	mov [VGA], eax
@@ -717,10 +745,10 @@ perspectivetransform:
 	
 	mov FP, 0xbcde
 	call clip
+	mov FP, 0xedcb
 	
 	###Need to decide on a way to use the outgoing information.  Probably just pump it straight through to clip/rasterize.
 	###Need to know incoming data format.
-	
 
 
 ret
@@ -766,19 +794,23 @@ binarySubdivide:
 			egxpositive:
 		
 		jne edx, eex, precheckedx
+			mov FP, 0xacac
 			mov eax, ecx
 			ret
 		precheckedx:
 		
 	binarysubdivideloop1:
 		#First divide guess value by two.
-		incr egx #round up
+		je egx, 1, dontround1
+			incr egx #round up
+		dontround1:
 		incr efx #round up
 		arsh egx, 1 #egx = (x1-x2)/2
 		arsh efx, 1 #efx = (y1-y2)/2
 		# If yguess == eex, done
 		# efx holds yguess
 			jne ebx, eex, binarySubdividenotdone1
+				mov FP, 0xacac
 				ret
 			binarySubdividenotdone1:
 		
@@ -796,13 +828,16 @@ binarySubdivide:
 		
 	binarysubdivideloop2:
 		#First divide guess value by two.
-		incr egx #round up
+		je egx, 1, dontround2
+			incr egx #round up
+		dontround2:
 		incr efx #round up
 		arsh egx, 1 #egx = (x1-x2)/2
 		arsh efx, 1 #efx = (y1-y2)/2
 		# If yguess == eex, done
 		# efx holds yguess
 			jne ebx, eex, binarySubdividenotdone2
+				mov FP, 0xacac
 				ret
 			binarySubdividenotdone2:
 		
@@ -1515,6 +1550,42 @@ point:
 0
 0
 0
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
+0xffff
 
 triangle:
 0

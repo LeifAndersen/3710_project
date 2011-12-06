@@ -769,7 +769,9 @@ binarySubdivide:
 		
 	binarysubdivideloop1:
 		#First divide guess value by two.
-		incr egx #round up
+		je egx, 1, dontround1
+			incr egx #round up
+		dontround1:
 		incr efx #round up
 		arsh egx, 1 #egx = (x1-x2)/2
 		arsh efx, 1 #efx = (y1-y2)/2
@@ -794,13 +796,16 @@ binarySubdivide:
 		
 	binarysubdivideloop2:
 		#First divide guess value by two.
-		incr egx #round up
+		je egx, 1, dontround2
+			incr egx #round up
+		dontround2:
 		incr efx #round up
 		arsh egx, 1 #egx = (x1-x2)/2
 		arsh efx, 1 #efx = (y1-y2)/2
 		# If yguess == eex, done
 		# efx holds yguess
 			jne ebx, eex, binarySubdividenotdone2
+				mov FP, 0xacac
 				ret
 			binarySubdividenotdone2:
 		
@@ -989,23 +994,6 @@ points:
 0
 0
 00
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
 0
 0
 0
