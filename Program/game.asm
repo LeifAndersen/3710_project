@@ -140,8 +140,7 @@ mainLoop:
 	je %0, 0, noInput2
 		mov [UP_KEY], %0
 	noInput2:
-	j mainLoop # TODO, kill
-	# j mainEndGameState
+	j mainEndGameState
 	# TODO DEBUGGING ---------------
 
 	# Move the AI

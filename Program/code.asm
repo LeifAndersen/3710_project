@@ -132,9 +132,7 @@ mainLoop:
 	je %0, 0, noInput
 		mov [UP_KEY], %0
 	noInput:
-	call drawDebuggingGraphics
 	add %0, %0
-	j mainLoop
 	# TODO DEBUGGING ---------------
 
 
@@ -1405,6 +1403,13 @@ FindTheta:
 	pop %4
 	pop %3
 	pop %2
+	ret
+
+drawCross:
+
+	ret
+
+drawLife:
 	ret
 
 # Take top left x in 0, top left y in 1, bottom right x in 2 bottom right y in 3,
