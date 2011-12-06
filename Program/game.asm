@@ -809,12 +809,11 @@ mainEndGameState:
 	add %LOW, 1
 	add %7, %LOW
 
-#	Sort triangles by distance of nearest point (furthest away comes first). Insertion sort
+#	Sort triangles by distance of furthest point (furthest away comes first). Insertion sort
 	mov %4, 1				# starting index
 	mov %0, 1
 	sub %SP, 10				# temp triangle
 	mov %2, %SP
-	mov %0, %6				# triangle array pointer
 	incr %6					# skip size
 
 	sorttrianglesouterloop:
@@ -824,7 +823,7 @@ mainEndGameState:
 	mov %1, %2				# move temp pointer into dst arg of move_triangle
 	call move_triangle
 	mov %3, %4				# get a inner loop index
-	decr %3
+	decr %3					# i - 1
 
 		sorttrianglesinnerloop:
 		mov %0, %6				# get pointer to model
@@ -849,6 +848,9 @@ mainEndGameState:
 	call move_triangle
 	incr %4
 	jl %4, %5, sorttrianglesouterloop
+	
+	# get back to size
+	decr %6
 
 	# clean up stack
 	add %SP, 10
