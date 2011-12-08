@@ -94,7 +94,7 @@ main:
 
 	mov %6, tetra2
 
-	call rotate_model
+	#call rotate_model
 
 	mov [translate_x], %9
 
