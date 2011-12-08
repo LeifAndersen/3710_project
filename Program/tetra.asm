@@ -1,7 +1,7 @@
 ###
 ### CLIPPING/RASTERIZATION
 ###
-
+ 
 `define UP_KEY 16382
 `define DOWN_KEY 16381
 `define RIGHT_KEY 16380
@@ -41,131 +41,68 @@
 init:
 	mov SP, STACK_TOP
 	mov FP, SP
-	mov %14, 0				# this is the angle of the cube
-	mov %9, 0				# translation x amount
-	mov %8, 15				# translation z amount
-	mov %3, 1				# increment amount
+	mov %14, 0					# this is the angle of the cube
 	call main
-
+	
 main:
-
-
+	mov SP, STACK_TOP
+	
+		
 	jge %5, 6, resetBackColor
-		mov %5, 7
+		incr %5
 		j donebackcolor
 	resetBackColor:
-		mov %5, 7
+		mov %5, 0
 	donebackcolor:
-
+	
 	VGAfull1:
 		mov %6, [VGA]
 	je %6, 1, VGAfull1
 	mov [VGA], %5
-
+	
 	VGAfull2:
 		mov %6, [VGA]
 	je %6, 1, VGAfull2
 	mov [VGA], %5
-
+	
 	call clearbuffer
-
-	# move model around numerically
-	jne %9, 20, keepgoingright
-	mov %3, -1
-	keepgoingright:
-	jne %9, 0, keepgoingleft
-	mov %3, 1
-	keepgoingleft:
-
-	add %9, %3
-
+	
+	
 	###Properly formatted data
-	mov %0, tank_model
-	mov %1, tank_model2
-	mov %2, [tank_model]
-	mov %2, 10
-	mov %2, %LOW
-	add %2, 1				# get proper size
+	mov %0, cube
+	mov %1, cube2
+	mov %2, [cube]
 	call memcpy
-
-	mov %6, tank_model2
-
-	call rotate_model
-
-	mov [translate_x], %9
-
-	mov [translate_z], %8
+	
+	mov %6, cube2
+	
+	call translate_model20
 
 	call translate_model
-
+	
 	call drawtriangles
+	
+	#call perspectivetransform
 
 	mov eax, 0xffff
 	VGAfull5:
 		mov %6, [VGA]
 	je %6, 1, VGAfull1
 	mov [VGA], eax
-
+	
 	VGAfull6:
 		mov %6, [VGA]
 	je %6, 1, VGAfull1
 	mov [VGA], eax
-
+	
 	mov eax, 0xf
 	mov FP, 3
 	mov [LCD], FP
 	call pause
 	mov FP, 4
 	mov [LCD], FP
-
+	
 	j main
-
-#	rotate tank.  Model pointer comes in %6 and rotation comes in %14
-rotate_model:
-	push %0
-	push %1
-	push %2
-	push %3
-
-	mov %1, %14				# get the rotation for the tank
-	mov %0, 0				# other angle is 0
-	call setup_rotate
-	mov %4, [%6]			# get the size of the tank in triangles
-	sub %SP, 9				# make room for triangle to rotate
-	mov %1, %SP				# top of the temp triangle (first point)
-	mov %0, %6				# pointer to modifiable model
-	incr %0					# skip size field in model
-	rotatetankloop:			# loop that rotates tank points
-	incr %0					# skip color
-	call rotate_point
-	add %0, 3				# move to next point in triangle
-	add %1, 3
-	call rotate_point
-	add %0, 3				# move to next point in triangle
-	add %1, 3
-	call rotate_point
-	mov %2, 9
-	sub %0, 6
-	sub %1, 6
-	mov %3, %0
-	mov %0, %1
-	mov %1, %3
-	call memcpy				# copy rotated triangle back into tank
-	mov %3, %1
-	mov %1, %0
-	mov %0, %3
-	add %0, 9				# go to next triangle
-	decr %4					# done rotating one triangle
-	# check if loop again
-	jne %4, 0, rotatetankloop
-	# done with tank, remove temp storage on stack
-	add %SP, 9
-
-	pop %3
-	pop %2
-	pop %1
-	pop %0
-	ret
 
 # copy memory from [%0], to [%1] of size in %2.
 # preserves args
@@ -204,82 +141,82 @@ clip:
 	#add SP, 10
 	mov FP, 0xbbaa
 	mov temp2, [eax]
-
+	
 	mov FP, 5
 	mov [LCD], FP
 	call copyTriangle
-
+	
 	mov FP, 6
 	mov [LCD], FP
 	#Given a triangle pointed at by eax, first do comparisons to establish the zone values of each point.
 		# call copyTriangle # Don't need this because perspective already puts the triangle into triangle:
-
+		
 		mov zone1, 0
 		mov zone2, 0
 		mov zone3, 0
-
+	
 	###Check zone 0, 2
 		#t1
 		mov eax, [triangle+2] #y1
 		jge eax, 0, p1notinzone0
 			or zone1, 1
 		p1notinzone0:
-
+		
 		jle eax, 119, p1notinzone2
 			or zone1, 0b100
 		p1notinzone2:
-
+	
 		#t2
 		mov eax, [triangle+4] #y2
 		jge eax, 0, p2notinzone0
 			or zone2, 1
 		p2notinzone0:
-
+		
 		jle eax, 119, p2notinzone2
 			or zone2, 0b100
 		p2notinzone2:
-
+		
 		#t3
 		mov eax, [triangle+6] #y3
 		jge eax, 0, p3notinzone0
 			or zone3, 1
 		p3notinzone0:
-
+		
 		jle eax, 119, p3notinzone2
 			or zone3, 0b100
 		p3notinzone2:
-
+	
 	###Check zone 1,3
 		#t1
 		mov eax, [triangle+1] #x1
 		jle eax, 159, p1notinzone1
 			or zone1, 0b10
 		p1notinzone1:
-
+		
 		jge eax, 0, p1notinzone3
 			or zone1, 0b1000
 		p1notinzone3:
-
+		
 		#t2
 		mov eax, [triangle+3] #x2
 		jle eax, 159, p2notinzone1
 			or zone2, 0b10
 		p2notinzone1:
-
+		
 		jge eax, 0, p2notinzone3
 			or zone2, 0b1000
 		p2notinzone3:
-
+		
 		#t3
 		mov eax, [triangle+5] #x3
 		jle eax, 159, p3notinzone1
 			or zone3, 0b10
 		p3notinzone1:
-
+		
 		jge eax, 0, p3notinzone3
 			or zone3, 0b1000
 		p3notinzone3:
-
+		
 	### Now we have established which zones every1 is in
 	### Next step is the base case: if zone1 & zone2 & zone3 != 0, return.
 	### Else if zone1 | zone2 | zone3 == 0, rasterize.
@@ -287,16 +224,16 @@ clip:
 		mov eax, zone1
 		and eax, zone2
 		and eax, zone3
-
+		
 		je eax, 0, basecase1fail
 			mov FP, 0xfbfb
 			ret
 		basecase1fail:
-
+		
 		mov eax, zone1
 		or eax, zone2
 		or eax, zone3
-
+		
 		jne eax, 0, basecase2fail
 			mov FP, 0xfbfb
 			mov FP, 7
@@ -307,102 +244,102 @@ clip:
 			or %1, %1 #mov FP, 0xdddd
 			ret
 		basecase2fail:
-
+	
 	### Reduction step.  Check zone by zone.
+	### 
 	###
-	###
-
+	
 	mov eax, zone1
 	or eax, zone2
 	or eax, zone3
-
-
+	
+	
 	#Check zone 0.
 	mov ebx, eax
 	and ebx, 1
-
+	
 	jne ebx, 1, checkzone1
 		### At least one point is in zone 0. Could be two triangle.
-
+	
 		mov egx, 0
 		mov [zone], egx
-
+		
 		### No longer need to save this zone information, so we can modify zone1, zone2, zone3
 		and zone1, 1 #Make zone 0 the only bit left.
 		and zone2, 1
 		and zone3, 1
-
+		
 		mov eex, 0 #Prepare eex for split, eex is a param for it.
-
-		j presplitsort
+		
+		j presplitsort	
 	checkzone1:
 	mov ebx, eax
 	and ebx, 0b10
-
+	
 	jne ebx, 0b10, checkzone2
 		### At least one point is in zone 1. Could be two triangle.
-
+		
 		mov egx, 1
 		mov [zone], egx
-
+		
 		### No longer need to save this zone information, so we can modify zone1, zone2, zone3
 		rsh zone1, 1
 		rsh zone2, 1
 		rsh zone3, 1
-
+		
 		and zone1, 1 #Make zone 0 the only bit left.
 		and zone2, 1
 		and zone3, 1
-
+		
 		mov eex, 159 #Prepare eex for split, eex is a param for it.
-
-		j presplitsort
-
+		
+		j presplitsort	
+	
 	checkzone2:
 	mov ebx, eax
 	and ebx, 0b100
-
+	
 	jne ebx, 0b100, checkzone3
 		### At least one point is in zone 2. Could be two triangle.
-
+		
 		mov egx, 2
 		mov [zone], egx
-
+		
 		### No longer need to save this zone information, so we can modify zone1, zone2, zone3
 		rsh zone1, 2
 		rsh zone2, 2
 		rsh zone3, 2
-
+		
 		and zone1, 1 #Make zone 0 the only bit left.
 		and zone2, 1
 		and zone3, 1
-
+		
 		mov eex, 119 #Prepare eex for split, eex is a param for it.
-
+		
 		j presplitsort
-
+	
 	checkzone3:
 		### At least one point is in zone 3. Could be two triangle.
-
+		
 		mov egx, 3
 		mov [zone], egx
-
+		
 		### No longer need to save this zone information, so we can modify zone1, zone2, zone3
 		rsh zone1, 3
 		rsh zone2, 3
 		rsh zone3, 3
-
+		
 		and zone1, 1 #Make zone 0 the only bit left.
 		and zone2, 1
 		and zone3, 1
-
+		
 		mov eex, 0 #Prepare eex for split, eex is a param for it.
-
-		j presplitsort
-
-
+		
+		j presplitsort	
+	
+	
 	### First find pivot point once zone is established.
-
+	
 	### PRE-SPLIT SORT
 	### Determine pivot point and then go to split.
 	###
@@ -425,8 +362,8 @@ clip:
 				mov ebx, [triangle+6]
 				mov [triangle+4], ebx
 				mov [triangle+6], eax
-
-				j split
+				
+				j split				
 			point1in0point3out:
 			#Only point 1 is in 0, point 1 is the pivot point. Must swap point 1 and 3.
 				mov eax, [triangle+1]
@@ -437,8 +374,8 @@ clip:
 				mov ebx, [triangle+6]
 				mov [triangle+2], ebx
 				mov [triangle+6], eax
-
-				j split
+				
+				j split			
 			point1notin0:
 			jne zone2, 1, point2notin0
 				#point 2 is in 0
@@ -452,7 +389,7 @@ clip:
 					mov ebx, [triangle+6]
 					mov [triangle+2], ebx
 					mov [triangle+6], eax
-
+					
 					j split
 			point2in0point3out:
 				#point 2 is the pivot.  Swap 2 and 3.
@@ -464,12 +401,12 @@ clip:
 				mov ebx, [triangle+6]
 				mov [triangle+4], ebx
 				mov [triangle+6], eax
-
+				
 				j split
 			point2notin0:
 				#point 3 is the pivot. Already sorted.
 					j split
-
+	
 	###
 	### SPLIT
 	###
@@ -489,7 +426,7 @@ clip:
 			mov FP, 11
 			mov [LCD], FP
 				mov zone1, eax # Zone1 contains the x-value of p1-p3 edge on y=0.
-
+				
 				mov eax, [triangle+5]
 				mov ebx, [triangle+6]
 				mov ecx, [triangle+3]
@@ -501,7 +438,7 @@ clip:
 			mov FP, 13
 			mov [LCD], FP
 				j checkpivotside
-
+				
 			swapinputsforbinary:
 				mov eax, [triangle+6]
 				mov ebx, [triangle+5]
@@ -514,7 +451,7 @@ clip:
 			mov FP, 15
 			mov [LCD], FP
 				mov zone1, eax # Zone1 contains the x-value of p1-p3 edge on y=0.
-
+				
 				mov eax, [triangle+6]
 				mov ebx, [triangle+5]
 				mov ecx, [triangle+4]
@@ -525,13 +462,13 @@ clip:
 				call binarySubdivide #eax contains the x-value of p2-p3 edge on y=0.
 			mov FP, 17
 			mov [LCD], FP
-
+			
 			checkpivotside:
-
+				
 				###
 				### Must check which side of boundary the pivot is on, and then create the new triangles so ones outside the boundary don't include the boundary value.
 				###
-
+				
 				mov ebx, [zone]
 				#zone0
 				jne ebx, 0, tryzone1
@@ -540,34 +477,34 @@ clip:
 					mov ecx, [triangle+6]
 					jl ecx, 0, pivotoutsideboundaryx
 					j pivotinsideboundaryx
-
+					
 				tryzone1:
 				jne ebx, 1, tryzone2
 					mov efx, 160
 					mov ecx, [triangle+5]
 					jg ecx, 159, pivotoutsideboundaryy
 					j pivotinsideboundaryy
-
+					
 				tryzone2:
 				jne ebx, 2, tryzone3
 					mov efx, 120
 					mov ecx, [triangle+6]
 					jg ecx, 119, pivotoutsideboundaryx
 					j pivotinsideboundaryx
-
+					
 				tryzone3:
 				#Must be in this zone if it wasn't in the others.
 					mov efx, -1
 					mov ecx, [triangle+5]
 					jl ecx, 0, pivotoutsideboundaryy
 					j pivotinsideboundaryy
-
+					
 				### Pivot outside boundary
 				###
 				###
-
+				
 				pivotoutsideboundaryx:
-
+				
 				#Now form the three new triangles and push them onto the stack, recursive call to clip.
 				mov ebx, [triangle+2]
 				push ebx
@@ -578,7 +515,7 @@ clip:
 				push eex
 				push eax
 				push temp2
-
+				
 				mov ebx, [triangle+2]
 				push ebx
 				mov ebx, [triangle+1]
@@ -590,7 +527,7 @@ clip:
 				push eex
 				push eax
 				push temp2
-
+				
 				mov ebx, [triangle+6]
 				push ebx
 				mov ebx, [triangle+5]
@@ -600,15 +537,15 @@ clip:
 				push efx
 				push eax
 				push temp2
-
+				
 				j donepushingtriangles
-
+				
 				### Pivot inside boundary
 				###
 				###
-
+				
 				pivotinsideboundaryx:
-
+				
 				#Now form the three new triangles and push them onto the stack, recursive call to clip.
 				mov ebx, [triangle+2]
 				push ebx
@@ -619,7 +556,7 @@ clip:
 				push efx
 				push eax
 				push temp2
-
+				
 				mov ebx, [triangle+2]
 				push ebx
 				mov ebx, [triangle+1]
@@ -631,7 +568,7 @@ clip:
 				push efx
 				push eax
 				push temp2
-
+				
 				mov ebx, [triangle+6]
 				push ebx
 				mov ebx, [triangle+5]
@@ -641,15 +578,15 @@ clip:
 				push eex
 				push eax
 				push temp2
-
+				
 				j donepushingtriangles
-
+					
 				### Pivot outside boundary
 				###
 				###
-
+				
 				pivotoutsideboundaryy:
-
+				
 				#Now form the three new triangles and push them onto the stack, recursive call to clip.
 				mov ebx, [triangle+2]
 				push ebx
@@ -660,7 +597,7 @@ clip:
 				push eax
 				push eex
 				push temp2
-
+				
 				mov ebx, [triangle+2]
 				push ebx
 				mov ebx, [triangle+1]
@@ -672,7 +609,7 @@ clip:
 				push eax
 				push eex
 				push temp2
-
+				
 				mov ebx, [triangle+6]
 				push ebx
 				mov ebx, [triangle+5]
@@ -682,15 +619,15 @@ clip:
 				push eax
 				push efx
 				push temp2
-
+				
 				j donepushingtriangles
-
+				
 				### Pivot inside boundary
 				###
 				###
-
+				
 				pivotinsideboundaryy:
-
+				
 				#Now form the three new triangles and push them onto the stack, recursive call to clip.
 				mov ebx, [triangle+2]
 				push ebx
@@ -701,7 +638,7 @@ clip:
 				push eax
 				push efx
 				push temp2
-
+				
 				mov ebx, [triangle+2]
 				push ebx
 				mov ebx, [triangle+1]
@@ -713,7 +650,7 @@ clip:
 				push eax
 				push efx
 				push temp2
-
+				
 				mov ebx, [triangle+6]
 				push ebx
 				mov ebx, [triangle+5]
@@ -723,27 +660,27 @@ clip:
 				push eax
 				push eex
 				push temp2
-
+				
 				donepushingtriangles:
-
+				
 				mov eax, SP
 				call clip
-
+				
 				#and %1, %1 ########## test code
 				add SP, 7
 				mov eax, SP
 				call clip
-
+				
 				#and %1, %1 ########## test code
 				add SP, 7
 				mov eax, SP
 				call clip
-
+				
 				#and %1, %1 ########## test code
 				add SP, 7
-
+				
 				mov FP, 0xfbfb
-				ret
+				ret			
 ###
 ###
 ### END CLIP
@@ -766,98 +703,98 @@ perspectivetransform:
 		call copypoint
 		add eax, 3
 		push eax
-
+		
 		#Superposition.  First, do x1 and z1, then do y1 and z1.
 		mov eax, [point]
 		mov ebx, [point+2]
 		mov ecx, 0
 		mov edx, PERSPECTIVE
 		mov eex, 0
-
+		
 		call binarySubdivide
-
+		
 		add eax, 80
 		mov [triangle+1], eax
-
+		
 		#Superposition.  First, do x1 and z1, then do y1 and z1.
 		mov eax, [point+1]
 		mov ebx, [point+2]
 		mov ecx, 0
 		mov edx, PERSPECTIVE
 		mov eex, 0
-
+		
 		call binarySubdivide
-
+		
 		add eax, 60
 		mov [triangle+2], eax
-
+	
 	###Point 2
-
+	
 		pop eax
 		call copypoint
 		add eax, 3
 		push eax
-
+		
 		#Superposition.  First, do x1 and z1, then do y1 and z1.
 		mov eax, [point]
 		mov ebx, [point+2]
 		mov ecx, 0
 		mov edx, PERSPECTIVE
 		mov eex, 0
-
+		
 		call binarySubdivide
-
+		
 		add eax, 80
 		mov [triangle+3], eax
-
+		
 		#Superposition.  First, do x1 and z1, then do y1 and z1.
 		mov eax, [point+1]
 		mov ebx, [point+2]
 		mov ecx, 0
 		mov edx, PERSPECTIVE
 		mov eex, 0
-
+		
 		call binarySubdivide
-
+		
 		add eax, 60
 		mov [triangle+4], eax
-
+		
 	###Point 3
-
+	
 		pop eax
 		call copypoint
 		add eax, 3
-
+		
 		#Superposition.  First, do x1 and z1, then do y1 and z1.
 		mov eax, [point]
 		mov ebx, [point+2]
 		mov ecx, 0
 		mov edx, PERSPECTIVE
 		mov eex, 0
-
+		
 		call binarySubdivide
-
+		
 		add eax, 80
 		mov [triangle+5], eax
-
+		
 		#Superposition.  First, do x1 and z1, then do y1 and z1.
 		mov eax, [point+1]
 		mov ebx, [point+2]
 		mov ecx, 0
 		mov edx, PERSPECTIVE
 		mov eex, 0
-
+		
 		call binarySubdivide
-
+		
 		add eax, 60
 		mov [triangle+6], eax
-
+	
 	mov eax, triangle
-
+	
 	mov FP, 0xbcde
 	call clip
 	mov FP, 0xedcb
-
+	
 	###Need to decide on a way to use the outgoing information.  Probably just pump it straight through to clip/rasterize.
 	###Need to know incoming data format.
 
@@ -875,41 +812,41 @@ ret
 ### eax = x1, ebx = y1, ecx = x2, edx = y2, eex = y-value of intersection.  return = x-value of intersection. Return is put into eax.
 ### Note - x and y can be switched to flip axes
 
-binarySubdivide:
+binarySubdivide:		
 	mov FP, 0xbbbb
 	### Find lowest point (most negative y) to start with.
 		jge edx, ebx, ebxislowest
 			mov efx, ebx
 			mov ebx, edx
 			mov edx, efx
-
+			
 			mov efx, eax
 			mov eax, ecx
 			mov ecx, efx
 		ebxislowest:
-
+		
 	### Set up difference outside loop. efx is y difference.  egx is x difference.
 			mov efx, edx #efx = y1
 			sub efx, ebx #efx = y1 - y2
-
+			
 			mov egx, ecx #eax = x1
 			sub egx, eax #egx = x1-x2
-
+			
 		###efx is guaranteed pos
-
+			
 		###Must ensure egx is positive.
 			jge egx, 0, egxpositive
 				not egx, egx
 				add egx, 1
 				j binarysubdivideloop2
 			egxpositive:
-
+		
 		jne edx, eex, precheckedx
 			mov FP, 0xacac
 			mov eax, ecx
 			ret
 		precheckedx:
-
+		
 	binarysubdivideloop1:
 		#First divide guess value by two.
 		je egx, 1, dontround1
@@ -927,7 +864,7 @@ binarySubdivide:
 				mov FP, 0xacac
 				ret
 			binarySubdividenotdone1:
-
+		
 		# If y1 < eex
 			jge ebx, eex, y1belowlimit1
 				add ebx, efx #ebx = y1 + (y1-y2)/2 = new y1.
@@ -937,9 +874,9 @@ binarySubdivide:
 		# If y1 > eex
 				sub ebx, efx #ebx = y1 - (y1-y2)/2 = new y1.
 				sub eax, egx #eax = x1 - (x1-x2)/2 = new x1.
-
+		
 		j binarysubdivideloop1
-
+		
 	binarysubdivideloop2:
 		#First divide guess value by two.
 		je egx, 1, dontround2
@@ -957,7 +894,7 @@ binarySubdivide:
 				mov FP, 0xacac
 				ret
 			binarySubdividenotdone2:
-
+		
 		# If y1 < eex
 			jge ebx, eex, y1belowlimit2
 				add ebx, efx #ebx = y1 + (y1-y2)/2 = new y1.
@@ -967,9 +904,9 @@ binarySubdivide:
 		# If y1 > eex
 				sub ebx, efx #ebx = y1 - (y1-y2)/2 = new y1.
 				add eax, egx #eax = x1 - (x1-x2)/2 = new x1.
-
+		
 		j binarysubdivideloop2
-
+		
 ###
 ###
 ### END BINARY SUBDIVIDE
@@ -986,7 +923,7 @@ copyTriangle:
 	mov FP, 0xafaf
 	push ebx
 	push eax
-
+	
 	mov ebx, [eax]
 	mov [triangle], ebx
 	incr eax
@@ -1007,7 +944,7 @@ copyTriangle:
 	incr eax
 	mov ebx, [eax]
 	mov [triangle+6], ebx
-
+	
 	pop eax
 	pop ebx
 	#mov FP, 0xabfa
@@ -1018,7 +955,7 @@ copypoint:
 	mov FP, 0xcbcb
 	push ebx
 	push eax
-
+	
 	mov ebx, [eax]
 	mov [point], ebx
 	incr eax
@@ -1027,7 +964,7 @@ copypoint:
 	incr eax
 	mov ebx, [eax]
 	mov [point+2], ebx
-
+	
 	pop eax
 	pop ebx
 ret
@@ -1082,36 +1019,36 @@ jne temp2, eax, notthesamey
 	mov temp2, [triangle]
 	or temp1, temp2
 	mov [VGA], temp1
-
+	
 	mov temp1, [triangle+1]
 	mov temp2, [triangle+3]
 	mov eax, [triangle+5]
-
+	
 	jl temp1, temp2, temp1smallerysame
 		mov temp1, temp2
 	temp1smallerysame:
-
+	
 	jl temp1, eax, temp1smallerysame2
 		mov temp1, eax
 	temp1smallerysame2:
-
+	
 	mov ebx, [triangle+1]
 	mov temp2, [triangle+3]
 	mov eax, [triangle+5]
-
+	
 	jg ebx, temp2, ebxbiggerysame1
 		mov ebx, temp2
 	ebxbiggerysame1:
-
+	
 	jg ebx, eax, ebxbiggerysame2
 		mov ebx, eax
 	ebxbiggerysame2:
-
+	
 	lsh temp1, 8
 	or temp1, ebx
 	mov [VGA], temp1
 	ret
-
+	
 notthesamey:
 
 cmp temp1, temp2
@@ -1224,7 +1161,7 @@ jne y3cmp
 	#y2 == yvalright + y1.
 	mov temp1, [triangle+3] #temp1 = xrefleft = x2
 	mov ebx, [triangle+5] #Move x3 into ebx
-	sub ebx, temp1 #ebx = xdifleft = x3 - xref = x3 - x2.
+	sub ebx, temp1 #ebx = xdifleft = x3 - xref = x3 - x2.	
 	mov edx, [triangle+6] #edx = y3
 	mov eex, [triangle+4] #eex = y2
 	sub edx, eex #edx = y3 - y2 = ydifleft
@@ -1232,12 +1169,12 @@ jne y3cmp
 	add edx, %10
 	mov edx, [edx] #edx = 1/ydifleft
 	mov ymax, [triangle+6]
-
+	
 	#Check for flat buns
 	mov %10, [triangle+4]
 	cmp %10, ymax
 	je flatbuns
-
+	
 	mov %10, [triangle+2]
 	sub ymax, %10
 	mov yvalleft, 0
@@ -1412,7 +1349,7 @@ decr eax
 ###
 ### NEW DRAW METHOD WITH MIDtriangle
 ###
-#ecx holds prev L/R value.  eax holds current y-value. edx holds current L/R value.  eex holds next L/R y-value.
+#ecx holds prev L/R value.  eax holds current y-value. edx holds current L/R value.  eex holds next L/R y-value.   
 FillLoop:
 mov ebx, eax #Copy eax as temp into ebx.
 lsh ebx, 3
@@ -1422,7 +1359,7 @@ or ebx, %10
 	VGAfull9:
 		mov ecx, [VGA]
 	je ecx, 1, VGAfull9
-
+	
 	mov [VGA], ebx
 
 mov ecx, edx
@@ -1831,7 +1768,7 @@ setup_rotate:
 	mov %0, %8	# generate and save sin
 	call sin
 	mov %1, %0
-	mov %0, 0x4000	# fill matrix. this is 1.0
+	mov %0, 0x4000	# fill matrix. this is 1.0 
 	mov [rotation_matrix_x], %0		# 1.0
 	mov %0, 0
 	mov [rotation_matrix_x+1], %0	# 0
@@ -1936,7 +1873,7 @@ matrix_multiply:
 		matmulloop2:
 		# get two elements
 		mov %3, [%1]
-		mov %4, [%0]
+		mov %4, [%0]	
 		fmul %3, %4				# multuply
 		# store in accumulator
 		add %5, %3
@@ -1968,7 +1905,7 @@ matrix_multiply:
 	pop %4
 	pop %3
 	ret
-
+	
 ### DRAW TRIANGLES
 ###
 ### Expects a pointer to a triangle list in %6
@@ -1992,12 +1929,12 @@ drawtriangles:
 	mov %0, %6
 	mov %1, [%6] #%1 is size in triangle count.
 	mov %2, 1 #%2 is loop counter.
-
+	
 	mov HIGH, 0xffff
-
+	
 	mov FP, [%0]
 	incr %0
-
+	
 	checktriangles:
 	mov FP, [%0]
 	incr %0
@@ -2019,30 +1956,30 @@ drawtriangles:
 	incr %0
 	mov FP, [%0]
 	incr %0
-
+	
 	je %2, %1, endchecktriangles
-
+	
 	incr %2
 	j checktriangles
-
+	
 	endchecktriangles:
-
-
+	
+	
 	mov %0, %6
 	mov %1, [%6] #%1 is size in triangle count.
-
+	
 	incr %0 #0 points to color1 now.
 	mov %2, 1 #%2 is loop counter.
-
+	
 	drawtriangleloop:
-
+	
 	call zclip
 	incr %2
 	jg %2, %1, drawtrianglecleanup
 	add %0, 10
-
+	
 	j drawtriangleloop
-
+	
 	drawtrianglecleanup:
 
 	pop FP
@@ -2057,13 +1994,60 @@ drawtriangles:
 	pop %2
 	pop %1
 	pop %0
-
+	
 ret
 ###
 ###
 ### END DRAW TRIANGLES
 ###
 ###
+
+#	Translate model (add entity location to all points in model).
+# take a model in %6
+translate_model20:
+	push %0
+	push %1
+	push %2
+	push %4
+
+	# translate tank
+	sub %SP, 3				# make temp point
+	mov %0, %SP
+	mov %1, [subtract35x]			# copy in AI tank translation (position)
+	mov %2, 0		# offest by camera pos
+	sub %1, %2
+	mov [%0], %1
+	incr %0
+	mov %1, 0
+	mov [%0], %1
+	incr %0
+	mov %1, [subtract35z]			# y = z, mind = blown
+	mov %2, 0		# offest by camera pos
+	sub %1, %2
+	mov [%0], %1
+	sub %0, 2				# restore pointer
+	mov %4, [%6]			# get the size of the tank in triangles
+	mov %1, %6				# pointer to modifiable tank
+	incr %1					# skip size field in tank
+	translatetankloop20:		# loop that translates tank points
+	incr %1					# skip color
+	call vector_add
+	add %1, 3				# move to next point
+	call vector_add
+	add %1, 3				# move to next point
+	call vector_add
+	add %1, 3				# move to next triangle
+	decr %4					# done rotating one triangle
+	# check if loop again
+	jne %4, 0, translatetankloop20
+	# done with tank, remove temp storage on stack
+	add %SP, 3
+
+	pop %4
+	pop %2
+	pop %1
+	pop %0
+	ret
 
 #	Translate model (add entity location to all points in model).
 # take a model in %6
@@ -2178,13 +2162,13 @@ zclip:
 	jge ebx, 0, safepoint2
 		ret
 	safepoint2:
-
+	
 	add eax, 3
 	mov ebx, [eax]
 	jge ebx, 0, safepoint3
 		ret
 	safepoint3:
-
+	
 	###Triangle is entirely in positive z. Safe to draw.
 	mov eax, %0
 	call perspectivetransform
@@ -2273,21 +2257,21 @@ jonsmatrixmult:
 
 	mov %2, %0
 	mov %3, %1
-
+	
 	mov %4, [%2]
 	incr %2
 	mov %5, [%3]
 	incr %3
-
+	
 	fmul %4, %5
 	mov %6, %4
-
-
+	
+	
 	mov %4, [%2]
 	incr %2
 	mov %5, [%3]
 	incr %3
-
+	
 	fmul %4, %5
 	add %6, %4
 
@@ -2295,28 +2279,28 @@ jonsmatrixmult:
 	incr %2
 	mov %5, [%3]
 	incr %3
-
-	fmul %4, %5
+	
+	fmul %4, %5	
 	add %6, %4
-
+	
 	###6 now holds first result value
 	mov [matpoint], %6
 	mov %3, %1
-
+	
 	mov %4, [%2]
 	incr %2
 	mov %5, [%3]
 	incr %3
-
+	
 	fmul %4, %5
 	mov %6, %4
-
-
+	
+	
 	mov %4, [%2]
 	incr %2
 	mov %5, [%3]
 	incr %3
-
+	
 	fmul %4, %5
 	add %6, %4
 
@@ -2324,28 +2308,28 @@ jonsmatrixmult:
 	incr %2
 	mov %5, [%3]
 	incr %3
-
-	fmul %4, %5
+	
+	fmul %4, %5	
 	add %6, %4
-
+	
 	###6 now holds second result value
 	mov [matpoint+1], %6
 	mov %3, %1
-
+	
 	mov %4, [%2]
 	incr %2
 	mov %5, [%3]
 	incr %3
-
+	
 	fmul %4, %5
 	mov %6, %4
-
-
+	
+	
 	mov %4, [%2]
 	incr %2
 	mov %5, [%3]
 	incr %3
-
+	
 	fmul %4, %5
 	add %6, %4
 
@@ -2353,14 +2337,14 @@ jonsmatrixmult:
 	incr %2
 	mov %5, [%3]
 	incr %3
-
-	fmul %4, %5
+	
+	fmul %4, %5	
 	add %6, %4
-
+	
 	###6 now holds third result value
 	mov [matpoint+2], %6
-
-	ret
+	
+	ret 
 
 ret
 ###
@@ -2631,564 +2615,146 @@ slopes:
 
 0xFFFF
 
-tank_model:
-26
-# Face 0
-1 #color
--50 #-
-0
--80
--84 #-
--70
--130
-85 #-
--70
--130
-1 #color
--50 #-
-0
--80
-85 #-
--70
--130
-50 #-
-0
--80
-# Face 1
-2 #color
-85 #-
--70
--130
--84 #-
--70
--130
--85 #-
--70
-114
-2 #color
-85 #-
--70
--130
--85 #-
--70
-114
-84 #-
--70
-114
-# Face 2
-1 #color
--84 #-
--70
--130
--50 #-
-0
--80
--50 #-
-0
-64
-1 #color
--84 #-
--70
--130
--50 #-
-0
-64
--85 #-
--70
-114
-# Face 3
-2 #color
-50 #-
-0
--80
-85 #-
--70
--130
-84 #-
--70
-114
-2 #color
-50 #-
-0
--80
-84 #-
--70
-114
-50 #-
-0
-64
-# Face 4
-3 #color
-84 #-
--70
-114
--85 #-
--70
-114
--50 #-
-0
-64
-3 #color
-84 #-
--70
-114
--50 #-
-0
-64
-50 #-
-0
-64
-# Face 5
-4 #color
-25 #-
--120
--44
-39 #-
--70
--64
--39 #-
--70
--64
-4 #color
-25 #-
--120
--44
--39 #-
--70
--64
--25 #-
--120
--44
-# Face 6
-3 #color
-25 #-
--120
--44
--25 #-
--120
--44
--25 #-
--120
-28
-3 #color
-25 #-
--120
--44
--25 #-
--120
-28
-25 #-
--120
-28
-# Face 7
-4 #color
--25 #-
--120
--44
--39 #-
--70
--64
--39 #-
--70
-48
-4 #color
--25 #-
--120
--44
--39 #-
--70
-48
--25 #-
--120
-28
-# Face 8
-1 #color
-39 #-
--70
--64
-25 #-
--120
--44
-25 #-
--120
-28
-1 #color
-39 #-
--70
--64
-25 #-
--120
-28
-39 #-
--70
-48
-# Face 9
-1 #color
-25 #-
--120
-28
--25 #-
--120
-28
--39 #-
--70
-48
-1 #color
-25 #-
--120
-28
--39 #-
--70
-48
-39 #-
--70
-48
-# Face 10
-1 #color
-0 #-
--110
-28
--14 #-
--96
-28
--14 #-
--96
-114
-1 #color
-0 #-
--110
-28
--14 #-
--96
-114
-0 #-
--110
-114
-# Face 11
-1 #color
-0 #-
--110
-28
-14 #-
--96
-28
-14 #-
--96
-114
-1 #color
-0 #-
--110
-28
-14 #-
--96
-114
-0 #-
--110
-114
-# Face 12
-1 #color
--14 #-
--96
-28
-14 #-
--96
-28
-14 #-
--96
-114
-1 #color
--14 #-
--96
-28
-14 #-
--96
-114
--14 #-
--96
-114
+cube:
+3
 
-tank_model2:
-26
-# Face 0
-1 #color
--50 #-
-0
--80
--84 #-
--70
--130
-85 #-
--70
--130
-1 #color
--50 #-
-0
--80
-85 #-
--70
--130
-50 #-
-0
--80
-# Face 1
-2 #color
-85 #-
--70
--130
--84 #-
--70
--130
--85 #-
--70
-114
-2 #color
-85 #-
--70
--130
--85 #-
--70
-114
-84 #-
--70
-114
-# Face 2
-1 #color
--84 #-
--70
--130
--50 #-
-0
--80
--50 #-
-0
-64
-1 #color
--84 #-
--70
--130
--50 #-
-0
-64
--85 #-
--70
-114
-# Face 3
-2 #color
-50 #-
-0
--80
-85 #-
--70
--130
-84 #-
--70
-114
-2 #color
-50 #-
-0
--80
-84 #-
--70
-114
-50 #-
-0
-64
-# Face 4
-3 #color
-84 #-
--70
-114
--85 #-
--70
-114
--50 #-
-0
-64
-3 #color
-84 #-
--70
-114
--50 #-
-0
-64
-50 #-
-0
-64
-# Face 5
-4 #color
-25 #-
--120
--44
-39 #-
--70
--64
--39 #-
--70
--64
-4 #color
-25 #-
--120
--44
--39 #-
--70
--64
--25 #-
--120
--44
-# Face 6
-3 #color
-25 #-
--120
--44
--25 #-
--120
--44
--25 #-
--120
-28
-3 #color
-25 #-
--120
--44
--25 #-
--120
-28
-25 #-
--120
-28
-# Face 7
-4 #color
--25 #-
--120
--44
--39 #-
--70
--64
--39 #-
--70
-48
-4 #color
--25 #-
--120
--44
--39 #-
--70
-48
--25 #-
--120
-28
-# Face 8
-1 #color
-39 #-
--70
--64
-25 #-
--120
--44
-25 #-
--120
-28
-1 #color
-39 #-
--70
--64
-25 #-
--120
-28
-39 #-
--70
-48
-# Face 9
-1 #color
-25 #-
--120
-28
--25 #-
--120
-28
--39 #-
--70
-48
-1 #color
-25 #-
--120
-28
--39 #-
--70
-48
-39 #-
--70
-48
-# Face 10
-1 #color
-0 #-
--110
-28
--14 #-
--96
-28
--14 #-
--96
-114
-1 #color
-0 #-
--110
-28
--14 #-
--96
-114
-0 #-
--110
-114
-# Face 11
-1 #color
-0 #-
--110
-28
-14 #-
--96
-28
-14 #-
--96
-114
-1 #color
-0 #-
--110
-28
-14 #-
--96
-114
-0 #-
--110
-114
-# Face 12
-1 #color
--14 #-
--96
-28
-14 #-
--96
-28
-14 #-
--96
-114
-1 #color
--14 #-
--96
-28
-14 #-
--96
-114
--14 #-
--96
-114
-
-
-translate_x:
+#bot
 1
 
-translate_z:
+-50
+50
 0
+
+0
+50
+50
+
+50
+50
+0
+
+#left
+2
+
+-50
+50
+0
+
+0
+50
+50
+
+0
+-50
+25
+
+#right
+3
+
+50
+50
+0
+
+0
+50
+50
+
+0
+-50
+25
+
+#front
+#4
+
+#50
+#50
+#0
+
+#-50
+#50
+#0
+
+#0
+#-50
+#25
+
+
+cube2:
+4
+
+#bot
+1
+
+-50
+50
+0
+
+0
+50
+50
+
+50
+50
+0
+
+#left
+2
+
+-50
+50
+0
+
+0
+50
+50
+
+0
+-50
+25
+
+#right
+3
+
+50
+50
+0
+
+0
+50
+50
+
+0
+-50
+25
+
+#front
+4
+
+50
+50
+0
+
+-50
+50
+0
+
+0
+-50
+25
+
+
+AI_X:
+0
+
+AI_Y:
+35
+
+
+subtract35x:
+0
+
+subtract35z:
+-35
 
 twotriangles:
 2
@@ -3226,6 +2792,15 @@ rotation_matrix_x:
 0
 0
 0
+0
+0
+0
+0
+0
+0
+0
+0
+0
 
 
 0xFFFF
@@ -3240,7 +2815,15 @@ rotation_matrix_y:
 0
 0
 0
-
+0
+0
+0
+0
+0
+0
+0
+0
+0
 
 0xffff
 0xffff
