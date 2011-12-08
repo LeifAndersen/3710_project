@@ -1,8 +1,7 @@
 #
 # RASTERIZE
 #
-# Takes in pointer to a triangle: Color + 3 screen coordinates (0 to 159 horizontal, 0 to 119 vertical, start at top, work down).
-#
+# Takes in pointer to a triangle: Color + 3 screen coordinates (0 to 159 horizontal, 0 to 119 vertical, start at top, work down).  #
 #
 # Writes lines out to PRAM.
 
@@ -86,7 +85,62 @@ mov [VGA], eax
 mov eax, 0xf
 call pause
 
-call movepoint2 #This will add motion to the triangle to test various different weird triangles.
+# call movepoint2 #This will add motion to the triangle to test various different weird triangles.
+
+# TODO LEIF
+# Move by keyboard input
+
+push %0
+push %1
+push %2
+push %3
+push %4
+
+mov %0, [UP_KEY]
+mov %1, [DOWN_KEY]
+mov %3, [LEFT_KEY]
+mov %2, [RIGHT_KEY]
+
+sub %0, %1
+sub %2, %3
+
+	# mov %4, [triangle+1]
+	# add %4, %2
+	# mov [triangle+1], %4
+
+	mov %4, [triangle+3]
+	add %4, %2
+	mov [triangle+3], %4
+
+	# mov %4, [triangle+5]
+	# add %4, %2
+	# mov [triangle+5], %4
+
+	# mov %4, [triangle+2]
+	# add %4, %0
+	# mov [triangle+2], %4
+
+	mov %4, [triangle+4]
+	add %4, %0
+	mov [triangle+4], %4
+
+	# mov %4, [triangle+6]
+	# add %4, %0
+	# mov [triangle+6], %4
+
+add %0, %2
+je %0, 0, noInput
+	mov [LCD], %0
+	mov [UP_KEY], %0
+noInput:
+
+pop %4
+pop %3
+pop %2
+pop %1
+pop %0
+
+# TODO LEIF
 
 j infinite2
 
