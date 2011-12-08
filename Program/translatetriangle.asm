@@ -41,14 +41,14 @@
 init:
 	mov SP, STACK_TOP
 	mov FP, SP
-	mov %14, 0				# this is the angle of the cube
-	mov %9, 0				# translation x amount
-	mov %8, 15				# translation z amount
-	mov %3, 1				# increment amount
+	mov %14, 0					# this is the angle of the cube
+	mov %14, 0					# this is the angle of the cube
+	mov %9, 0					# translation x amount
+	mov %8, 15					# translation z amount
+	mov %3, 1					# increment amount
 	call main
 
 main:
-
 
 	jge %5, 6, resetBackColor
 		mov %5, 7
@@ -69,6 +69,8 @@ main:
 
 	call clearbuffer
 
+	j basic
+
 	# move model around numerically
 	jne %9, 20, keepgoingright
 	mov %3, -1
@@ -77,24 +79,26 @@ main:
 	mov %3, 1
 	keepgoingleft:
 
+	basic:
+
 	add %9, %3
 
 	###Properly formatted data
-	mov %0, tank_model
-	mov %1, tank_model2
-	mov %2, [tank_model]
+	mov %0, tetra
+	mov %1, tetra2
+	mov %2, [tetra]
 	mov %2, 10
 	mov %2, %LOW
 	add %2, 1				# get proper size
 	call memcpy
 
-	mov %6, tank_model2
+	mov %6, tetra2
 
-	call rotate_model
+	#call rotate_model
 
 	mov [translate_x], %9
 
-	mov [translate_z], %8
+	#mov [translate_z], %8
 
 	call translate_model
 
@@ -119,53 +123,6 @@ main:
 	mov [LCD], FP
 
 	j main
-
-#	rotate tank.  Model pointer comes in %6 and rotation comes in %14
-rotate_model:
-	push %0
-	push %1
-	push %2
-	push %3
-
-	mov %1, %14				# get the rotation for the tank
-	mov %0, 0				# other angle is 0
-	call setup_rotate
-	mov %4, [%6]			# get the size of the tank in triangles
-	sub %SP, 9				# make room for triangle to rotate
-	mov %1, %SP				# top of the temp triangle (first point)
-	mov %0, %6				# pointer to modifiable model
-	incr %0					# skip size field in model
-	rotatetankloop:			# loop that rotates tank points
-	incr %0					# skip color
-	call rotate_point
-	add %0, 3				# move to next point in triangle
-	add %1, 3
-	call rotate_point
-	add %0, 3				# move to next point in triangle
-	add %1, 3
-	call rotate_point
-	mov %2, 9
-	sub %0, 6
-	sub %1, 6
-	mov %3, %0
-	mov %0, %1
-	mov %1, %3
-	call memcpy				# copy rotated triangle back into tank
-	mov %3, %1
-	mov %1, %0
-	mov %0, %3
-	add %0, 9				# go to next triangle
-	decr %4					# done rotating one triangle
-	# check if loop again
-	jne %4, 0, rotatetankloop
-	# done with tank, remove temp storage on stack
-	add %SP, 9
-
-	pop %3
-	pop %2
-	pop %1
-	pop %0
-	ret
 
 # copy memory from [%0], to [%1] of size in %2.
 # preserves args
@@ -2067,6 +2024,53 @@ ret
 
 #	Translate model (add entity location to all points in model).
 # take a model in %6
+translate_model20:
+	push %0
+	push %1
+	push %2
+	push %4
+
+	# translate tank
+	sub %SP, 3				# make temp point
+	mov %0, %SP
+	mov %1, [subtract35x]			# copy in AI tank translation (position)
+	mov %2, 0		# offest by camera pos
+	sub %1, %2
+	mov [%0], %1
+	incr %0
+	mov %1, 0
+	mov [%0], %1
+	incr %0
+	mov %1, [subtract35z]			# y = z, mind = blown
+	mov %2, 0		# offest by camera pos
+	sub %1, %2
+	mov [%0], %1
+	sub %0, 2				# restore pointer
+	mov %4, [%6]			# get the size of the tank in triangles
+	mov %1, %6				# pointer to modifiable tank
+	incr %1					# skip size field in tank
+	translatetankloop20:		# loop that translates tank points
+	incr %1					# skip color
+	call vector_add
+	add %1, 3				# move to next point
+	call vector_add
+	add %1, 3				# move to next point
+	call vector_add
+	add %1, 3				# move to next triangle
+	decr %4					# done rotating one triangle
+	# check if loop again
+	jne %4, 0, translatetankloop20
+	# done with tank, remove temp storage on stack
+	add %SP, 3
+
+	pop %4
+	pop %2
+	pop %1
+	pop %0
+	ret
+
+#	Translate model (add entity location to all points in model).
+# take a model in %6
 translate_model:
 	push %0
 	push %1
@@ -2631,563 +2635,145 @@ slopes:
 
 0xFFFF
 
-tank_model:
-26
-# Face 0
-1 #color
--50 #-
-0
--80
--84 #-
--70
--130
-85 #-
--70
--130
-1 #color
--50 #-
-0
--80
-85 #-
--70
--130
-50 #-
-0
--80
-# Face 1
-2 #color
-85 #-
--70
--130
--84 #-
--70
--130
--85 #-
--70
-114
-2 #color
-85 #-
--70
--130
--85 #-
--70
-114
-84 #-
--70
-114
-# Face 2
-1 #color
--84 #-
--70
--130
--50 #-
-0
--80
--50 #-
-0
-64
-1 #color
--84 #-
--70
--130
--50 #-
-0
-64
--85 #-
--70
-114
-# Face 3
-2 #color
-50 #-
-0
--80
-85 #-
--70
--130
-84 #-
--70
-114
-2 #color
-50 #-
-0
--80
-84 #-
--70
-114
-50 #-
-0
-64
-# Face 4
-3 #color
-84 #-
--70
-114
--85 #-
--70
-114
--50 #-
-0
-64
-3 #color
-84 #-
--70
-114
--50 #-
-0
-64
-50 #-
-0
-64
-# Face 5
-4 #color
-25 #-
--120
--44
-39 #-
--70
--64
--39 #-
--70
--64
-4 #color
-25 #-
--120
--44
--39 #-
--70
--64
--25 #-
--120
--44
-# Face 6
-3 #color
-25 #-
--120
--44
--25 #-
--120
--44
--25 #-
--120
-28
-3 #color
-25 #-
--120
--44
--25 #-
--120
-28
-25 #-
--120
-28
-# Face 7
-4 #color
--25 #-
--120
--44
--39 #-
--70
--64
--39 #-
--70
-48
-4 #color
--25 #-
--120
--44
--39 #-
--70
-48
--25 #-
--120
-28
-# Face 8
-1 #color
-39 #-
--70
--64
-25 #-
--120
--44
-25 #-
--120
-28
-1 #color
-39 #-
--70
--64
-25 #-
--120
-28
-39 #-
--70
-48
-# Face 9
-1 #color
-25 #-
--120
-28
--25 #-
--120
-28
--39 #-
--70
-48
-1 #color
-25 #-
--120
-28
--39 #-
--70
-48
-39 #-
--70
-48
-# Face 10
-1 #color
-0 #-
--110
-28
--14 #-
--96
-28
--14 #-
--96
-114
-1 #color
-0 #-
--110
-28
--14 #-
--96
-114
-0 #-
--110
-114
-# Face 11
-1 #color
-0 #-
--110
-28
-14 #-
--96
-28
-14 #-
--96
-114
-1 #color
-0 #-
--110
-28
-14 #-
--96
-114
-0 #-
--110
-114
-# Face 12
-1 #color
--14 #-
--96
-28
-14 #-
--96
-28
-14 #-
--96
-114
-1 #color
--14 #-
--96
-28
-14 #-
--96
-114
--14 #-
--96
-114
+tetra:
+3
 
-tank_model2:
-26
-# Face 0
-1 #color
--50 #-
+#bot
+1
+
+-50
+50
 0
--80
--84 #-
--70
--130
-85 #-
--70
--130
-1 #color
--50 #-
+
 0
--80
-85 #-
--70
--130
-50 #-
+50
+50
+
+50
+50
 0
--80
-# Face 1
-2 #color
-85 #-
--70
--130
--84 #-
--70
--130
--85 #-
--70
-114
-2 #color
-85 #-
--70
--130
--85 #-
--70
-114
-84 #-
--70
-114
-# Face 2
-1 #color
--84 #-
--70
--130
--50 #-
+
+#left
+2
+
+-50
+50
 0
--80
--50 #-
+
 0
-64
-1 #color
--84 #-
--70
--130
--50 #-
+50
+50
+
 0
-64
--85 #-
--70
-114
-# Face 3
-2 #color
-50 #-
+-50
+25
+
+#right
+3
+
+50
+50
 0
--80
-85 #-
--70
--130
-84 #-
--70
-114
-2 #color
-50 #-
+
 0
--80
-84 #-
--70
-114
-50 #-
+50
+50
+
 0
-64
-# Face 4
-3 #color
-84 #-
--70
-114
--85 #-
--70
-114
--50 #-
+-50
+25
+
+#front
+#4
+
+#50
+#50
+#0
+
+#-50
+#50
+#0
+
+#0
+#-50
+#25
+
+
+tetra2:
+4
+
+#bot
+1
+
+-50
+50
 0
-64
-3 #color
-84 #-
--70
-114
--50 #-
+
 0
-64
-50 #-
+50
+50
+
+50
+50
 0
-64
-# Face 5
-4 #color
-25 #-
--120
--44
-39 #-
--70
--64
--39 #-
--70
--64
-4 #color
-25 #-
--120
--44
--39 #-
--70
--64
--25 #-
--120
--44
-# Face 6
-3 #color
-25 #-
--120
--44
--25 #-
--120
--44
--25 #-
--120
-28
-3 #color
-25 #-
--120
--44
--25 #-
--120
-28
-25 #-
--120
-28
-# Face 7
-4 #color
--25 #-
--120
--44
--39 #-
--70
--64
--39 #-
--70
-48
-4 #color
--25 #-
--120
--44
--39 #-
--70
-48
--25 #-
--120
-28
-# Face 8
-1 #color
-39 #-
--70
--64
-25 #-
--120
--44
-25 #-
--120
-28
-1 #color
-39 #-
--70
--64
-25 #-
--120
-28
-39 #-
--70
-48
-# Face 9
-1 #color
-25 #-
--120
-28
--25 #-
--120
-28
--39 #-
--70
-48
-1 #color
-25 #-
--120
-28
--39 #-
--70
-48
-39 #-
--70
-48
-# Face 10
-1 #color
-0 #-
--110
-28
--14 #-
--96
-28
--14 #-
--96
-114
-1 #color
-0 #-
--110
-28
--14 #-
--96
-114
-0 #-
--110
-114
-# Face 11
-1 #color
-0 #-
--110
-28
-14 #-
--96
-28
-14 #-
--96
-114
-1 #color
-0 #-
--110
-28
-14 #-
--96
-114
-0 #-
--110
-114
-# Face 12
-1 #color
--14 #-
--96
-28
-14 #-
--96
-28
-14 #-
--96
-114
-1 #color
--14 #-
--96
-28
-14 #-
--96
-114
--14 #-
--96
-114
+
+#left
+2
+
+-50
+50
+0
+
+0
+50
+50
+
+0
+-50
+25
+
+#right
+3
+
+50
+50
+0
+
+0
+50
+50
+
+0
+-50
+25
+
+#front
+4
+
+50
+50
+0
+
+-50
+50
+0
+
+0
+-50
+25
 
 
 translate_x:
 1
 
 translate_z:
+0
+
+
+subtract35x:
+-10
+
+subtract35z:
 0
 
 twotriangles:
@@ -3226,6 +2812,15 @@ rotation_matrix_x:
 0
 0
 0
+0
+0
+0
+0
+0
+0
+0
+0
+0
 
 
 0xFFFF
@@ -3240,7 +2835,15 @@ rotation_matrix_y:
 0
 0
 0
-
+0
+0
+0
+0
+0
+0
+0
+0
+0
 
 0xffff
 0xffff
