@@ -2076,7 +2076,7 @@ translate_model:
 	# translate tank
 	sub %SP, 3				# make temp point
 	mov %0, %SP
-	mov %1, [AI_X]			# copy in AI tank translation (position)
+	mov %1, [translate_x]			# copy in AI tank translation (position)
 	mov %2, 0		# offest by camera pos
 	sub %1, %2
 	mov [%0], %1
@@ -2084,7 +2084,7 @@ translate_model:
 	mov %1, 0
 	mov [%0], %1
 	incr %0
-	mov %1, [AI_Y]			# y = z, mind = blown
+	mov %1, [translate_z]			# y = z, mind = blown
 	mov %2, 0		# offest by camera pos
 	sub %1, %2
 	mov [%0], %1
