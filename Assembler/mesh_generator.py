@@ -7,7 +7,16 @@ def save(filepath):
     # Assume we're exporting the first mesh
     mesh = bpy.data.meshes[0]
 
-    file.write(str(2*len(mesh.faces)) + '\n')
+    k = 0
+
+    for i in range(len(mesh.faces)):
+        face = mesh.faces[i]
+        if len(face.vertices) == 4:
+            k+=2
+        else:
+            k+=1
+
+    file.write(str(k) + '\n')
 
     for i in range(len(mesh.faces)):
         face = mesh.faces[i]
