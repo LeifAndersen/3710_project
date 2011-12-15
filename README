@@ -1,0 +1,27 @@
+Dependencies:
+1.  Xilinx 12.2
+2.  Python 2.7
+
+To build the pyramid project:
+1.  Go to the root of the project
+2.  Run: python Assembler/pad Program/tetraslide.asm
+3.  Open Xilinx 12.2
+4.  Open project: CPU/CPU.xise
+5.  Synthesise/Generate bit file
+6.  Place on Board
+
+The structure of the repository is:
+CPU - Top level CPU module
+BaisCPU - A Simplified CPU for testing
+ALU - The ALU project
+Register - The register file
+Models - blend files for drawable models
+Assembler - Python scripts for assembly
+FlagRegister - A special register for the ALU
+Keyboard - The keyboard Controller
+VGA - The VGA controller
+Painter - The graphics hardware
+PrimativeBRAM - The block rams
+ALUZPostSynthesis - For debuggin
+MainMem  - An instationation of PrimativeBRam for the CPU to use.
+Program - Many assembly files that can be put on the board.  Many of them out of date and don't work.
