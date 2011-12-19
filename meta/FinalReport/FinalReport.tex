@@ -9,12 +9,26 @@
 \usepackage{colortbl}
 \usepackage[T1]{fontenc}
 \usepackage{longtable}
+\usepackage{enumerate}
 
 \title{Potato Group 3D Graphics}
 \author{Leif Andersen\\Daniel Blakemore\\Jon Parker}
 
 \begin{document}
-\maketitle
+
+\begin{titlepage}
+\begin{center}
+$ $\\
+%\maketitle
+\vspace{100 mm}
+\textsc{\Large Potato Group 3D Graphics}\\[2cm]
+Leif Andersen\\Daniel Blakemore\\Jon Parker
+\end{center}
+\end{titlepage}
+
+
+
+\pagebreak
 
 \begin{abstract}
 Our project consists of hardware and software that implements a three-dimensional (3D) graphics pipeline.  The hardware consists of a 25MHz CPU with VGA output.  Software for this processor is written in a custom 18-bit assembly language loosely based on Intel x86.  The software is a pipeline that uses fixed point and integer operations to move and draw models in three-space to a VGA monitor at 160x120 resolution.  Since 3D graphics are compute intensive, we also created specialized parallel-running hardware to improve drawing speeds.  Our final demonstration is of a 3D tetrahedron being translated across the screen.
@@ -31,7 +45,7 @@ Our CPU was designed as a general purpose processor featuring most of the basic 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=1.0\textwidth]{Figure1.png}
-	\caption{Draw Unit consisting of the PRAM, Painter, and Frame Buffer. VGA shown externally.}
+	\caption{CPU Top Level diagram}
 	\label{fig:CPU}
 \end{figure}
 
@@ -49,17 +63,13 @@ The main design goal of our control logic was simplicity.  With this in mind, we
 \subsection{Memory Controller}
 Our I/O is entirely memory mapped.  This simplifies reads and writes in code in exchange for some added complexity in the memory controller.  The controller sends any write data to all attached output devices (memory, LCD, DrawUnit) and then switches the write enable signal and the output data sent to the CPU based on the address of the access.  Memory mapped I/O is assigned to specific addresses (out of the range of the available memory) and memory accesses correspond to the address range 0x0000 to 0x2c00 (11 block rams).
 
-\subsection{The most quirky element of our CPU is the way in which we handled the structural hazards and unavoidable multi-cycle instructions like jumps, memory reads, calls, and returns.  The jumps and calls both use branch delay slots since program counter changes take an extra cycle to read the next instruction.  Returns and memory reads work more interestingly: control signals for the read (returns are reads) are forwarded to the next cycle and these control signals preempt control signals from the NOP in the delay slot so that register writes can be done properly. In figure \ref{fig:CPU}, the buffers labeled 12-14 are always controlled by the previous instruction because they send the values read from memory to their destinations.  }
+\subsection{Pipelining}
+The most quirky element of our CPU is the way in which we handled the structural hazards and unavoidable multi-cycle instructions like jumps, memory reads, calls, and returns.  The jumps and calls both use branch delay slots since program counter changes take an extra cycle to read the next instruction.  Returns and memory reads work more interestingly: control signals for the read (returns are reads) are forwarded to the next cycle and these control signals preempt control signals from the NOP in the delay slot so that register writes can be done properly. In figure \ref{fig:CPU}, the buffers labeled 12-14 are always controlled by the previous instruction because they send the values read from memory to their destinations.
 
 \section{IO}
 \subsection{Keyboard Controller}
-The keyboard controller is responsible for turning taking the player's movements and storing them to be used later.  We use PS/2 to take input form the keyboard.  The reason for this was because it was simple to connect a keyboard to the board requiring no wire wrapping or other manual wire connection.
-
-PS/2 sends data that is best interpreted with a shift register.  It has a clock designated as PS2\_CLK and a data line designated as PS2\_DATA.  Once per cycle of the clock, a new value is sent on the clock.  The first bit is always 0, followed by 8 data bits, a bit of parody, and one last bit to indicate the end of the package, which is a 1.  Thus, 11 bits are sent for every 8 bits of data.  Also, if there no data to be sent, the clock will not change \cite{ps2}.
-
-The keyboard controller is nothing more than a shift register connected to the PS/2 Clock.  Then, assuming on the data, it sets (or resets) a bit in a register for each key, which is:
-
-\begin{enumerate}
+The keyboard controller is responsible for taking the player's movements and storing them for later use. We use the PS/2 standard to take input from the keyboard. The PS/2 connection sends data that is best interpreted with a shift register. It has a clock designated as PS2\_CLK and a data line designated as PS2\_DATA. Once per cycle of the clock, a new value is sent on the data line. The first bit is always 0, followed by 8 data bits, a bit of parity, and one last bit, a 1, to indicate the end of the package. Thus, 11 bits are sent for every 8 bits of data. Also, if there is no data to be sent, the clock will not change \cite{ps2}. The keyboard controller is nothing more than a shift register connected to the PS/2 Clock. Then, based on the data, it sets (or resets) a bit in a register for each key, which is:
+\begin{enumerate}[i)]
 	\item Up
 	\item Down
 	\item Left
@@ -68,9 +78,7 @@ The keyboard controller is nothing more than a shift register connected to the P
 	\item B
 \end{enumerate}
 
-Finally, at ever tick of the CPU's clock, there is one register for each of these keys, and is incremented by 1 (and saturates at the max value).  Finally, there is a reset pin which will allow these count register to be reset to 0, that way the CPU can tell them that it has been read.
-
-This method is not scale able to a full keyboard, do to the hardware needed to have a register per key.  But in the case where we only need a few buttons to be kept, this is extremely useful as it allows us to move the player with respect to how long the player has pressed the button, rather than how long a cycle of the game takes.
+At every tick of the CPU's clock, if a key is marked as pressed, a corresponding counter for that key is incremented by 1 (and saturates at the max value). Finally, there is a reset pin which will allow these count registers to be reset to 0, that way the CPU can tell them that the count has been read. This method is not scalable to a full keyboard, due to the hardware needed to have a register per key. But, in the case where we only need a few buttons to be kept, this is extremely useful as it allows us to move the player with respect to how long the player has pressed the button, rather than how long a cycle of the game takes.
 
 \subsection{VGA Controller}
 The VGA Controller is responsible for outputting colors to a monitor.  The controller reads from a special set of memory called the frame buffer to determine what color should be written to each pixel.  The VGA Controller operates on a 25 MHz external clock and two internal clocks: vertical sync (vsync) and horizontal sync (hsync).  Vsync is the clock that determines when a new frame is drawn to the screen.  During each vsync cycle, all 640x480 pixels on the screen are drawn to.  Hsync determines when a single row of pixels is drawn.  During each hsync cycle, one row of 640 pixels is drawn.  Hsync goes positive 480 times for every one time vsync goes positive.
@@ -181,7 +189,7 @@ All of these move instructions allowed us to easily access memory and all work d
 \subsubsection{Game Loop}
 A video game consists of a single loop of events that happen over and over.  This loop is:
 
-\begin{enumerate}
+\begin{enumerate}[i)]
 	\item Take Input from the User.
 	\item Update the Game State.
 	\item Output the current state of the game to the user.
@@ -209,7 +217,7 @@ To move the player requires a bit of trigonometry.  The player has a forward and
 \subsubsection{AI}
 The AI needs to have several different states to make it look realistic.  They are:
 
-\begin{enumerate}
+\begin{enumerate}[i)]
 	\item Moving
 	\item Turning
 	\item Fireing
@@ -225,7 +233,7 @@ The Fireing phase happens when the AI has no bullet on the field.  Do to the sta
 \subsubsection{Overview of a Typical Floating Point 3D Pipeline}
 The goal of a 3D graphics pipeline is to take models represented in three-space, and draw them to a two-dimensional screen.  Models are represented as a set of triangles.  These models must be rotated, translated, flattened to the screen, and drawn to pixels.  In industry standard pipelines such as Direct3D and OpenGL, these operations are performed using floating point math because there are lots of slopes and trigonometric functions.  A simplified version of the OpenGL pipeline is as follows:
 
-\begin{enumerate}
+\begin{enumerate}[i)]
 \item Object Transformation
 
 Triangles are translated by simple vector addition, and rotated by multiplying each point of each triangle by a matrix with the format shown in figure \ref{fig:matrices}, where theta is the rotation angle around the subscripted axis.
@@ -392,7 +400,7 @@ I was mostly in charge of writing and maintaining control logic and the assemble
 I also wrote a few of the simple initial mathematical stages of the software pipeline including rotation, translation, and backface culling.
 
 \subsection{Leif Andersen}
-For hardware, I mainly worked on the Keyboard Controller.  I also worked on the register file with Daniel and ALU with Jon.  However both of these were relatively simple pieces of hardware.  I also helped Daniel design the control logic.
+For hardware, I mainly worked on the keyboard controller.  I also worked on the register file with Daniel and the ALU with Jon.  However both of these were relatively simple pieces of hardware.  I also helped Daniel design the control logic.
 
 For software I did a bit of work on the assembler and pre-processor.  I also did the entire game state and some of the integrating it into the graphics pipeline.  Even though we didn't actually demo the game itself, much of the logic in the game state did get used in the final demonstration of the rotating pyramid.  I also wrote a python script that takes a model made in blender \cite{blender}, and turns it into data that can be drawn with the graphics pipeline.
 
