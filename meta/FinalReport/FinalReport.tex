@@ -46,6 +46,24 @@ Our I/O is entirely memory mapped.  This simplifies reads and writes in code in 
 
 \section{IO}
 \subsection{Keyboard Controller}
+The keyboard controller is responsible for turning taking the player's movements and storing them to be used later.  We use PS/2 to take input form the keyboard.  The reason for this was because it was simple to connect a keyboard to the board requiring no wire wrapping or other manual wire connection.
+
+PS/2 sends data that is best interpreted with a shift register.  It has a clock designated as PS2\_CLK and a data line designated as PS2\_DATA.  Once per cycle of the clock, a new value is sent on the clock.  The first bit is always 0, followed by 8 data bits, a bit of parody, and one last bit to indicate the end of the package, which is a 1.  Thus, 11 bits are sent for every 8 bits of data.  Also, if there no data to be sent, the clock will not change.
+
+The keyboard controller is nothing more than a shift register connected to the PS/2 Clock.  Then, assuming on the data, it sets (or resets) a bit in a register for each key, which is:
+
+\begin{enumerate}
+	\item Up
+	\item Down
+	\item Left
+	\item Right
+	\item A
+	\item B
+\end{enumerate}
+
+Finally, at ever tick of the CPU's clock, there is one register for each of these keys, and is incremented by 1 (and saturates at the max value).  Finally, there is a reset pin which will allow these count register to be reset to 0, that way the CPU can tell them that it has been read.
+
+This method is not scale able to a full keyboard, do to the hardware needed to have a register per key.  But in the case where we only need a few buttons to be kept, this is extremely useful as it allows us to move the player with respect to how long the player has pressed the button, rather than how long a cycle of the game takes.
 
 \subsection{VGA Controller}
 The VGA Controller is responsible for outputting colors to a monitor.  The controller reads from a special set of memory called the frame buffer to determine what color should be written to each pixel.  The VGA Controller operates on a 25 MHz external clock and two internal clocks: vertical sync (vsync) and horizontal sync (hsync).  Vsync is the clock that determines when a new frame is drawn to the screen.  During each vsync cycle, all 640x480 pixels on the screen are drawn to.  Hsync determines when a single row of pixels is drawn.  During each hsync cycle, one row of 640 pixels is drawn.  Hsync goes positive 480 times for every one time vsync goes positive.
@@ -153,11 +171,52 @@ All of these move instructions allowed us to easily access memory and all work d
 
 \section{Software}
 \subsection{Game Model}
-%\XXX TODO
+\subsubsection{Game Loop}
+A video game consists of a single loop of events that happen over and over.  This loop is:
+
+\begin{enumerate}
+	\item Take Input from the User.
+	\item Update the Game State.
+	\item Output the current state of the game to the user.
+\end{enumerate}
+
+In this simplified game, taking input from the user is simply a task of seeing what keys have been pressed on they keyboard, and storing it into memory, to be used in the updating of the game state.
+
+The game state needs to update the player's position, as well as well as move the AI given a state, as well as the player's state.  Finally, simple collision detection of the player's bullets and the AI's bullet, as well as the Player and AI themselves, need to be done.  When there is a collision, the position, score, and lives of the player.  To be precise, when the player's bullet hits the AI, the player's score goes up, the bullet is removed from the field, and the AI is moved to some starting point.  Likewise, if the AI's bullet hits the player, the player needs to be moved to some starting point, the bullet needs to be removed, and the player's lives go down.  If the player hits the AI itself, nothing happens, they simply cannot move.
+
+\subsubsection{Memory Storage}
+A typical video game will create a dynamically expanding heap to store the data for the game.  This is useful because most games will have an undetermined number of AI players, thus space can be made for them at run time.  Making a dynamically expanding heap is outside of the scope of this project.  As such, space was made for a single AI player, and a single bullet for both the player and AI.  Each item is stored as a single $(X,Y)$ value pair, as well as a theta to say what direction it's travelling.
+
+There are other constants that are needed for the game, such as starting positions, and bullet velocity.  However, because these are unchanging constants, they can be placed into the game at assemble time using the preprocessor.
+
+\subsubsection{Movement}
+To move the player requires a bit of trigonometry.  The player has a forward and backwards button, as well as a turn right and turn left button.  However, the vales are stored as $(X,Y)$, and $\theta$.  Thus, it is easy to update the players direction, just simply add and subtract $\theta$ by the amount the player has held the turn right and left buttons.  However, to update $(X,Y)$, the following equations can be used:
+
+\begin{equation}
+	X_{new} = (Up-Down)\times \cos(\theta) + X_{old}
+\end{equation}
+\begin{equation}
+	Y_{new} = (Up-Down)\times \sin(\theta) + Y_{old}
+\end{equation}
+
+\subsubsection{AI}
+The AI needs to have several different states to make it look realistic.  They are:
+
+\begin{enumerate}
+	\item Moving
+	\item Turning
+	\item Fireing
+\end{enumerate}
+
+In the moving phase, the AI is moving in a particular direction which has been set to about where the player is.
+
+In the turning phase, the AI calculates the direction it needs to be in order to go to the player, and slowly turn there.  If this phase did not exist than the AI would appear to turn around in one spot instantly.  More complicated AIs should be capable of moving and turning at the same time.  In this case, we chose to have the AI do one or the other.
+
+The Fireing phase happens when the AI has no bullet on the field.  Do to the static heap size with space for one bullet per tank, the AI can only have one bullet on the field.  As such, when the bullet dies (time of existence has expired), the AI fires another bullet, which simply consists of setting the bullet's $(X,Y)$ and theta values to that of the AI.
 
 \subsection{Graphics Pipeline}
 \subsubsection{Overview of a Typical Floating Point 3D Pipeline}
-  The goal of a 3D graphics pipeline is to take models represented in three-space, and draw them to a two-dimensional screen.  Models are represented as a set of triangles.  These models must be rotated, translated, flattened to the screen, and drawn to pixels.  In industry standard pipelines such as Direct3D and OpenGL, these operations are performed using floating point math because there are lots of slopes and trigonometric functions.  A simplified version of the OpenGL pipeline is as follows:
+The goal of a 3D graphics pipeline is to take models represented in three-space, and draw them to a two-dimensional screen.  Models are represented as a set of triangles.  These models must be rotated, translated, flattened to the screen, and drawn to pixels.  In industry standard pipelines such as Direct3D and OpenGL, these operations are performed using floating point math because there are lots of slopes and trigonometric functions.  A simplified version of the OpenGL pipeline is as follows:
 
 \begin{enumerate}
 \item Object Transformation
@@ -304,8 +363,9 @@ Part of our design goals included having x86-like instructions such as PUSH, POP
 Our final solution was to increment and decrement the stack pointer whenever we popped or pushed, respectively.  This follows the x86 stack convention.
 
 \subsection{Keyboard Controller}
+The keyboard controller started out by using the PS/2 Clock for all of it's registers.  This created problems because the PS/2 Clock and CPU's clock are not synchronised, which created all sorts of timing issues.  The way we got around this was to plug all of the registers into the normal CPU clock, and then the PS/2 Clock into another register, and only change state when that register changes state.
 
-%\XXX TODO
+There was also a bug where only about every other button press was recognized by the keyboard controller.  We suspect this is related to how we interpreted the PS/2 spec.  However, this bug was never fixed.
  
 \subsection{Block Ram Usage}
 Since a 3d game takes a large code-space, a large heap for models, and a large stack for drawing those models, we designed our system to utilize all 20 available block rams on the Spartan3E.  Unfortunately, when asked for an 18 wide by 11264 tall (11*1024) ram, Xilinx ISE comes up with a frustrating optimization: it splits the ram into 18 separate 1 bit wide rams because that reduces the latency and area in LUTs.  Unfortunately, this changes what should be 11 block rams into using 18.  We figured out this was happening by carefully reading through the synthesis reports.  Our solution to this was instantiating 11 block rams, each 18 wide by 1024 tall, and then writing our own wiring scheme to interconnect them into one large 11264 tall module.
@@ -325,7 +385,9 @@ I was mostly in charge of writing and maintaining control logic and the assemble
 I also wrote a few of the simple initial mathematical stages of the software pipeline including rotation, translation, and backface culling.
 
 \subsection{Leif Andersen}
-%\XXX TODO
+For hardware, I mainly worked on the Keyboard Controller.  I also worked on the register file with Daniel and ALU with Jon.  However both of these were relatively simple pieces of hardware.  I also helped Daniel design the control logic.
+
+For software I did a bit of work on the assembler and pre-processor.  I also did the entire game state and some of the integrating it into the graphics pipeline.  Even though we didn't actually demo the game itself, much of the logic in the game state did get used in the final demonstration of the rotating pyramid.  I also wrote a python script that takes a model made in blender \cite{blender}, and turns it into data that can be drawn with the graphics pipeline.
 
 \subsection{Jon Parker}
 For hardware, I wrote the vga controller, draw unit, instantiated the DCM, and worked together with Leif on the ALU.  I also worked with Daniel to write the memory.  For software, I wrote rasterization, clipping, and perspective transform including helper functions such as a binary subdivide.  Also, using a tutorial by Paul Willoughby and another by Tyler Nichols, I set up our ISE project to generate the program files using a mem file instead of re-synthesizing the entire CPU.
@@ -336,10 +398,10 @@ For hardware, I wrote the vga controller, draw unit, instantiated the DCM, and w
 One bug that we would fix was a clipping error. When a triangle is exactly one pixel past the screen edge, it gets stretched all the way across the screen.  Another is that the binary subdivide can sometimes be off by a single pixel; while not clearly visible, it could still be improved upon.
 
 \subsection{Keyboard Controller}
-%\XXX TODO
+The keyboard controller had a few issues and bugs in it.  Namely that currently only one key can be pressed at a time, and that about half of the key presses are dropped.  After talking with Tyler Nichols, this seems to be a common problem with simple keyboard controllers, and a more robust one must be used to get all of the data.  In general, dropping every other key press is a terrible thing to happen.  However, it is not the worst thing to happen in this context, as the user will be holding down the key to move.  In a real game this is unacceptable as the player will need to make quick movements, but in this simple game, we believe that it would be acceptable.
 
 \subsection{Game Integration}
-%\XXX TODO
+The graphics pipeline did not get finished in time to be fully integrated into the game state.  Everything has been written, but there appears to be many bugs that still needs to removed.  Given a few more days, we believe we would have the game fully finished.
 
 \bibliographystyle{ieeetr}
 \bibliography{FinalReport}
