@@ -1,6 +1,10 @@
 \documentclass[onecolumn]{IEEEtran}
 \usepackage{float}
 \usepackage{graphicx}
+\usepackage{url}
+\usepackage{listing}
+\usepackage{amsmath}
+\usepackage{mathtools}
 
 \title{Potato Group 3D Graphics}
 \author{Leif Andersen\\Daniel Blakemore\\Jon Parker}
@@ -159,8 +163,7 @@ Triangles are translated by simple vector addition, and rotated by multiplying e
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=1.0\textwidth]{matrices.png}
-	\caption{Rotation Matrix. Source: %http://en.wikipedia.org/wiki/Perspective_transform
-	}
+	\caption{Rotation Matrix \cite{3dProjection}.}
 	\label{fig:matrices}
 \end{figure}
 
@@ -183,8 +186,7 @@ Triangles are now flattened with matrix operations of the format in \ref{fig:pro
 	%\includegraphics[width=1.0\textwidth]{projectionMat.png}
 	$$b_x = (d_x - e_x)(\frac{e_z}{d_z})$$
 	$$b_y = (d_y - e_y)(\frac{e_z}{d_z})$$
-	\caption{The matrix operations to perform a perspective transform. Source: %http://en.wikipedia.org/wiki/Perspective_transform
-	}
+	\caption{The matrix operations to perform a perspective transform \cite{3dProjection}.}
 	\label{fig:projectionMat}
 \end{figure}
 
@@ -200,8 +202,7 @@ The pixels bound by a triangle are filled in with the color of that triangle.  T
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.50\textwidth]{rasterization.png}
-	\caption{Scanline Algorithm. Source: %http://www.techfak.uni-bielefeld.de/ags/wbski/lehre/digiSA/WS0607/3DVRCG/Vorlesung/13.RT3DCGVR-vertex-2-fragment.pdf
-	}
+	\caption{Scanline Algorithm \cite{rasterizer}.}
 	\label{fig:rasterization}
 \end{figure}
 
@@ -336,6 +337,13 @@ One bug that we would fix was a clipping error. When a triangle is exactly one p
 \subsection{Game Integration}
 %\XXX TODO
 
-References [leif/jon]..l..
+\bibliographystyle{ieeetr}
+\bibliography{FinalReport}
+
+\appendix
+\begin{center}
+\chapter{A}
+\end{center}
+
 
 \end{document}
