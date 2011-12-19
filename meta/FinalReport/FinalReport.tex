@@ -5,6 +5,10 @@
 \usepackage{listing}
 \usepackage{amsmath}
 \usepackage{mathtools}
+\usepackage[final]{pdfpages}
+\usepackage{colortbl}
+\usepackage[T1]{fontenc}
+\usepackage{longtable}
 
 \title{Potato Group 3D Graphics}
 \author{Leif Andersen\\Daniel Blakemore\\Jon Parker}
@@ -345,5 +349,7 @@ One bug that we would fix was a clipping error. When a triangle is exactly one p
 \chapter{A}
 \end{center}
 
+%\input{appendixA}
+\includepdf[pages=-]{appendixA.pdf}
 
 \end{document}

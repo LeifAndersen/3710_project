@@ -1,0 +1,248 @@
+\documentclass[a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[latin1]{inputenc}
+\usepackage{colortbl}
+\begin{document}
+\def\colorrow{\rowcolor[gray]{0.75}}
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|}
+\hline
+Primary OP&RDest&ALUOP/ImmHi&Rsrc/ImmLo&&&&&&
+&&\\
+\hline
+\colorrow Name&Operands&15-12&11-8&7-4&3-0&&&&
+&&\\
+\hline
+INSTR&RDest, RSrc&0000&RDest&OPCODE&RSrc&&&&
+&&\\
+\hline
+\colorrow INSTRI&RDest, Imm&OPCODE&RDest&ImmHi&ImmLo&&&&
+&&\\
+\hline
+ADD&RDest, RDest&0000&RDest&0010&RSrc&&&&
+&&\\
+\hline
+\colorrow SUB&RDest, RDest&0000&RDest&0011&RSrc&&&&
+&&\\
+\hline
+AND&RDest, RDest&0000&RDest&0110&RSrc&&&&
+&&\\
+\hline
+\colorrow OR&RDest, RDest&0000&RDest&0111&RSrc&&&&
+&&\\
+\hline
+XOR&RDest, RDest&0000&RDest&1000&RSrc&&&&
+&&\\
+\hline
+\colorrow NOT&RDest, RDest&0000&RDest&1001&RSrc&&&&
+&&\\
+\hline
+LSH&RDest, RDest&0000&RDest&1010&RSrc&&&&
+&&\\
+\hline
+\colorrow RSH&RDest, RDest&0000&RDest&1011&RSrc&&&&
+&&\\
+\hline
+ARSH&RDest, RDest&0000&RDest&1100&RSrc&&&&
+&&\\
+\hline
+\colorrow MUL&RSrc2, RSrc&0000&RSrc2&1101&RSrc&&&&
+&&\\
+\hline
+FMUL&RDest, RSrc&0000&RDest&1110&RSrc&&&&
+&&\\
+\hline
+\colorrow MOVR&RDest, RSrc&0000&RDest&1111&RSrc&&&&
+&&\\
+\hline
+&&&&&&&&&
+&&\\
+\hline
+\colorrow &&&&&&&&&
+&&\\
+\hline
+Compares&&&&&&&&&
+&&\\
+\hline
+\colorrow CMP (A-B)&A, B&0000&A&0100&B&&&&
+&&\\
+\hline
+CMP (Imm-A)&A, Imm&0100&A&ImmHi&ImmLo&&&&
+&&\\
+\hline
+\colorrow CMPR (B-A)&B, A&0000&A&0101&B&&&&
+&&\\
+\hline
+CMPR (A-Imm)&Imm, A&0101&A&ImmHi&ImmLo&&&&
+&&\\
+\hline
+\colorrow &&&&&&&&&
+&&\\
+\hline
+&&&&&&&&&
+&&\\
+\hline
+\colorrow Primary OP&Data&OP&Address&&&&&&
+&&\\
+\hline
+Name&Operands&15-12&11-8&7-4&3-0&&&&
+&&\\
+\hline
+\colorrow MOVMR&RAddr, RDest&0001&RDest&0010&RAddr&&&&
+&&\\
+\hline
+MOVRM&RAddr, RSrc&0001&RSrc&0011&RAddr&&&&
+&&\\
+\hline
+\colorrow &&&&&&&&&
+&&\\
+\hline
+&&&&&&&&&
+&&\\
+\hline
+\colorrow OP&Imm&&&&&&&&
+&&\\
+\hline
+Name&Operands&17-14&13-0&&&&&&
+&&\\
+\hline
+\colorrow CALL&Imm Addr&0100&Imm&&&&&&
+&&\\
+\hline
+MOVMRI&Imm Addr&0101&Imm&&&&&&
+&&\\
+\hline
+\colorrow MOVRMI&Imm Addr&0110&Imm&&&&&&
+&&\\
+\hline
+RET&n/a&0111&n/a&&&&&&
+&&\\
+\hline
+\colorrow &&&&&&&&&
+&&\\
+\hline
+&&&&&&&&&
+&&\\
+\hline
+\colorrow OP&Imm&&&&&&&&
+&&\\
+\hline
+\end{tabular}
+\newline
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|}
+\hline
+Name&Operands&17-13&12-0&&&&&&
+&&\\
+\hline
+\colorrow JL&Imm Addr&10000&Imm&&&&&&
+&&\\
+\hline
+JLE&Imm Addr&10001&Imm&&&&&&
+&&\\
+\hline
+\colorrow JNE&Imm Addr&10010&Imm&&&&&&
+&&\\
+\hline
+JE&Imm Addr&10011&Imm&&&&&&
+&&\\
+\hline
+\colorrow J&Imm Addr&10100&Imm&&&&&&
+&&\\
+\hline
+JBE&Imm Addr&10101&Imm&&&&&&
+&&\\
+\hline
+\colorrow JB&Imm Addr&10110&Imm&&&&&&
+&&\\
+\hline
+&&&&&&&&&
+&&\\
+\hline
+\colorrow &&&&&&&&&
+&&\\
+\hline
+OP&Operand&ImmLo&&&&&&&
+&&\\
+\hline
+\colorrow Name&Operands&17-14&13-10&9-0&&&&&
+&&\\
+\hline
+POP&RDest&1100&RDest&n/a&&&&&
+&&\\
+\hline
+\colorrow PUSH&RSrc&1101&RSrc&n/a&&&&&
+&&\\
+\hline
+PUSHI&Imm&1110&ImmHi&ImmLo&&&&&
+&&\\
+\hline
+\colorrow &&&&&&&&&
+&&\\
+\hline
+&&&&&&&&&
+&&\\
+\hline
+\colorrow Name&Operands&17-12 (OP)&11-8 (Operand)&7-0 (unused)&&&&&
+&&\\
+\hline
+INCR&R&111100&R&n/a&&&&&
+&&\\
+\hline
+\colorrow DECR&R&111101&R&n/a&&&&&
+&&\\
+\hline
+&&&&&&&&&
+&&\\
+\hline
+\colorrow &&&&&&&&&
+&&\\
+\hline
+Psuedoinstructions with special formatting&&&&&&&&&
+&&\\
+\hline
+\colorrow Moves&&&&&&&&&
+&&\\
+\hline
+MOV [\%R], \%R&&Move from a register into memory at address in register&&&&&&&
+&&\\
+\hline
+\colorrow MOV \%R, [\%R]&&Move from memory at address in register into a register&&&&&&&
+&&\\
+\hline
+MOV [IMM/LABEL], \%R&&Move from a register into memory at immediate address&&&&&&&
+&&\\
+\hline
+\colorrow MOV \%R, [IMM/LABEL]&&Move from memory at immediate address into a register&&&&&&&
+&&\\
+\hline
+MOV \%R, [LABEL+constant]&&Move from memory at a label address plus a constant&&&&&&&
+&&\\
+\hline
+\colorrow MOV [LABEL+constant], \%R&&Move to memory at a label address plus a constant&&&&&&&
+&&\\
+\hline
+MOV \%R, \%R&&Move a register to another register&&&&&&&
+&&\\
+\hline
+\colorrow MOV \%R, IMM&&Move an immediate up to 16 bits into a register&&&&&&&
+&&\\
+\hline
+&&&&&&&&&
+&&\\
+\hline
+\colorrow &&&&&&&&&
+&&\\
+\hline
+Special Jump Formats&&&&&&&&&
+&&\\
+\hline
+\colorrow JUMP A, B, LABEL&&Jump to label if the two parameters compared as A JUMPTYPE B (e.g. A > B for JG) return true.&&&&&&&
+&&\\
+\hline
+Works with the following jump types&&&&&&&&&
+&&\\
+\hline
+\colorrow JE& JNE& JA*& JAE*& JB& JBE& JG*& JGE*& JL& JLE 
+&&\\
+\hline
+(NOTE: jumps with asterisks are emulated using reverse compares&&&&&&&&&\end{tabular}
+\end{document}
