@@ -1,5 +1,6 @@
 \documentclass[onecolumn]{IEEEtran}
 \usepackage{float}
+\usepackage{graphicx}
 
 \title{Potato Group 3D Graphics}
 \author{Leif Andersen\\Daniel Blakemore\\Jon Parker}
@@ -47,7 +48,12 @@ Internally, an hsync counter keeps track of how many times hsync has gone positi
 \subsection{Draw Unit}
 The draw unit is hardware consisting of a first-in first-out queue called PRAM (Painter RAM), a decoder that writes colors to memory called the painter, and the frame buffer.  See figure \ref{fig:draw}:
 
-%\XXX Figure draw goes here
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\textwidth]{draw.png}
+	\caption{Draw Unit consisting of the PRAM, Painter, and Frame Buffer. VGA shown externally.}
+	\label{fig:draw}
+\end{figure}
 
 The purpose of the draw unit is to write pixel colors to memory in parallel to the CPU’s calculations.  This memory, called the frame buffer, is then read by the VGA Controller, which outputs these pixel colors to the user’s screen.  The draw unit fixes the screen resolution to 160x120 to meet the block ram limitations of the Spartan-3E FPGA.
 
@@ -66,7 +72,12 @@ The frame buffer is a set of 8 block rams in which pixel colors for the entire s
 
 Since the Spartan3E only has 368kbits of usable ram, the largest factor of a 640x480 resolution that fits in this ram is 160x120.  A 160x120 resolution has 160*120 pixels, each pixel has 3 bits of color, and there are 2 copies of that pixel.  Therefore the memory used is 160*120*3*2 which equals a little over 115kbits.  Complicating matters is that each pixel is a three bit value, but only word sizes that are powers of two are addressable.  To resolve this matter, a single pixel color is stored in three different rams: one ram for bit 2 (called rbuffer), one for bit 1 (called gbuffer), and one for bit 0 (called bbuffer).  The address into these rams is then the same for each pixel.  Unfortunately, this led to each ram being 38400 bits, which is 2.34 block rams.  This meant each of the three rams wasted .66 of a block ram resource on the FPGA.  To address this, a fourth ram was created, called sbuffer.  Rbuffer, gbuffer, and bbuffer were all reduced in size to use exactly two block rams each, meaning they didn’t quite have enough room for all the pixels.  Sbuffer, using 4 bit words in which the most significant bit is wasted, contains all three bits of a color per pixel at a single address.  Sbuffer still wastes a quarter of its space, but that’s much better than the two-thirds of a wasted block ram for each of the other rams.  Figure \ref{fig:frameBuffer} displays our final frame buffer implementation:
 
-%\XXX Frame buff figure goes here.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\textwidth]{framebuffer.png}
+	\caption{Frame Buffer with read and write pointers.}
+	\label{fig:frameBuffer}
+\end{figure}
 
 With this as our final setup, there are two very special addresses into the rams: 19200 and 32640.  19200 is the address at which one buffer ends and another begins.  The front buffer and back buffer are each simply represented by a pointer that either points to address 0 or address 19200 (represented by the orange arrows in figure \ref{fig:frameBuffer}).  When it’s time to swap buffers, those pointers just swap.  So if the front buffer initially started at 0 and then the swap buffer signal came, front buffer simply switches to pointing at 19200.  This swap cannot occur until vsync goes low, so a register is set until vsync goes low, at which point the buffers swap, and the painter then ends its pause state.  VGA always just reads at an offset from front buffer, and the painter always writes to an offset from back buffer.  The other special address, 32640, is where the rbuffer, gbuffer, and bbuffer end, and sbuffer begins.  Some simple logic inside determines if the offset from 19200 being used by the painter or VGA is above or equal to 32640, and if so subtracts 13440 from that offset and uses the result as the address into sbuffer instead of reading out of rbuffer, gbuffer, and bbuffer.
 
@@ -111,28 +122,23 @@ Finding our opcode space limited to 3 bits for jump instructions, we decided to 
 \subsubsection{Moves}
 The last of the unique bits of our assembly code were special kinds of MOV instructions.  Wanting to emulate x86 functionality, we designed our assembler to use take move instructions of various forms: 
 
-\begin{table}
-\centering
-\label{tab:moveTypes}
-\begin{tabular}{|c|c|}
-\hline 
-MOV [\%R], \%R & Move from a register into memory at address in register \\ 
-\hline 
-MOV \%R, [\%R] & Move from memory at address in register into a register \\ 
-\hline 
-MOV [IMM/LABEL], \%R & Move from a register into memory at immediate address \\ 
-\hline 
-MOV \%R, [IMM/LABEL] & Move from memory at immediate address into a register \\ 
-\hline 
-MOV \%R, [LABEL+constant] & Move from memory at a label address plus a constant \\ 
-\hline 
-MOV [LABEL+constant], \%R & Move to memory at a label address plus a constant \\ 
-\hline 
-MOV \%R, \%R & Move a register to another register \\ 
-\hline 
-MOV \%R, IMM & Move an immediate up to 16 bits into a register \\ 
-\hline 
-\end{tabular}
+\begin{table}[H]
+	\centering
+	\label{tab:moveTypes}
+	\caption{Move Instructions}
+	\begin{tabular}{ c c }
+	\hline
+	Instruction               & Effect \\ \hline
+	MOV [\%R], \%R            & Move from a register into memory at address in register \\
+	MOV \%R, [\%R]            & Move from memory at address in register into a register \\	
+	MOV [IMM/LABEL], \%R      & Move from a register into memory at immediate address \\ 
+	MOV \%R, [IMM/LABEL]      & Move from memory at immediate address into a register \\  
+	MOV \%R, [LABEL+constant] & Move from memory at a label address plus a constant \\  
+	MOV [LABEL+constant], \%R & Move to memory at a label address plus a constant \\  
+	MOV \%R, \%R              & Move a register to another register \\  
+	MOV \%R, IMM              & Move an immediate up to 16 bits into a register \\  
+	\hline
+	\end{tabular}
 \end{table}
 
 All of these move instructions allowed us to easily access memory and all work determining the translation of these instructions was done transparently in the assembler.
@@ -150,7 +156,13 @@ All of these move instructions allowed us to easily access memory and all work d
 
 Triangles are translated by simple vector addition, and rotated by multiplying each point of each triangle by a matrix with the format shown in figure \ref{fig:matrices}, where theta is the rotation angle around the subscripted axis.
 
-%\XXX Matrices goes here.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\textwidth]{matrices.png}
+	\caption{Rotation Matrix. Source: %http://en.wikipedia.org/wiki/Perspective_transform
+	}
+	\label{fig:matrices}
+\end{figure}
 
 Note that there is one set of these matrices per model, each with different values.  These values are floating point numbers.  For object transformations, vector c is set to 0.  Vector a is the position of a single point.
 
@@ -166,7 +178,15 @@ Triangles behind the camera are discarded, and triangles crossing the boundary o
 
 Triangles are now flattened with matrix operations of the format in \ref{fig:projectionMat}:
 
-%%\XXX perspective transformation goes here
+\begin{figure}[H]
+	\centering
+	%\includegraphics[width=1.0\textwidth]{projectionMat.png}
+	$$b_x = (d_x - e_x)(\frac{e_z}{d_z})$$
+	$$b_y = (d_y - e_y)(\frac{e_z}{d_z})$$
+	\caption{The matrix operations to perform a perspective transform. Source: %http://en.wikipedia.org/wiki/Perspective_transform
+	}
+	\label{fig:projectionMat}
+\end{figure}
 
 This calculation is performed for each point.  d is a point’s location vector, and e is the camera’s location vector.  b is the point after being projected.  This transformation flattens all the points to the screen location (normally z = 0).
 \item Screen Clipping
@@ -177,7 +197,14 @@ Similarly to Z-clipping, triangles off screen are discarded, and triangles cross
 
 The pixels bound by a triangle are filled in with the color of that triangle.  This is performed using the scanline algorithm.  Essentially, the screen is split up by lines.  Then for each line of pixels, the intersection of that line with a triangle is calculated.  Finally, all pixels between the two end points on a line are filled in.  See figure \ref{fig:rasterization}:
 
-%%\XXX Rasterizer goes here.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.50\textwidth]{rasterization.png}
+	\caption{Scanline Algorithm. Source: %http://www.techfak.uni-bielefeld.de/ags/wbski/lehre/digiSA/WS0607/3DVRCG/Vorlesung/13.RT3DCGVR-vertex-2-fragment.pdf
+	}
+	\label{fig:rasterization}
+\end{figure}
+
 
 Since triangles can be layered, only the closest one to the screen should be drawn.  To do this, a buffer containing the z value of each pixel is created.  When a pixel is being drawn, the z-value for the triangle at that pixel is compared to the one in the z-buffer.  If the z-value in the buffer is farther away, then the triangle fills that pixel and the z-buffer is updated with the new, closer z value.  Otherwise, the pixel is not refilled and the old z value is kept in the z-buffer.  This completes the graphics pipeline.  In the following sections, we describe our implementation using fixed point numbers and integer instead of floating point.
 
@@ -204,36 +231,61 @@ In OpenGL, this step is performed after perspective transform.   However, we can
 \subsubsection{Perspective Transform}
 We avoid using matrix operations for our perspective transform because that requires a divide operation.  Instead we perform our perspective transform according to figure \ref{fig:perspectiveTransform}:
 
-%%\XXX Perspective transform goes here
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\textwidth]{perspective.png}
+	\caption{Perspective transform from a top-down view.}
+	\label{fig:perspectiveTransform}
+\end{figure}
 
 The eye is situated at (0,0,-100) from the screen.  This represents the user’s eye.  The screen is centered around (0,0,0), drawn in blue.  To make the triangle perspective-correct, for each point, we take the edge (represented by green) formed by the eye at one end and the triangle’s vertex at the other.  Then we find the intersection of this line with z = 0, represented by the red points.  Since we don’t have a divide operation, we can’t just use slope-intercept to calculate an intersection.  Instead we do a binary search; we keep guessing where the z intersection is until our guess has a z-value of zero.  See figure \ref{fig:binarySearch}:
 
-%%\XXX Binary Search goes here
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\textwidth]{binarySearch.png}
+	\caption{Binary search for z = 0.}
+	\label{fig:binarySearch}
+\end{figure}
 
 On each iteration, we take the z difference of the end points (represented by blue), then divide that by two.  Then we add or subtract that value to the top point based on if the top point is negative or positive and this gives us a new top end point (represented by red).  For each time we divide the z difference by two and add/subtract, we apply the same operations to the x and y value value of the point.  This ends up performing the same operation as a slope-intercept calculation only using right arithmetic shifts.  After doing this for all triangles, we have a flattened set of perspective-correct triangles.  Because the real center of the screen is at pixel (80,60) in our 160x120 screen, we add 80 to the x coordinate and 60 to the y coordinate.  Since z=0 for all points now, we can simply discard z coordinates for the remainder of the pipeline.
 
 \subsubsection{Screen-Clipping}
 Now the problem is that we have some points that are above, below, to the left, or to the right of the screen boundaries.  We can only rasterize a triangle if it’s completely within the screen boundaries.  To deal with this, we define four zones: above, right, below, and left.  Any point can be in one, two, or no zones.  If it’s in no zones, that means the point is within the screen boundaries.  If all three points of a triangle are not in a zone, then the triangle can be rasterized.  If all three points are in the same zone, it means the triangle is completely outside the screen and the triangle can be discarded.  Otherwise, the triangle is split into multiple sub-triangles along the boundary and clip is recursively called on those subtriangles.  A single triangle might be split, and then the sub-triangles may also be split.  See figure \ref{fig:clipping} for an example of this:
 
-%%\XXX Clipping goes here
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\textwidth]{clipping.png}
+	\caption{A triangle being recursively split for clipping.}
+	\label{fig:clipping}
+\end{figure}
 
 As seen in figure ref{fig:clipping}, we start with the red triangle.  Each point is compared with the screen boundaries to determine which zones it lies in.  Then, starting with the above zone and going clockwise, we check if any of the points are in that zone.  P1 is, so we calculate the intersection with the top of the screen using the binary subdivide helper function.  The triangle is then split along this intersection into three component triangles; the blue edges define this split.  After this, we call clip on the three new triangles.  The topmost triangle gets discarded because all three points now lie in the above zone.  The other two triangles are still partially in and partially out of the screen, so they get further split, denoted by the pink and green lines.  Eventually we end up with three triangles in which all points lie within the screen, and five triangles which have been discarded.  Each time we find a triangle completely within the screen, it is rasterized before continuing with clipping whatever split triangles remain.
 
 \subsubsection{Rasterization}
 The final step in the pipeline is to take those three points passed by clipping and determine which pixels to fill in.  Since the draw unit works on a line-by-line basis, this is how the triangle is rasterized.  We start at the top point, and work our way down one pixel line at a time.  On a given pixel line, we determine the end points of that line using a modified slope-intercept formula.  To calculate slopes, we normally need to perform division.  However, there is another way to do this: a lookup table.  In previous pipeline stages, this was not feasible due to the range of possible values (216).  But now, the range of possible y differences is [0, 119] because that’s the screen height.  Therefore we created a lookup table of 120 values, corresponding to 1/(y-difference).  Multiplying this by some x-difference gives a slope.  Rasterization proceeds according to figure \ref{fig:rasteriser}:
 
-%%\XXX Rasteriser goes here
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\textwidth]{rasteriser.png}
+	\caption{Rasterization.}
+	\label{fig:rasteriser}
+\end{figure}
 
 First the points are sorted such that the point with the lowest y-value (closest to the top of the screen) is P1.  Then P2 is the first point clockwise from P1, and P3 is the second clockwise point.  This guarantees that the edge (P1, P3) is the left bound and the edge (P1, P2) is the right bound.  Next, two incrementers, one for the left side and one for the right side, are set to 0.  Line by line, as shown by the numberings on the left of figure \ref{fig:rasteriser}, the edge pixels are calculated and then passed to the draw unit using formula \ref{eq:rasterise}
 
 \begin{equation}
-\label{eq:rasterise}
-incrementer \times x-difference \times \frac{1}{y-difference}  
+	\label{eq:rasterise}
+	incrementer \times x-difference \times \frac{1}{y-difference}  
 \end{equation}
 
 The draw unit fills in everything in between the edge pixels on a line as well.  On line 5 in figure \ref{fig:rasteriser}, indicated by the blue line, there is a complication because edge (P1, P2) ends and edge (P2, P3) begins, so the slope of the right side needs to be recalculated, and the right incrementer must be reset.  There are a few other special cases, such as when the left bound is formed by two edges instead of the right bound, or when a triangle has a flat top or bottom.  Each of these is checked to make sure the correct side has its slope/incrementer recalculated.  After this point, we proceed until we reach line 14, at which point the entire triangle has been rasterized.  One additional complication arises with this method, illustrated in figure \ref{fig:rasterizerProblem}:
 
-%%\XXX Rasterizer Problem goes here
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\textwidth]{rasterizerProblem.png}
+	\caption{Problem with rasterization when only using endpoints.}
+	\label{fig:rasterizerProblem}
+\end{figure}
 
 When a P1 and P2 of a triangle are equal, or even when the triangle is just very narrow, the above problem occurs.  The endpoints on any given line of pixels are equal, and so only a single pixel gets drawn per line instead of a connected line.  To solve this, we calculate six values per line instead of two: the two endpoints of the current line, the average of the current endpoints with the previous endpoints, and the average with the next endpoints.  Then we compare all three right points and choose the right most.  We choose the left most of the three left points.  These two points are what we pass to the draw unit, which gives us the intended rasterization.  This step completes the entire 3D pipeline.  
 
@@ -248,7 +300,7 @@ Our final solution was to increment and decrement the stack pointer whenever we 
 
 \subsection{Keyboard Controller}
 
-%%\XXX TODO
+%\XXX TODO
  
 \subsection{Block Ram Usage}
 Since a 3d game takes a large code-space, a large heap for models, and a large stack for drawing those models, we designed our system to utilize all 20 available block rams on the Spartan3E.  Unfortunately, when asked for an 18 wide by 11264 tall (11*1024) ram, Xilinx ISE comes up with a frustrating optimization: it splits the ram into 18 separate 1 bit wide rams because that reduces the latency and area in LUTs.  Unfortunately, this changes what should be 11 block rams into using 18.  We figured out this was happening by carefully reading through the synthesis reports.  Our solution to this was instantiating 11 block rams, each 18 wide by 1024 tall, and then writing our own wiring scheme to interconnect them into one large 11264 tall module.
@@ -268,7 +320,7 @@ I was mostly in charge of writing and maintaining control logic and the assemble
 I also wrote a few of the simple initial mathematical stages of the software pipeline including rotation, translation, and backface culling.
 
 \subsection{Leif Andersen}
-%%\XXX TODO
+%\XXX TODO
 
 \subsection{Jon Parker}
 For hardware, I wrote the vga controller, draw unit, instantiated the DCM, and worked together with Leif on the ALU.  I also worked with Daniel to write the memory.  For software, I wrote rasterization, clipping, and perspective transform including helper functions such as a binary subdivide.  Also, using a tutorial by Paul Willoughby and another by Tyler Nichols, I set up our ISE project to generate the program files using a mem file instead of re-synthesizing the entire CPU.
